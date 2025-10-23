@@ -1,0 +1,98 @@
+/* ==========================================================================
+   Global Design System Variables & Base Styles
+  ==========================================================================
+*/
+
+/* 1. COLOR PALETTE
+  (Based on Section 1 of README.md)
+*/
+:root {
+  /* Primary / Brand */
+  --color-primary: #F15A24;
+  --color-brand-dark: #0A142F;
+
+  /* Text */
+  --color-text-primary: #333333;
+  --color-text-secondary: #666666;
+  --color-text-inverted: #FFFFFF;
+
+  /* Backgrounds */
+  --color-bg-primary: #FFFFFF;
+  --color-bg-secondary: #0A142F;
+  --color-bg-light: #FAFAFA;
+
+  /* Borders */
+  --color-border: #EAEAEA;
+
+  /* Utility Colors */
+  --color-error: #D93025;
+  --color-success: #1E8E3E;
+
+/* 2. TYPOGRAPHY
+  (Based on Section 2 of README.md)
+*/
+  --font-family-heading: "Roboto", Arial, sans-serif;
+  --font-family-body: "Roboto", Arial, sans-serif;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+/* 3. LAYOUT & SPACING
+  (Based on Section 3 of README.md)
+*/
+  --space-xs:   4px;
+  --space-sm:   8px;
+  --space-md:   16px;
+  --space-lg:   24px;
+  --space-xl:   32px;
+  --space-xxl:  48px;
+  --space-xxxl: 64px;
+
+/* 4. BORDER RADIUS
+  (Based on Section 4 of README.md)
+*/
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+}
+
+
+/* ==========================================================================
+   Global Base Styles
+  ==========================================================================
+*/
+
+/* Apply a better box-sizing model to all elements */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Apply base font and colors from our design system */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-body);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  line-height: 1.6;
+}
+
+/* Apply heading font and color from our design system */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 var(--space-md) 0;
+  font-family: var(--font-family-heading);
+  color: var(--color-brand-dark);
+  line-height: 1.2;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
