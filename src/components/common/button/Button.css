@@ -1,0 +1,56 @@
+/* src/components/common/button/Button.css */
+
+/* Base styles for all buttons */
+.btn {
+  display: inline-block;
+  padding: var(--space-sm) var(--space-lg);
+  font-family: var(--font-family-heading);
+  font-size: 0.875rem; /* 14px */
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 2px solid transparent;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  margin-right: 20px;
+}
+
+/* --- Variant Styles --- */
+
+/* Primary (Orange) */
+.btn.primary {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverted);
+}
+
+.btn.primary:hover {
+  background-color: var(--color-brand-dark); /* As per our README */
+  color: var(--color-text-inverted);
+}
+
+/* Dark (Navy) */
+.btn.dark {
+  background-color: var(--color-bg-btn-dark);
+  color: var(--color-text-inverted);
+}
+
+.btn.dark:hover {
+  background-color: var(--color-primary); /* As per our README */
+  color: var(--color-text-inverted);
+}
+
+/* Outline (New style from screenshot) */
+.btn.outline {
+  background-color: transparent;
+  color: var(--color-text-inverted);
+  border-color: rgba(255, 255, 255, 0.5); /* Faded white border */
+}
+
+.btn.outline:hover {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverted);
+  border-color: var(--color-primary);
+}
+

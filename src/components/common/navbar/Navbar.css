@@ -1,0 +1,142 @@
+/* src/components/common/navbar/Navbar.css */
+.navbar {
+  background-color: var(--color-brand-dark);
+  position: relative; /* Needed for the mobile menu to position correctly */
+}
+
+/* We reuse the same .container class from TopBar.css */
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- Desktop Navigation --- */
+.nav-desktop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.nav-links-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  display: block;
+  padding: 16px var(--space-lg); /* Vertical padding creates the height */
+  font-family: var(--font-family-heading);
+  font-size: 0.875rem; /* 14px */
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-inverted);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  border-top: 4px solid transparent; /* For active state underline */
+  border-bottom: 4px solid transparent;
+}
+
+.nav-link:hover {
+  color: var(--color-primary);
+}
+
+/* This is the active state style from the screenshot */
+.nav-link.active {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverted);
+}
+
+/* --- Mobile Navigation (Hidden on Desktop) --- */
+.nav-mobile {
+  display: none; /* Hide mobile controls on desktop */
+}
+.mobile-menu {
+  display: none; /* Hide mobile panel on desktop */
+}
+
+
+/* --- Responsive Breakpoint --- */
+/* This breakpoint matches our --breakpoint-lg */
+@media (max-width: 1024px) {
+  .nav-desktop {
+    display: none; /* Hide desktop links on mobile */
+  }
+
+  .nav-mobile {
+    display: flex; /* Show mobile controls */
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    color: var(--color-text-inverted);
+  }
+
+  .nav-mobile-title {
+    font-family: var(--font-family-heading);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+  }
+
+  .menu-toggle-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-inverted);
+    cursor: pointer;
+    padding: var(--space-sm);
+  }
+
+  /* --- Mobile Menu Dropdown Panel --- */
+  .mobile-menu {
+    display: block;
+    background-color: var(--color-brand-dark);
+    
+    /* This is the animation! */
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    
+    position: absolute; /* Position it below the navbar */
+    left: 0;
+    right: 0;
+    top: 100%; /* Start right below the parent .navbar */
+    z-index: 100;
+  }
+
+  /* When 'open' class is added, expand to this height */
+  .mobile-menu.open {
+    max-height: 60vh; /* 60% of viewport height, adjust as needed */
+    overflow-y: auto; /* Allow scrolling if menu is long */
+  }
+
+  .mobile-links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .mobile-link {
+    display: block;
+    padding: var(--space-md) var(--space-md);
+    font-family: var(--font-family-heading);
+    font-size: 1rem; /* 16px */
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-inverted);
+    text-decoration: none;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .mobile-link.active,
+  .mobile-link:hover {
+    color: var(--color-primary);
+  }
+
+  .mobile-menu-btn {
+    width: calc(100% - (var(--space-md) * 2));
+    margin: var(--space-xl) var(--space-md);
+  }
+}
+

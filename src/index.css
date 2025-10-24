@@ -9,7 +9,8 @@
 :root {
   /* Primary / Brand */
   --color-primary: #F15A24;
-  --color-brand-dark: #0A142F;
+  --color-brand-dark: #040e26;
+  
 
   /* Text */
   --color-text-primary: #333333;
@@ -20,6 +21,7 @@
   --color-bg-primary: #FFFFFF;
   --color-bg-secondary: #0A142F;
   --color-bg-light: #FAFAFA;
+  --color-bg-btn-dark: #1e273c;
 
   /* Borders */
   --color-border: #EAEAEA;
