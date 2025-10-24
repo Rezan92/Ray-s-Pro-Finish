@@ -5,7 +5,8 @@
   display: inline-block;
   padding: var(--space-sm) var(--space-lg);
   font-family: var(--font-family-heading);
-  font-size: 0.875rem; /* 14px */
+  font-size: 0.875rem;
+  /* 14px */
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   text-decoration: none;
@@ -26,7 +27,8 @@
 }
 
 .btn.primary:hover {
-  background-color: var(--color-brand-dark); /* As per our README */
+  background-color: var(--color-brand-dark);
+  /* As per our README */
   color: var(--color-text-inverted);
 }
 
@@ -37,7 +39,8 @@
 }
 
 .btn.dark:hover {
-  background-color: var(--color-primary); /* As per our README */
+  background-color: var(--color-primary);
+  /* As per our README */
   color: var(--color-text-inverted);
 }
 
@@ -45,7 +48,8 @@
 .btn.outline {
   background-color: transparent;
   color: var(--color-text-inverted);
-  border-color: rgba(255, 255, 255, 0.5); /* Faded white border */
+  border-color: rgba(255, 255, 255, 0.5);
+  /* Faded white border */
 }
 
 .btn.outline:hover {
@@ -53,4 +57,3 @@
   color: var(--color-text-inverted);
   border-color: var(--color-primary);
 }
-

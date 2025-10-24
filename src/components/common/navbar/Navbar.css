@@ -62,14 +62,19 @@
 /* --- Responsive Breakpoint --- */
 /* This breakpoint matches our --breakpoint-lg */
 @media (max-width: 1024px) {
+  .container {
+    padding: 0 var(--space-md);
+  }
+  
   .nav-desktop {
     display: none; /* Hide desktop links on mobile */
   }
 
   .nav-mobile {
     display: flex; /* Show mobile controls */
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
+    gap: var(--space-sm);
     width: 100%;
     color: var(--color-text-inverted);
   }
@@ -85,7 +90,7 @@
     border: none;
     color: var(--color-text-inverted);
     cursor: pointer;
-    padding: var(--space-sm);
+    padding: var(--space-sm) 0;
   }
 
   /* --- Mobile Menu Dropdown Panel --- */
@@ -137,6 +142,7 @@
   .mobile-menu-btn {
     width: calc(100% - (var(--space-md) * 2));
     margin: var(--space-xl) var(--space-md);
+    background-color: var(--color-primary);
   }
 }
 

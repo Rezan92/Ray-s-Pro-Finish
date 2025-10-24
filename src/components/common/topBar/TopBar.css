@@ -33,6 +33,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: var(--space-xl);
+    padding: 0 var(--space-md);
   }
 
   .contact-wrapper {
