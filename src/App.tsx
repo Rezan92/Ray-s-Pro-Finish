@@ -6,7 +6,7 @@ import TopBar from './components/common/topBar/TopBar';
 
 function App() {
 	return (
-		<div>
+		<div className="App">
       <TopBar/>
       <main>
 			<Routes>

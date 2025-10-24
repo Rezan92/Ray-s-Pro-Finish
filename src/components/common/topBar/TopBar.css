@@ -2,7 +2,6 @@
 .top-bar {
   background-color: var(--color-bg-primary);
   padding: var(--space-lg) 0;
-  border-bottom: 1px solid var(--color-border);
 }
 
 /* This is a common class we can reuse in other components */
@@ -15,7 +14,6 @@
   /* Standard layout constraint */
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--space-md); /* Ensures some padding on mobile */
 }
 
 /* This is the flexbox you asked about! */
