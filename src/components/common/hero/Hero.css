@@ -1,4 +1,8 @@
 /* src/components/common/hero/Hero.css */
+.hero-container-wrapper {
+  min-height: 750px;
+}
+
 .hero {
   position: absolute;
   top: 150px;
@@ -38,6 +42,7 @@
 .hero-container {
   position: relative;
   z-index: 2;
+  top: inherit;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--space-sm);
@@ -71,6 +76,10 @@
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
+  .hero-container-wrapper {
+    min-height: 420px;
+  }
+
   .hero {
     height: 80vh;
     min-height: 500px;
