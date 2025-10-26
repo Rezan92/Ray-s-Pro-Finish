@@ -44,6 +44,17 @@
   color: var(--color-text-inverted);
 }
 
+.btn.light {
+  background-color: var(--color-bg-light);
+  color: var(--color-text-primary);
+}
+
+.btn.light:hover {
+  background-color: var(--color-bg-btn-dark);
+  /* As per our README */
+  color: var(--color-text-inverted);
+}
+
 /* Outline (New style from screenshot) */
 .btn.outline {
   background-color: transparent;
@@ -56,4 +67,7 @@
   background-color: var(--color-primary);
   color: var(--color-text-inverted);
   border-color: var(--color-primary);
+}
+.hero-button {
+  margin: 0;
 }

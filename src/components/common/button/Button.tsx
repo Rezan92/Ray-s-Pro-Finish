@@ -3,7 +3,7 @@ import './Button.css';
 import { Link } from 'react-router-dom';
 
 // We can define the different styles our button can have
-type ButtonVariant = 'primary' | 'dark' | 'outline';
+type ButtonVariant = 'primary' | 'dark' | 'outline' | 'light';
 
 interface ButtonProps {
   children: React.ReactNode;

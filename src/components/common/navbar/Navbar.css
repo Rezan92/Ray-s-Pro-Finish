@@ -1,14 +1,19 @@
 /* src/components/common/navbar/Navbar.css */
 .navbar {
-  background-color: var(--color-brand-dark);
-  position: relative; /* Needed for the mobile menu to position correctly */
+  position: relative;
+  /* Needed for the mobile menu to position correctly */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-sm);
 }
 
 /* We reuse the same .container class from TopBar.css */
 .navbar .container {
+  background-color: var(--color-brand-dark);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0;
 }
 
 /* --- Desktop Navigation --- */
@@ -28,15 +33,18 @@
 
 .nav-link {
   display: block;
-  padding: 16px var(--space-lg); /* Vertical padding creates the height */
+  padding: 16px var(--space-lg);
+  /* Vertical padding creates the height */
   font-family: var(--font-family-heading);
-  font-size: 0.875rem; /* 14px */
+  font-size: 0.875rem;
+  /* 14px */
   font-weight: var(--font-weight-bold);
   color: var(--color-text-inverted);
   text-decoration: none;
   text-transform: uppercase;
   transition: all 0.3s ease;
-  border-top: 4px solid transparent; /* For active state underline */
+  border-top: 4px solid transparent;
+  /* For active state underline */
   border-bottom: 4px solid transparent;
 }
 
@@ -52,10 +60,13 @@
 
 /* --- Mobile Navigation (Hidden on Desktop) --- */
 .nav-mobile {
-  display: none; /* Hide mobile controls on desktop */
+  display: none;
+  /* Hide mobile controls on desktop */
 }
+
 .mobile-menu {
-  display: none; /* Hide mobile panel on desktop */
+  display: none;
+  /* Hide mobile panel on desktop */
 }
 
 
@@ -65,13 +76,15 @@
   .container {
     padding: 0 var(--space-md);
   }
-  
+
   .nav-desktop {
-    display: none; /* Hide desktop links on mobile */
+    display: none;
+    /* Hide desktop links on mobile */
   }
 
   .nav-mobile {
-    display: flex; /* Show mobile controls */
+    display: flex;
+    /* Show mobile controls */
     justify-content: flex-start;
     align-items: center;
     gap: var(--space-sm);
@@ -97,23 +110,27 @@
   .mobile-menu {
     display: block;
     background-color: var(--color-brand-dark);
-    
+
     /* This is the animation! */
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-    
-    position: absolute; /* Position it below the navbar */
+
+    position: absolute;
+    /* Position it below the navbar */
     left: 0;
     right: 0;
-    top: 100%; /* Start right below the parent .navbar */
+    top: 100%;
+    /* Start right below the parent .navbar */
     z-index: 100;
   }
 
   /* When 'open' class is added, expand to this height */
   .mobile-menu.open {
-    max-height: 60vh; /* 60% of viewport height, adjust as needed */
-    overflow-y: auto; /* Allow scrolling if menu is long */
+    max-height: 60vh;
+    /* 60% of viewport height, adjust as needed */
+    overflow-y: auto;
+    /* Allow scrolling if menu is long */
   }
 
   .mobile-links-list {
@@ -126,7 +143,8 @@
     display: block;
     padding: var(--space-md) var(--space-md);
     font-family: var(--font-family-heading);
-    font-size: 1rem; /* 16px */
+    font-size: 1rem;
+    /* 16px */
     font-weight: var(--font-weight-bold);
     color: var(--color-text-inverted);
     text-decoration: none;
@@ -144,5 +162,9 @@
     margin: var(--space-xl) var(--space-md);
     background-color: var(--color-primary);
   }
-}
 
+  .navbar {
+    padding: 0;
+  }
+
+}

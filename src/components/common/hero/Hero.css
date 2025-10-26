@@ -1,0 +1,94 @@
+/* src/components/common/hero/Hero.css */
+.hero {
+  position: absolute;
+  top: 150px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  height: 90vh;
+  min-height: 600px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  color: var(--color-text-inverted);
+}
+
+.hero .container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Dark overlay for text readability */
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(10, 20, 47, 0.31);
+  /* --color-brand-dark at 60% opacity */
+  z-index: -1;
+}
+
+/* We reuse .container but need to position content above the overlay */
+.hero-container {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-sm);
+}
+
+.hero-title {
+  font-family: var(--font-family-heading);
+  font-size: 3.5rem;
+  /* 56px */
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-text-inverted);
+  text-transform: uppercase;
+  line-height: 1.2;
+  margin-bottom: var(--space-lg);
+}
+
+.hero-subtitle {
+  font-family: var(--font-family-body);
+  font-size: 1.125rem;
+  /* 18px */
+  color: var(--color-text-inverted);
+  line-height: 1.6;
+  margin-bottom: var(--space-xl);
+}
+
+.hero-actions {
+  display: flex;
+  gap: 10px;
+  /* Space between buttons */
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .hero {
+    height: 80vh;
+    min-height: 500px;
+    align-items: center;
+    /* Center content vertically */
+    justify-content: center;
+    /* Center content horizontally */
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+    /* 40px */
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+    /* 16px */
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
