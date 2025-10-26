@@ -1,4 +1,3 @@
-import React from 'react';
 import './FeatureSection.css';
 import { HardHat, Shield, Users } from 'lucide-react'; // Icons from screenshot
 import {FeatureCard} from '../featureCard/FeatureCard';

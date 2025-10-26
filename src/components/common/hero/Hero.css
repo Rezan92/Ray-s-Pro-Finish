@@ -42,7 +42,7 @@
 .hero-container {
   position: relative;
   z-index: 2;
-  top: inherit;
+  top: 50px;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--space-sm);
@@ -87,6 +87,10 @@
     /* Center content vertically */
     justify-content: center;
     /* Center content horizontally */
+  }
+
+  .hero-container {
+    top: inherit;
   }
 
   .hero-title {
