@@ -1,0 +1,108 @@
+/* src/components/home/ServiceCard.css */
+
+.service-card {
+  position: relative;
+  background: var(--color-bg-primary);
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+  /* overflow: hidden; */
+  transition: all 0.3s ease;
+}
+
+.service-card-image-wrapper {
+  position: relative;
+  height: 250px;
+}
+
+.service-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.service-card-icon-wrapper {
+  position: absolute;
+  bottom: -40px;
+  /* Sits halfway over the edge */
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: var(--color-bg-primary);
+  border: 0 solid var(--color-bg-primary);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.service-card-icon {
+  color: var(--color-primary);
+  transition: color 0.3s ease;
+}
+
+.service-card-content {
+  padding: 60px var(--space-lg) var(--space-lg);
+  /* 60px top padding to clear icon */
+  text-align: center;
+}
+
+.service-card-title {
+  font-family: var(--font-family-heading);
+  font-size: 1.25rem;
+  /* 20px */
+  font-weight: var(--font-weight-bold);
+  color: var(--color-brand-dark);
+  margin-bottom: var(--space-md);
+}
+
+.service-card-description {
+  font-family: var(--font-family-body);
+  font-size: 1rem;
+  /* 16px */
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--space-lg);
+}
+
+/* --- Hover Effect --- */
+
+/* We use :hover on the main .service-card to change 
+  elements deep inside it. This is a very clean way
+  to handle the hover effect.
+*/
+
+.service-card:hover .service-card-icon-wrapper {
+  background-color: var(--color-primary);
+}
+
+.service-card:hover .service-card-icon {
+  color: var(--color-text-inverted);
+  /* White icon */
+}
+
+/* This selector targets the button component *inside* the card.
+  We are essentially swapping its 'variant' from 'dark' to 'primary'.
+*/
+.service-card:hover .service-card-button {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverted);
+  border-color: var(--color-primary);
+}
+
+.service-card-button {
+  position: absolute;
+  bottom: -20px;
+  right: 50%;
+  transform: translateX(50%);
+  width: 80%;
+  padding: 12px 10px;
+  margin: 0 auto;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 14px;
+}
