@@ -1,0 +1,130 @@
+/* src/components/home/IndustrialServicesSection.css */
+
+.industrial-services-section {
+  /* display: grid; */
+  /* grid-template-columns: 1fr 1fr; */
+  /* Two equal columns */
+  /* width: 100%; */
+  /* min-height: 600px; */
+  background-color: var(--color-brand-dark);
+  position: relative;
+}
+
+.industrial-services-section-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+
+.industrial-services-right-bg {
+  background-size: cover;
+  background-position: center;
+  width: 50%;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  z-index: 1;
+}
+
+/* --- Left Column --- */
+.industrial-services-left-content {
+  padding: var(--space-xxxl) 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 600px;
+}
+
+.industrial-services-subtitle {
+  font-family: var(--font-family-heading);
+  font-size: 0.875rem;
+  /* 14px */
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: var(--space-md);
+}
+
+.industrial-services-title {
+  font-family: var(--font-family-heading);
+  font-size: 2.5rem;
+  /* 40px */
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-text-inverted);
+  margin-bottom: var(--space-lg);
+}
+
+.industrial-services-description {
+  font-family: var(--font-family-body);
+  font-size: 1rem;
+  /* 16px */
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.7;
+  margin-bottom: var(--space-md);
+}
+
+.industrial-services-stats-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: var(--space-sm);
+  width: 600px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 1220px) {
+
+  /* Move stats to be centered on tablet */
+  .industrial-services-stats-wrapper {
+    left: var(--space-xl);
+  }
+
+  .industrial-services-section-container {
+    flex-direction: column;
+  }
+
+  .industrial-services-right-bg {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+
+  /* Stack to one column */
+  .industrial-services-section {
+    grid-template-columns: 1fr;
+  }
+
+  .industrial-services-left-content {
+    /* padding: var(--space-xxl) var(--space-md); */
+  }
+
+  .industrial-services-title {
+    font-size: 2rem;
+    /* 32px */
+  }
+
+  /* Center stats on mobile */
+  .industrial-services-stats-wrapper {
+    position: relative;
+    /* Un-pin it */
+    top: 0;
+    left: 0;
+    transform: none;
+    /* Center horizontally */
+    margin: 0 auto;
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .stat-card {
+    width: 90%;
+    /* Make stat cards responsive */
+    max-width: 350px;
+  }
+}
