@@ -5,6 +5,7 @@ import { RequestQuoteSection } from '@/components/common/requestQuoteSection/Req
 import { ServicesSection } from '@/components/common/servicesSection/ServicesSection';
 import { IndustrialServicesSection } from '@/components/common/industrialServicesSection/IndustrialServicesSection';
 import {LatestProjectsSection} from '../../components/common/latestProjectsSection/LatestProjectsSection';
+import {TestimonialSection} from '../../components/common/testimonialSection/TestimonialSection';
 
 function HomePage() {
 	return (
@@ -16,6 +17,7 @@ function HomePage() {
 			<ServicesSection />
 			<IndustrialServicesSection />
       <LatestProjectsSection />
+      <TestimonialSection />
 		</div>
 	);
 }

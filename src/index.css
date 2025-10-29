@@ -78,6 +78,7 @@ body {
   color: var(--color-text-primary);
   background-color: var(--color-bg-primary);
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
 /* Apply heading font and color from our design system */
