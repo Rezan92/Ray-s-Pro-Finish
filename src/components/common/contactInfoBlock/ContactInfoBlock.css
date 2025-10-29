@@ -1,13 +1,12 @@
 /* src/components/Header/ContactInfoBlock.module.css */
 .contact-block {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-md);
 }
 
-.icon-wrapper {
+.contactInfo-icon-wrapper {
   color: var(--color-primary);
-  /* This flex setup is to ensure the icon is perfectly centered */
   display: flex;
   align-items: center;
   justify-content: center;

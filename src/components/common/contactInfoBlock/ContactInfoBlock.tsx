@@ -16,8 +16,8 @@ function ContactInfoBlock({
 }: ContactInfoBlockProps) {
 	return (
 		<div className='contact-block'>
-			<div className='icon-wrapper'>
-				<Icon size={24} />
+			<div className='contactInfo-icon-wrapper'>
+				<Icon size={30} />
 			</div>
 			<div className='text-wrapper'>
 				<span className='title'>

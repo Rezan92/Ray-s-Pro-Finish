@@ -1,4 +1,4 @@
-import { Phone, MapPin } from 'lucide-react';
+import { Phone, MapPin, MessageSquare } from 'lucide-react'; // Added MessageSquare
 import ContactInfoBlock from '../contactInfoBlock/ContactInfoBlock';
 import Logo from '../logo/Logo';
 import './TopBar.css';
@@ -13,17 +13,17 @@ function TopBar() {
 					</div>
 					<div className='contact-wrapper'>
 						<ContactInfoBlock
-							icon={Phone}
-              bold = 'Free Call: '
-							title='+1 234 456 78910'
-							subtitle='Call Us Now 24/7 Customer Support'
+							icon={Phone} // You can also use MessageSquare here if you prefer
+							bold='Call or Text: '
+							title='773-799-0006'
+							subtitle='Mon-Fri, 8:00 AM - 6:00 PM'
 						/>
 					</div>
 					<div className='contact-wrapper'>
 						<ContactInfoBlock
 							icon={MapPin}
-							title='Our Location'
-							subtitle='198 West 21th Street, Suite 721 New York NY 10016'
+							title='Our Service Area'
+							subtitle='Serving Wheaton, Lombard & Chicagoland Suburbs'
 						/>
 					</div>
 				</div>
