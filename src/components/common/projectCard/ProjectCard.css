@@ -1,0 +1,144 @@
+/* src/components/home/ProjectCard.css */
+
+.project-card {
+  background-color: var(--color-bg-primary); /* Default background for the card */
+  border-radius: var(--border-radius-md);
+  overflow: visible; /* Allow content to overlap */
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+  position: relative; /* For z-index stacking */
+  margin-bottom: 40px; /* Space for the overlapping content */
+}
+
+.project-card-image-wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 10; /* Gives a consistent image height */
+  overflow: hidden;
+  position: relative; /* For absolute positioning of plus overlay */
+  z-index: 1; /* Image is behind the content */
+}
+
+.project-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease-in-out;
+}
+
+.project-card:hover .project-card-image {
+  transform: scale(1.05); /* Slight zoom on image hover */
+}
+
+/* Plus icon overlay */
+.project-card-plus-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2; /* On top of image, behind content on hover */
+}
+
+.project-card:hover .project-card-plus-overlay {
+  opacity: 1;
+}
+
+.project-card-content {
+  background-color: var(--color-bg-primary); /* Default white background */
+  padding: var(--space-sm);
+  position: relative;
+  /* This is the overlap trick you described! */
+  margin-top: -60px; 
+  width: 90%; /* Thinner than the card */
+  margin-inline: auto; /* Centers the block horizontally */
+  border-radius: var(--border-radius-sm);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for floating effect */
+  text-align: start;
+  z-index: 3; /* Ensure it sits above the image and plus icon */
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.project-card:hover .project-card-content {
+  background-color: var(--color-primary); /* Orange on hover */
+  transform: translateY(-10px); /* Lift slightly on hover */
+  color: white; /* Text color on hover */
+}
+
+
+.project-card-tag {
+  display: inline-block;
+  background-color: rgba(241, 90, 36, 0.1); /* Light orange default */
+  color: var(--color-primary); /* Orange default */
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  margin-bottom: var(--space-sm);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.project-card:hover .project-card-tag {
+  background-color: rgba(255, 255, 255, 0.2); /* White translucent on orange background */
+  color: white; /* White text on orange background */
+}
+
+.project-card-title {
+  font-family: var(--font-family-heading);
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-brand-dark); /* Dark default */
+  margin: 0 0 var(--space-sm) 0;
+  transition: color 0.3s ease;
+}
+
+.project-card:hover .project-card-title {
+  color: white; /* White on hover */
+}
+
+.project-card-location {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Center location text */
+  gap: var(--space-xs);
+  color: var(--color-text-secondary); /* Secondary default */
+  font-size: 0.875rem;
+  transition: color 0.3s ease;
+}
+
+.project-card:hover .project-card-location {
+  color: rgba(255, 255, 255, 0.8); /* Lighter white on hover */
+}
+
+.project-card-location svg {
+  color: var(--color-primary); /* Orange default */
+  transition: color 0.3s ease;
+}
+
+.project-card:hover .project-card-location svg {
+  color: white; /* White on hover */
+}
+
+/* Ensure content block respects mobile responsiveness as well */
+@media (max-width: 640px) {
+  .project-card {
+    margin-bottom: 20px; /* Less margin on mobile */
+  }
+  .project-card-content {
+    margin-top: -40px; /* Adjust for smaller overlap on mobile */
+    padding: var(--space-md);
+    width: 90%;
+  }
+  .project-card-title {
+    font-size: 1.1rem;
+  }
+  .project-card-location {
+    font-size: 0.8rem;
+  }
+}
+

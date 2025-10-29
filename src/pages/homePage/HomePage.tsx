@@ -4,6 +4,7 @@ import { AboutSection } from '@/components/common/aboutSection/AboutSection';
 import { RequestQuoteSection } from '@/components/common/requestQuoteSection/RequestQuoteSection';
 import { ServicesSection } from '@/components/common/servicesSection/ServicesSection';
 import { IndustrialServicesSection } from '@/components/common/industrialServicesSection/IndustrialServicesSection';
+import {LatestProjectsSection} from '../../components/common/latestProjectsSection/LatestProjectsSection';
 
 function HomePage() {
 	return (
@@ -14,6 +15,7 @@ function HomePage() {
 			<RequestQuoteSection />
 			<ServicesSection />
 			<IndustrialServicesSection />
+      <LatestProjectsSection />
 		</div>
 	);
 }
