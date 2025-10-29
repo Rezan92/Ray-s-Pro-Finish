@@ -19,14 +19,12 @@ const Hero = () => {
 				<div className='hero-container'>
 					<div className='hero-content'>
 						<h1 className='hero-title'>
-							WE BUILD
-							<br />
-							GREAT PROJECTS
+							EXPERT DRYWALL REPAIR
+							<br />& INTERIOR PAINTING
 						</h1>
 						<p className='hero-subtitle'>
-							Far far away, behind the word mountains, far from the countries
-							Vokalia and Consonantia, there live the blind texts. Separated
-							they live in Bookmarksgrove.
+							From seamless drywall patching and installation to a flawless,
+							high-quality paint finish, we make your walls look perfect.
 						</p>
 						<div className='hero-actions'>
 							<Button
@@ -41,7 +39,7 @@ const Hero = () => {
 								variant='light'
 								className='hero-button'
 							>
-								Request a Quote
+								Get a Quote
 							</Button>
 						</div>
 					</div>
