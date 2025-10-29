@@ -1,0 +1,126 @@
+/* src/components/common/footer/Footer.css */
+
+.footer-section {
+  background-color: var(--color-brand-dark);
+  color: rgba(255, 255, 255, 0.7);
+  padding: var(--space-xxxl) var(--space-xl);
+  margin-top: 7rem;
+}
+
+.footer-grid {
+  display: grid;
+  /* 4 columns on desktop */
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-xxl);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-sm);
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.footer-column-title {
+  font-family: var(--font-family-heading);
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-inverted);
+  margin: 0 0 var(--space-md) 0;
+  text-transform: uppercase;
+}
+
+.footer-about-text {
+  font-family: var(--font-family-body);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.footer-social-icons {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.footer-social-icons a {
+  color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.05);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.footer-social-icons a:hover {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverted);
+}
+
+/* Links List */
+.footer-links-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.footer-link-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-family: var(--font-family-body);
+  transition: all 0.3s ease;
+}
+
+.footer-link-item:hover {
+  color: var(--color-text-inverted);
+}
+
+.footer-link-item:hover .footer-link-icon {
+  transform: translateX(5px);
+}
+
+.footer-link-icon {
+  color: var(--color-primary);
+  transition: transform 0.3s ease;
+}
+
+/* Contact List */
+.footer-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.footer-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  line-height: 1.7;
+}
+
+.footer-contact-icon {
+  color: var(--color-primary);
+  margin-top: 5px;
+  /* Aligns icon nicely with text */
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .footer-grid {
+    /* 2 columns on tablet */
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-grid {
+    /* 1 column on mobile */
+    grid-template-columns: 1fr;
+  }
+}
