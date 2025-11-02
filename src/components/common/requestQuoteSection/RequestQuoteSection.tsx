@@ -1,11 +1,9 @@
 import './RequestQuoteSection.css';
-// Using a relative path to fix the import error
 import { Button } from '@/components/common/button/Button';
 
 export const RequestQuoteSection = () => {
 	return (
 		<section className='request-quote-section'>
-			{/* The background image and dark overlay are handled by the CSS */}
 			<div className='request-quote-content'>
 				<h2 className='request-quote-title'>Ready to Transform Your Space?</h2>
 				<p className='request-quote-description'>

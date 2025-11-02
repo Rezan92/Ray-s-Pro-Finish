@@ -1,44 +1,44 @@
-import {ServiceCard} from '../serviceCard/ServiceCard';
+import { ServiceCard } from '../serviceCard/ServiceCard';
 import './ServicesSection.css';
-import { DraftingCompass, Building, Hammer } from 'lucide-react';
+import { PaintRoller, Sheet, Wand2 } from 'lucide-react';
+import paintingImage from '@/assets/serviceSection/Painting.png';
+import patchingImage from '@/assets/serviceSection/Patching.png';
+import installationImage from '@/assets/serviceSection/installation.png';
 
-// You can replace these with paths to your actual images
-const serviceImage1 = 'https://placehold.co/400x300/666/fff?text=Service+1';
-const serviceImage2 = 'https://placehold.co/400x300/666/fff?text=Service+2';
-const serviceImage3 = 'https://placehold.co/400x300/666/fff?text=Service+3';
+const serviceImage1 = paintingImage;
+const serviceImage2 = patchingImage;
+const serviceImage3 = installationImage;
 
 export const ServicesSection = () => {
-  const cardDescription =
-    'Far far away, behind the word mountains, far from the countries Vokalia and Consonantia';
+	return (
+		<section className='services-section'>
+			<div className='services-section-header'>
+				<span className='services-section-subtitle'>Our Services</span>
+				<h2 className='services-section-title'>
+					Our Painting & Drywall Services
+				</h2>
+			</div>
 
-  return (
-    <section className="services-section">
-      <div className="services-section-header">
-        <span className="services-section-subtitle">Our Services</span>
-        <h2 className="services-section-title">We Offer Services</h2>
-      </div>
-
-      <div className="services-section-grid">
-        <ServiceCard
-          icon={DraftingCompass}
-          imageSrc={serviceImage1}
-          title="Architecture"
-          description={cardDescription}
-        />
-        <ServiceCard
-          icon={Building}
-          imageSrc={serviceImage2}
-          title="Renovation"
-          description={cardDescription}
-        />
-        <ServiceCard
-          icon={Hammer}
-          imageSrc={serviceImage3}
-          title="Construction"
-          description={cardDescription}
-        />
-      </div>
-    </section>
-  );
+			<div className='services-section-grid'>
+				<ServiceCard
+					icon={PaintRoller}
+					imageSrc={serviceImage1}
+					title='Interior Painting'
+					description='From walls and ceilings to trim and doors, we provide a clean, high-quality paint job that brings new life to your space.'
+				/>
+				<ServiceCard
+					icon={Wand2}
+					imageSrc={serviceImage2}
+					title='Drywall Repair & Patching'
+					description="Don't let holes, cracks, or water damage ruin your walls. We specialize in seamless patches that make the damage completely disappear."
+				/>
+				<ServiceCard
+					icon={Sheet}
+					imageSrc={serviceImage3}
+					title='Drywall Installation'
+					description='Finishing a basement or remodeling? We professionally hang, tape, and finish new drywall for perfectly smooth, paint-ready walls.'
+				/>
+			</div>
+		</section>
+	);
 };
-
