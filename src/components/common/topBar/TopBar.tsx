@@ -1,4 +1,4 @@
-import { Phone, MapPin, MessageSquare } from 'lucide-react'; // Added MessageSquare
+import { Phone, MapPin } from 'lucide-react';
 import ContactInfoBlock from '../contactInfoBlock/ContactInfoBlock';
 import Logo from '../logo/Logo';
 import './TopBar.css';

@@ -31,13 +31,11 @@
 }
 
 .feature-card.primary .icon-wrapper {
-  background-color: var(--color-primary);
-  /* The icon in the screenshot is black on orange */
-  color: var(--color-brand-dark); 
+  background-color: var(--color-brand-dark);
+  color: var(--color-primary); 
   border: 2px solid var(--color-brand-dark);
 }
 
-/* Specific icon color for dark cards (orange) */
 .feature-card.dark .icon-wrapper {
   background-color: var(--color-primary);
   color: var(--color-brand-dark);
