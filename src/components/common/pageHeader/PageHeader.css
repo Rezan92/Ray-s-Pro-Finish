@@ -21,7 +21,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--color-brand-dark);
+  background-color: #040e266b;
   opacity: 0.85;
   z-index: -1;
 }

@@ -1,3 +1,4 @@
+import './AboutPage.css'; // <-- 1. Import the new CSS file
 import { PageHeader } from '@/components/common/pageHeader/PageHeader';
 import { AboutSection } from '@/components/common/aboutSection/AboutSection';
 import { IndustrialServicesSection } from '@/components/common/industrialServicesSection/IndustrialServicesSection';
@@ -7,7 +8,7 @@ import { RequestQuoteSection } from '@/components/common/requestQuoteSection/Req
 
 function AboutPage() {
 	return (
-		<div>
+		<div className='about-page-wrapper'>
 			{/* 1. Page Title */}
 			<PageHeader title='About Us' />
 

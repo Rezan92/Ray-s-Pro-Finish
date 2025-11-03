@@ -1,0 +1,15 @@
+.about-page-wrapper > * {
+	margin-bottom: var(--space-xxxl);
+}
+
+.about-page-wrapper .feature-section {
+	margin-top: 0;
+}
+
+.about-page-wrapper {
+	padding-bottom: var(--space-xxxl);
+}
+
+.about-page-wrapper > *:last-child {
+	margin-bottom: 0;
+}
