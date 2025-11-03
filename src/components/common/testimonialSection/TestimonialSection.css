@@ -83,4 +83,8 @@
   .testimonial-section__title {
     font-size: 2rem;
   }
+
+  .testimonial-section__left::after {
+    display: none;
+  }
 }

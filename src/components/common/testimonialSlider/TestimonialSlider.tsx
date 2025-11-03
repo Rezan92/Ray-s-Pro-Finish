@@ -51,7 +51,7 @@ export const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
 		resetTimeout();
 		timeoutRef.current = window.setTimeout(() => {
 			setCurrentIndex((prevIndex) => prevIndex + 1);
-		}, 3000); // Slide duration
+		}, 20000); // Slide duration
 
 		return () => {
 			resetTimeout();
