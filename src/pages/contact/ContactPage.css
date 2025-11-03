@@ -1,0 +1,21 @@
+.contact-page-wrapper > * {
+  margin-bottom: var(--space-xxxl);
+}
+.contact-page-wrapper > *:last-child {
+  margin-bottom: 0;
+}
+
+.contact-page-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr; /* Left col smaller, right col larger */
+  gap: var(--space-xxl);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-sm); /* <-- UPDATED padding as requested */
+}
+
+@media (max-width: 1024px) {
+  .contact-page-grid {
+    grid-template-columns: 1fr; /* Stack columns on tablet/mobile */
+  }
+}
