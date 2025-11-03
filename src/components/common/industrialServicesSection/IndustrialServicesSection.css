@@ -30,6 +30,17 @@
   z-index: 1;
 }
 
+.industrial-services-right-bg::after {
+  content:'';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+} 
+
 /* --- Left Column --- */
 .industrial-services-left-content {
   padding: var(--space-xxxl) 0;
@@ -57,6 +68,7 @@
   font-weight: var(--font-weight-extrabold);
   color: var(--color-text-inverted);
   margin-bottom: var(--space-lg);
+  padding: 0 var(--space-sm);
 }
 
 .industrial-services-description {
@@ -83,6 +95,7 @@
   /* Move stats to be centered on tablet */
   .industrial-services-stats-wrapper {
     left: var(--space-xl);
+    margin: auto;
   }
 
   .industrial-services-section-container {
@@ -101,9 +114,6 @@
     grid-template-columns: 1fr;
   }
 
-  .industrial-services-left-content {
-    /* padding: var(--space-xxl) var(--space-md); */
-  }
 
   .industrial-services-title {
     font-size: 2rem;
@@ -118,7 +128,7 @@
     left: 0;
     transform: none;
     /* Center horizontally */
-    margin: 0 auto;
+    margin: auto;
     width: 100%;
     padding: 1rem;
   }
@@ -127,5 +137,6 @@
     width: 90%;
     /* Make stat cards responsive */
     max-width: 350px;
+    margin: auto;
   }
 }

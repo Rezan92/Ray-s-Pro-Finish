@@ -1,9 +1,9 @@
 import { StatCard } from '../statCard/StatCard';
 import './IndustrialServicesSection.css';
 import { HardHat, Smile } from 'lucide-react';
+import bgImage from '@/assets/industrialServices/industrialServices.png';
 
 // Using a placeholder for the background image on the right
-const bgImage = 'https://placehold.co/800x600/666/fff?text=Clean+Worksite';
 
 export const IndustrialServicesSection = () => {
 	return (
