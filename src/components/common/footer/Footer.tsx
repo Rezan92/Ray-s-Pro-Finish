@@ -44,8 +44,9 @@ export const Footer: React.FC = () => {
 				<div className='footer-column'>
 					<h3 className='footer-column-title'>ABOUT</h3>
 					<p className='footer-about-text'>
-						Far far away, behind the word mountains, far from the countries
-						Vokalia and Consonantia, there live the blind texts.
+						Ray's Pro Finish specializes in expert drywall repair and
+						high-quality interior painting. We're committed to delivering a
+						flawless finish and professional service to every homeowner.
 					</p>
 					<div className='footer-social-icons'>
 						<a
@@ -108,20 +109,16 @@ export const Footer: React.FC = () => {
 					<div className='footer-links-list'>
 						{/* You can update these links as needed */}
 						<FooterLink
-							to='/services/customer'
-							label='Customer Services'
+							to='/services'
+							label='Interior Painting'
 						/>
 						<FooterLink
-							to='/services/delivery'
-							label='Prompt Delivery'
+							to='/services'
+							label='Drywall Repair & Patching'
 						/>
 						<FooterLink
-							to='/services/equipment'
-							label='Reliable Equipment'
-						/>
-						<FooterLink
-							to='/services/new-equipment'
-							label='New Heavy Equipment'
+							to='/services'
+							label='Drywall Installation'
 						/>
 					</div>
 				</div>
@@ -132,11 +129,11 @@ export const Footer: React.FC = () => {
 					<div className='footer-contact-list'>
 						<ContactItem
 							icon={<MapPin size={20} />}
-							text='203 Fake St. Mountain View, San Francisco, California, USA'
+							text='Service Area: Wheaton, Lombard & Chicagoland Suburbs'
 						/>
 						<ContactItem
 							icon={<Phone size={20} />}
-							text='+2 392 3929 210'
+							text='(773) 799-0006 (Call or Text)'
 						/>
 						<ContactItem
 							icon={<Mail size={20} />}
