@@ -3,7 +3,7 @@ import './IndustrialServicesSection.css';
 import { HardHat, Smile } from 'lucide-react';
 
 // Using a placeholder for the background image on the right
-const bgImage = 'https://placehold.co/800x600/666/fff?text=Workers';
+const bgImage = 'https://placehold.co/800x600/666/fff?text=Clean+Worksite';
 
 export const IndustrialServicesSection = () => {
 	return (
@@ -18,18 +18,20 @@ export const IndustrialServicesSection = () => {
 				{/* Left Column (Text) */}
 				<div className='industrial-services-left-content'>
 					<span className='industrial-services-subtitle'>
-						WILCON A CONSTRUCTION COMPANY
+						A COMMITMENT TO QUALITY
 					</span>
 					<h2 className='industrial-services-title'>
-						Best Provider for Industrial Services
+						The Difference is in the Details
 					</h2>
 					<p className='industrial-services-description'>
-						Far far away, behind the word mountains, far from the countries
-						Vokalia and Consonantia, there live the blind texts.
+						A great finish is only possible with great preparation. We take the
+						time to properly prep every surface, protect your furniture, and
+						ensure our work area is spotless at the end of each day.
 					</p>
 					<p className='industrial-services-description'>
-						Separated they live in Bookmarksgrove right at the coast of the
-						Semantics, a large language ocean.
+						We use high-quality materials and professional techniques to deliver
+						a final product that not only looks beautiful but is built to last.
+						Your satisfaction is our top priority.
 					</p>
 				</div>
 
@@ -38,13 +40,13 @@ export const IndustrialServicesSection = () => {
 				<div className='industrial-services-stats-wrapper'>
 					<StatCard
 						icon={HardHat}
-						count='48,000'
+						count='200'
 						label='PROJECT COMPLETED'
 						variant='primary'
 					/>
 					<StatCard
 						icon={Smile}
-						count='54,900'
+						count='250'
 						label='HAPPY CUSTOMERS'
 						variant='light'
 					/>
