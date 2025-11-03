@@ -1,0 +1,77 @@
+/* src/components/common/specialtyServicesSection/SpecialtyServicesSection.css */
+
+.specialty-services-section {
+	width: 100%;
+	margin: 3rem auto;
+	padding: var(--space-xxxl) var(--space-xl);
+	background-color: var(--color-bg-light); /* Light background to stand out */
+	border-radius: var(--border-radius-md);
+}
+
+.specialty-services-header {
+	text-align: center;
+	margin-bottom: var(--space-xxl);
+}
+
+.specialty-services-subtitle {
+	font-size: 0.875rem;
+	font-weight: var(--font-weight-medium);
+	color: var(--color-primary);
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+.specialty-services-title {
+	font-family: var(--font-family-heading);
+	font-size: 2.5rem;
+	font-weight: var(--font-weight-bold);
+	color: var(--color-brand-dark);
+	margin: var(--space-sm) 0 0 0;
+}
+
+.specialty-services-grid {
+	display: grid;
+	/* 3 columns, but auto-fit lets them wrap nicely */
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: var(--space-lg);
+	max-width: 900px;
+	margin: 0 auto; /* Center the grid */
+}
+
+.specialty-item {
+	display: flex;
+	align-items: center;
+	gap: var(--space-md);
+	padding: var(--space-sm) 0;
+}
+
+.specialty-item-icon {
+	flex-shrink: 0;
+	width: 24px;
+	height: 24px;
+	padding: 4px;
+	color: var(--color-primary);
+	background-color: rgba(241, 90, 36, 0.1);
+	border-radius: 50%;
+}
+
+.specialty-item-title {
+	font-family: var(--font-family-body);
+	font-size: 1rem;
+	font-weight: var(--font-weight-medium);
+	color: var(--color-brand-dark);
+}
+
+/* --- Responsive --- */
+@media (max-width: 640px) {
+	.specialty-services-title {
+		font-size: 2rem;
+	}
+	.specialty-services-section {
+		padding: var(--space-xxl) var(--space-lg);
+	}
+	.specialty-services-grid {
+		/* Stack to 1 column on mobile */
+		grid-template-columns: 1fr;
+	}
+}
