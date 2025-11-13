@@ -1,6 +1,7 @@
 /* src/components/common/pageHeader/PageHeader.css */
 
 .page-header {
+  margin-top: -27px;
   position: relative;
   padding: var(--space-xxxl) var(--space-xl);
   text-align: center;

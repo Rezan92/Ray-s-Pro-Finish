@@ -2,6 +2,8 @@
 .top-bar {
   background-color: var(--color-bg-primary);
   padding: var(--space-lg) 0;
+  position: relative;
+  z-index: 4;
 }
 
 /* This is a common class we can reuse in other components */
