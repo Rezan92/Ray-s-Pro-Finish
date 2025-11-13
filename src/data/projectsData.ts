@@ -53,13 +53,4 @@ export const projectsData: Project[] = [
 		details:
 			'A leak left an ugly stain and bubbling paint on this kitchen ceiling. We cut out the damaged drywall, patched it, expertly matched the existing texture, and painted it to look like the damage never even happened.',
 	},
-	{
-		id: 6,
-		image: 'https://placehold.co/600x400/5f8a7a/ffffff?text=Accent+Wall',
-		tag: 'Detail Painting',
-		title: 'Master Bedroom Accent Wall',
-		location: 'Lombard, IL',
-		details:
-			'To create a modern focal point, we painted this dark accent wall. This precision work requires perfectly straight and sharp lines, along with a fresh coat on the baseboards and trim for a high-end, professional look.',
-	},
 ];

@@ -6,7 +6,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(10, 20, 47, 0.8); /* Dark navy overlay */
+  background-color: rgba(10, 20, 47, 0.8);
+  /* Dark navy overlay */
   z-index: 1000;
   animation: modal-fade-in 0.3s ease-out;
 }
@@ -43,16 +44,22 @@
   width: 36px;
   height: 36px;
   color: var(--color-brand-dark);
-  z-index: 2; /* On top of the image */
+  z-index: 2;
+  /* On top of the image */
 }
+
 .modal-close-btn:hover {
   background-color: white;
 }
 
 .modal-image {
   width: 100%;
-  height: 300px;
-  object-fit: cover;
+  max-height: 500px;
+  /* <--- CHANGED: Use max-height to give it room */
+  object-fit: contain;
+  /* <--- CHANGED: This shows the full image */
+  background-color: var(--color-brand-dark);
+  /* <--- ADDED: Fills empty space */
   border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
 }
 
@@ -99,8 +106,13 @@
 
 /* --- Animations --- */
 @keyframes modal-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes modal-slide-down {
@@ -108,6 +120,7 @@
     transform: translate(-50%, -60%);
     opacity: 0;
   }
+
   to {
     transform: translate(-50%, -50%);
     opacity: 1;
@@ -119,11 +132,12 @@
   .modal-content {
     flex-direction: column;
   }
+
   .modal-image {
     height: 200px;
   }
+
   .modal-title {
     font-size: 1.5rem;
   }
 }
-
