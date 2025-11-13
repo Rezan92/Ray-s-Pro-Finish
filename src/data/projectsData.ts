@@ -1,10 +1,16 @@
 import type { Project } from '@/components/common/projectCard/ProjectCard';
+import basementFinishingImage from '@/assets/projectsImages/BasementFinish.png';
+import CeilingDamageImage from '@/assets/projectsImages/CeilingDamage.png';
+import DrywallPatchingImage from '@/assets/projectsImages/DrywallPatching.png';
+import GarageFinishingImage from '@/assets/projectsImages/GarageFinishing.png';
+import LivingroomFinishImage from '@/assets/projectsImages/LivingroomFinish.png';
+// import AccentWallImage from '@/assets/projectsImages/AccentWall.png';
 
 // This is now the SINGLE SOURCE OF TRUTH for all projects
 export const projectsData: Project[] = [
 	{
 		id: 1,
-		image: 'https://placehold.co/600x400/5f6b8a/ffffff?text=Garage+Finishing',
+		image: GarageFinishingImage,
 		tag: 'Drywall Finishing',
 		title: 'Two-Car Garage Finishing',
 		location: 'Lombard, IL',
@@ -13,7 +19,7 @@ export const projectsData: Project[] = [
 	},
 	{
 		id: 2,
-		image: 'https://placehold.co/600x400/6a5f8a/ffffff?text=Basement+Remodel',
+		image: basementFinishingImage,
 		tag: 'Install & Paint',
 		title: 'Basement Remodel Finishing',
 		location: 'Wheaton, IL',
@@ -22,8 +28,7 @@ export const projectsData: Project[] = [
 	},
 	{
 		id: 3,
-		image:
-			'https://placehold.co/600x400/8a5f7e/ffffff?text=Living+Room+Repaint',
+		image: LivingroomFinishImage,
 		tag: 'Interior Painting',
 		title: 'Modern Living Room Repaint',
 		location: 'Glen Ellyn, IL',
@@ -32,7 +37,7 @@ export const projectsData: Project[] = [
 	},
 	{
 		id: 4,
-		image: 'https://placehold.co/600x400/8a5f6a/ffffff?text=Wall+Patching',
+		image: DrywallPatchingImage,
 		tag: 'Drywall Repair',
 		title: 'Nail Hole & Anchor Patching',
 		location: 'Wheaton, IL',
@@ -41,7 +46,7 @@ export const projectsData: Project[] = [
 	},
 	{
 		id: 5,
-		image: 'https://placehold.co/600x400/8a7e5f/ffffff?text=Ceiling+Repair',
+		image: CeilingDamageImage,
 		tag: 'Ceiling Repair',
 		title: 'Kitchen Ceiling Water Damage',
 		location: 'Carol Stream, IL',
