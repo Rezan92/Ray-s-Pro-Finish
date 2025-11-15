@@ -35,11 +35,11 @@ const Hero = () => {
 								Our Services
 							</Button>
 							<Button
-								to='/contact'
+								to='/estimator'
 								variant='light'
 								className='hero-button'
 							>
-								Get a Quote
+								Get an Instant Estimate
 							</Button>
 						</div>
 					</div>

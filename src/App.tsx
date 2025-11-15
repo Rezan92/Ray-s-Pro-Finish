@@ -8,6 +8,7 @@ import TopBar from './components/common/topBar/TopBar';
 import Navbar from './components/common/navbar/Navbar';
 import { Footer } from './components/common/footer/Footer';
 import ProjectsPage from './pages/projects/ProjectsPage';
+import EstimatorPage from './pages/estimatorPage/EstimatorPage';
 
 function App() {
 	return (
@@ -35,6 +36,11 @@ function App() {
 					<Route
 						path='/contact'
 						element={<ContactPage />}
+					/>
+
+					<Route
+						path='/estimator'
+						element={<EstimatorPage />}
 					/>
 				</Routes>
 			</main>
