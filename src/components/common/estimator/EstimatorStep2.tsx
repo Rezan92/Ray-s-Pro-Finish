@@ -4,24 +4,25 @@ import { PaintingForm } from './PaintingForm';
 import { RepairForm } from './RepairForm';
 import { InstallationForm } from './InstallationForm';
 
+// Props are updated to match the new handlers from EstimatorPage
 interface EstimatorStep2Props {
 	formData: FormData;
 	onNestedChange: (
 		path: 'painting' | 'patching' | 'installation',
 		field: string,
-		value: any,
+		value: any
 	) => void;
-	onRoomChange: (roomId: string, field: string, value: any) => void;
-	onRoomScopeChange: (roomId: string, field: string, value: boolean) => void;
-	onRoomCountChange: (roomType: 'bedroom' | 'bathroom', count: number) => void;
+	onPaintingRoomTypeToggle: (type: string, isChecked: boolean) => void;
+	onPaintingRoomAdd: (type: string) => void;
+	onPaintingRoomRemove: (roomId: string) => void;
+	onPaintingRoomChange: (roomId: string, field: string, value: any) => void;
+	onPaintingGlobalChange: (field: string, value: string) => void;
 }
 
-// This component now just renders the forms for the selected services
-export const EstimatorStep2: React.FC<EstimatorStep2Props> = ({
-	formData,
-	...props
-}) => {
+export const EstimatorStep2: React.FC<EstimatorStep2Props> = (props) => {
+	const { formData } = props;
 	const { services } = formData;
+
 	return (
 		<div className='estimator-step'>
 			<h2 className='estimator-title'>Project Details</h2>
@@ -29,21 +30,26 @@ export const EstimatorStep2: React.FC<EstimatorStep2Props> = ({
 				Please provide as much detail as possible for each service you
 				selected.
 			</p>
+
+			{/* Pass all painting-related props to PaintingForm */}
 			{services.painting && (
 				<PaintingForm
 					formData={formData}
-					onNestedChange={props.onNestedChange as any}
-					onRoomChange={props.onRoomChange}
-					onRoomScopeChange={props.onRoomScopeChange}
-					onRoomCountChange={props.onRoomCountChange}
+					onRoomTypeToggle={props.onPaintingRoomTypeToggle}
+					onRoomAdd={props.onPaintingRoomAdd}
+					onRoomRemove={props.onPaintingRoomRemove}
+					onRoomChange={props.onPaintingRoomChange}
+					onGlobalChange={props.onPaintingGlobalChange}
 				/>
 			)}
+
 			{services.patching && (
 				<RepairForm
 					formData={formData}
 					onNestedChange={props.onNestedChange as any}
 				/>
 			)}
+
 			{services.installation && (
 				<InstallationForm
 					formData={formData}

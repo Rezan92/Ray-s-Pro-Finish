@@ -1,152 +1,132 @@
 import React, { useMemo } from 'react';
 import type { FormData, PaintingRoom } from './EstimatorTypes';
-import { PaintingRoomDetails } from './PaintingRoomDetails';
+import { PaintingRoomCard } from './PaintingRoomCard';
 
+// Define the props it will receive from EstimatorPage
 interface PaintingFormProps {
 	formData: FormData;
-	onNestedChange: (
-		path: 'painting' | 'patching' | 'installation',
-		field: string,
-		value: any,
-	) => void;
+	onRoomTypeToggle: (type: string, isChecked: boolean) => void;
 	onRoomChange: (roomId: string, field: string, value: any) => void;
-	onRoomScopeChange: (roomId: string, field: string, value: boolean) => void;
-	onRoomCountChange: (roomType: 'bedroom' | 'bathroom', count: number) => void;
+	onRoomAdd: (type: string) => void;
+	onRoomRemove: (roomId: string) => void;
+	onGlobalChange: (field: string, value: string) => void;
 }
+
+// Define our room types and labels
+const ROOM_TYPES = [
+	{ key: 'livingRoom', label: 'Living Room' },
+	{ key: 'kitchen', label: 'Kitchen' },
+	{ key: 'bedroom', label: 'Bedroom' },
+	{ key: 'bathroom', label: 'Bathroom' },
+	{ key: 'hallway', label: 'Hallway' },
+	{ key: 'stairwell', label: 'Stairwell' },
+	{ key: 'closet', label: 'Closet' },
+];
+
+// Helper to determine if a room type is multi-room
+const isMultiRoom = (type: string) => type === 'bedroom' || type === 'bathroom';
 
 export const PaintingForm: React.FC<PaintingFormProps> = ({
 	formData,
-	onNestedChange,
+	onRoomTypeToggle,
 	onRoomChange,
-	onRoomScopeChange,
-	onRoomCountChange,
+	onRoomAdd,
+	onRoomRemove,
+	onGlobalChange,
 }) => {
-	const { spaces } = formData.painting;
+	const { painting } = formData;
 
-	const handleSpacesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		onNestedChange('painting', 'spaces', {
-			...spaces,
-			[e.target.name]: e.target.checked,
+	// Create a map of which room types are checked
+	const checkedTypes = useMemo(() => {
+		const typeMap = new Map<string, boolean>();
+		painting.rooms.forEach((room) => {
+			typeMap.set(room.type, true);
 		});
-	};
-
-	// Memoize the list of rooms to prevent re-renders
-	const roomsToDisplay = useMemo(() => {
-		return formData.painting.rooms;
-	}, [formData.painting.rooms]);
+		return typeMap;
+	}, [painting.rooms]);
 
 	return (
 		<div className='service-form-box'>
 			<h3 className='service-form-title'>Interior Painting</h3>
-			<div className='form-group'>
-				<label>What spaces are we painting?</label>
-				<div className='checkbox-group horizontal wrap'>
-					{[
-						{ name: 'livingRoom', label: 'Living Room' },
-						{ name: 'kitchen', label: 'Kitchen' },
-						{ name: 'hallway', label: 'Hallway' },
-						{ name: 'stairwell', label: 'Stairwell' },
-						{ name: 'closets', label: 'Closets' },
-					].map((room) => (
-						<label
-							key={room.name}
-							className='checkbox-label'
-						>
-							<input
-								type='checkbox'
-								name={room.name}
-								checked={spaces[room.name as keyof typeof spaces]}
-								onChange={handleSpacesChange}
-							/>
-							{room.label}
-						</label>
-					))}
-				</div>
-				<div className='input-group horizontal'>
-					<label>Bedrooms:</label>
-					<input
-						type='number'
-						min='0'
-						className='small-input'
-						value={spaces.bedroomCount}
-						onChange={(e) =>
-							onRoomCountChange('bedroom', parseInt(e.target.value) || 0)
-						}
-					/>
-					<label>Bathrooms:</label>
-					<input
-						type='number'
-						min='0'
-						className='small-input'
-						value={spaces.bathroomCount}
-						onChange={(e) =>
-							onRoomCountChange('bathroom', parseInt(e.target.value) || 0)
-						}
-					/>
-				</div>
-			</div>
 
-			{/* --- Dynamic Room Details --- */}
-			{roomsToDisplay.length > 0 && (
+			{/* --- A. The Room Builder --- */}
+			<div className='form-group-box'>
 				<div className='form-group'>
-					<label>Room Details</label>
-					<div className='room-details-container'>
-						{roomsToDisplay.map((room) => (
-							<PaintingRoomDetails
-								key={room.id}
-								room={room}
-								onRoomChange={onRoomChange}
-								onRoomScopeChange={onRoomScopeChange}
-							/>
-						))}
+					<label>Please add the spaces you'd like us to paint.</label>
+					<div className='checkbox-group horizontal wrap'>
+						{ROOM_TYPES.map((type) => {
+							const isChecked = checkedTypes.get(type.key) || false;
+							return (
+								<label
+									key={type.key}
+									className='checkbox-label'
+								>
+									<input
+										type='checkbox'
+										checked={isChecked}
+										onChange={(e) => onRoomTypeToggle(type.key, e.target.checked)}
+									/>
+									{type.label}
+								</label>
+							);
+						})}
 					</div>
 				</div>
-			)}
-
-			<div className='form-group'>
-				<label>Furniture</label>
-				<select
-					name='furniture'
-					value={formData.painting.rooms[0]?.furniture || 'Empty'}
-					onChange={(e) =>
-						formData.painting.rooms.forEach((room) =>
-							onRoomChange(room.id, 'furniture', e.target.value),
-						)
-					}
-				>
-					<option value='Empty'>Room will be empty</option>
-					<option value='Center'>I will move furniture to center</option>
-					<option value='Contractor'>
-						I need the contractor to move all furniture
-					</option>
-				</select>
 			</div>
 
-			<div className='form-group'>
-				<label>Paint Materials</label>
-				<select
-					name='materials'
-					value={formData.painting.materials}
-					onChange={(e) =>
-						onNestedChange('painting', 'materials', e.target.value)
-					}
-				>
-					<option value='Customer'>I will provide all paint</option>
-					<option value='Standard'>
-						Please include paint (standard quality)
-					</option>
-					<option value='Premium'>Please include paint (premium quality)</option>
-				</select>
-			</div>
+			{/* --- B. The Generated Room Cards --- */}
+			{painting.rooms.map((room) => {
+				const multi = isMultiRoom(room.type);
+				return (
+					<PaintingRoomCard
+						key={room.id}
+						room={room}
+						onRoomChange={onRoomChange}
+						// Only pass Add/Remove handlers if it's a multi-room type
+						onRoomAdd={multi ? onRoomAdd : undefined}
+						// Only show "Remove" if it's NOT the first of its type
+						onRoomRemove={
+							multi && !room.id.endsWith('_0') ? onRoomRemove : undefined
+						}
+					/>
+				);
+			})}
 
-			<div className='form-group'>
-				<label>Photo Upload (Required)</label>
-				<div className='upload-placeholder'>
-					[File Upload Component Here]
-					<p>
-						Please upload 1-2 photos of each room. This is required for an
-						accurate estimate.
-					</p>
+			{/* --- C. Global Painting Questions --- */}
+			<div className='form-group-box global-questions'>
+				<div className='form-group'>
+					<label>Who will provide the paint?</label>
+					<select
+						name='paintProvider'
+						value={painting.paintProvider}
+						onChange={(e) => onGlobalChange('paintProvider', e.target.value)}
+					>
+						<option value=''>Please select...</option>
+						<option value='Customer'>I will provide all paint</option>
+						<option value='Standard'>
+							Please include standard quality paint
+						</option>
+						<option value='Premium'>
+							Please include premium quality paint
+						</option>
+					</select>
+				</div>
+				<div className='form-group'>
+					<label>What about furniture?</label>
+					<select
+						name='furniture'
+						value={painting.furniture}
+						onChange={(e) => onGlobalChange('furniture', e.target.value)}
+					>
+						<option value=''>Please select...</option>
+						<option value='Empty'>The home will be empty</option>
+						<option value='Customer'>
+							I will move and cover all my furniture
+						</option>
+						<option value='Contractor'>
+							I need the painter to move and cover furniture
+						</option>
+					</select>
 				</div>
 			</div>
 		</div>

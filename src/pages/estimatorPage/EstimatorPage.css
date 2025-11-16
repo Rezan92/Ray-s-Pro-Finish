@@ -11,12 +11,18 @@
 	border-radius: var(--border-radius-md);
 }
 
+/* 1. Widen the container for Step 2 as requested */
+.estimator-container.wide {
+	max-width: 1200px;
+}
+
 .estimator-step {
 	padding: var(--space-xl);
 	border: 1px solid var(--color-border);
 	border-radius: var(--border-radius-md);
 	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-	margin-bottom: var(--space-xl); /* Add margin between steps */
+	margin-bottom: var(--space-xl);
+	/* Add margin between steps */
 }
 
 .estimator-title {
@@ -50,9 +56,11 @@
 	transition: all 0.3s ease;
 	text-align: left;
 }
+
 .checkbox-label.large:hover {
 	border-color: var(--color-primary);
 }
+
 .checkbox-label.large input {
 	width: 24px;
 	height: 24px;
@@ -86,6 +94,7 @@
 	flex-direction: column;
 	gap: var(--space-sm);
 }
+
 .form-group-grid {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
@@ -127,12 +136,15 @@
 	align-items: center;
 	gap: var(--space-sm);
 }
+
 .input-group.horizontal {
 	flex-wrap: wrap;
 }
+
 .input-group span {
 	font-weight: bold;
 }
+
 .small-input {
 	width: 100px !important;
 }
@@ -143,14 +155,16 @@
 	flex-direction: column;
 	gap: var(--space-sm);
 	background-color: var(--color-bg-light);
-	padding: var(--space-md);
+	padding: var(--space-sm);
 	border-radius: var(--border-radius-sm);
 }
+
 .checkbox-group.horizontal {
 	flex-direction: row;
 	align-items: center;
 	gap: var(--space-md);
 }
+
 .checkbox-group.horizontal.wrap {
 	flex-wrap: wrap;
 }
@@ -224,12 +238,14 @@
 	flex-direction: column;
 	gap: var(--space-lg);
 }
+
 .room-details-box {
 	background: var(--color-bg-light);
 	border: 1px dashed var(--color-border);
 	border-radius: var(--border-radius-md);
 	padding: var(--space-md);
 }
+
 .room-details-title {
 	font-size: 1.125rem;
 	font-weight: bold;
@@ -246,6 +262,7 @@
 	background: var(--color-bg-light);
 	color: var(--color-text-secondary);
 }
+
 .upload-placeholder p {
 	font-size: 0.875rem;
 	margin: var(--space-sm) 0 0 0;
@@ -258,6 +275,7 @@
 	align-items: center;
 	margin-top: var(--space-lg);
 }
+
 .estimator-submit-btn {
 	width: 100%;
 	padding: var(--space-md);
@@ -268,11 +286,13 @@
 .result-step {
 	text-align: center;
 }
+
 .loading-spinner {
 	font-size: 1.25rem;
 	color: var(--color-text-secondary);
 	padding: var(--space-xxxl) 0;
 }
+
 .estimator-error {
 	background-color: rgba(217, 48, 37, 0.1);
 	border: 1px solid var(--color-error);
@@ -281,12 +301,14 @@
 	border-radius: var(--border-radius-sm);
 	margin-bottom: var(--space-lg);
 }
+
 .estimation-result {
 	background-color: var(--color-bg-light);
 	border-radius: var(--border-radius-md);
 	padding: var(--space-xl);
 	margin-bottom: var(--space-xl);
 }
+
 .estimate-display {
 	font-family: var(--font-family-heading);
 	font-size: 3rem;
@@ -294,26 +316,374 @@
 	color: var(--color-primary);
 	margin-bottom: var(--space-md);
 }
+
 .estimate-explanation {
 	font-size: 1.125rem;
 	color: var(--color-brand-dark);
 	margin-bottom: var(--space-lg);
 }
+
 .estimator-disclaimer {
 	font-size: 0.875rem;
 	color: var(--color-text-secondary);
 	margin-bottom: var(--space-xl);
 }
+
 .result-back-btn {
 	margin-top: var(--space-lg);
 	background: none;
 	color: var(--color-text-secondary);
 	border: none;
 }
+
+.result-back-btn {
+	margin: 0;
+	/* Override default margins */
+	color: var(--color-text-secondary);
+	border: none;
+}
+
 .result-back-btn:hover {
 	background: none;
 	color: var(--color-brand-dark);
 	text-decoration: underline;
+}
+
+/* --- Progress Bar --- */
+.estimator-progress-bar {
+	display: flex;
+	justify-content: space-between;
+	margin: 0 auto var(--space-xxl);
+	max-width: 700px;
+	counter-reset: step;
+	/* Initializes a step counter */
+}
+
+.step-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
+	flex: 1;
+	color: var(--color-text-secondary);
+	transition: all 0.3s ease;
+}
+
+/* The step number circle */
+.step-item::before {
+	counter-increment: step;
+	content: counter(step);
+	/* Display the step number */
+	font-family: var(--font-family-heading);
+	font-weight: var(--font-weight-bold);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: var(--color-bg-light);
+	border: 2px solid var(--color-border);
+	margin-bottom: var(--space-sm);
+	transition: all 0.3s ease;
+}
+
+/* The connector line */
+.step-item:not(:last-child)::after {
+	content: '';
+	position: absolute;
+	top: 20px;
+	/* Aligns with center of circle */
+	left: 50%;
+	width: 100%;
+	height: 2px;
+	background-color: var(--color-border);
+	z-index: -1;
+	transition: all 0.3s ease;
+}
+
+/* Active Step */
+.step-item.active::before {
+	background-color: var(--color-primary);
+	color: white;
+	border-color: var(--color-primary);
+}
+
+.step-item.active {
+	color: var(--color-brand-dark);
+	font-weight: var(--font-weight-bold);
+}
+
+/* Completed Step */
+.step-item.completed::before {
+	content: '✔';
+	/* Checkmark */
+	background-color: var(--color-success);
+	/* (Using a green from your README) */
+	color: white;
+	border-color: var(--color-success);
+}
+
+.step-item.completed:not(:last-child)::after {
+	background-color: var(--color-success);
+}
+
+/* --- Accordion --- */
+.accordion-item {
+	background: var(--color-bg-light);
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-md);
+	margin-bottom: var(--space-md);
+}
+
+.accordion-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	background: none;
+	border: none;
+	padding: var(--space-sm);
+	cursor: pointer;
+	text-align: left;
+}
+
+.accordion-title {
+	font-size: 1rem;
+	font-weight: bold;
+	color: var(--color-brand-dark);
+}
+
+.accordion-status {
+	display: flex;
+	align-items: center;
+	gap: var(--space-sm);
+}
+
+.details-complete-badge {
+	font-size: 0.75rem;
+	font-weight: 500;
+	color: var(--color-success);
+	background-color: rgba(30, 142, 62, 0.1);
+	padding: var(--space-xs) var(--space-sm);
+	border-radius: var(--border-radius-sm);
+}
+
+.accordion-icon {
+	color: var(--color-text-secondary);
+	transition: transform 0.3s ease;
+}
+
+.accordion-header.open .accordion-icon {
+	transform: rotate(180deg);
+}
+
+.accordion-content {
+	/* This is your existing room details box, just nested now */
+	padding: 0;
+	/* The .room-details-box inside has padding */
+}
+
+/* This is your existing style, just making sure it's correct */
+.room-details-box {
+	background: none;
+	border: none;
+	border-top: 1px solid var(--color-border);
+	border-radius: 0;
+	margin: 0;
+}
+
+/* 2. The new 2-column grid layout */
+.step-2-grid {
+	display: grid;
+	grid-template-columns: 1fr 2.5fr;
+	/* 1 part nav, 2.5 parts content */
+	gap: var(--space-xl);
+	align-items: flex-start;
+	/* Important: keeps columns from stretching */
+}
+
+/* 3. The new "Master-Detail" Navigation (Left Column) */
+.step-2-nav {
+	background-color: var(--color-bg-light);
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-md);
+	position: sticky;
+	/* Sticks to the top as you scroll the form */
+	top: 20px;
+}
+
+.step-2-nav-list {
+	list-style: none;
+	padding: var(--space-sm);
+	margin: 0;
+}
+
+.step-2-nav-list li {
+	margin: 0;
+}
+
+.step-2-nav-button {
+	font-family: var(--font-family-heading);
+	font-size: 1rem;
+	font-weight: var(--font-weight-bold);
+	color: var(--color-brand-dark);
+	padding: var(--space-md);
+	border-radius: var(--border-radius-sm);
+	width: 100%;
+	text-align: left;
+	background: none;
+	border: none;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.step-2-nav-button:hover {
+	background-color: var(--color-border);
+}
+
+.step-2-nav-button.active {
+	background-color: var(--color-primary);
+	color: white;
+	box-shadow: 0 4px 10px rgba(241, 90, 36, 0.3);
+}
+
+/* Indent the room names */
+.step-2-nav-button.is-room {
+	padding-left: var(--space-xl);
+	font-size: 0.9rem;
+	font-weight: var(--font-weight-medium);
+}
+
+.step-2-nav-button .chevron {
+	transition: transform 0.2s;
+}
+
+.step-2-nav-button.active .chevron {
+	transform: translateX(5px);
+}
+
+/* 4. The "Gray Box" for each question group (Right Column) */
+.form-group-box {
+	background-color: var(--color-bg-light);
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-md);
+	padding: var(--space-md);
+	margin-bottom: var(--space-sm);
+	/* This creates the separation you wanted */
+}
+
+.form-group-box:last-child {
+	margin-bottom: 0;
+}
+
+.form-group-box .form-group-grid {
+	gap: var(--space-md);
+	/* Tighter gap inside the box */
+}
+
+.form-group-box .form-group {
+	margin: 0;
+	/* Remove default margins if any */
+}
+
+.room-builder-item .arrow-icon {
+	color: var(--color-primary);
+	transition: transform 0.3s ease;
+}
+
+/* --- Room Card --- */
+.room-card {
+	/* A style to indent the cards */
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	border-top: 1px solid var(--color-primary);
+	background-color: #fdfdfd; /* Slightly different bg */
+}
+
+.accordion-header {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: none;
+	border: none;
+	padding: var(--space-sm);
+	cursor: pointer;
+}
+
+.accordion-title {
+	font-size: 1rem;
+	font-weight: bold;
+	color: var(--color-brand-dark);
+}
+
+.accordion-actions {
+	display: flex;
+	align-items: center;
+	gap: var(--space-md);
+}
+
+.accordion-icon {
+	color: var(--color-text-secondary);
+	transition: transform 0.3s ease;
+}
+.accordion-header.open .accordion-icon {
+	transform: rotate(180deg);
+}
+
+.accordion-content {
+	padding: var(--space-lg);
+	border-top: 1px solid var(--color-border);
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-md); /* Space between form groups */
+}
+
+.conditional-field {
+	padding-left: var(--space-lg);
+	border-left: 3px solid var(--color-primary);
+	margin-top: var(--space-sm);
+}
+
+.btn-remove {
+	background: none;
+	border: none;
+	color: var(--color-error);
+	font-family: var(--font-family-body);
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	gap: var(--space-xs);
+	cursor: pointer;
+	padding: var(--space-xs);
+}
+
+.btn-add-room {
+	background-color: var(--color-bg-light);
+	border: 1px dashed var(--color-primary);
+	color: var(--color-primary);
+	font-family: var(--font-family-heading);
+	font-weight: var(--font-weight-bold);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--space-sm);
+	padding: var(--space-md);
+	border-radius: var(--border-radius-sm);
+	cursor: pointer;
+	margin-top: var(--space-md);
+}
+.btn-add-room:hover {
+	background-color: #fefaf8;
+}
+
+.global-questions {
+	margin-top: var(--space-xl);
+	border-top: 2px solid var(--color-primary);
 }
 
 /* --- Responsive --- */
@@ -321,18 +691,41 @@
 	.estimator-container {
 		margin: var(--space-xl) auto;
 	}
+
 	.estimator-title {
 		font-size: 1.75rem;
 	}
+
 	.estimate-display {
 		font-size: 2.5rem;
 	}
+
 	.form-group-grid {
 		grid-template-columns: 1fr;
 		gap: var(--space-lg);
 	}
+
 	.checkbox-group.horizontal {
 		flex-direction: column;
 		align-items: flex-start;
+	}
+}
+
+/* 5. Responsive behavior for the 2-column grid */
+@media (max-width: 900px) {
+	.estimator-container.wide {
+		max-width: 800px;
+		/* Let it shrink on tablet */
+	}
+
+	.step-2-grid {
+		grid-template-columns: 1fr;
+		/* Stack them */
+	}
+
+	.step-2-nav {
+		position: static;
+		/* Un-stick the nav */
+		margin-bottom: var(--space-xl);
 	}
 }

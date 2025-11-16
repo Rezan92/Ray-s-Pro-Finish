@@ -1,29 +1,28 @@
 // This file defines the new, complex data structure for our form
 
 /**
- * Interface for a single room in the painting path.
+ * Interface for a single, dynamic painting room card.
  */
 export interface PaintingRoom {
-	id: string; // A unique ID like "living-room" or "bedroom-1"
-	name: string; // "Living Room", "Bedroom #1"
-	dimensions: {
-		length: string;
-		width: string;
-	};
-	ceilingHeight: string;
-	scope: {
+	id: string; // A unique ID like "livingRoom_0" or "bedroom_1"
+	type: string; // "livingRoom", "kitchen", "bedroom", etc.
+	label: string; // "Living Room", "Bedroom 1", "Bedroom 2"
+	size: string; // 'Small', 'Medium', 'Large'
+	ceilingHeight: string; // '8ft', '9-10ft', '11ft+'
+	surfaces: {
 		walls: boolean;
 		ceiling: boolean;
 		trim: boolean;
 		doors: boolean;
-		doorCount: string;
 	};
-	condition: {
-		currentColor: string;
-		newColor: string;
-		prep: string;
-	};
-	furniture: string;
+	wallCondition: string; // 'Good', 'Fair', 'Poor'
+	colorChange: string; // 'Similar', 'Light-to-Dark', 'Dark-to-Light'
+
+	// Conditional fields
+	ceilingTexture?: string; // 'Flat', 'Textured', 'Popcorn'
+	trimCondition?: string; // 'Good', 'Poor'
+	doorCount?: string; // '1', '2', etc.
+	doorStyle?: string; // 'Slab', 'Paneled'
 }
 
 /**
@@ -37,24 +36,17 @@ export interface FormData {
 		installation: boolean;
 	};
 
-	// Path 1: Painting Details
+	// Path 1: Painting Details (New Structure)
 	painting: {
-		spaces: {
-			livingRoom: boolean;
-			kitchen: boolean;
-			hallway: boolean;
-			stairwell: boolean;
-			closets: boolean;
-			// For rooms that can have more than one
-			bedroomCount: number;
-			bathroomCount: number;
-		};
-		// This will hold the dynamic "mini-forms"
+		// This array will hold all the room cards
 		rooms: PaintingRoom[];
-		materials: string;
+
+		// Global settings
+		paintProvider: string;
+		furniture: string;
 	};
 
-	// Path 2: Patching Details
+	// Path 2: Patching Details (Unchanged)
 	patching: {
 		quantity: string;
 		location: string[];
@@ -63,13 +55,20 @@ export interface FormData {
 		scope: string;
 	};
 
-	// Path 3: Installation Details
+	// Path 3: Installation Details (Unchanged)
 	installation: {
 		project_type: string;
 		sqft: string;
 		ceilingHeight: string;
 		scope: string;
 		finish: string;
+	};
+
+	// Path 4: Contact (Unchanged)
+	contact: {
+		name: string;
+		email: string;
+		phone: string;
 	};
 }
 
