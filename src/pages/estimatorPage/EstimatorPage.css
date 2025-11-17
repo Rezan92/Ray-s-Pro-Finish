@@ -4,7 +4,7 @@
 }
 
 .estimator-container {
-	max-width: 800px;
+	max-width: 1200px;
 	margin: var(--space-xxxl) auto;
 	padding: 0 var(--space-md);
 	background-color: var(--color-bg-primary);
@@ -274,6 +274,7 @@
 	justify-content: flex-end;
 	align-items: center;
 	margin-top: var(--space-lg);
+	gap: var(--space-md);
 }
 
 .estimator-submit-btn {
@@ -330,17 +331,8 @@
 }
 
 .result-back-btn {
-	margin-top: var(--space-lg);
 	background: none;
 	color: var(--color-text-secondary);
-	border: none;
-}
-
-.result-back-btn {
-	margin: 0;
-	/* Override default margins */
-	color: var(--color-text-secondary);
-	border: none;
 }
 
 .result-back-btn:hover {
@@ -354,7 +346,7 @@
 	display: flex;
 	justify-content: space-between;
 	margin: 0 auto var(--space-xxl);
-	max-width: 700px;
+	max-width: 1000px;
 	counter-reset: step;
 	/* Initializes a step counter */
 }
@@ -451,7 +443,7 @@
 .accordion-title {
 	font-size: 1rem;
 	font-weight: bold;
-	color: var(--color-brand-dark);
+	color: var(--color-primary);
 }
 
 .accordion-status {
@@ -601,7 +593,8 @@
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
 	border-top: 1px solid var(--color-primary);
-	background-color: #fdfdfd; /* Slightly different bg */
+	background-color: #fdfdfd;
+	/* Slightly different bg */
 }
 
 .accordion-header {
@@ -615,11 +608,6 @@
 	cursor: pointer;
 }
 
-.accordion-title {
-	font-size: 1rem;
-	font-weight: bold;
-	color: var(--color-brand-dark);
-}
 
 .accordion-actions {
 	display: flex;
@@ -631,6 +619,7 @@
 	color: var(--color-text-secondary);
 	transition: transform 0.3s ease;
 }
+
 .accordion-header.open .accordion-icon {
 	transform: rotate(180deg);
 }
@@ -640,7 +629,16 @@
 	border-top: 1px solid var(--color-border);
 	display: flex;
 	flex-direction: column;
-	gap: var(--space-md); /* Space between form groups */
+	gap: var(--space-md);
+	/* Space between form groups */
+}
+
+.conditional-fields-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: var(--space-md);
+	border-left: 3px solid var(--color-primary);
+	padding-left: var(--space-lg);
 }
 
 .conditional-field {
@@ -677,6 +675,7 @@
 	cursor: pointer;
 	margin-top: var(--space-md);
 }
+
 .btn-add-room:hover {
 	background-color: #fefaf8;
 }
@@ -690,6 +689,23 @@
 @media (max-width: 768px) {
 	.estimator-container {
 		margin: var(--space-xl) auto;
+		padding: 0;
+	}
+
+	.estimator-step {
+		padding: 0;
+	}
+
+	.service-form-box {
+		padding: var(--space-sm);
+	}
+
+	.form-group-box {
+		padding: var(--space-sm);
+	}
+
+	.accordion-content {
+		padding: var(--space-sm);
 	}
 
 	.estimator-title {

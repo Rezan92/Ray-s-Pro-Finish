@@ -74,9 +74,11 @@ export interface FormData {
 
 /**
  * Defines the structure of the JSON response we expect from Gemini.
+ * ADDED: totalHours
  */
 export interface Estimate {
 	low: number;
 	high: number;
 	explanation: string;
+	totalHours: number; // Added for your internal reference
 }

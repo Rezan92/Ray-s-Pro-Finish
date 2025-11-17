@@ -1,84 +1,11 @@
 import type {
 	FormData,
 	Estimate,
-	PaintingRoom, // Import the new type
 } from '@/components/common/estimator/EstimatorTypes';
 
 // 1. Get the API Key from Environment Variables
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
-
-// --- Helper function to format painting details ---
-const formatPaintingPrompt = (paintingData: FormData['painting']): string => {
-	let prompt = '\n\n--- SERVICE 1: INTERIOR PAINTING ---';
-
-	const { rooms, paintProvider, furniture } = paintingData;
-
-	if (rooms.length === 0) {
-		prompt += '\n- No rooms selected.';
-		return prompt;
-	}
-
-	// Add the global settings
-	prompt += `\n- Global Paint: ${paintProvider || 'Not specified'}`;
-	prompt += `\n- Global Furniture: ${furniture || 'Not specified'}`;
-
-	// Add each room card
-	rooms.forEach((room: PaintingRoom) => {
-		prompt += `\n\n  Room: ${room.label} (Type: ${room.type})`;
-		prompt += `\n  - Size: ${room.size || 'Medium'}`;
-		prompt += `\n  - Ceiling Height: ${room.ceilingHeight}`;
-		prompt += `\n  - Wall Condition: ${room.wallCondition}`;
-		prompt += `\n  - Color Change: ${room.colorChange}`;
-
-		// Surfaces
-		const surfaces = Object.entries(room.surfaces)
-			.filter(([key, value]) => value && key !== 'doorCount')
-			.map(([key]) => key)
-			.join(', ');
-		prompt += `\n  - Surfaces: ${surfaces || 'None'}`;
-
-		// Conditional Details
-		if (room.surfaces.ceiling && room.ceilingTexture) {
-			prompt += `\n    - Ceiling Texture: ${room.ceilingTexture}`;
-		}
-		if (room.surfaces.trim && room.trimCondition) {
-			prompt += `\n    - Trim Condition: ${room.trimCondition}`;
-		}
-		if (room.surfaces.doors) {
-			prompt += `\n    - Door Count: ${room.doorCount || '1'}`;
-			prompt += `\n    - Door Style: ${room.doorStyle || 'Slab'}`;
-		}
-	});
-
-	return prompt;
-};
-
-// --- Helper function to format patching details ---
-const formatPatchingPrompt = (patchingData: FormData['patching']): string => {
-	// ... (same as before)
-	let prompt = '\n\n--- SERVICE 2: DRYWALL PATCHING ---';
-	prompt += `\n- Quantity: ${patchingData.quantity}`;
-	prompt += `\n- Location: ${patchingData.location.join(', ')}`;
-	prompt += `\n- Largest Size: ${patchingData.largest_size}`;
-	prompt += `\n- Texture: ${patchingData.texture}`;
-	prompt += `\n- Scope: ${patchingData.scope}`;
-	return prompt;
-};
-
-// --- Helper function to format installation details ---
-const formatInstallationPrompt = (
-	installationData: FormData['installation'],
-): string => {
-	// ... (same as before)
-	let prompt = '\n\n--- SERVICE 3: DRYWALL INSTALLATION ---';
-	prompt += `\n- Project Type: ${installationData.project_type}`;
-	prompt += `\n- Room Sq Ft: ${installationData.sqft || 'N/A'}`;
-	prompt += `\n- Ceiling Height: ${installationData.ceilingHeight || 'N/A'}`;
-	prompt += `\n- Scope: ${installationData.scope}`;
-	prompt += `\n- Finish: ${installationData.finish}`;
-	return prompt;
-};
 
 /**
  * Calls the Gemini API to get a price estimate.
@@ -88,7 +15,6 @@ const formatInstallationPrompt = (
 export const getGeminiEstimate = async (
 	answers: FormData,
 ): Promise<Estimate> => {
-	// (API key check is unchanged)
 	if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_API_KEY_HERE') {
 		console.error('Gemini API key is missing or not set in .env.local');
 		throw new Error(
@@ -96,91 +22,101 @@ export const getGeminiEstimate = async (
 		);
 	}
 
-	// --- 1. Build the prompt dynamically based on selected services ---
-	let customerAnswersPrompt = '--- CUSTOMER REQUEST ---';
-	if (answers.services.painting) {
-		customerAnswersPrompt += formatPaintingPrompt(answers.painting);
-	}
-	if (answers.services.patching) {
-		customerAnswersPrompt += formatPatchingPrompt(answers.patching);
-	}
-	if (answers.services.installation) {
-		customerAnswersPrompt += formatInstallationPrompt(answers.installation);
-	}
-	customerAnswersPrompt +=
-		'\n\n(Note: Photos were not uploaded for this estimate.)';
+	// --- 1. Create the customerAnswersPrompt from the raw FormData ---
+	// The new prompt is smart enough to parse this directly.
+	const customerAnswersPrompt = JSON.stringify(answers);
 
-	// --- 2. Construct the main prompt (RULES ARE UPDATED) ---
+	// --- 2. Construct the main prompt (NEW HOUR-BASED LOGIC) ---
 	const mainPrompt = `
-    You are an expert estimator for a high-quality painting and drywall business.
-    Your goal is to provide a helpful, non-binding price range.
-    Your tone is professional, helpful, and trustworthy.
+    You are an expert estimator for a high-quality painting business.
+    Your labor rate is $65 per hour.
+    Your goal is to provide a preliminary price range based on the user's selections.
+    You must be professional, reasonable, and trustworthy.
 
-    --- MY PRICING RULES ---
-    (You must use these rules to calculate the estimate. Base prices are for "Medium" size, "8ft" ceilings, "Good" condition, and "Similar" color change.)
+    --- MY ESTIMATION RULES ---
 
-    **PATH 1: PAINTING**
-    - **Room Base (Walls only):**
-      - Bedroom: $400
-      - Living Room: $650
-      - Kitchen: $350
-      - Bathroom: $250
-      - Hallway: $200
-      - Stairwell: $500
-      - Closet: $100
-    
-    - **Size Adjustments:**
-      - 'Small': -25% from base.
-      - 'Medium': +0% (base).
-      - 'Large': +40% to base.
-    
-    - **Ceiling Height Adjustments:**
-      - '9-10ft': +15% to room total.
-      - '11ft+': +25% to room total.
+    SECTION 1: BASELINE LABOR HOURS (WALLS ONLY)
+    This table represents the hours for a single painter to prep and paint WALLS ONLY (2 coats) in a room. This is the baseline.
+    (Note: "Stairwell" 'Standard' maps to Medium, 'Vaulted' to Large. "Hallway" 'Standard' maps to Medium, 'Long' to Large. "Closet" 'Standard' maps to Small, 'Walk-in' to Medium.)
 
-    - **Surface Add-ons (per room):**
-      - 'Ceiling' in scope: +$1.00/sq ft (Use approx. sq ft: Small=100, Medium=180, Large=300).
-        - If 'Textured': +20% to Ceiling cost.
-        - If 'Popcorn': +40% to Ceiling cost.
-      - 'Trim' in scope: +$150 (for Medium room).
-        - If 'Poor' Trim Condition: +$75 (for re-caulking).
-      - 'Doors' in scope:
-        - 'Slab' Door: +$50 per door.
-        - 'Paneled' Door: +$75 per door.
-        - Use 'doorCount' for number of doors.
-    
-    - **Condition Adjustments (per room):**
-      - 'Fair' Wall Condition: +15% to Walls cost.
-      - 'Poor' Wall Condition: +30% to Walls cost.
-      - 'Light-to-Dark' Color Change: +$50 per room.
-      - 'Dark-to-Light' Color Change: +$75 per room (extra primer).
-    
-    - **Global Adjustments (Apply to *entire* painting sub-total):**
-      - 'paintProvider' = 'Standard': +20%
-      - 'paintProvider' = 'Premium': +35%
-      - 'furniture' = 'Contractor': +$75 *per room* listed.
+| Room Type | Small | Medium | Large |
+| :--- | :--- | :--- | :--- |
+| Living Room | 4.5 hrs | 6.0 hrs | 8.0 hrs |
+| Kitchen | 4.0 hrs | 5.0 hrs | 6.0 hrs |
+| Bedroom | 3.0 hrs | 3.5 hrs | 4.5 hrs |
+| Bathroom | 2.0 hrs | 3.0 hrs | 4.0 hrs |
+| Hallway | 2.5 hrs | 3.5 hrs | 4.5 hrs |
+| Stairwell | 5.0 hrs | 7.0 hrs | 9.0 hrs |
+| Closet | 1.0 hrs | 1.5 hrs | 2.0 hrs |
 
-    **PATH 2: DRYWALL PATCHING (Unchanged)**
-    - (Same rules as before)
+    SECTION 2: PROPORTIONAL ADD-ON LABOR HOURS
+    For each room, you will add hours for additional surfaces. These are percentages of that room's Baseline Hours.
 
-    **PATH 3: DRYWALL INSTALLATION (Unchanged)**
-    - (Same rules as before)
+    *Ceiling (surfaces.ceiling):
+        * Add +60% of Baseline Hours.
+        * If ceilingTexture is 'Textured', multiply *ceiling hours* by 1.2x.
+        * If ceilingTexture is 'Popcorn', multiply *ceiling hours* by 1.5x.
 
-    **MULTI-SERVICE DISCOUNT (Unchanged)**
-    - (Same rules as before)
+    * Trim (surfaces.trim):
+        * Add +70% of Baseline Hours. (This covers baseboards, window/door casings).
+        * If *trimCondition* is 'Poor', multiply *trim hours* by 1.5x (for extra prep).
+
+    * Doors (surfaces.doors):
+        * If *doorStyle* is 'Slab', add +0.75 hours per *doorCount*.
+        * If *doorStyle* is 'Paneled', add +1.25 hours per *doorCount*.
+
+    SECTION 3: GLOBAL ADJUSTMENT LABOR HOURS
+    These adjustments apply to the *total calculated hours for each room*.
+
+    * Ceiling Height:
+        * If *ceilingHeight* is '9-10ft', multiply *all hours for that room* by 1.15x.
+        * If *ceilingHeight* is '11ft+', multiply *all hours for that room* by 1.3x.
+
+    * Wall Condition & Color:
+        * If *wallCondition* is 'Fair', add +10% to *wall hours*.
+        * If *wallCondition* is 'Poor', add +25% to *wall hours*.
+        * If *colorChange* is 'Dark-to-Light', add +40% to *wall hours* (for primer coat).
+
+    * Furniture:
+        * If *painting.furniture* is 'Contractor', add +1.5 hours *per room*.
+
+    * Ignored Services:
+        * You MUST ignore any data from *services.patching* and *services.installation*. This estimate is for painting only.
+
+    SECTION 4: FINAL CALCULATION
+    1.  totalHours: Sum all calculated labor hours (Baseline + Add-ons + Adjustments) for all rooms.
+    2.  Total_Labor_Price: Calculate *totalHours* * 65.
+    3.  Total_Material_Cost:
+        * If *painting.paintProvider* is 'Standard', add +$60 *per room*.
+        * If *painting.paintProvider* is 'Premium', add +$100 *per room*.
+        * If *painting.paintProvider* is 'Customer', add +$0.
+    4.  Final_Price: Calculate *Total_Labor_Price* + *Total_Material_Cost*.
+    5.  low: Calculate *Final_Price* * 0.9 (Round to nearest integer).
+    6.  high: Calculate *Final_Price* * 1.1 (Round to nearest integer).
+    7.  explanation: Write a simple, 1-2 sentence summary.
+        * DO NOT mention hours, percentages, or multipliers.
+        * DO mention what rooms are included (e.g., "Living Room and 2 Bedrooms").
+        * DO mention what surfaces (e.g., "walls, trim, and ceilings").
+        * DO mention if paint is included (e.g., "and includes the cost of premium paint.").
+
     --- END OF RULES ---
 
+    Here is the customer's data:
     ${customerAnswersPrompt}
 
     YOUR TASK:
-    1. Analyze the customer's request against my rules.
-    2. Calculate a combined low-end and high-end estimate. The range should be about 20% (e.g., $1000 - $1200).
-    3. Provide a 1-3 sentence explanation for the quote, mentioning what services are included.
-    4. **MANDATORY:** Respond *only* with a valid JSON object in this exact format:
-       { "low": 1200, "high": 1850, "explanation": "This estimate includes painting a living room and 2 bedrooms (walls, trim, and ceilings) and patching 3 small holes." }
+    Analyze the customer's JSON data against my rules and return *only* a valid JSON object in the specified format. Do not include any other text.
+
+    Required JSON Output Format:
+    {
+      "low": number,
+      "high": number,
+      "explanation": "string",
+      "totalHours": number
+    }
   `;
 
-	// (The rest of the fetch call is unchanged)
+	// --- 3. Make the API Call ---
 	const response = await fetch(API_URL, {
 		method: 'POST',
 		headers: {
@@ -190,14 +126,16 @@ export const getGeminiEstimate = async (
 			contents: [{ parts: [{ text: mainPrompt }] }],
 			generationConfig: {
 				responseMimeType: 'application/json',
+				// Update schema to include totalHours
 				responseSchema: {
 					type: 'OBJECT',
 					properties: {
 						low: { type: 'NUMBER' },
 						high: { type: 'NUMBER' },
 						explanation: { type: 'STRING' },
+						totalHours: { type: 'NUMBER' }, // Added this field
 					},
-					required: ['low', 'high', 'explanation'],
+					required: ['low', 'high', 'explanation', 'totalHours'],
 				},
 			},
 		}),
@@ -210,6 +148,12 @@ export const getGeminiEstimate = async (
 	}
 
 	const data = await response.json();
-	const jsonText = data.candidates[0].content.parts[0].text;
-	return JSON.parse(jsonText) as Estimate;
+
+	try {
+		const jsonText = data.candidates[0].content.parts[0].text;
+		return JSON.parse(jsonText) as Estimate;
+	} catch (e) {
+		console.error('Failed to parse Gemini response:', e);
+		throw new Error('Received an invalid estimate from the server.');
+	}
 };

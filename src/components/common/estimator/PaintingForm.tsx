@@ -64,7 +64,9 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 									<input
 										type='checkbox'
 										checked={isChecked}
-										onChange={(e) => onRoomTypeToggle(type.key, e.target.checked)}
+										onChange={(e) =>
+											onRoomTypeToggle(type.key, e.target.checked)
+										}
 									/>
 									{type.label}
 								</label>
@@ -83,7 +85,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 						room={room}
 						onRoomChange={onRoomChange}
 						// Only pass Add/Remove handlers if it's a multi-room type
-						onRoomAdd={multi ? onRoomAdd : undefined}
+						onRoomAdd={multi && room.id.endsWith('_0') ? onRoomAdd : undefined}
 						// Only show "Remove" if it's NOT the first of its type
 						onRoomRemove={
 							multi && !room.id.endsWith('_0') ? onRoomRemove : undefined

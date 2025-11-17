@@ -58,7 +58,10 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 							<Trash2 size={16} /> Remove
 						</button>
 					)}
-					<ChevronDown size={20} className='accordion-icon' />
+					<ChevronDown
+						size={20}
+						className='accordion-icon'
+					/>
 				</div>
 			</button>
 
@@ -73,9 +76,9 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 								value={room.size}
 								onChange={handleFieldChange}
 							>
-								<option value='Small'>Small (e.g., 10x10)</option>
-								<option value='Medium'>Medium (e.g., 12x15)</option>
-								<option value='Large'>Large (e.g., 15x20+)</option>
+								<option value='Small'>Small</option>
+								<option value='Medium'>Medium</option>
+								<option value='Large'>Large</option>
 							</select>
 						</div>
 						<div className='form-group'>
@@ -136,64 +139,66 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 					</div>
 
 					{/* --- Conditional Fields --- */}
-					{room.surfaces.ceiling && (
-						<div className='form-group conditional-field'>
-							<label>Ceiling Texture</label>
-							<select
-								name='ceilingTexture'
-								value={room.ceilingTexture || 'Flat'}
-								onChange={handleFieldChange}
-							>
-								<option value='Flat'>Flat/Smooth</option>
-								<option value='Textured'>Textured</option>
-								<option value='Popcorn'>Popcorn</option>
-							</select>
-						</div>
-					)}
-					{room.surfaces.trim && (
-						<div className='form-group conditional-field'>
-							<label>Trim Condition</label>
-							<select
-								name='trimCondition'
-								value={room.trimCondition || 'Good'}
-								onChange={handleFieldChange}
-							>
-								<option value='Good'>Good (Just needs paint)</option>
-								<option value='Poor'>Poor (Needs re-caulking)</option>
-							</select>
-						</div>
-					)}
-					{room.surfaces.doors && (
-						<div className='form-group-grid conditional-field'>
+					<div className='conditional-fields-container'>
+						{room.surfaces.ceiling && (
 							<div className='form-group'>
-								<label>How many doors?</label>
-								<input
-									type='number'
-									name='doorCount'
-									className='small-input'
-									min='0'
-									value={room.doorCount || '1'}
-									onChange={handleFieldChange}
-								/>
-							</div>
-							<div className='form-group'>
-								<label>Door Style</label>
+								<label>Ceiling Texture</label>
 								<select
-									name='doorStyle'
-									value={room.doorStyle || 'Slab'}
+									name='ceilingTexture'
+									value={room.ceilingTexture || 'Flat'}
 									onChange={handleFieldChange}
 								>
-									<option value='Slab'>Flat / Slab</option>
-									<option value='Paneled'>Paneled (e.g., 6-panel)</option>
+									<option value='Flat'>Flat/Smooth</option>
+									<option value='Textured'>Textured</option>
+									<option value='Popcorn'>Popcorn</option>
 								</select>
 							</div>
-						</div>
-					)}
+						)}
+						{room.surfaces.trim && (
+							<div className='form-group'>
+								<label>Trim Condition</label>
+								<select
+									name='trimCondition'
+									value={room.trimCondition || 'Good'}
+									onChange={handleFieldChange}
+								>
+									<option value='Good'>Good (Just needs paint)</option>
+									<option value='Poor'>Poor (Needs re-caulking)</option>
+								</select>
+							</div>
+						)}
+						{room.surfaces.doors && (
+							<>
+								<div className='form-group'>
+									<label>How many doors?</label>
+									<input
+										type='number'
+										name='doorCount'
+										className='small-input'
+										min='0'
+										value={room.doorCount || '1'}
+										onChange={handleFieldChange}
+									/>
+								</div>
+								<div className='form-group'>
+									<label>Door Style</label>
+									<select
+										name='doorStyle'
+										value={room.doorStyle || 'Slab'}
+										onChange={handleFieldChange}
+									>
+										<option value='Slab'>Flat / Slab</option>
+										<option value='Paneled'>Paneled (e.g., 6-panel)</option>
+									</select>
+								</div>
+							</>
+						)}
+					</div>
 
 					{/* --- Bottom Row of Card --- */}
 					<div className='form-group-grid'>
 						<div className='form-group'>
-							<label>Wall Condition</label>
+							<label>Surface Condition</label>
 							<select
 								name='wallCondition'
 								value={room.wallCondition}
