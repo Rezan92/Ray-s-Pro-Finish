@@ -13,12 +13,12 @@ const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-
  * @returns A promise that resolves to an Estimate object.
  */
 export const getGeminiEstimate = async (
-	answers: FormData,
+	answers: FormData
 ): Promise<Estimate> => {
 	if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_API_KEY_HERE') {
 		console.error('Gemini API key is missing or not set in .env.local');
 		throw new Error(
-			'API key is not configured. Please contact the site administrator.',
+			'API key is not configured. Please contact the site administrator.'
 		);
 	}
 
@@ -29,7 +29,7 @@ export const getGeminiEstimate = async (
 	// --- 2. Construct the main prompt (NEW HOUR-BASED LOGIC) ---
 	const mainPrompt = `
     You are an expert estimator for a high-quality painting business.
-    Your labor rate is $65 per hour.
+    Your labor rate is $70 per hour.
     Your goal is to provide a preliminary price range based on the user's selections.
     You must be professional, reasonable, and trustworthy.
 
@@ -39,26 +39,32 @@ export const getGeminiEstimate = async (
     This table represents the hours for a single painter to prep and paint WALLS ONLY (2 coats) in a room. This is the baseline.
     (Note: "Stairwell" 'Standard' maps to Medium, 'Vaulted' to Large. "Hallway" 'Standard' maps to Medium, 'Long' to Large. "Closet" 'Standard' maps to Small, 'Walk-in' to Medium.)
 
-| Room Type | Small | Medium | Large |
-| :--- | :--- | :--- | :--- |
-| Living Room | 4.5 hrs | 6.0 hrs | 8.0 hrs |
-| Kitchen | 4.0 hrs | 5.0 hrs | 6.0 hrs |
-| Bedroom | 3.0 hrs | 3.5 hrs | 4.5 hrs |
-| Bathroom | 2.0 hrs | 3.0 hrs | 4.0 hrs |
-| Hallway | 2.5 hrs | 3.5 hrs | 4.5 hrs |
-| Stairwell | 5.0 hrs | 7.0 hrs | 9.0 hrs |
-| Closet | 1.0 hrs | 1.5 hrs | 2.0 hrs |
+| Room / Area | Small (Hours) | Medium (Hours) | Large (Hours) | X-Large (Hours) |
+| :--- | :--- | :--- | :--- | :--- |
+| Bedroom | 3.0 | 4.5 | 5.5 | 6.5 |
+| Living Room | 4.5 | 6.0 | 7.5 | 9.0 |
+| Dining Room | 2.5 | 4.0 | 5.0 | 6.0 |
+| Kitchen¹ | 2.0 | 3.0 | 3.5 | 4.5 |
+| Bathroom² | 1.5 | 2.5 | 4.0 | 5.0 |
+| Office / Study | 2.0 | 3.0 | 4.0 | 4.5 |
+| Basement | 6.5 | 10.0 | 13.0 | 16.0 |
+| Laundry² | 1.5 | 2.0 | 2.5 | 3.0 |
+| Closet³ | 0.5 | 1.5 | 3.0 | 4.0 |
+| Hallway⁴ | 1.5 | 3.0 | 4.5 | 6.0 |
+| Stairwell⁵ | 3.5 | 5.0 | 11.0 | 15.0 |
+| Garage⁶ | 7.0 | 10.0 | 13.0 | 16.0 |
+| Other | 0.5 | 2.5 | 3.5 | 6.5 |
 
     SECTION 2: PROPORTIONAL ADD-ON LABOR HOURS
     For each room, you will add hours for additional surfaces. These are percentages of that room's Baseline Hours.
 
     *Ceiling (surfaces.ceiling):
-        * Add +60% of Baseline Hours.
+        * Add +45% of Baseline Hours.
         * If ceilingTexture is 'Textured', multiply *ceiling hours* by 1.2x.
         * If ceilingTexture is 'Popcorn', multiply *ceiling hours* by 1.5x.
 
     * Trim (surfaces.trim):
-        * Add +70% of Baseline Hours. (This covers baseboards, window/door casings).
+        * Add +80% of Baseline Hours. (This covers baseboards, window/door casings).
         * If *trimCondition* is 'Poor', multiply *trim hours* by 1.5x (for extra prep).
 
     * Doors (surfaces.doors):
@@ -78,14 +84,14 @@ export const getGeminiEstimate = async (
         * If *colorChange* is 'Dark-to-Light', add +40% to *wall hours* (for primer coat).
 
     * Furniture:
-        * If *painting.furniture* is 'Contractor', add +1.5 hours *per room*.
+        * If *painting.furniture* is 'Contractor', add +1 hours *per room*.
 
     * Ignored Services:
         * You MUST ignore any data from *services.patching* and *services.installation*. This estimate is for painting only.
 
     SECTION 4: FINAL CALCULATION
     1.  totalHours: Sum all calculated labor hours (Baseline + Add-ons + Adjustments) for all rooms.
-    2.  Total_Labor_Price: Calculate *totalHours* * 65.
+    2.  Total_Labor_Price: Calculate *totalHours* * 70.
     3.  Total_Material_Cost:
         * If *painting.paintProvider* is 'Standard', add +$60 *per room*.
         * If *painting.paintProvider* is 'Premium', add +$100 *per room*.
@@ -93,11 +99,13 @@ export const getGeminiEstimate = async (
     4.  Final_Price: Calculate *Total_Labor_Price* + *Total_Material_Cost*.
     5.  low: Calculate *Final_Price* * 0.9 (Round to nearest integer).
     6.  high: Calculate *Final_Price* * 1.1 (Round to nearest integer).
-    7.  explanation: Write a simple, 1-2 sentence summary.
-        * DO NOT mention hours, percentages, or multipliers.
-        * DO mention what rooms are included (e.g., "Living Room and 2 Bedrooms").
-        * DO mention what surfaces (e.g., "walls, trim, and ceilings").
-        * DO mention if paint is included (e.g., "and includes the cost of premium paint.").
+    7.  explanation: Write a brief, user-friendly breakdown of the costs.
+        * Start with a summary sentence.
+        * Then, provide a bulleted list of the main cost components.
+        * For each component (e.g., "Wall Painting", "Ceiling Painting", "Trim & Baseboards", "Doors", "Furniture Moving", "Paint Materials"), show the approximate cost. You can derive this from the hours and material costs you calculated.
+        * Show the total number of hours for the job.
+				* Include approximate how much paint is needed for the job in gallons after taking into account the customers answers.
+        * Example format: "This estimate for the Living Room and 2 Bedrooms includes:\n- Walls Labor: ~$XXX\n- Trim & Doors Labor: ~$XXX\n- Premium Paint Materials: ~$XXX"
 
     --- END OF RULES ---
 

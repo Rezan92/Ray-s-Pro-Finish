@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { PaintingRoom } from './EstimatorTypes';
 import { ChevronDown, Plus, Trash2 } from 'lucide-react';
+import { ROOM_SIZE_OPTIONS } from './roomSizeData';
 
 // Define the props it will receive from the form
 interface PaintingRoomCardProps {
@@ -34,6 +35,9 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 	// --- Special Logic for Stairwell ---
 	const isStairwell = room.type === 'stairwell';
 	const ceilingHeightValue = isStairwell ? '11ft+' : room.ceilingHeight;
+
+	// Get the dynamic size options for the current room type
+	const sizeOptions = ROOM_SIZE_OPTIONS[room.type] || [];
 
 	return (
 		<div className='form-group-box room-card'>
@@ -76,9 +80,14 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 								value={room.size}
 								onChange={handleFieldChange}
 							>
-								<option value='Small'>Small</option>
-								<option value='Medium'>Medium</option>
-								<option value='Large'>Large</option>
+								{sizeOptions.map((option) => (
+									<option
+										key={option.value}
+										value={option.value}
+									>
+										{option.label}
+									</option>
+								))}
 							</select>
 						</div>
 						<div className='form-group'>

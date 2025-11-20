@@ -15,12 +15,18 @@ interface PaintingFormProps {
 // Define our room types and labels
 const ROOM_TYPES = [
 	{ key: 'livingRoom', label: 'Living Room' },
+	{ key: 'diningRoom', label: 'Dining Room' },
 	{ key: 'kitchen', label: 'Kitchen' },
 	{ key: 'bedroom', label: 'Bedroom' },
 	{ key: 'bathroom', label: 'Bathroom' },
+	{ key: 'office', label: 'Office / Study' },
+	{ key: 'basement', label: 'Basement' },
 	{ key: 'hallway', label: 'Hallway' },
 	{ key: 'stairwell', label: 'Stairwell' },
+	{ key: 'laundryRoom', label: 'Laundry Room' },
+	{ key: 'garage', label: 'Garage' },
 	{ key: 'closet', label: 'Closet' },
+	{ key: 'other', label: 'Other' },
 ];
 
 // Helper to determine if a room type is multi-room

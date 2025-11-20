@@ -43,12 +43,18 @@ const createNewRoom = (
 // Helper map for labels
 const ROOM_LABELS: { [key: string]: string } = {
 	livingRoom: 'Living Room',
+	diningRoom: 'Dining Room',
 	kitchen: 'Kitchen',
 	bedroom: 'Bedroom',
 	bathroom: 'Bathroom',
+	office: 'Office / Study',
+	basement: 'Basement',
 	hallway: 'Hallway',
 	stairwell: 'Stairwell',
+	laundryRoom: 'Laundry Room',
+	garage: 'Garage',
 	closet: 'Closet',
+	other: 'Other',
 };
 
 // (EstimatorProgressBar and EstimatorStepContact components stay the same)
