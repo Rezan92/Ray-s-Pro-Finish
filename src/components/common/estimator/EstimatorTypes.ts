@@ -44,6 +44,7 @@ export interface FormData {
 		// Global settings
 		paintProvider: string;
 		furniture: string;
+		additionalDetails?: string;
 	};
 
 	// Path 2: Patching Details (Unchanged)

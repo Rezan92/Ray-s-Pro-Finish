@@ -152,7 +152,7 @@
 .checkbox-group,
 .radio-group {
 	display: flex;
-	flex-direction: column;
+	flex-wrap: wrap;
 	gap: var(--space-sm);
 	background-color: var(--color-bg-light);
 	padding: var(--space-sm);
@@ -721,10 +721,6 @@
 		gap: var(--space-lg);
 	}
 
-	.checkbox-group.horizontal {
-		flex-direction: column;
-		align-items: flex-start;
-	}
 }
 
 /* 5. Responsive behavior for the 2-column grid */

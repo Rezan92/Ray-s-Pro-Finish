@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import type { FormData, PaintingRoom } from './EstimatorTypes';
 import { PaintingRoomCard } from './PaintingRoomCard';
+import type { FormData } from './EstimatorTypes';
 
 // Define the props it will receive from EstimatorPage
 interface PaintingFormProps {
@@ -42,6 +42,9 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 }) => {
 	const { painting } = formData;
 
+	// Helper to hide "Add Another" button if limit reached
+	const getRoomCount = (type: string) =>
+		painting.rooms.filter((r) => r.type === type).length;
 	// Create a map of which room types are checked
 	const checkedTypes = useMemo(() => {
 		const typeMap = new Map<string, boolean>();
@@ -59,7 +62,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 			<div className='form-group-box'>
 				<div className='form-group'>
 					<label>Please add the spaces you'd like us to paint.</label>
-					<div className='checkbox-group horizontal wrap'>
+					<div className='checkbox-group two-column'>
 						{ROOM_TYPES.map((type) => {
 							const isChecked = checkedTypes.get(type.key) || false;
 							return (
@@ -85,13 +88,19 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 			{/* --- B. The Generated Room Cards --- */}
 			{painting.rooms.map((room) => {
 				const multi = isMultiRoom(room.type);
+				// Logic to hide add button if at limit (e.g. 8)
+				const isAtLimit = getRoomCount(room.type) >= 8;
 				return (
 					<PaintingRoomCard
 						key={room.id}
 						room={room}
 						onRoomChange={onRoomChange}
-						// Only pass Add/Remove handlers if it's a multi-room type
-						onRoomAdd={multi && room.id.endsWith('_0') ? onRoomAdd : undefined}
+						// Update this line: Only pass onRoomAdd if multi-room AND not at limit
+						onRoomAdd={
+							multi && room.id.endsWith('_0') && !isAtLimit
+								? onRoomAdd
+								: undefined
+						}
 						// Only show "Remove" if it's NOT the first of its type
 						onRoomRemove={
 							multi && !room.id.endsWith('_0') ? onRoomRemove : undefined
@@ -135,6 +144,40 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 							I need the painter to move and cover furniture
 						</option>
 					</select>
+				</div>
+
+				{/* NEW Additional Details Section */}
+				<div
+					className='form-group'
+					style={{ marginTop: '1rem' }}
+				>
+					<label>
+						Additional Details{' '}
+						<span
+							style={{
+								fontWeight: 'normal',
+								fontSize: '0.85rem',
+								color: '#666',
+							}}
+						>
+							(Optional - Max 600 characters)
+						</span>
+					</label>
+					<textarea
+						name='additionalDetails'
+						value={painting.additionalDetails || ''}
+						onChange={(e) =>
+							onGlobalChange('additionalDetails', e.target.value)
+						}
+						maxLength={600} // Enforce the limit natively
+						rows={4}
+						placeholder='Tell us about specific damage, color changes (e.g. dark red to white), or high ceilings...'
+					/>
+					<div
+						style={{ textAlign: 'right', fontSize: '0.8rem', color: '#999' }}
+					>
+						{(painting.additionalDetails || '').length} / 600
+					</div>
 				</div>
 			</div>
 		</div>
