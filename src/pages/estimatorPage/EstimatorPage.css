@@ -153,6 +153,7 @@
 .radio-group {
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: space-around;
 	gap: var(--space-sm);
 	background-color: var(--color-bg-light);
 	padding: var(--space-sm);
