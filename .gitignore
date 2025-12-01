@@ -11,7 +11,7 @@ dist/
 build/
 
 # OS / Editor junk
-.DS_Store
+.DS_Store/
 .vscode/
 .idea/
 
