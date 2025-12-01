@@ -9,12 +9,14 @@ import Navbar from './components/common/navbar/Navbar';
 import { Footer } from './components/common/footer/Footer';
 import ProjectsPage from './pages/projects/ProjectsPage';
 import EstimatorPage from './pages/estimatorPage/EstimatorPage';
+import { ModalManager } from './components/common/modal/ModalManager';
 
 function App() {
 	return (
 		<div className='App'>
 			<TopBar />
 			<Navbar />
+			<ModalManager />
 			<main>
 				<Routes>
 					<Route

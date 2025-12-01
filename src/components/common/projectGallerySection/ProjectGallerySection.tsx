@@ -1,51 +1,34 @@
-import React, { useState, useMemo, useEffect } from 'react';
 import './ProjectGallerySection.css';
 import { ProjectCard } from '../projectCard/ProjectCard';
 import type { Project } from '../projectCard/ProjectCard';
-import { ProjectModal } from '../projectModal/ProjectModal';
-import { ChevronDown } from 'lucide-react'; // Import an icon for the dropdown
-import { projectsData } from '@/data/projectsData'; // <-- IMPORT the shared data
-
-// Mock data has been removed from this file
+import { ChevronDown } from 'lucide-react';
+// --- Redux Imports ---
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import {
+	setFilter,
+	selectFilteredProjects,
+	selectActiveFilter,
+	selectProjectCategories,
+} from '@/store/slices/projectsSlice';
+import { openProjectModal } from '@/store/slices/uiSlice'; // <--- Import action
 
 export const ProjectGallerySection = () => {
-	// === Modal State ===
-	const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+	// --- Redux State ---
+	const dispatch = useAppDispatch();
 
-	// === Filter State ===
-	const [activeFilter, setActiveFilter] = useState<string>('All');
-	const [filteredProjects, setFilteredProjects] =
-		useState<Project[]>(projectsData);
+	// These "selectors" automatically update the component when data changes
+	const filteredProjects = useAppSelector(selectFilteredProjects);
+	const activeFilter = useAppSelector(selectActiveFilter);
+	const filterCategories = useAppSelector(selectProjectCategories);
 
-	// Get all unique tags from the projects data
-	const filterCategories = useMemo(() => {
-		const tags = new Set(projectsData.map((p) => p.tag));
-		return ['All', ...Array.from(tags)];
-	}, []); // This only runs once
-
-	// This effect runs whenever the activeFilter changes
-	useEffect(() => {
-		if (activeFilter === 'All') {
-			setFilteredProjects(projectsData);
-		} else {
-			const filtered = projectsData.filter(
-				(project) => project.tag === activeFilter
-			);
-			setFilteredProjects(filtered);
-		}
-	}, [activeFilter]);
-
+	// --- Handlers ---
+	// Just dispatch the action! No local state needed.
 	const handleCardClick = (project: Project) => {
-		setSelectedProject(project);
+		dispatch(openProjectModal(project));
 	};
 
-	const handleCloseModal = () => {
-		setSelectedProject(null);
-	};
-
-	// This is the new handler for the dropdown
 	const handleFilterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-		setActiveFilter(event.target.value);
+		dispatch(setFilter(event.target.value));
 	};
 
 	return (
@@ -55,7 +38,7 @@ export const ProjectGallerySection = () => {
 				<h2 className='project-gallery-title'>A Showcase of Quality</h2>
 			</div>
 
-			{/* === This is the new Dropdown Filter === */}
+			{/* Filter Dropdown */}
 			<div className='project-filter-dropdown-wrapper'>
 				<label
 					htmlFor='project-filter'
@@ -67,7 +50,7 @@ export const ProjectGallerySection = () => {
 					<select
 						id='project-filter'
 						className='project-filter-select'
-						value={activeFilter}
+						value={activeFilter} // Controlled by Redux
 						onChange={handleFilterChange}
 					>
 						{filterCategories.map((category) => (
@@ -86,7 +69,7 @@ export const ProjectGallerySection = () => {
 				</div>
 			</div>
 
-			{/* --- Project Grid --- */}
+			{/* Project Grid */}
 			<div className='project-gallery-grid'>
 				{filteredProjects.map((project) => (
 					<ProjectCard
@@ -97,13 +80,7 @@ export const ProjectGallerySection = () => {
 				))}
 			</div>
 
-			{/* This is the modal. It only renders if a project is selected. */}
-			{selectedProject && (
-				<ProjectModal
-					project={selectedProject}
-					onClose={handleCloseModal}
-				/>
-			)}
+			{/* NO MODAL HERE! It is now handled globally by ModalManager in App.tsx */}
 		</section>
 	);
 };

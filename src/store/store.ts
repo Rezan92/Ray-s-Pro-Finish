@@ -1,11 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import estimatorReducer from './slices/estimatorSlice';
+import uiReducer from './slices/uiSlice';
+import projectsReducer from './slices/projectsSlice';
 
 export const store = configureStore({
-  reducer: {
-    estimator: estimatorReducer,
-    // We can add uiSlice later for modals if desired
-  },
+	reducer: {
+		estimator: estimatorReducer,
+		ui: uiReducer,
+		projects: projectsReducer,
+	},
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

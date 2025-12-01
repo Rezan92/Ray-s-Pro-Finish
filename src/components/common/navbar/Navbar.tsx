@@ -1,10 +1,12 @@
-import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Button } from '../button/Button';
 import { Menu } from 'lucide-react';
 import './Navbar.css';
 
-// Define our navigation links as an array of objects
+// --- Redux Imports ---
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { toggleMobileMenu, closeMobileMenu } from '@/store/slices/uiSlice';
+
 const navLinks = [
 	{ label: 'Home', to: '/' },
 	{ label: 'About', to: '/about' },
@@ -15,18 +17,12 @@ const navLinks = [
 ];
 
 const Navbar = () => {
-	// State to manage the mobile menu's open/closed status
-	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+	// Use Redux instead of local state
+	const dispatch = useAppDispatch();
+	const isMobileMenuOpen = useAppSelector((state) => state.ui.isMobileMenuOpen);
 
-	// Toggle function for the hamburger button
-	const toggleMobileMenu = () => {
-		setIsMobileMenuOpen(!isMobileMenuOpen);
-	};
-
-	// Close menu when a link is clicked
-	const handleLinkClick = () => {
-		setIsMobileMenuOpen(false);
-	};
+	const handleToggle = () => dispatch(toggleMobileMenu());
+	const handleClose = () => dispatch(closeMobileMenu());
 
 	return (
 		<nav className='navbar'>
@@ -60,10 +56,10 @@ const Navbar = () => {
 				<div className='nav-mobile'>
 					{/* Hamburger Menu Button */}
 					<button
-						onClick={toggleMobileMenu}
+						onClick={handleToggle}
 						className='menu-toggle-btn'
 					>
-						{<Menu size={28} />} 
+						{<Menu size={28} />}
 					</button>
 					<span className='nav-mobile-title'>Menu</span>
 				</div>
@@ -82,7 +78,7 @@ const Navbar = () => {
 								className={({ isActive }) =>
 									isActive ? 'mobile-link active' : 'mobile-link'
 								}
-								onClick={handleLinkClick} // Close menu on click
+								onClick={handleClose} // Close on click
 							>
 								{link.label}
 							</NavLink>
@@ -93,6 +89,9 @@ const Navbar = () => {
 					to='/contact'
 					variant='dark'
 					className='mobile-menu-btn'
+					// We can attach onClick to Button component if it supports it,
+					// or wrap it to close menu when clicked.
+					onClick={handleClose}
 				>
 					Inquire Now
 				</Button>
