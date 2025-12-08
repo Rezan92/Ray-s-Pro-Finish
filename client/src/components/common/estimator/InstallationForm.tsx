@@ -1,7 +1,6 @@
 import React from 'react';
 import type { FormData } from './EstimatorTypes';
 
-// ... (Interface is the same) ...
 interface InstallationFormProps {
 	formData: FormData;
 	onNestedChange: (path: 'installation', field: string, value: any) => void;
@@ -43,7 +42,7 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 					<div className='form-group'>
 						<label>Total Room Sq Ft (L x W)</label>
 						<input
-							type='text'
+							type='number'
 							name='sqft'
 							value={installation.sqft}
 							onChange={handleChange}
@@ -95,7 +94,6 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 				</div>
 			</div>
 
-			{/* --- Photo Upload Section is REMOVED --- */}
 		</div>
 	);
 };
