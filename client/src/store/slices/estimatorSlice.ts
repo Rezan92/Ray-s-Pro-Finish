@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 import type { FormData, Estimate, PaintingRoom } from '@/components/common/estimator/EstimatorTypes';
-import { getGeminiEstimate } from '@/utils/estimator/getGeminiEstimate';
-import { ROOM_SIZE_OPTIONS } from '@/components/common/estimator/roomSizeData';
+import { endpoints } from '@/config/api';
 
 // --- Default/Initial State ---
 // We define the initial state of a room here to keep it consistent
@@ -78,7 +77,20 @@ export const generateEstimate = createAsyncThunk(
   'estimator/generate',
   async (formData: FormData, { rejectWithValue }) => {
     try {
-      const result = await getGeminiEstimate(formData);
+      // We now fetch from our own backend!
+      const response = await fetch(endpoints.estimate , {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Server error: Failed to fetch estimate');
+      }
+
+      const result = await response.json();
       return result;
     } catch (err: any) {
       return rejectWithValue(err.message || 'Failed to generate estimate');

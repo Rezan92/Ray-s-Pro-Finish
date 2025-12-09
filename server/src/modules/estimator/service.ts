@@ -1,33 +1,20 @@
-import type {
-	FormData,
-	Estimate,
-} from '@/components/common/estimator/EstimatorTypes';
+import dotenv from 'dotenv';
 
-// 1. Get the API Key from Environment Variables
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+dotenv.config();
+
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+// Using the same model version you had, or a standard stable one. 
+// "gemini-1.5-flash" is excellent for this.
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
 
-/**
- * Calls the Gemini API to get a price estimate.
- * @param answers The user's form data.
- * @returns A promise that resolves to an Estimate object.
- */
-export const getGeminiEstimate = async (
-	answers: FormData
-): Promise<Estimate> => {
-	if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_API_KEY_HERE') {
-		console.error('Gemini API key is missing or not set in .env.local');
-		throw new Error(
-			'API key is not configured. Please contact the site administrator.'
-		);
-	}
+if (!GEMINI_API_KEY) {
+  console.error("❌ GEMINI_API_KEY is missing in server .env file");
+}
 
-	// --- 1. Create the customerAnswersPrompt from the raw FormData ---
-	// The new prompt is smart enough to parse this directly.
-	const customerAnswersPrompt = JSON.stringify(answers);
+export const calculateEstimate = async (formData: any) => {
+  const customerAnswersPrompt = JSON.stringify(formData);
 
-	// --- 2. Construct the main prompt (NEW HOUR-BASED LOGIC) ---
-	const mainPrompt = `
+  const mainPrompt = `
     You are an expert estimator for a high-quality painting business.
     Your labor rate is $70 per hour.
     Your goal is to provide a preliminary price range based on the user's selections.
@@ -124,44 +111,45 @@ export const getGeminiEstimate = async (
     }
   `;
 
-	// --- 3. Make the API Call ---
-	const response = await fetch(API_URL, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({
-			contents: [{ parts: [{ text: mainPrompt }] }],
-			generationConfig: {
-				responseMimeType: 'application/json',
-				// Update schema to include totalHours
-				responseSchema: {
-					type: 'OBJECT',
-					properties: {
-						low: { type: 'NUMBER' },
-						high: { type: 'NUMBER' },
-						explanation: { type: 'STRING' },
-						totalHours: { type: 'NUMBER' }, // Added this field
-					},
-					required: ['low', 'high', 'explanation', 'totalHours'],
-				},
-			},
-		}),
-	});
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: mainPrompt }] }],
+        generationConfig: {
+          responseMimeType: "application/json",
+          // We define the schema to enforce the JSON structure
+          responseSchema: {
+            type: "OBJECT",
+            properties: {
+              low: { type: "NUMBER" },
+              high: { type: "NUMBER" },
+              explanation: { type: "STRING" },
+              totalHours: { type: "NUMBER" },
+            },
+            required: ["low", "high", "explanation", "totalHours"],
+          },
+        },
+      }),
+    });
 
-	if (!response.ok) {
-		const errorData = await response.json();
-		console.error('Gemini API Error:', errorData);
-		throw new Error('Failed to get estimate from Gemini.');
-	}
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Gemini API Error details:", errorText);
+        throw new Error(`Gemini API Error: ${response.statusText}`);
+    }
 
-	const data = await response.json();
-
-	try {
-		const jsonText = data.candidates[0].content.parts[0].text;
-		return JSON.parse(jsonText) as Estimate;
-	} catch (e) {
-		console.error('Failed to parse Gemini response:', e);
-		throw new Error('Received an invalid estimate from the server.');
-	}
+    const data = await response.json();
+    
+    // The path to the text is different in the REST API vs the SDK
+    const jsonText = data.candidates[0].content.parts[0].text;
+    
+    return JSON.parse(jsonText);
+  } catch (error) {
+    console.error("Estimation Service Error:", error);
+    throw new Error("Failed to generate estimate");
+  }
 };

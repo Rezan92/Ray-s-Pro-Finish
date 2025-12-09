@@ -2,6 +2,7 @@ import express from 'express';
 import type { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import estimatorRoutes from './modules/estimator/routes.js';
 
 dotenv.config();
 
@@ -16,6 +17,9 @@ app.use(express.json());
 app.get('/', (req: Request, res: Response) => {
   res.send('API is running...');
 });
+
+// Routes
+app.use('/api/estimate', estimatorRoutes);
 
 // Start Server
 app.listen(PORT, () => {
