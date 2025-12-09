@@ -21,7 +21,9 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 
 	// --- Local Change Handlers ---
 	const handleFieldChange = (
-		e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+		e: React.ChangeEvent<
+			HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement
+		>
 	) => {
 		onRoomChange(room.id, e.target.name, e.target.value);
 	};
@@ -72,6 +74,41 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 			{/* --- Collapsible Card Body --- */}
 			{isOpen && (
 				<div className='accordion-content'>
+					{/* NEW: Description field specifically for 'Other' rooms */}
+					{room.type === 'other' && (
+						<div className='form-group'>
+							<label>
+								Description{' '}
+								<span
+									style={{
+										fontWeight: 'normal',
+										fontSize: '0.8rem',
+										color: '#666',
+									}}
+								>
+									(Max 600 chars)
+								</span>
+							</label>
+							<textarea
+								name='roomDescription'
+								value={room.roomDescription || ''}
+								onChange={handleFieldChange}
+								placeholder='e.g. Sunroom, Library, Mudroom. What are we painting here?'
+								maxLength={600}
+								rows={3}
+							/>
+							<div
+								style={{
+									textAlign: 'right',
+									fontSize: '0.8rem',
+									color: '#999',
+								}}
+							>
+								{(room.roomDescription || '').length} / 600
+							</div>
+						</div>
+					)}
+
 					<div className='form-group-grid'>
 						<div className='form-group'>
 							<label>Approximate Size</label>
@@ -144,6 +181,16 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 								/>
 								Doors
 							</label>
+							{/* NEW: Crown Molding Checkbox */}
+							<label className='checkbox-label'>
+								<input
+									type='checkbox'
+									name='crownMolding'
+									checked={room.surfaces.crownMolding || false}
+									onChange={handleSurfaceChange}
+								/>
+								Crown Molding
+							</label>
 						</div>
 					</div>
 
@@ -173,6 +220,20 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 								>
 									<option value='Good'>Good (Just needs paint)</option>
 									<option value='Poor'>Poor (Needs re-caulking)</option>
+								</select>
+							</div>
+						)}
+						{/* NEW: Crown Molding Style */}
+						{room.surfaces.crownMolding && (
+							<div className='form-group'>
+								<label>Crown Molding Style</label>
+								<select
+									name='crownMoldingStyle'
+									value={room.crownMoldingStyle || 'Simple'}
+									onChange={handleFieldChange}
+								>
+									<option value='Simple'>Simple / Smooth</option>
+									<option value='Ornate'>Ornate / Detailed / Dental</option>
 								</select>
 							</div>
 						)}
