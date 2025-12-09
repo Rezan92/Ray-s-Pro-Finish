@@ -14,6 +14,7 @@ export interface PaintingRoom {
 		ceiling: boolean;
 		trim: boolean;
 		doors: boolean;
+		crownMolding: boolean; // <--- NEW
 	};
 	wallCondition: string; // 'Good', 'Fair', 'Poor'
 	colorChange: string; // 'Similar', 'Light-to-Dark', 'Dark-to-Light'
@@ -23,6 +24,8 @@ export interface PaintingRoom {
 	trimCondition?: string; // 'Good', 'Poor'
 	doorCount?: string; // '1', '2', etc.
 	doorStyle?: string; // 'Slab', 'Paneled'
+	crownMoldingStyle?: string; // 'Simple', 'Ornate' <--- NEW
+	roomDescription?: string; // For 'Other' rooms <--- NEW
 }
 
 /**
