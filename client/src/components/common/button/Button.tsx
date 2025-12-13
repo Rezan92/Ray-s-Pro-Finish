@@ -13,7 +13,7 @@ interface ButtonProps {
 	variant?: ButtonVariant;
 	className?: string; // Allow passing extra classes
 	target?: string; // For opening in a new tab (e.g., _blank)
-	type?: 'submit' | 'button' | 'reset';
+	type?: 'submit' | 'button' | 'reset'; // <--- Ensure this is defined
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -24,6 +24,7 @@ export const Button: React.FC<ButtonProps> = ({
 	variant = 'primary', // Default to 'primary' (orange)
 	className = '',
 	target,
+	type = 'button', // <--- Default to 'button' to prevent accidental form submissions
 }) => {
 	// Combine the base class, the variant class, and any extra classes
 	const classes = `btn ${variant} ${className}`;
@@ -58,6 +59,7 @@ export const Button: React.FC<ButtonProps> = ({
 	// Otherwise, render a standard <button>
 	return (
 		<button
+			type={type} // <--- CRITICAL FIX: Pass the type prop to the DOM element
 			onClick={onClick}
 			className={classes}
 		>

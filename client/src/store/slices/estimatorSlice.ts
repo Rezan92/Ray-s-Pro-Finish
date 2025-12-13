@@ -7,9 +7,11 @@ import type {
 	FormData,
 	Estimate,
 	PaintingRoom,
+	RepairItem,
 } from '@/components/common/estimator/EstimatorTypes';
 import { endpoints } from '@/config/api';
 
+// --- Default/Initial State ---
 const createNewRoom = (
 	type: string,
 	id: string,
@@ -87,6 +89,7 @@ const initialState: EstimatorState = {
 	error: null,
 };
 
+// --- Async Thunk ---
 export const generateEstimate = createAsyncThunk(
 	'estimator/generate',
 	async (formData: FormData, { rejectWithValue }) => {
@@ -97,15 +100,19 @@ export const generateEstimate = createAsyncThunk(
 				body: JSON.stringify(formData),
 			});
 
-			if (!response.ok)
+			if (!response.ok) {
 				throw new Error('Server error: Failed to fetch estimate');
-			return await response.json();
+			}
+
+			const result = await response.json();
+			return result;
 		} catch (err: any) {
 			return rejectWithValue(err.message || 'Failed to generate estimate');
 		}
 	}
 );
 
+// --- The Slice ---
 export const estimatorSlice = createSlice({
 	name: 'estimator',
 	initialState,
@@ -122,6 +129,8 @@ export const estimatorSlice = createSlice({
 		) => {
 			state.formData.services[action.payload.name] = action.payload.checked;
 		},
+
+		// --- Painting Logic ---
 		toggleRoomType: (
 			state,
 			action: PayloadAction<{ type: string; isChecked: boolean }>
@@ -180,6 +189,18 @@ export const estimatorSlice = createSlice({
 			// @ts-ignore
 			state.formData.painting[action.payload.field] = action.payload.value;
 		},
+
+		// --- Patching Logic (NEW) ---
+		addRepair: (state, action: PayloadAction<RepairItem>) => {
+			state.formData.patching.repairs.push(action.payload);
+		},
+		removeRepair: (state, action: PayloadAction<string>) => {
+			state.formData.patching.repairs = state.formData.patching.repairs.filter(
+				(r) => r.id !== action.payload
+			);
+		},
+
+		// --- Generic Updates ---
 		updateNestedForm: (
 			state,
 			action: PayloadAction<{
@@ -199,6 +220,7 @@ export const estimatorSlice = createSlice({
 			// @ts-ignore
 			state.formData.contact[action.payload.field] = action.payload.value;
 		},
+
 		resetEstimator: () => initialState,
 	},
 	extraReducers: (builder) => {
@@ -225,6 +247,8 @@ export const {
 	toggleRoomType,
 	addRoom,
 	removeRoom,
+	addRepair,
+	removeRepair,
 	updateRoomField,
 	updatePaintingGlobal,
 	updateNestedForm,

@@ -1,22 +1,28 @@
 import React from 'react';
-import type { FormData } from './EstimatorTypes';
+import type { FormData, RepairItem } from './EstimatorTypes';
 import { PaintingForm } from './PaintingForm';
 import { RepairForm } from './RepairForm';
 import { InstallationForm } from './InstallationForm';
 
-// Props are updated to match the new handlers from EstimatorPage
 interface EstimatorStep2Props {
 	formData: FormData;
-	onNestedChange: (
-		path: 'painting' | 'patching' | 'installation',
-		field: string,
-		value: any
-	) => void;
+	// Painting Handlers
 	onPaintingRoomTypeToggle: (type: string, isChecked: boolean) => void;
 	onPaintingRoomAdd: (type: string) => void;
 	onPaintingRoomRemove: (roomId: string) => void;
 	onPaintingRoomChange: (roomId: string, field: string, value: any) => void;
 	onPaintingGlobalChange: (field: string, value: string) => void;
+
+	// Repair Handlers (NEW)
+	onAddRepair: (repair: RepairItem) => void;
+	onRemoveRepair: (id: string) => void;
+
+	// Generic Handler
+	onNestedChange: (
+		path: 'painting' | 'patching' | 'installation',
+		field: string,
+		value: any
+	) => void;
 }
 
 export const EstimatorStep2: React.FC<EstimatorStep2Props> = (props) => {
@@ -27,11 +33,9 @@ export const EstimatorStep2: React.FC<EstimatorStep2Props> = (props) => {
 		<div className='estimator-step'>
 			<h2 className='estimator-title'>Project Details</h2>
 			<p className='estimator-subtitle'>
-				Please provide as much detail as possible for each service you
-				selected.
+				Please provide as much detail as possible for each service you selected.
 			</p>
 
-			{/* Pass all painting-related props to PaintingForm */}
 			{services.painting && (
 				<PaintingForm
 					formData={formData}
@@ -47,6 +51,8 @@ export const EstimatorStep2: React.FC<EstimatorStep2Props> = (props) => {
 				<RepairForm
 					formData={formData}
 					onNestedChange={props.onNestedChange as any}
+					onAddRepair={props.onAddRepair}
+					onRemoveRepair={props.onRemoveRepair}
 				/>
 			)}
 
