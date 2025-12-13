@@ -18,6 +18,7 @@ const INITIAL_REPAIR: RepairItem = {
 	texture: 'Smooth',
 	scope: 'Patch Only',
 	paintMatching: 'Customer has paint',
+	accessibility: 'Standard',
 };
 
 export const RepairForm: React.FC<RepairFormProps> = ({
@@ -134,7 +135,24 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 						</select>
 					</div>
 				</div>
-
+				<div className='form-group'>
+					<label>Height / Accessibility</label>
+					<select
+						name='accessibility'
+						value={newRepair.accessibility}
+						onChange={handleNewRepairChange}
+					>
+						<option value='Standard'>
+							Standard (Reachable from floor/small stool)
+						</option>
+						<option value='Ladder'>
+							Medium Height (Requires 6-8ft Ladder)
+						</option>
+						<option value='High'>
+							High / Vaulted (Requires Extension Ladder/Scaffold)
+						</option>
+					</select>
+				</div>
 				<div className='form-group-grid'>
 					<div className='form-group'>
 						<label>Size of Damage</label>

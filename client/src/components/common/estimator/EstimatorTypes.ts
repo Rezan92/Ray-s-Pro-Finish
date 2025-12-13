@@ -24,10 +24,11 @@ export interface PaintingRoom {
 export interface RepairItem {
 	id: string;
 	damageType: string; // 'Hole', 'Crack', 'Water Damage', 'Tape Issues'
-	size: string;       // 'Medium (<12")', 'Large (1-3ft)', 'X-Large (Sheet+)'
-	placement: string;  // 'Wall', 'Ceiling'
-	texture: string;    // 'Smooth', 'Orange Peel', 'Knockdown', 'Popcorn'
-	scope: string;      // 'Patch Only', 'Patch & Prime', 'Patch, Prime & Paint'
+	size: string; // 'Medium (<12")', 'Large (1-3ft)', 'X-Large (Sheet+)'
+	placement: string; // 'Wall', 'Ceiling'
+	accessibility: string; // 'Standard (Reach from floor)', 'Ladder (8-12ft)', 'High/Scaffold (12ft+)'
+	texture: string; // 'Smooth', 'Orange Peel', 'Knockdown', 'Popcorn'
+	scope: string; // 'Patch Only', 'Patch & Prime', 'Patch, Prime & Paint'
 	paintMatching?: string; // 'Customer has paint', 'Color Match needed', 'Paint entire wall'
 }
 
@@ -46,8 +47,8 @@ export interface FormData {
 	};
 
 	patching: {
-		repairs: RepairItem[]; 
-		smallRepairsDescription?: string; 
+		repairs: RepairItem[];
+		smallRepairsDescription?: string;
 	};
 
 	installation: {
