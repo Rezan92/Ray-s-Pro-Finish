@@ -32,6 +32,18 @@ export interface RepairItem {
 	paintMatching?: string; // 'Customer has paint', 'Color Match needed', 'Paint entire wall'
 }
 
+export interface InstallationData {
+	projectType: string; // 'Wall', 'Ceiling', 'Room'
+	wallLength: string; // 'Small (Under 10ft)', 'Medium (10-20ft)', 'Large (20ft+)'
+	roomSqft: string; // User input number
+	ceilingHeight: string; // 'Standard (8ft)', 'High (9-10ft)', 'Vaulted (12ft+)'
+	framing: string; // 'Ready', 'Wood', 'Metal'
+	drywallType: string; // 'Standard', 'Moisture', 'Fire' (We can default this or ask later, keeping simple for now)
+	openings: string; // Number of doors/windows (for Rooms)
+	finishLevel: string; // 'Level 3', 'Level 4', 'Level 5'
+	includePaint: boolean;
+}
+
 export interface FormData {
 	services: {
 		painting: boolean;
@@ -51,13 +63,7 @@ export interface FormData {
 		smallRepairsDescription?: string;
 	};
 
-	installation: {
-		project_type: string;
-		sqft: string;
-		ceilingHeight: string;
-		scope: string;
-		finish: string;
-	};
+	installation: InstallationData;
 
 	contact: {
 		name: string;

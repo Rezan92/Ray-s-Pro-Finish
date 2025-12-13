@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import { calculatePaintingEstimate } from './services/paintingService.js';
 import { calculateRepairEstimate } from './services/repairService.js';
+import {calculateInstallEstimate} from './services/installService.js';
 
 export const getEstimate = async (
 	req: Request,
@@ -45,8 +46,17 @@ export const getEstimate = async (
 			}
 		}
 
-		// 3. Installation Service (Future placeholder)
-		// if (formData.services.installation) { ... }
+		// 3. Installation Service (NEW)
+		if (formData.services.installation) {
+			promises.push(
+				calculateInstallEstimate(formData.installation).then((est) => {
+					totalLow += est.low;
+					totalHigh += est.high;
+					totalHours += est.totalHours;
+					combinedExplanation += `INSTALLATION:\n${est.explanation}\n\n`;
+				})
+			);
+		}
 
 		await Promise.all(promises);
 
