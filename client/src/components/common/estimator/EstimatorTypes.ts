@@ -13,8 +13,6 @@ export interface PaintingRoom {
 	};
 	wallCondition: string; // 'Good', 'Fair', 'Poor'
 	colorChange: string; // 'Similar', 'Light-to-Dark', 'Dark-to-Light'
-
-	// Conditional fields
 	ceilingTexture?: string; // 'Flat', 'Textured', 'Popcorn'
 	trimCondition?: string; // 'Good', 'Poor'
 	doorCount?: string; // '1', '2', etc.
@@ -30,8 +28,6 @@ export interface RepairItem {
 	placement: string;  // 'Wall', 'Ceiling'
 	texture: string;    // 'Smooth', 'Orange Peel', 'Knockdown', 'Popcorn'
 	scope: string;      // 'Patch Only', 'Patch & Prime', 'Patch, Prime & Paint'
-	
-	// Conditional
 	paintMatching?: string; // 'Customer has paint', 'Color Match needed', 'Paint entire wall'
 }
 
@@ -50,9 +46,7 @@ export interface FormData {
 	};
 
 	patching: {
-		// The list of major damages
 		repairs: RepairItem[]; 
-		// The free text for small stuff
 		smallRepairsDescription?: string; 
 	};
 

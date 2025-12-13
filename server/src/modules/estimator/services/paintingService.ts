@@ -1,19 +1,8 @@
-import dotenv from 'dotenv';
+import { callGemini } from './aiHelper.js';
 
-dotenv.config();
-
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
-
-if (!GEMINI_API_KEY) {
-	console.error('❌ GEMINI_API_KEY is missing in server .env file');
-}
-
-export const calculatePaintingEstimate = async (formData: any) => {
-	const customerAnswersPrompt = JSON.stringify(formData);
-
-	const mainPrompt = `
+const generatePaintingPrompt = (data: any) => {
+	return `
+  
     You are an expert estimator for a high-quality painting business.
     Your labor rate is $70 per hour.
     Your goal is to provide a preliminary price range based on the user's selections.
@@ -105,7 +94,7 @@ export const calculatePaintingEstimate = async (formData: any) => {
     --- END OF RULES ---
 
     Here is the customer's data:
-    ${customerAnswersPrompt}
+    ${JSON.stringify(data)}
 
     YOUR TASK:
     Analyze the customer's JSON data against my rules and return *only* a valid JSON object in the specified format. Do not include any other text.
@@ -117,46 +106,11 @@ export const calculatePaintingEstimate = async (formData: any) => {
       "explanation": "string",
       "totalHours": number
     }
+  
   `;
+};
 
-	try {
-		const response = await fetch(API_URL, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				contents: [{ parts: [{ text: mainPrompt }] }],
-				generationConfig: {
-					responseMimeType: 'application/json',
-					// We define the schema to enforce the JSON structure
-					responseSchema: {
-						type: 'OBJECT',
-						properties: {
-							low: { type: 'NUMBER' },
-							high: { type: 'NUMBER' },
-							explanation: { type: 'STRING' },
-							totalHours: { type: 'NUMBER' },
-						},
-						required: ['low', 'high', 'explanation', 'totalHours'],
-					},
-				},
-			}),
-		});
-
-		if (!response.ok) {
-			const errorText = await response.text();
-			console.error('Gemini API Error details:', errorText);
-			throw new Error(`Gemini API Error: ${response.statusText}`);
-		}
-
-		const data = await response.json();
-
-		const jsonText = data.candidates[0].content.parts[0].text;
-
-		return JSON.parse(jsonText);
-	} catch (error) {
-		console.error('Estimation Service Error:', error);
-		throw new Error('Failed to generate estimate');
-	}
+export const calculatePaintingEstimate = async (data: any) => {
+	const prompt = generatePaintingPrompt(data);
+	return await callGemini(prompt);
 };

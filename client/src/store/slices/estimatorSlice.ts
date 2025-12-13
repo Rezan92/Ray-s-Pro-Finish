@@ -10,8 +10,6 @@ import type {
 } from '@/components/common/estimator/EstimatorTypes';
 import { endpoints } from '@/config/api';
 
-// --- Default/Initial State ---
-// We define the initial state of a room here to keep it consistent
 const createNewRoom = (
 	type: string,
 	id: string,
@@ -24,7 +22,6 @@ const createNewRoom = (
 		label,
 		size: 'Medium',
 		ceilingHeight: isStairwell ? '11ft+' : '8ft',
-		// Initialize crownMolding to false
 		surfaces: {
 			walls: true,
 			ceiling: false,
@@ -38,7 +35,6 @@ const createNewRoom = (
 		trimCondition: 'Good',
 		doorCount: '1',
 		doorStyle: 'Slab',
-		// Initialize new fields
 		crownMoldingStyle: 'Simple',
 		roomDescription: '',
 	};
@@ -74,11 +70,8 @@ const initialState: EstimatorState = {
 		services: { painting: false, patching: false, installation: false },
 		painting: { rooms: [], paintProvider: '', furniture: '' },
 		patching: {
-			quantity: '1-3',
-			location: ['Wall'],
-			largest_size: 'Fist-sized',
-			texture: "I don't know",
-			scope: 'Patch only',
+			repairs: [],
+			smallRepairsDescription: '',
 		},
 		installation: {
 			project_type: 'New construction',
@@ -94,33 +87,25 @@ const initialState: EstimatorState = {
 	error: null,
 };
 
-// --- Async Thunk for Gemini ---
 export const generateEstimate = createAsyncThunk(
 	'estimator/generate',
 	async (formData: FormData, { rejectWithValue }) => {
 		try {
-			// We now fetch from our own backend!
 			const response = await fetch(endpoints.estimate, {
 				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
+				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(formData),
 			});
 
-			if (!response.ok) {
+			if (!response.ok)
 				throw new Error('Server error: Failed to fetch estimate');
-			}
-
-			const result = await response.json();
-			return result;
+			return await response.json();
 		} catch (err: any) {
 			return rejectWithValue(err.message || 'Failed to generate estimate');
 		}
 	}
 );
 
-// --- The Slice ---
 export const estimatorSlice = createSlice({
 	name: 'estimator',
 	initialState,
@@ -128,7 +113,6 @@ export const estimatorSlice = createSlice({
 		setStep: (state, action: PayloadAction<number>) => {
 			state.step = action.payload;
 		},
-		// Service Toggles
 		toggleService: (
 			state,
 			action: PayloadAction<{
@@ -138,15 +122,12 @@ export const estimatorSlice = createSlice({
 		) => {
 			state.formData.services[action.payload.name] = action.payload.checked;
 		},
-
-		// --- Painting Logic ---
 		toggleRoomType: (
 			state,
 			action: PayloadAction<{ type: string; isChecked: boolean }>
 		) => {
 			const { type, isChecked } = action.payload;
 			if (isChecked) {
-				// Add first room if not exists
 				const exists = state.formData.painting.rooms.some(
 					(r) => r.type === type
 				);
@@ -161,7 +142,6 @@ export const estimatorSlice = createSlice({
 					);
 				}
 			} else {
-				// Remove all rooms of this type
 				state.formData.painting.rooms = state.formData.painting.rooms.filter(
 					(r) => r.type !== type
 				);
@@ -189,7 +169,7 @@ export const estimatorSlice = createSlice({
 				(r) => r.id === action.payload.roomId
 			);
 			if (room) {
-				// @ts-ignore - Dynamic assignment is safe here due to payload structure
+				// @ts-ignore
 				room[action.payload.field] = action.payload.value;
 			}
 		},
@@ -200,8 +180,6 @@ export const estimatorSlice = createSlice({
 			// @ts-ignore
 			state.formData.painting[action.payload.field] = action.payload.value;
 		},
-
-		// --- Generic Nested Updates (Patching/Installation) ---
 		updateNestedForm: (
 			state,
 			action: PayloadAction<{
@@ -214,8 +192,6 @@ export const estimatorSlice = createSlice({
 			state.formData[action.payload.path][action.payload.field] =
 				action.payload.value;
 		},
-
-		// --- Contact ---
 		updateContact: (
 			state,
 			action: PayloadAction<{ field: string; value: string }>
@@ -223,7 +199,6 @@ export const estimatorSlice = createSlice({
 			// @ts-ignore
 			state.formData.contact[action.payload.field] = action.payload.value;
 		},
-
 		resetEstimator: () => initialState,
 	},
 	extraReducers: (builder) => {
@@ -235,7 +210,7 @@ export const estimatorSlice = createSlice({
 			.addCase(generateEstimate.fulfilled, (state, action) => {
 				state.status = 'succeeded';
 				state.estimate = action.payload;
-				state.step = 4; // Auto-advance to result
+				state.step = 4;
 			})
 			.addCase(generateEstimate.rejected, (state, action) => {
 				state.status = 'failed';
