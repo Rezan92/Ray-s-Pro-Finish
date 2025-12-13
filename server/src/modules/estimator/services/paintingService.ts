@@ -3,15 +3,14 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-// Using the same model version you had, or a standard stable one.
-// "gemini-1.5-flash" is excellent for this.
+
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
 
 if (!GEMINI_API_KEY) {
 	console.error('❌ GEMINI_API_KEY is missing in server .env file');
 }
 
-export const calculateEstimate = async (formData: any) => {
+export const calculatePaintingEstimate = async (formData: any) => {
 	const customerAnswersPrompt = JSON.stringify(formData);
 
 	const mainPrompt = `
@@ -153,7 +152,6 @@ export const calculateEstimate = async (formData: any) => {
 
 		const data = await response.json();
 
-		// The path to the text is different in the REST API vs the SDK
 		const jsonText = data.candidates[0].content.parts[0].text;
 
 		return JSON.parse(jsonText);

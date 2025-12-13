@@ -1,8 +1,3 @@
-// This file defines the new, complex data structure for our form
-
-/**
- * Interface for a single, dynamic painting room card.
- */
 export interface PaintingRoom {
 	id: string; // A unique ID like "livingRoom_0" or "bedroom_1"
 	type: string; // "livingRoom", "kitchen", "bedroom", etc.
@@ -14,7 +9,7 @@ export interface PaintingRoom {
 		ceiling: boolean;
 		trim: boolean;
 		doors: boolean;
-		crownMolding: boolean; // <--- NEW
+		crownMolding: boolean;
 	};
 	wallCondition: string; // 'Good', 'Fair', 'Poor'
 	colorChange: string; // 'Similar', 'Light-to-Dark', 'Dark-to-Light'
@@ -24,42 +19,43 @@ export interface PaintingRoom {
 	trimCondition?: string; // 'Good', 'Poor'
 	doorCount?: string; // '1', '2', etc.
 	doorStyle?: string; // 'Slab', 'Paneled'
-	crownMoldingStyle?: string; // 'Simple', 'Ornate' <--- NEW
-	roomDescription?: string; // For 'Other' rooms <--- NEW
+	crownMoldingStyle?: string; // 'Simple', 'Ornate'
+	roomDescription?: string; // For 'Other' rooms
 }
 
-/**
- * Defines the structure for the *entire* estimator form.
- */
+export interface RepairItem {
+	id: string;
+	damageType: string; // 'Hole', 'Crack', 'Water Damage', 'Tape Issues'
+	size: string;       // 'Medium (<12")', 'Large (1-3ft)', 'X-Large (Sheet+)'
+	placement: string;  // 'Wall', 'Ceiling'
+	texture: string;    // 'Smooth', 'Orange Peel', 'Knockdown', 'Popcorn'
+	scope: string;      // 'Patch Only', 'Patch & Prime', 'Patch, Prime & Paint'
+	
+	// Conditional
+	paintMatching?: string; // 'Customer has paint', 'Color Match needed', 'Paint entire wall'
+}
+
 export interface FormData {
-	// Step 1: Service Selection
 	services: {
 		painting: boolean;
 		patching: boolean;
 		installation: boolean;
 	};
 
-	// Path 1: Painting Details (New Structure)
 	painting: {
-		// This array will hold all the room cards
 		rooms: PaintingRoom[];
-
-		// Global settings
 		paintProvider: string;
 		furniture: string;
 		additionalDetails?: string;
 	};
 
-	// Path 2: Patching Details (Unchanged)
 	patching: {
-		quantity: string;
-		location: string[];
-		largest_size: string;
-		texture: string;
-		scope: string;
+		// The list of major damages
+		repairs: RepairItem[]; 
+		// The free text for small stuff
+		smallRepairsDescription?: string; 
 	};
 
-	// Path 3: Installation Details (Unchanged)
 	installation: {
 		project_type: string;
 		sqft: string;
@@ -68,7 +64,6 @@ export interface FormData {
 		finish: string;
 	};
 
-	// Path 4: Contact (Unchanged)
 	contact: {
 		name: string;
 		email: string;
@@ -76,13 +71,9 @@ export interface FormData {
 	};
 }
 
-/**
- * Defines the structure of the JSON response we expect from Gemini.
- * ADDED: totalHours
- */
 export interface Estimate {
 	low: number;
 	high: number;
 	explanation: string;
-	totalHours: number; // Added for your internal reference
+	totalHours: number;
 }
