@@ -15,10 +15,10 @@ const INITIAL_REPAIR: RepairItem = {
 	damageType: 'Hole',
 	size: 'Medium (<12")',
 	placement: 'Wall',
+	accessibility: 'Standard',
 	texture: 'Smooth',
 	scope: 'Patch Only',
 	paintMatching: 'Customer has paint',
-	accessibility: 'Standard',
 };
 
 export const RepairForm: React.FC<RepairFormProps> = ({
@@ -29,7 +29,6 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 }) => {
 	const { patching } = formData;
 
-	// Local state for the "New Repair" card
 	const [newRepair, setNewRepair] = useState<RepairItem>(INITIAL_REPAIR);
 
 	const handleNewRepairChange = (
@@ -41,9 +40,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 	const handleAddClick = () => {
 		onAddRepair({
 			...newRepair,
-			id: Date.now().toString(), // Simple ID generation
+			id: Date.now().toString(),
 		});
-		// Reset form
 		setNewRepair({ ...INITIAL_REPAIR });
 	};
 
@@ -53,36 +51,47 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 		<div className='service-form-box'>
 			<h3 className='service-form-title'>Drywall Repair & Patching</h3>
 
-			<div
-				className='form-group-box'
-				style={{ backgroundColor: '#fff', border: 'none', paddingLeft: 0 }}
-			>
-				<p style={{ marginBottom: '1rem', color: '#666' }}>
-					For larger repairs, please add them to the list below. For small
-					dings, use the description box at the bottom.
+			{/* Instruction Box */}
+			<div className='form-group-box'>
+				<p style={{ margin: 0, color: '#666' }}>
+					For larger repairs, use the builder below to add them to your list.
+					For small dings, use the description box at the bottom.
 				</p>
 			</div>
 
-			{/* --- 1. LIST OF ADDED REPAIRS --- */}
+			{/* List of Added Repairs */}
 			{patching.repairs.length > 0 && (
-				<div className='added-repairs-list'>
-					<h4 className='room-details-title'>Your Repair List</h4>
+				<div
+					className='added-repairs-list'
+					style={{ marginTop: '1.5rem' }}
+				>
+					<h4 className='room-details-title'>
+						Your Repair List ({patching.repairs.length})
+					</h4>
 					{patching.repairs.map((item, index) => (
 						<div
 							key={item.id}
-							className='form-group-box repair-item-summary'
+							className='form-group-box'
 							style={{
 								display: 'flex',
 								justifyContent: 'space-between',
 								alignItems: 'center',
+								marginBottom: '8px',
 							}}
 						>
 							<div>
 								<strong>
 									{index + 1}. {item.placement} - {item.damageType}
 								</strong>
-								<div style={{ fontSize: '0.85rem', color: '#666' }}>
-									{item.size} • {item.texture} • {item.scope}
+								<div
+									style={{
+										fontSize: '0.85rem',
+										color: '#666',
+										marginTop: '4px',
+									}}
+								>
+									{item.size} • {item.accessibility} • {item.texture} •{' '}
+									{item.scope}
 								</div>
 							</div>
 							<button
@@ -97,109 +106,128 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 				</div>
 			)}
 
-			{/* --- 2. ADD NEW REPAIR BUILDER --- */}
+			{/* --- THE REPAIR BUILDER --- */}
+			{/* We use a clean white container with a border to hold the isolated questions */}
 			<div
-				className='form-group-box'
-				style={{ border: '2px solid var(--color-primary)', marginTop: '2rem' }}
+				style={{
+					border: '2px solid var(--color-primary)',
+					borderRadius: '8px',
+					padding: '1.5rem',
+					marginTop: '2rem',
+					backgroundColor: '#fff',
+				}}
 			>
 				<h4
 					className='room-details-title'
-					style={{ color: 'var(--color-primary)' }}
+					style={{ color: 'var(--color-primary)', marginBottom: '1.5rem' }}
 				>
 					Add a Major Repair
 				</h4>
 
-				<div className='form-group-grid'>
-					<div className='form-group'>
-						<label>Damage Type</label>
-						<select
-							name='damageType'
-							value={newRepair.damageType}
-							onChange={handleNewRepairChange}
-						>
-							<option value='Hole'>Hole / Impact Damage</option>
-							<option value='Crack'>Stress Crack</option>
-							<option value='Water Damage'>Water Damage</option>
-							<option value='Tape Issues'>Peeling Tape / Blisters</option>
-						</select>
-					</div>
-					<div className='form-group'>
-						<label>Placement</label>
-						<select
-							name='placement'
-							value={newRepair.placement}
-							onChange={handleNewRepairChange}
-						>
-							<option value='Wall'>Wall</option>
-							<option value='Ceiling'>Ceiling (Harder access)</option>
-						</select>
-					</div>
-				</div>
-				<div className='form-group'>
-					<label>Height / Accessibility</label>
-					<select
-						name='accessibility'
-						value={newRepair.accessibility}
-						onChange={handleNewRepairChange}
-					>
-						<option value='Standard'>
-							Standard (Reachable from floor/small stool)
-						</option>
-						<option value='Ladder'>
-							Medium Height (Requires 6-8ft Ladder)
-						</option>
-						<option value='High'>
-							High / Vaulted (Requires Extension Ladder/Scaffold)
-						</option>
-					</select>
-				</div>
-				<div className='form-group-grid'>
-					<div className='form-group'>
-						<label>Size of Damage</label>
-						<select
-							name='size'
-							value={newRepair.size}
-							onChange={handleNewRepairChange}
-						>
-							<option value='Medium (<12")'>
-								Medium (Plate size or smaller)
-							</option>
-							<option value='Large (1-3ft)'>Large (1-3 feet)</option>
-							<option value='X-Large (Sheet+)'>
-								X-Large (Full sheet or more)
-							</option>
-						</select>
-					</div>
-					<div className='form-group'>
-						<label>Texture Matching</label>
-						<select
-							name='texture'
-							value={newRepair.texture}
-							onChange={handleNewRepairChange}
-						>
-							<option value='Smooth'>Smooth / Flat</option>
-							<option value='Orange Peel'>Orange Peel</option>
-							<option value='Knockdown'>Knockdown</option>
-							<option value='Popcorn'>Popcorn (Ceiling)</option>
-						</select>
+				{/* 1. Type & Placement */}
+				<div className='form-group-box'>
+					<div className='form-group-grid'>
+						<div className='form-group'>
+							<label>Damage Type</label>
+							<select
+								name='damageType'
+								value={newRepair.damageType}
+								onChange={handleNewRepairChange}
+							>
+								<option value='Hole'>Hole / Impact Damage</option>
+								<option value='Crack'>Stress Crack</option>
+								<option value='Water Damage'>Water Damage</option>
+								<option value='Tape Issues'>Peeling Tape / Blisters</option>
+							</select>
+						</div>
+						<div className='form-group'>
+							<label>Placement</label>
+							<select
+								name='placement'
+								value={newRepair.placement}
+								onChange={handleNewRepairChange}
+							>
+								<option value='Wall'>Wall</option>
+								<option value='Ceiling'>Ceiling</option>
+							</select>
+						</div>
 					</div>
 				</div>
 
-				<div className='form-group'>
-					<label>Scope of Work</label>
-					<select
-						name='scope'
-						value={newRepair.scope}
-						onChange={handleNewRepairChange}
-					>
-						<option value='Patch Only'>Patch Only (Ready for paint)</option>
-						<option value='Patch & Prime'>Patch & Prime</option>
-						<option value='Patch, Prime & Paint'>Patch, Prime & Paint</option>
-					</select>
+				{/* 2. Size & Accessibility */}
+				<div className='form-group-box'>
+					<div className='form-group-grid'>
+						<div className='form-group'>
+							<label>Size of Damage</label>
+							<select
+								name='size'
+								value={newRepair.size}
+								onChange={handleNewRepairChange}
+							>
+								<option value='Medium (<12")'>
+									Medium (Plate size or smaller)
+								</option>
+								<option value='Large (1-3ft)'>Large (1-3 feet)</option>
+								<option value='X-Large (Sheet+)'>
+									X-Large (Full sheet or more)
+								</option>
+							</select>
+						</div>
+						<div className='form-group'>
+							<label>Height / Accessibility</label>
+							<select
+								name='accessibility'
+								value={newRepair.accessibility}
+								onChange={handleNewRepairChange}
+							>
+								<option value='Standard'>
+									Standard (Reachable from floor/stool)
+								</option>
+								<option value='Ladder'>Medium (Requires 6-8ft Ladder)</option>
+								<option value='High'>
+									High / Vaulted (Scaffold/Ext. Ladder)
+								</option>
+							</select>
+						</div>
+					</div>
 				</div>
 
+				{/* 3. Texture & Scope */}
+				<div className='form-group-box'>
+					<div className='form-group-grid'>
+						<div className='form-group'>
+							<label>Texture Matching</label>
+							<select
+								name='texture'
+								value={newRepair.texture}
+								onChange={handleNewRepairChange}
+							>
+								<option value='Smooth'>Smooth / Flat</option>
+								<option value='Orange Peel'>Orange Peel</option>
+								<option value='Knockdown'>Knockdown</option>
+								<option value='Popcorn'>Popcorn (Ceiling)</option>
+							</select>
+						</div>
+						<div className='form-group'>
+							<label>Scope of Work</label>
+							<select
+								name='scope'
+								value={newRepair.scope}
+								onChange={handleNewRepairChange}
+							>
+								<option value='Patch Only'>Patch Only (Ready for paint)</option>
+								<option value='Patch & Prime'>Patch & Prime</option>
+								<option value='Patch, Prime & Paint'>
+									Patch, Prime & Paint
+								</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				{/* 4. Paint Matching (Conditional) */}
 				{showPaintOptions && (
-					<div className='conditional-field'>
+					<div className='form-group-box'>
 						<div className='form-group'>
 							<label>Paint Matching</label>
 							<select
@@ -224,7 +252,6 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 				<Button
 					type='button'
 					variant='dark'
-					className='btn-add-room'
 					style={{ width: '100%', marginTop: '1rem' }}
 					onClick={handleAddClick}
 				>
@@ -232,20 +259,22 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 				</Button>
 			</div>
 
-			{/* --- 3. SMALL REPAIRS --- */}
-			<div className='form-group-box global-questions'>
+			{/* --- Small Repairs --- */}
+			<div
+				className='form-group-box'
+				style={{ marginTop: '2rem' }}
+			>
 				<div className='form-group'>
-					<label>
-						Small Repairs / Description
+					<label style={{ display: 'flex', justifyContent: 'space-between' }}>
+						<span>Small Repairs / Description</span>
 						<span
 							style={{
 								fontWeight: 'normal',
 								fontSize: '0.8rem',
 								color: '#666',
-								marginLeft: '8px',
 							}}
 						>
-							(Max 600 chars)
+							Max 600 chars
 						</span>
 					</label>
 					<div
@@ -259,9 +288,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 						}}
 					>
 						<AlertCircle size={16} />
-						<span>
-							Have small nail pops or minor dings? Just list them here.
-						</span>
+						<span>Have small nail pops or minor dings? List them here.</span>
 					</div>
 					<textarea
 						name='smallRepairsDescription'
@@ -278,7 +305,12 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 						placeholder='e.g. 5 nail pops in the hallway, small ding behind the bedroom door...'
 					/>
 					<div
-						style={{ textAlign: 'right', fontSize: '0.8rem', color: '#999' }}
+						style={{
+							textAlign: 'right',
+							fontSize: '0.8rem',
+							color: '#999',
+							marginTop: '4px',
+						}}
 					>
 						{(patching.smallRepairsDescription || '').length} / 600
 					</div>
