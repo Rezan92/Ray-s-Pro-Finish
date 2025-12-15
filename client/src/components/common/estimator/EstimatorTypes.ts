@@ -44,11 +44,31 @@ export interface InstallationData {
 	includePaint: boolean;
 }
 
+export interface GarageData {
+	capacity: string; // '1-Car', '2-Car', '3-Car', '4-Car'
+	scope: string; // 'Walls Only', 'Ceiling Only', 'Both'
+
+	// Condition
+	currentCondition: string; // 'Open Studs', 'Insulated (No Board)', 'Existing Drywall (Needs Finish)'
+
+	// Finish
+	finishLevel: string; // 'Fire Tape (Code)', 'Level 3 (Work)', 'Level 4 (Smooth/Paint Ready)'
+
+	// Services
+	includeInsulation: boolean;
+	includePaint: boolean;
+	includeEpoxy: boolean;
+	includeBaseboards: boolean; // Rubber/Vinyl base
+
+	additionalDetails?: string;
+}
+
 export interface FormData {
 	services: {
 		painting: boolean;
 		patching: boolean;
 		installation: boolean;
+		garage: boolean;
 	};
 
 	painting: {
@@ -64,6 +84,7 @@ export interface FormData {
 	};
 
 	installation: InstallationData;
+	garage: GarageData;
 
 	contact: {
 		name: string;

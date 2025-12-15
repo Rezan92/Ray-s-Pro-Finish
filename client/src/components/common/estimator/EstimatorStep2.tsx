@@ -3,6 +3,7 @@ import type { FormData, RepairItem } from './EstimatorTypes';
 import { PaintingForm } from './PaintingForm';
 import { RepairForm } from './RepairForm';
 import { InstallationForm } from './InstallationForm';
+import { GarageForm } from './GarageForm';
 
 interface EstimatorStep2Props {
 	formData: FormData;
@@ -58,6 +59,13 @@ export const EstimatorStep2: React.FC<EstimatorStep2Props> = (props) => {
 
 			{services.installation && (
 				<InstallationForm
+					formData={formData}
+					onNestedChange={props.onNestedChange as any}
+				/>
+			)}
+
+			{services.garage && (
+				<GarageForm
 					formData={formData}
 					onNestedChange={props.onNestedChange as any}
 				/>
