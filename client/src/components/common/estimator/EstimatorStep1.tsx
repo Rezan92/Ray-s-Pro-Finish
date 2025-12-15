@@ -55,6 +55,16 @@ export const EstimatorStep1: React.FC<EstimatorStep1Props> = ({
 						/>
 						Garage Finishing
 					</label>
+
+					<label className='checkbox-label large'>
+						<input
+							type='checkbox'
+							name='basement'
+							checked={services.basement}
+							onChange={handleServiceChange}
+						/>
+						Basement Finishing
+					</label>
 				</div>
 			</div>
 		</div>

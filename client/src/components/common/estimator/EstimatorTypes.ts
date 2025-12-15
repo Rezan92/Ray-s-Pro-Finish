@@ -63,12 +63,34 @@ export interface GarageData {
 	additionalDetails?: string;
 }
 
+export interface BasementData {
+	sqft: string;
+	ceilingHeight: string; // 'Standard', 'Low (<7ft)', 'High (9ft+)'
+	currentCondition: string; // 'Bare Concrete', 'Framed', 'Partially Finished'
+	numBedrooms: string; // '0', '1', '2', '3+'
+
+	egressWindow: string; // 'Existing/Code Compliant', 'Need to Install (Cut Foundation)'
+
+	bathroom: string; // 'None', 'Half Bath', 'Full Bath'
+	plumbingRoughIn: string; // 'Yes, pipes visible', 'No, need concrete work'
+	wetBar: string; // 'None', 'Wet Bar', 'Kitchenette'
+
+	hvac: string;
+	stairs: string;
+	ceilingType: string; // 'Drywall', 'Drop Ceiling', 'Industrial (Black)'
+	flooring: string; // 'LVP', 'Carpet', 'Tile', 'None'
+	electrical: string; // 'Standard', 'Upgraded (Cans)'
+
+	additionalDetails?: string;
+}
+
 export interface FormData {
 	services: {
 		painting: boolean;
 		patching: boolean;
 		installation: boolean;
 		garage: boolean;
+		basement: boolean;
 	};
 
 	painting: {
@@ -85,6 +107,7 @@ export interface FormData {
 
 	installation: InstallationData;
 	garage: GarageData;
+	basement: BasementData;
 
 	contact: {
 		name: string;

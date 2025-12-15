@@ -3,6 +3,7 @@ import { calculatePaintingEstimate } from './services/paintingService.js';
 import { calculateRepairEstimate } from './services/repairService.js';
 import { calculateInstallEstimate } from './services/installService.js';
 import { calculateGarageEstimate } from './services/garageService.js';
+import { calculateBasementEstimate } from './services/basementService.js';
 
 export const getEstimate = async (
 	req: Request,
@@ -67,6 +68,18 @@ export const getEstimate = async (
 					totalHigh += est.high;
 					totalHours += est.totalHours;
 					combinedExplanation += `GARAGE FINISH:\n${est.explanation}\n\n`;
+				})
+			);
+		}
+
+		// 5. Basement
+		if (formData.services.basement) {
+			promises.push(
+				calculateBasementEstimate(formData.basement).then((est) => {
+					totalLow += est.low;
+					totalHigh += est.high;
+					totalHours += est.totalHours;
+					combinedExplanation += `BASEMENT FINISH:\n${est.explanation}\n\n`;
 				})
 			);
 		}
