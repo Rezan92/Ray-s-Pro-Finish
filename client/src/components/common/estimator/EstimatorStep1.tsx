@@ -28,6 +28,7 @@ export const EstimatorStep1: React.FC<EstimatorStep1Props> = ({
 						/>
 						Interior Painting
 					</label>
+
 					<label className='checkbox-label large'>
 						<input
 							type='checkbox'
@@ -37,6 +38,7 @@ export const EstimatorStep1: React.FC<EstimatorStep1Props> = ({
 						/>
 						Drywall Patching
 					</label>
+
 					<label className='checkbox-label large'>
 						<input
 							type='checkbox'
@@ -44,8 +46,9 @@ export const EstimatorStep1: React.FC<EstimatorStep1Props> = ({
 							checked={services.installation}
 							onChange={handleServiceChange}
 						/>
-						Drywall Installation
+						Framing, Remodeling & Drywall
 					</label>
+
 					<label className='checkbox-label large'>
 						<input
 							type='checkbox'

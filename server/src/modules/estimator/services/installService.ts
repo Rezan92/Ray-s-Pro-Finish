@@ -1,55 +1,48 @@
 import { callGemini } from './aiHelper.js';
 
 const generateInstallPrompt = (data: any) => {
-  return `
-    You are an expert construction estimator.
-    Labor Rate: $75/hr (Higher for installation).
+	return `
+    You are an expert construction estimator for Framing & Remodeling.
+    Labor Rate: $75/hr.
     
-    --- DRYWALL INSTALLATION RULES ---
+    --- FRAMING & REMODELING RULES ---
 
-    SECTION 1: CALCULATING BOARD COUNT (Estimated)
-    * If 'Wall':
-       - Small (<10ft): 3 sheets
-       - Medium (10-20ft): 5 sheets
-       - Large (20ft+): 8 sheets
-    * If 'Ceiling':
-       - Area = roomSqft. Sheets = (Area / 32). Add 15% waste.
-    * If 'Room':
-       - Wall Area approx = (sqrt(roomSqft) * 4) * 8. 
-       - Ceiling Area = roomSqft.
-       - Total Sheets = (Wall Area + Ceiling Area) / 32. Add 15% waste.
+    SECTION 1: PROJECT TYPES
+    * "Demo":
+       - Removal Labor: 1 hr per 4 linear feet.
+       - Load Bearing: If "Yes", add $1,500 placeholder (Engineering/Support).
+       - Disposal: If included, add $150 + $50 labor.
+    * "Hanging" (Just Hanging Drywall):
+       - Calculate sheets based on 'roomSqft' / 32.
+       - Labor: Hanging Only (0.5 hrs/sheet) + Finish Level.
+       - Framing: Assume $0 (Ready).
+    * "Ceiling" (Overlay):
+       - Calculate sheets. Hanging Labor x 1.25 (Overhead fatigue).
+       - Framing: Assume $0.
 
-    SECTION 2: LABOR (Hanging & Finishing)
-    * Hanging: 0.5 hours per sheet.
-    * Finishing (Taping/Mudding):
-       - Level 3: 0.5 hours per sheet.
-       - Level 4: 0.75 hours per sheet (Standard).
-       - Level 5: 1.25 hours per sheet (Skim coat).
-    * Height Multiplier:
-       - High (9-10ft): 1.2x total labor.
-       - Vaulted (12ft+): 1.5x total labor.
+    SECTION 2: NEW CONSTRUCTION (Building Walls)
+    * "Wall"/"Partition":
+       - Sheets: Small(3), Medium(5), Large(8).
+       - Framing (If Need Wood/Metal): 0.75 hrs/LF. Material $5/LF.
+       - Openings: 1.5 hrs/opening.
 
-    SECTION 3: FRAMING (If selected)
-    * "Frames are ready": 0 extra hours.
-    * "Need Framing": 
-       - Calculate Linear Feet.
-       - Wood/Metal: 0.75 hours per linear foot.
-       - Materials: +$5 per linear foot.
+    SECTION 3: LABOR & FINISHES
+    * Hanging: 0.5 hrs/sheet.
+    * Finishing: L3(0.5), L4(0.75), L5(1.25).
+    * Painting: If included, 0.4 hrs/sheet + $20/gal material.
 
-    SECTION 4: PAINTING (If selected)
-    * Prime & Paint: 
-       - 0.4 hours per sheet.
-       - Materials: $20 per estimated gallon (1 gal per 300sqft).
+    SECTION 4: COMPLEXITY (Analyze 'additionalDetails')
+    * Look for keywords in the description:
+       - "Soffit", "Box", "Duct": Add +2 hours framing labor.
+       - "High", "Vaulted": Multiply total labor by 1.2x.
+       - "Soundproof", "Quiet": Suggest 5/8" board cost adjustment.
 
-    SECTION 5: OPENINGS (If 'Room' selected)
-    * Add 1.0 hour per door/window for corner bead and detail work.
-
-    Calculate total hours, material estimates, and cost range.
+    Calculate total hours and budget range.
     Customer Data: ${JSON.stringify(data)}
   `;
 };
 
 export const calculateInstallEstimate = async (data: any) => {
-    const prompt = generateInstallPrompt(data);
-    return await callGemini(prompt);
+	const prompt = generateInstallPrompt(data);
+	return await callGemini(prompt);
 };

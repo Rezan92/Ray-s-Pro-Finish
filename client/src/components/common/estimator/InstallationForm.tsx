@@ -1,5 +1,6 @@
 import React from 'react';
 import type { FormData } from './EstimatorTypes';
+import { AlertTriangle, Info } from 'lucide-react';
 
 interface InstallationFormProps {
 	formData: FormData;
@@ -13,7 +14,9 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 	const { installation } = formData;
 
 	const handleChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+		e: React.ChangeEvent<
+			HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+		>
 	) => {
 		const value =
 			e.target.type === 'checkbox'
@@ -22,33 +25,53 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 		onNestedChange('installation', e.target.name, value);
 	};
 
+	const isDemo = installation.projectType === 'Demo';
+	const isHangingOnly = installation.projectType === 'Hanging';
+
+	// LOGIC: Show framing options only for New Walls, Partitions, or New Rooms.
+	const showFraming =
+		installation.projectType === 'Wall' ||
+		installation.projectType === 'Partition' ||
+		installation.projectType === 'Room';
+
+	// LOGIC: Show dimensions
+	const isLinearProject =
+		installation.projectType === 'Wall' ||
+		installation.projectType === 'Partition' ||
+		isDemo;
+	const isAreaProject =
+		installation.projectType === 'Ceiling' ||
+		installation.projectType === 'Room' ||
+		isHangingOnly;
+
 	return (
 		<div className='service-form-box'>
-			<h3 className='service-form-title'>Drywall Installation</h3>
+			<h3 className='service-form-title'>Framing & Remodeling</h3>
 
-			{/* 1. Project Type Selector */}
+			{/* 1. Project Type */}
 			<div className='form-group-box'>
 				<div className='form-group'>
-					<label>What are we building?</label>
+					<label>What are we working on?</label>
 					<select
 						name='projectType'
 						value={installation.projectType}
 						onChange={handleChange}
 					>
-						<option value='Wall'>Adding a New Wall</option>
-						<option value='Ceiling'>
-							Ceiling Overlay (Cover Popcorn/Damage)
-						</option>
+						<option value='Wall'>Build a New Wall</option>
+						<option value='Partition'>Split a Room (Partition Wall)</option>
+						<option value='Hanging'>Just Hanging Drywall (Board Only)</option>
+						<option value='Ceiling'>Ceiling Overlay (Cover Popcorn)</option>
 						<option value='Room'>New Room / Addition</option>
+						<option value='Demo'>Remove / Demolish a Wall</option>
 					</select>
 				</div>
 			</div>
 
-			{/* 2. Dynamic Dimensions */}
+			{/* 2. Dimensions & Scope */}
 			<div className='form-group-box'>
 				<div className='form-group-grid'>
-					{/* Logic for WALLS */}
-					{installation.projectType === 'Wall' && (
+					{/* Linear Projects (Length) */}
+					{isLinearProject && (
 						<>
 							<div className='form-group'>
 								<label>Approximate Length</label>
@@ -77,11 +100,11 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 						</>
 					)}
 
-					{/* Logic for CEILING OVERLAYS */}
-					{installation.projectType === 'Ceiling' && (
+					{/* Area Projects (Sq Ft) */}
+					{isAreaProject && (
 						<>
 							<div className='form-group'>
-								<label>Total Ceiling Area (Sq Ft)</label>
+								<label>Total Area (Sq Ft)</label>
 								<input
 									type='number'
 									name='roomSqft'
@@ -105,93 +128,186 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 							</div>
 						</>
 					)}
+				</div>
+			</div>
 
-					{/* Logic for ROOM ADDITIONS */}
-					{installation.projectType === 'Room' && (
-						<>
+			{/* 3. DEMOLITION SPECIFICS */}
+			{isDemo && (
+				<div
+					className='form-group-box'
+					style={{ borderLeft: '4px solid #dc2626' }}
+				>
+					<h4
+						className='room-details-title'
+						style={{ fontSize: '1rem', color: '#dc2626', marginBottom: '1rem' }}
+					>
+						Demolition Safety
+					</h4>
+					<div className='form-group'>
+						<label
+							style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+						>
+							<AlertTriangle
+								size={18}
+								color='#dc2626'
+							/>
+							Is this a Load-Bearing Wall?
+						</label>
+						<select
+							name='isLoadBearing'
+							value={installation.isLoadBearing || 'No'}
+							onChange={handleChange}
+						>
+							<option value='No'>No, it's just a partition</option>
+							<option value='Yes'>Yes (Requires Beam/Engineer)</option>
+							<option value='Unsure'>I am unsure (Need onsite check)</option>
+						</select>
+					</div>
+					<div
+						className='form-group'
+						style={{ marginTop: '1rem' }}
+					>
+						<label className='checkbox-label'>
+							<input
+								type='checkbox'
+								name='includeDemolition'
+								checked={installation.includeDemolition || false}
+								onChange={handleChange}
+							/>
+							Include Debris Removal & Disposal?
+						</label>
+					</div>
+				</div>
+			)}
+
+			{/* 4. CONSTRUCTION SPECS (Hidden for Demo) */}
+			{!isDemo && (
+				<div className='form-group-box'>
+					<div className='form-group-grid'>
+						{/* Framing - Only for Wall/Partition/Room */}
+						{showFraming && (
 							<div className='form-group'>
-								<label>Floor Area (Sq Ft)</label>
-								<input
-									type='number'
-									name='roomSqft'
-									value={installation.roomSqft}
+								<label>Framing Status</label>
+								<select
+									name='framing'
+									value={installation.framing}
 									onChange={handleChange}
-									placeholder='e.g. 150'
-									min='0'
-								/>
+								>
+									<option value='Ready'>
+										Frames are ready (Just hang drywall)
+									</option>
+									<option value='Need Wood'>Need Wood Framing (2x4s)</option>
+									<option value='Need Metal'>
+										Need Metal Framing (Steel studs)
+									</option>
+								</select>
 							</div>
+						)}
+
+						{/* Door Logic */}
+						{(installation.projectType === 'Partition' ||
+							installation.projectType === 'Room') && (
 							<div className='form-group'>
-								<label>Doors & Windows?</label>
+								<label>Doors/Openings Needed?</label>
 								<input
 									type='number'
 									name='openings'
 									value={installation.openings}
 									onChange={handleChange}
-									placeholder='Count (e.g. 2)'
+									placeholder='0'
 									min='0'
 								/>
-								<small style={{ color: '#666' }}>
-									Total number of openings to frame around
-								</small>
 							</div>
-						</>
-					)}
-				</div>
-			</div>
-
-			{/* 3. Framing & Prep */}
-			<div className='form-group-box'>
-				<div className='form-group-grid'>
-					<div className='form-group'>
-						<label>Framing Status</label>
-						<select
-							name='framing'
-							value={installation.framing}
-							onChange={handleChange}
-						>
-							<option value='Ready'>
-								Frames are ready (Just hang drywall)
-							</option>
-							<option value='Need Wood'>Need Wood Framing (2x4s)</option>
-							<option value='Need Metal'>
-								Need Metal Framing (Steel studs)
-							</option>
-						</select>
+						)}
 					</div>
-				</div>
-			</div>
 
-			{/* 4. Finish & Paint */}
-			<div className='form-group-box'>
-				<div className='form-group-grid'>
-					<div className='form-group'>
-						<label>Desired Finish Level</label>
-						<select
-							name='finishLevel'
-							value={installation.finishLevel}
-							onChange={handleChange}
-						>
-							<option value='Level 3'>Level 3 (Textured look)</option>
-							<option value='Level 4'>Level 4 (Standard Smooth)</option>
-							<option value='Level 5'>Level 5 (Premium Skim Coat)</option>
-						</select>
-					</div>
-					<div className='form-group'>
-						<label>Painting Service</label>
-						<div
-							className='checkbox-group'
-							style={{ padding: '12px', justifyContent: 'flex-start' }}
-						>
-							<label className='checkbox-label'>
-								<input
-									type='checkbox'
-									name='includePaint'
-									checked={installation.includePaint}
-									onChange={handleChange}
-								/>
-								Yes, Prime & Paint it
-							</label>
+					{/* Finishes - Always visible unless Demo */}
+					<div
+						className='form-group-grid'
+						style={{ marginTop: showFraming ? '0' : '0' }}
+					>
+						<div className='form-group'>
+							<label>Desired Finish Level</label>
+							<select
+								name='finishLevel'
+								value={installation.finishLevel}
+								onChange={handleChange}
+							>
+								<option value='Level 3'>Level 3 (Textured look)</option>
+								<option value='Level 4'>Level 4 (Standard Smooth)</option>
+								<option value='Level 5'>Level 5 (Premium Skim Coat)</option>
+							</select>
 						</div>
+						<div className='form-group'>
+							<label>Painting Service</label>
+							<div
+								className='checkbox-group'
+								style={{ padding: '12px', justifyContent: 'flex-start' }}
+							>
+								<label className='checkbox-label'>
+									<input
+										type='checkbox'
+										name='includePaint'
+										checked={installation.includePaint}
+										onChange={handleChange}
+									/>
+									Yes, Prime & Paint it
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
+
+			{/* 5. Additional Details (GENERIC) */}
+			<div className='form-group-box'>
+				<div className='form-group'>
+					<label style={{ display: 'flex', justifyContent: 'space-between' }}>
+						<span>Additional Details</span>
+						<span
+							style={{
+								fontWeight: 'normal',
+								fontSize: '0.8rem',
+								color: '#666',
+							}}
+						>
+							Max 600 chars
+						</span>
+					</label>
+					<div
+						style={{
+							display: 'flex',
+							alignItems: 'center',
+							gap: '8px',
+							marginBottom: '8px',
+							fontSize: '0.9rem',
+							color: '#666',
+						}}
+					>
+						<Info size={16} />
+						{/* UPDATED GENERIC TEXT */}
+						<span>
+							Is there anything else we should know about this project?
+						</span>
+					</div>
+					<textarea
+						name='additionalDetails'
+						value={installation.additionalDetails || ''}
+						onChange={handleChange}
+						maxLength={600}
+						rows={3}
+						/* UPDATED GENERIC PLACEHOLDER */
+						placeholder='e.g. Need to frame around some ductwork, specific soundproofing needs, or access instructions.'
+					/>
+					<div
+						style={{
+							textAlign: 'right',
+							fontSize: '0.8rem',
+							color: '#999',
+							marginTop: '4px',
+						}}
+					>
+						{(installation.additionalDetails || '').length} / 600
 					</div>
 				</div>
 			</div>

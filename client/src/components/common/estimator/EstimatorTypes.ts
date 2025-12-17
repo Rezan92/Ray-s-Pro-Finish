@@ -42,6 +42,9 @@ export interface InstallationData {
 	openings: string; // Number of doors/windows (for Rooms)
 	finishLevel: string; // 'Level 3', 'Level 4', 'Level 5'
 	includePaint: boolean;
+	isLoadBearing?: string; // 'No', 'Yes', 'Unsure'
+	includeDemolition?: boolean; // Haul away debris
+	additionalDetails?: string;
 }
 
 export interface GarageData {
