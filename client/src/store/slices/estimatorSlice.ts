@@ -23,7 +23,7 @@ const createNewRoom = (
 		label,
 		size: 'Medium',
 		ceilingHeight: isStairwell ? '11ft+' : '8ft',
-		windowCount: 0,
+		windowCount: 1,
 		closetSize: 'None',
 		surfaces: {
 			walls: true,

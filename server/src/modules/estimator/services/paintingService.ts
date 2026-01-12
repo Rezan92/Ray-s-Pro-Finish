@@ -195,32 +195,46 @@ export const calculatePaintingEstimate = async (data: any) => {
 			roomHours += currentCrownHours;
 		}
 
-		// 4. Doors/Windows
+		// 4. Doors (Price: $60 Slab / $80 Paneled | Time: 0.75h Slab / 1.25h Paneled)
 		if (room.surfaces?.doors === true) {
-			const doorCount = parseInt(room.doorCount) || 0;
-			const doorCost = doorCount * 60;
+			const doorCount = parseInt(room.doorCount) || 1;
+			const isPaneled = room.doorStyle === 'Paneled';
+
+			const doorUnitPrice = isPaneled ? 80 : 60; // Base $60 + $20 surcharge for paneled
+			const doorUnitHours = isPaneled ? 1.25 : 0.75; // Slab: 45min, Paneled: 1h15m
+
+			const currentDoorCost = doorCount * doorUnitPrice;
+			const currentDoorHours = doorCount * doorUnitHours;
+
 			items.push({
 				name: `${room.label} - Doors`,
-				cost: doorCost,
-				hours: 0,
-				details: `${doorCount} doors @ $60/side`,
+				cost: currentDoorCost,
+				hours: currentDoorHours,
+				details: `${doorCount} ${room.doorStyle} doors @ $${doorUnitPrice}/ea`,
 			});
-			roomCost += doorCost;
+
+			roomCost += currentDoorCost;
+			roomHours += currentDoorHours;
 		}
 
+		// 5. Windows (Price: $50 | Time: 0.5h)
 		if (room.surfaces?.windows === true) {
 			const windowCount = parseInt(room.windowCount) || 0;
-			const windowCost = windowCount * 50;
+			const currentWindowCost = windowCount * 50;
+			const currentWindowHours = windowCount * 0.5; // 30 mins per window frame
+
 			items.push({
 				name: `${room.label} - Windows`,
-				cost: windowCost,
-				hours: 0,
+				cost: currentWindowCost,
+				hours: currentWindowHours,
 				details: `${windowCount} window frames @ $50/ea`,
 			});
-			roomCost += windowCost;
+
+			roomCost += currentWindowCost;
+			roomHours += currentWindowHours;
 		}
 
-		// 5. Bedroom Closet
+		// 6. Bedroom Closet
 		if (room.type === 'bedroom' && room.closetSize !== 'None') {
 			const closetCostMap: any = { Standard: 75, Medium: 150, Large: 200 };
 			const closetTimeMap: any = { Standard: 1, Medium: 1.5, Large: 2.5 };

@@ -43,7 +43,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 			}
 			if (name === 'crownMolding')
 				onRoomChange(room.id, 'crownMoldingStyle', 'Simple');
-			if (name === 'windows') onRoomChange(room.id, 'windowCount', 0);
+			if (name === 'windows') onRoomChange(room.id, 'windowCount', 1);
 		}
 
 		const newSurfaces = { ...room.surfaces, [name]: checked };
