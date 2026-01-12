@@ -88,6 +88,10 @@ export const PAINT_PRICES = {
 	DOOR_PANELED: 80,
 	WINDOW_FRAME: 50,
 	CLOSET: { Standard: 75, Medium: 150, Large: 200 },
+	SUPPLY: {
+		STANDARD_GALLON: 50,
+		PREMIUM_GALLON: 75,
+	},
 	SURCHARGES: {
 		COLOR_CHANGE_PRIMER_PCT: 0.2,
 		FAIR_CONDITION_PCT: 0.1,
@@ -109,4 +113,19 @@ export const LABOR_MULTIPLIERS = {
 	DOOR_PANELED: 1.25,
 	WINDOW: 0.5,
 	CLOSET: { Standard: 1, Medium: 1.5, Large: 2.5 },
+};
+
+export const PAINT_COVERAGE = {
+	// 1 gallon covers ~350sqft for 1 coat.
+	// We divide by 175 to account for 2 coats automatically.
+	WALL_SQFT_PER_GALLON: 175,
+	CEILING_SQFT_PER_GALLON: 175,
+	// 1 gallon covers ~150 linear feet of trim/crown (2 coats)
+	TRIM_LF_PER_GALLON: 150,
+	// Typical door (2 coats, both sides)
+	DOOR_GALLONS: 0.15,
+	// Typical window frame (2 coats)
+	WINDOW_GALLONS: 0.1,
+	// Primer coverage (usually 1 coat only)
+	PRIMER_SQFT_PER_GALLON: 300,
 };
