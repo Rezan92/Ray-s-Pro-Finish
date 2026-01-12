@@ -106,14 +106,11 @@ export const calculatePaintingEstimate = async (data: any) => {
 		let roomCost = 0;
 		let roomHours = 0;
 
-		// 1. Walls ($1.5/sqft) - Strictly guarded by surfaces.walls
+		// 1. Walls ($1.5/sqft)
 		if (room.surfaces?.walls === true) {
 			let wallBase = wallSqft * 1.5;
-			if (room.colorChange === 'Dark-to-Light')
-				wallBase += wallSqft * 1.5 * 0.3;
 			if (room.wallCondition === 'Fair') wallBase *= 1.1;
 
-			// Fix: wallCost typo corrected to roomCost logic
 			const repairFee = room.wallCondition === 'Poor' ? 150 : 0;
 			const currentWallCost = wallBase + repairFee;
 			const currentWallHours = wallSqft * 0.0125;
@@ -129,9 +126,23 @@ export const calculatePaintingEstimate = async (data: any) => {
 
 			roomCost += currentWallCost;
 			roomHours += currentWallHours;
+
+			if (room.colorChange === 'Dark-to-Light') {
+				const primingCost = wallSqft * 1.5 * 0.2;
+				const primingHours = wallSqft * 0.005;
+				items.push({
+					name: `${room.label} - Wall Priming`,
+					cost: primingCost,
+					hours: primingHours,
+					details: `Color change: Dark-to-Light surcharge`,
+				});
+
+				roomCost += primingCost;
+				roomHours += primingHours;
+			}
 		}
 
-		// 2. Ceiling ($1/sqft) - Strictly guarded
+		// 2. Ceiling ($1/sqft)
 		if (room.surfaces?.ceiling === true) {
 			let ceilingBase = ceilingSqft * 1.0;
 			if (room.ceilingTexture === 'Textured') ceilingBase += ceilingSqft * 0.25;
@@ -150,7 +161,7 @@ export const calculatePaintingEstimate = async (data: any) => {
 			roomHours += currentCeilingHours;
 		}
 
-		// 3. Trim & Crown - Strictly guarded
+		// 3. Trim & Crown
 		if (room.surfaces?.trim === true) {
 			let trimBase = perimeter * 3.5;
 			if (room.trimStyle === 'Detailed') trimBase += perimeter * 1.0;
@@ -184,7 +195,7 @@ export const calculatePaintingEstimate = async (data: any) => {
 			roomHours += currentCrownHours;
 		}
 
-		// 4. Doors/Windows - Bug fixed: now strictly checks surfaces checkbox
+		// 4. Doors/Windows
 		if (room.surfaces?.doors === true) {
 			const doorCount = parseInt(room.doorCount) || 0;
 			const doorCost = doorCount * 60;
@@ -197,7 +208,6 @@ export const calculatePaintingEstimate = async (data: any) => {
 			roomCost += doorCost;
 		}
 
-		// Bug Fix: Calculation now correctly waits for the 'windows' checkbox
 		if (room.surfaces?.windows === true) {
 			const windowCount = parseInt(room.windowCount) || 0;
 			const windowCost = windowCount * 50;
@@ -244,5 +254,6 @@ export const calculatePaintingEstimate = async (data: any) => {
 		high: Math.round(totalCost * 1.1),
 		totalHours: parseFloat(totalHours.toFixed(1)),
 		explanation: explanation,
+		breakdownItems: items,
 	};
 };

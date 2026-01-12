@@ -16,6 +16,7 @@ export const getEstimate = async (
 		let totalHigh = 0;
 		let totalHours = 0;
 		let combinedExplanation = '';
+		let breakdownItems: any[] = [];
 
 		const promises = [];
 
@@ -27,6 +28,9 @@ export const getEstimate = async (
 					totalHigh += est.high;
 					totalHours += est.totalHours;
 					combinedExplanation += `PAINTING:\n${est.explanation}\n\n`;
+					if (est.breakdownItems) {
+						breakdownItems = [...breakdownItems, ...est.breakdownItems];
+					}
 				})
 			);
 		}
@@ -91,6 +95,7 @@ export const getEstimate = async (
 			high: Math.round(totalHigh),
 			totalHours: Number(totalHours.toFixed(1)),
 			explanation: combinedExplanation.trim() || 'No services selected.',
+			breakdownItems: breakdownItems,
 		});
 	} catch (error) {
 		console.error('Controller Error:', error);

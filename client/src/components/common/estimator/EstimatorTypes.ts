@@ -18,10 +18,10 @@ export interface PaintingRoom {
 	ceilingTexture: string; // 'Flat', 'Textured', 'Popcorn'
 	trimCondition: string; // 'Good', 'Poor'
 	trimStyle: 'Simple' | 'Detailed'; // NEW
-	doorCount: string; 
+	doorCount: string;
 	doorStyle: string; // 'Slab', 'Paneled'
 	crownMoldingStyle: string; // 'Simple', 'Detailed'
-	roomDescription?: string; 
+	roomDescription?: string;
 }
 
 export interface RepairItem {
@@ -122,9 +122,16 @@ export interface FormData {
 	};
 }
 
+export interface BreakdownItem {
+	name: string;
+	cost: number;
+	hours: number;
+	details?: string;
+}
 export interface Estimate {
 	low: number;
 	high: number;
 	explanation: string;
 	totalHours: number;
+	breakdownItems?: BreakdownItem[];
 }
