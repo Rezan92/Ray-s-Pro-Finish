@@ -106,31 +106,33 @@ export const calculatePaintingEstimate = async (data: any) => {
 		let roomCost = 0;
 		let roomHours = 0;
 
-		// 1. Walls ($1.5/sqft)
-		if (room.surfaces.walls) {
+		// 1. Walls ($1.5/sqft) - Strictly guarded by surfaces.walls
+		if (room.surfaces?.walls === true) {
 			let wallBase = wallSqft * 1.5;
 			if (room.colorChange === 'Dark-to-Light')
 				wallBase += wallSqft * 1.5 * 0.3;
 			if (room.wallCondition === 'Fair') wallBase *= 1.1;
-			if (room.wallCondition === 'Poor') wallCost += 150;
 
-			const currentWallCost =
-				wallBase + (room.wallCondition === 'Poor' ? 150 : 0);
+			// Fix: wallCost typo corrected to roomCost logic
+			const repairFee = room.wallCondition === 'Poor' ? 150 : 0;
+			const currentWallCost = wallBase + repairFee;
 			const currentWallHours = wallSqft * 0.0125;
 
 			items.push({
 				name: `${room.label} - Walls`,
 				cost: currentWallCost,
 				hours: currentWallHours,
-				details: `${wallSqft} sqft @ $1.50/sqft`,
+				details: `${wallSqft} sqft @ $1.50/sqft${
+					repairFee > 0 ? ' + $150 repair' : ''
+				}`,
 			});
 
-			roomCost += wallBase;
+			roomCost += currentWallCost;
 			roomHours += currentWallHours;
 		}
 
-		// 2. Ceiling ($1/sqft)
-		if (room.surfaces.ceiling) {
+		// 2. Ceiling ($1/sqft) - Strictly guarded
+		if (room.surfaces?.ceiling === true) {
 			let ceilingBase = ceilingSqft * 1.0;
 			if (room.ceilingTexture === 'Textured') ceilingBase += ceilingSqft * 0.25;
 			if (room.ceilingTexture === 'Popcorn') ceilingBase += ceilingSqft * 0.5;
@@ -148,8 +150,8 @@ export const calculatePaintingEstimate = async (data: any) => {
 			roomHours += currentCeilingHours;
 		}
 
-		// 3. Trim & Crown
-		if (room.surfaces.trim) {
+		// 3. Trim & Crown - Strictly guarded
+		if (room.surfaces?.trim === true) {
 			let trimBase = perimeter * 3.5;
 			if (room.trimStyle === 'Detailed') trimBase += perimeter * 1.0;
 			if (room.trimCondition === 'Poor') trimBase += perimeter * 0.5;
@@ -166,7 +168,8 @@ export const calculatePaintingEstimate = async (data: any) => {
 			roomCost += trimBase;
 			roomHours += currentTrimHours;
 		}
-		if (room.surfaces.crownMolding) {
+
+		if (room.surfaces?.crownMolding === true) {
 			const crownBase = perimeter * 4.0;
 			const currentCrownHours = perimeter * 0.063;
 
@@ -181,8 +184,8 @@ export const calculatePaintingEstimate = async (data: any) => {
 			roomHours += currentCrownHours;
 		}
 
-		// 4. Doors/Windows
-		if (room.surfaces.doors) {
+		// 4. Doors/Windows - Bug fixed: now strictly checks surfaces checkbox
+		if (room.surfaces?.doors === true) {
 			const doorCount = parseInt(room.doorCount) || 0;
 			const doorCost = doorCount * 60;
 			items.push({
@@ -194,18 +197,20 @@ export const calculatePaintingEstimate = async (data: any) => {
 			roomCost += doorCost;
 		}
 
-		if (room.windowCount > 0) {
-			const windowCost = (room.windowCount || 0) * 50;
+		// Bug Fix: Calculation now correctly waits for the 'windows' checkbox
+		if (room.surfaces?.windows === true) {
+			const windowCount = parseInt(room.windowCount) || 0;
+			const windowCost = windowCount * 50;
 			items.push({
 				name: `${room.label} - Windows`,
 				cost: windowCost,
 				hours: 0,
-				details: `${room.windowCount} window frames @ $50/ea`,
+				details: `${windowCount} window frames @ $50/ea`,
 			});
 			roomCost += windowCost;
 		}
 
-		// 5. Bedroom Closet (Cost & Time Calculation)
+		// 5. Bedroom Closet
 		if (room.type === 'bedroom' && room.closetSize !== 'None') {
 			const closetCostMap: any = { Standard: 75, Medium: 150, Large: 200 };
 			const closetTimeMap: any = { Standard: 1, Medium: 1.5, Large: 2.5 };

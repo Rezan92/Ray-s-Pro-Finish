@@ -32,6 +32,20 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 
 	const handleSurfaceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, checked } = e.target;
+
+		// Professional fix: Clear associated sub-data when unselecting a surface
+		if (!checked) {
+			if (name === 'ceiling') onRoomChange(room.id, 'ceilingTexture', 'Flat');
+			if (name === 'trim') onRoomChange(room.id, 'trimCondition', 'Good');
+			if (name === 'doors') {
+				onRoomChange(room.id, 'doorCount', '1');
+				onRoomChange(room.id, 'doorStyle', 'Slab');
+			}
+			if (name === 'crownMolding')
+				onRoomChange(room.id, 'crownMoldingStyle', 'Simple');
+			if (name === 'windows') onRoomChange(room.id, 'windowCount', 0);
+		}
+
 		const newSurfaces = { ...room.surfaces, [name]: checked };
 		onRoomChange(room.id, 'surfaces', newSurfaces);
 	};
