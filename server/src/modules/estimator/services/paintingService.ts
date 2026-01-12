@@ -1,98 +1,22 @@
 import { generateServiceBreakdown } from '../utils/breakdownHelper.js';
-
-const ROOM_DIMENSIONS: Record<string, Record<string, number[]>> = {
-	bedroom: {
-		Small: [10, 10],
-		Medium: [12, 14],
-		Large: [15, 16],
-		'X-Large': [18, 18],
-	},
-	livingRoom: {
-		Small: [12, 15],
-		Medium: [15, 18],
-		Large: [18, 22],
-		'X-Large': [20, 25],
-	},
-	diningRoom: {
-		Small: [9, 10],
-		Medium: [11, 13],
-		Large: [12, 16],
-		'X-Large': [14, 18],
-	},
-	kitchen: {
-		Small: [10, 10],
-		Medium: [12, 14],
-		Large: [15, 15],
-		'X-Large': [18, 20],
-	},
-	bathroom: {
-		Small: [5, 5],
-		Medium: [5, 8],
-		Large: [10, 12],
-		'X-Large': [12, 15],
-	},
-	office: {
-		Small: [8, 8],
-		Medium: [10, 10],
-		Large: [12, 12],
-		'X-Large': [12, 15],
-	},
-	basement: {
-		Small: [15, 20],
-		Medium: [20, 30],
-		Large: [25, 40],
-		'X-Large': [30, 50],
-	},
-	laundryRoom: {
-		Small: [6, 4],
-		Medium: [6, 8],
-		Large: [8, 10],
-		'X-Large': [10, 12],
-	},
-	closet: {
-		Small: [2, 4],
-		Medium: [5, 5],
-		Large: [6, 10],
-		'X-Large': [10, 10],
-	},
-	hallway: {
-		Small: [3, 6],
-		Medium: [3, 12],
-		Large: [4, 15],
-		'X-Large': [5, 20],
-	},
-	stairwell: {
-		Small: [3, 10],
-		Medium: [4, 12],
-		Large: [6, 15],
-		'X-Large': [8, 20],
-	},
-	garage: {
-		Small: [12, 20],
-		Medium: [22, 22],
-		Large: [22, 32],
-		'X-Large': [24, 40],
-	},
-	other: {
-		Small: [8, 8],
-		Medium: [10, 10],
-		Large: [12, 12],
-		'X-Large': [15, 20],
-	},
-};
+import {
+	ROOM_DIMENSIONS,
+	PAINT_PRICES,
+	LABOR_MULTIPLIERS,
+} from '../constants/paintingConstants.js';
 
 export const calculatePaintingEstimate = async (data: any) => {
 	let totalCost = 0;
 	let totalHours = 0;
 	const items: any[] = [];
 
-	// 0. Project Setup (Dynamic: 0.5 hours per room)
-	const setupHours = data.rooms.length * 0.5;
+	// 0. Project Setup (Dynamic: based on constant multiplier)
+	const setupHours = data.rooms.length * LABOR_MULTIPLIERS.SETUP_PER_ROOM;
 	items.push({
 		name: 'Project Setup & Prep',
 		cost: 0,
 		hours: setupHours,
-		details: `${data.rooms.length} spaces @ 0.5 hrs each`,
+		details: `${data.rooms.length} spaces @ ${LABOR_MULTIPLIERS.SETUP_PER_ROOM} hrs each`,
 	});
 	totalHours += setupHours;
 
@@ -106,35 +30,44 @@ export const calculatePaintingEstimate = async (data: any) => {
 		let roomCost = 0;
 		let roomHours = 0;
 
-		// 1. Walls ($1.5/sqft)
+		// 1. Walls Calculation
 		if (room.surfaces?.walls === true) {
-			let wallBase = wallSqft * 1.5;
-			if (room.wallCondition === 'Fair') wallBase *= 1.1;
+			let wallBase = wallSqft * PAINT_PRICES.WALL_BASE_PER_SQFT;
+			if (room.wallCondition === 'Fair') {
+				wallBase *= 1 + PAINT_PRICES.SURCHARGES.FAIR_CONDITION_PCT;
+			}
 
-			const repairFee = room.wallCondition === 'Poor' ? 150 : 0;
+			const repairFee =
+				room.wallCondition === 'Poor'
+					? PAINT_PRICES.SURCHARGES.POOR_CONDITION_FLAT
+					: 0;
 			const currentWallCost = wallBase + repairFee;
-			const currentWallHours = wallSqft * 0.0125;
+			const currentWallHours = wallSqft * LABOR_MULTIPLIERS.WALLS;
 
 			items.push({
 				name: `${room.label} - Walls`,
 				cost: currentWallCost,
 				hours: currentWallHours,
-				details: `${wallSqft} sqft @ $1.50/sqft${
-					repairFee > 0 ? ' + $150 repair' : ''
+				details: `${wallSqft} sqft @ $${PAINT_PRICES.WALL_BASE_PER_SQFT}/sqft${
+					repairFee > 0 ? ` + $${repairFee} repair` : ''
 				}`,
 			});
 
 			roomCost += currentWallCost;
 			roomHours += currentWallHours;
 
+			// Dark-to-Light Priming Logic
 			if (room.colorChange === 'Dark-to-Light') {
-				const primingCost = wallSqft * 1.5 * 0.2;
-				const primingHours = wallSqft * 0.005;
+				const primingCost =
+					wallSqft *
+					PAINT_PRICES.WALL_BASE_PER_SQFT *
+					PAINT_PRICES.SURCHARGES.COLOR_CHANGE_PRIMER_PCT;
+				const primingHours = wallSqft * LABOR_MULTIPLIERS.WALL_PRIMING;
 				items.push({
 					name: `${room.label} - Wall Priming`,
 					cost: primingCost,
 					hours: primingHours,
-					details: `Color change: Dark-to-Light surcharge`,
+					details: `Color change surcharge`,
 				});
 
 				roomCost += primingCost;
@@ -142,38 +75,48 @@ export const calculatePaintingEstimate = async (data: any) => {
 			}
 		}
 
-		// 2. Ceiling ($1/sqft)
+		// 2. Ceiling Calculation
 		if (room.surfaces?.ceiling === true) {
-			let ceilingBase = ceilingSqft * 1.0;
-			if (room.ceilingTexture === 'Textured') ceilingBase += ceilingSqft * 0.25;
-			if (room.ceilingTexture === 'Popcorn') ceilingBase += ceilingSqft * 0.5;
+			let ceilingBase = ceilingSqft * PAINT_PRICES.CEILING_BASE_PER_SQFT;
+			if (room.ceilingTexture === 'Textured') {
+				ceilingBase +=
+					ceilingSqft * PAINT_PRICES.SURCHARGES.TEXTURED_CEILING_ADD;
+			}
+			if (room.ceilingTexture === 'Popcorn') {
+				ceilingBase +=
+					ceilingSqft * PAINT_PRICES.SURCHARGES.POPCORN_CEILING_ADD;
+			}
 
-			const currentCeilingHours = ceilingSqft * 0.01;
+			const currentCeilingHours = ceilingSqft * LABOR_MULTIPLIERS.CEILING;
 
 			items.push({
 				name: `${room.label} - Ceiling`,
 				cost: ceilingBase,
 				hours: currentCeilingHours,
-				details: `${ceilingSqft} sqft @ $1.00/sqft`,
+				details: `${ceilingSqft} sqft @ $${PAINT_PRICES.CEILING_BASE_PER_SQFT}/sqft`,
 			});
 
 			roomCost += ceilingBase;
 			roomHours += currentCeilingHours;
 		}
 
-		// 3. Trim & Crown
+		// 3. Trim & Crown Calculation
 		if (room.surfaces?.trim === true) {
-			let trimBase = perimeter * 3.5;
-			if (room.trimStyle === 'Detailed') trimBase += perimeter * 1.0;
-			if (room.trimCondition === 'Poor') trimBase += perimeter * 0.5;
+			let trimBase = perimeter * PAINT_PRICES.TRIM_BASE_PER_LF;
+			if (room.trimStyle === 'Detailed') {
+				trimBase += perimeter * PAINT_PRICES.SURCHARGES.DETAILED_TRIM_ADD;
+			}
+			if (room.trimCondition === 'Poor') {
+				trimBase += perimeter * 0.5; // Caulking fee
+			}
 
-			const currentTrimHours = perimeter * 0.05;
+			const currentTrimHours = perimeter * LABOR_MULTIPLIERS.TRIM;
 
 			items.push({
 				name: `${room.label} - Trim`,
 				cost: trimBase,
 				hours: currentTrimHours,
-				details: `${perimeter} linear ft @ $3.50/lf`,
+				details: `${perimeter} linear ft @ $${PAINT_PRICES.TRIM_BASE_PER_LF}/lf`,
 			});
 
 			roomCost += trimBase;
@@ -181,27 +124,31 @@ export const calculatePaintingEstimate = async (data: any) => {
 		}
 
 		if (room.surfaces?.crownMolding === true) {
-			const crownBase = perimeter * 4.0;
-			const currentCrownHours = perimeter * 0.063;
+			const crownBase = perimeter * PAINT_PRICES.CROWN_BASE_PER_LF;
+			const currentCrownHours = perimeter * LABOR_MULTIPLIERS.CROWN;
 
 			items.push({
 				name: `${room.label} - Crown Molding`,
 				cost: crownBase,
 				hours: currentCrownHours,
-				details: `${perimeter} linear ft @ $4.00/lf`,
+				details: `${perimeter} linear ft @ $${PAINT_PRICES.CROWN_BASE_PER_LF}/lf`,
 			});
 
 			roomCost += crownBase;
 			roomHours += currentCrownHours;
 		}
 
-		// 4. Doors (Price: $60 Slab / $80 Paneled | Time: 0.75h Slab / 1.25h Paneled)
+		// 4. Doors Calculation
 		if (room.surfaces?.doors === true) {
 			const doorCount = parseInt(room.doorCount) || 1;
 			const isPaneled = room.doorStyle === 'Paneled';
 
-			const doorUnitPrice = isPaneled ? 80 : 60; // Base $60 + $20 surcharge for paneled
-			const doorUnitHours = isPaneled ? 1.25 : 0.75; // Slab: 45min, Paneled: 1h15m
+			const doorUnitPrice = isPaneled
+				? PAINT_PRICES.DOOR_PANELED
+				: PAINT_PRICES.DOOR_SLAB;
+			const doorUnitHours = isPaneled
+				? LABOR_MULTIPLIERS.DOOR_PANELED
+				: LABOR_MULTIPLIERS.DOOR_SLAB;
 
 			const currentDoorCost = doorCount * doorUnitPrice;
 			const currentDoorHours = doorCount * doorUnitHours;
@@ -217,30 +164,33 @@ export const calculatePaintingEstimate = async (data: any) => {
 			roomHours += currentDoorHours;
 		}
 
-		// 5. Windows (Price: $50 | Time: 0.5h)
+		// 5. Windows Calculation
 		if (room.surfaces?.windows === true) {
 			const windowCount = parseInt(room.windowCount) || 0;
-			const currentWindowCost = windowCount * 50;
-			const currentWindowHours = windowCount * 0.5; // 30 mins per window frame
+			const currentWindowCost = windowCount * PAINT_PRICES.WINDOW_FRAME;
+			const currentWindowHours = windowCount * LABOR_MULTIPLIERS.WINDOW;
 
 			items.push({
 				name: `${room.label} - Windows`,
 				cost: currentWindowCost,
 				hours: currentWindowHours,
-				details: `${windowCount} window frames @ $50/ea`,
+				details: `${windowCount} window frames @ $${PAINT_PRICES.WINDOW_FRAME}/ea`,
 			});
 
 			roomCost += currentWindowCost;
 			roomHours += currentWindowHours;
 		}
 
-		// 6. Bedroom Closet
+		// 6. Bedroom Closet Calculation
 		if (room.type === 'bedroom' && room.closetSize !== 'None') {
-			const closetCostMap: any = { Standard: 75, Medium: 150, Large: 200 };
-			const closetTimeMap: any = { Standard: 1, Medium: 1.5, Large: 2.5 };
-
-			const closetCost = closetCostMap[room.closetSize] || 0;
-			const closetHours = closetTimeMap[room.closetSize] || 0;
+			const closetCost =
+				PAINT_PRICES.CLOSET[
+					room.closetSize as keyof typeof PAINT_PRICES.CLOSET
+				] || 0;
+			const closetHours =
+				LABOR_MULTIPLIERS.CLOSET[
+					room.closetSize as keyof typeof LABOR_MULTIPLIERS.CLOSET
+				] || 0;
 
 			items.push({
 				name: `${room.label} - Closet`,
