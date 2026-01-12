@@ -11,7 +11,6 @@ import type {
 } from '@/components/common/estimator/EstimatorTypes';
 import { endpoints } from '@/config/api';
 
-// --- Default/Initial State ---
 const createNewRoom = (
 	type: string,
 	id: string,
@@ -24,6 +23,8 @@ const createNewRoom = (
 		label,
 		size: 'Medium',
 		ceilingHeight: isStairwell ? '11ft+' : '8ft',
+		windowCount: 0,
+		closetSize: 'None',
 		surfaces: {
 			walls: true,
 			ceiling: false,
@@ -35,6 +36,7 @@ const createNewRoom = (
 		colorChange: 'Similar',
 		ceilingTexture: 'Flat',
 		trimCondition: 'Good',
+		trimStyle: 'Simple',
 		doorCount: '1',
 		doorStyle: 'Slab',
 		crownMoldingStyle: 'Simple',
@@ -69,8 +71,14 @@ interface EstimatorState {
 const initialState: EstimatorState = {
 	step: 1,
 	formData: {
-		services: { painting: false, patching: false, installation: false },
-		painting: { rooms: [], paintProvider: '', furniture: '' },
+		services: {
+			painting: false,
+			patching: false,
+			installation: false,
+			garage: false,
+			basement: false,
+		},
+		painting: { rooms: [], paintProvider: 'Standard', furniture: 'None' },
 		patching: {
 			repairs: [],
 			smallRepairsDescription: '',
@@ -101,12 +109,12 @@ const initialState: EstimatorState = {
 			ceilingHeight: 'Standard',
 			currentCondition: 'Bare Concrete',
 			numBedrooms: '0',
-			egressWindow: 'Existing/Code Compliant', // Default safe value
+			egressWindow: 'Existing/Code Compliant',
 			bathroom: 'None',
 			plumbingRoughIn: 'Yes, pipes visible',
 			wetBar: 'None',
 			hvac: 'Existing Vents Sufficient',
-      stairs: 'Already Finished / No Change',
+			stairs: 'Already Finished / No Change',
 			ceilingType: 'Drywall',
 			flooring: 'LVP',
 			electrical: 'Standard',
@@ -119,7 +127,6 @@ const initialState: EstimatorState = {
 	error: null,
 };
 
-// --- Async Thunk ---
 export const generateEstimate = createAsyncThunk(
 	'estimator/generate',
 	async (formData: FormData, { rejectWithValue }) => {
@@ -129,20 +136,15 @@ export const generateEstimate = createAsyncThunk(
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(formData),
 			});
-
-			if (!response.ok) {
+			if (!response.ok)
 				throw new Error('Server error: Failed to fetch estimate');
-			}
-
-			const result = await response.json();
-			return result;
+			return await response.json();
 		} catch (err: any) {
 			return rejectWithValue(err.message || 'Failed to generate estimate');
 		}
 	}
 );
 
-// --- The Slice ---
 export const estimatorSlice = createSlice({
 	name: 'estimator',
 	initialState,
@@ -159,8 +161,6 @@ export const estimatorSlice = createSlice({
 		) => {
 			state.formData.services[action.payload.name] = action.payload.checked;
 		},
-
-		// --- Painting Logic ---
 		toggleRoomType: (
 			state,
 			action: PayloadAction<{ type: string; isChecked: boolean }>
@@ -219,8 +219,6 @@ export const estimatorSlice = createSlice({
 			// @ts-ignore
 			state.formData.painting[action.payload.field] = action.payload.value;
 		},
-
-		// --- Patching Logic (NEW) ---
 		addRepair: (state, action: PayloadAction<RepairItem>) => {
 			state.formData.patching.repairs.push(action.payload);
 		},
@@ -229,12 +227,10 @@ export const estimatorSlice = createSlice({
 				(r) => r.id !== action.payload
 			);
 		},
-
-		// --- Generic Updates ---
 		updateNestedForm: (
 			state,
 			action: PayloadAction<{
-				path: 'patching' | 'installation';
+				path: 'patching' | 'installation' | 'garage' | 'basement';
 				field: string;
 				value: any;
 			}>
@@ -250,7 +246,6 @@ export const estimatorSlice = createSlice({
 			// @ts-ignore
 			state.formData.contact[action.payload.field] = action.payload.value;
 		},
-
 		resetEstimator: () => initialState,
 	},
 	extraReducers: (builder) => {

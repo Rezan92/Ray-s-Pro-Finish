@@ -1,9 +1,11 @@
 export interface PaintingRoom {
 	id: string; // A unique ID like "livingRoom_0" or "bedroom_1"
 	type: string; // "livingRoom", "kitchen", "bedroom", etc.
-	label: string; // "Living Room", "Bedroom 1", "Bedroom 2"
-	size: string; // 'Small', 'Medium', 'Large'
-	ceilingHeight: string; // '8ft', '9-10ft', '11ft+'
+	label: string; // "Living Room", "Bedroom 1", etc.
+	size: string; // 'Small', 'Medium', 'Large', 'X-Large'
+	ceilingHeight: string; // '8ft', '9ft', '10ft', '10ft+'
+	windowCount: number;
+	closetSize: 'None' | 'Standard' | 'Medium' | 'Large';
 	surfaces: {
 		walls: boolean;
 		ceiling: boolean;
@@ -12,13 +14,14 @@ export interface PaintingRoom {
 		crownMolding: boolean;
 	};
 	wallCondition: string; // 'Good', 'Fair', 'Poor'
-	colorChange: string; // 'Similar', 'Light-to-Dark', 'Dark-to-Light'
-	ceilingTexture?: string; // 'Flat', 'Textured', 'Popcorn'
-	trimCondition?: string; // 'Good', 'Poor'
-	doorCount?: string; // '1', '2', etc.
-	doorStyle?: string; // 'Slab', 'Paneled'
-	crownMoldingStyle?: string; // 'Simple', 'Ornate'
-	roomDescription?: string; // For 'Other' rooms
+	colorChange: string; // 'Similar', 'Dark-to-Light'
+	ceilingTexture: string; // 'Flat', 'Textured', 'Popcorn'
+	trimCondition: string; // 'Good', 'Poor'
+	trimStyle: 'Simple' | 'Detailed'; // NEW
+	doorCount: string; 
+	doorStyle: string; // 'Slab', 'Paneled'
+	crownMoldingStyle: string; // 'Simple', 'Detailed'
+	roomDescription?: string; 
 }
 
 export interface RepairItem {

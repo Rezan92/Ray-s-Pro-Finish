@@ -23,7 +23,11 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 			HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement
 		>
 	) => {
-		onRoomChange(room.id, e.target.name, e.target.value);
+		onRoomChange(
+			room.id,
+			e.target.name,
+			e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
+		);
 	};
 
 	const handleSurfaceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,12 +40,13 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 	const ceilingHeightValue = isStairwell ? '11ft+' : room.ceilingHeight;
 	const sizeOptions = ROOM_SIZE_OPTIONS[room.type] || [];
 
-	// Check if any specific details need to be shown
+	// Updated showDetails to include windows
 	const showDetails =
 		room.surfaces.ceiling ||
 		room.surfaces.trim ||
 		room.surfaces.crownMolding ||
-		room.surfaces.doors;
+		room.surfaces.doors ||
+		room.surfaces.windows; // Added windows check
 
 	return (
 		<div
@@ -112,15 +117,6 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									maxLength={600}
 									rows={3}
 								/>
-								<div
-									style={{
-										textAlign: 'right',
-										fontSize: '0.8rem',
-										color: '#999',
-									}}
-								>
-									{(room.roomDescription || '').length} / 600
-								</div>
 							</div>
 						</div>
 					)}
@@ -161,7 +157,26 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						</div>
 					</div>
 
-					{/* 3. Surfaces Selection */}
+					{/* 3. NEW: Closet Size (Only for Bedroom) */}
+					{room.type === 'bedroom' && (
+						<div className='form-group-box'>
+							<div className='form-group'>
+								<label>Does this bedroom have a closet to paint?</label>
+								<select
+									name='closetSize'
+									value={room.closetSize || 'None'}
+									onChange={handleFieldChange}
+								>
+									<option value='None'>No Closet</option>
+									<option value='Standard'>Standard (2' x 4')</option>
+									<option value='Medium'>Medium Walk-in (5' x 5')</option>
+									<option value='Large'>Large Walk-in (6' x 10')</option>
+								</select>
+							</div>
+						</div>
+					)}
+
+					{/* 4. Surfaces Selection (Added Windows checkbox) */}
 					<div className='form-group-box'>
 						<div className='form-group'>
 							<label>What needs painting?</label>
@@ -211,11 +226,20 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									/>{' '}
 									Crown Molding
 								</label>
+								<label className='checkbox-label'>
+									<input
+										type='checkbox'
+										name='windows'
+										checked={room.surfaces.windows || false}
+										onChange={handleSurfaceChange}
+									/>{' '}
+									Windows
+								</label>
 							</div>
 						</div>
 					</div>
 
-					{/* 4. Surface Details (Conditional) */}
+					{/* 5. Surface Details (Conditional - Added Windows Count) */}
 					{showDetails && (
 						<div className='form-group-box'>
 							<div className='conditional-fields-container'>
@@ -255,7 +279,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 											onChange={handleFieldChange}
 										>
 											<option value='Simple'>Simple / Smooth</option>
-											<option value='Ornate'>Ornate / Detailed / Dental</option>
+											<option value='Detailed'>Detailed / Ornate</option>
 										</select>
 									</div>
 								)}
@@ -280,16 +304,29 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 												onChange={handleFieldChange}
 											>
 												<option value='Slab'>Flat / Slab</option>
-												<option value='Paneled'>Paneled (e.g., 6-panel)</option>
+												<option value='Paneled'>Paneled</option>
 											</select>
 										</div>
 									</>
+								)}
+								{room.surfaces.windows && (
+									<div className='form-group'>
+										<label>How many windows?</label>
+										<input
+											type='number'
+											name='windowCount'
+											className='small-input'
+											min='0'
+											value={room.windowCount || 0}
+											onChange={handleFieldChange}
+										/>
+									</div>
 								)}
 							</div>
 						</div>
 					)}
 
-					{/* 5. General Condition & Color */}
+					{/* 6. General Condition & Color */}
 					<div className='form-group-box'>
 						<div className='form-group-grid'>
 							<div className='form-group'>
@@ -312,7 +349,6 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									onChange={handleFieldChange}
 								>
 									<option value='Similar'>Similar Color</option>
-									<option value='Light-to-Dark'>Light-to-Dark</option>
 									<option value='Dark-to-Light'>Dark-to-Light</option>
 								</select>
 							</div>
