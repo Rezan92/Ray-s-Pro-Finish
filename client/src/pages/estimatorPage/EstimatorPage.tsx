@@ -49,7 +49,7 @@ const EstimatorProgressBar: React.FC<{ currentStep: number }> = ({
 	);
 };
 
-const EstimatorStepContact: React.FC = () => {
+const EstimatorStepContact: React.FC<{ contact: any }> = ({ contact }) => {
 	const dispatch = useAppDispatch();
 	return (
 		<div className='estimator-step'>
@@ -66,6 +66,7 @@ const EstimatorStepContact: React.FC = () => {
 						id='name'
 						name='name'
 						required
+						value={contact.name}
 						onChange={(e) =>
 							dispatch(updateContact({ field: 'name', value: e.target.value }))
 						}
@@ -78,6 +79,7 @@ const EstimatorStepContact: React.FC = () => {
 						id='email'
 						name='email'
 						required
+						value={contact.email}
 						onChange={(e) =>
 							dispatch(updateContact({ field: 'email', value: e.target.value }))
 						}
@@ -90,6 +92,7 @@ const EstimatorStepContact: React.FC = () => {
 					type='tel'
 					id='phone'
 					name='phone'
+					value={contact.phone}
 					onChange={(e) =>
 						dispatch(updateContact({ field: 'phone', value: e.target.value }))
 					}
@@ -204,7 +207,7 @@ const EstimatorPage = () => {
 
 					{step === 3 && (
 						<>
-							<EstimatorStepContact />
+							<EstimatorStepContact contact={formData.contact} />
 							<div className='estimator-actions space-between'>
 								<Button
 									type='button'
