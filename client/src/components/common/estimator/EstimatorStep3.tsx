@@ -31,12 +31,28 @@ export const EstimatorStep3: React.FC<EstimatorStep3Props> = ({
 						${estimation.low} - ${estimation.high}
 					</div>
 
-					{/* NEW: Organized Breakdown Table */}
-					{console.log(
-						'estimation.breakdownItems::',
-						estimation.breakdownItems
+					{/* CUSTOMER VIEW: Professional AI Message */}
+					{!estimation.isAdmin && estimation.customerSummary && (
+						<div
+							className='customer-summary'
+							style={{
+								textAlign: 'left',
+								margin: '2rem 0',
+								whiteSpace: 'pre-wrap',
+								lineHeight: '1.6',
+								background: '#fcfcfc',
+								padding: '20px',
+								borderRadius: '8px',
+								border: '1px solid #eee',
+							}}
+						>
+							{estimation.customerSummary}
+						</div>
 					)}
-					{estimation.breakdownItems && (
+
+					{/* ADMIN VIEW: Show Technical Table */}
+
+					{estimation.isAdmin && estimation.breakdownItems && (
 						<div
 							className='breakdown-container'
 							style={{ margin: '2rem 0', overflowX: 'auto' }}

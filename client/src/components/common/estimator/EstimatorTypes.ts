@@ -131,7 +131,9 @@ export interface BreakdownItem {
 export interface Estimate {
 	low: number;
 	high: number;
-	explanation: string;
 	totalHours: number;
-	breakdownItems?: BreakdownItem[];
+	isAdmin: boolean;
+	customerSummary?: string | null;
+	explanation?: string | null; // This is the technical string for admins
+	breakdownItems?: BreakdownItem[] | null;
 }

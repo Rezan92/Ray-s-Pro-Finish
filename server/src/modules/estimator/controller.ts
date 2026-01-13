@@ -4,6 +4,9 @@ import { calculateRepairEstimate } from './services/repairService.js';
 import { calculateInstallEstimate } from './services/installService.js';
 import { calculateGarageEstimate } from './services/garageService.js';
 import { calculateBasementEstimate } from './services/basementService.js';
+import { generateCustomerSummary } from './services/aiHelper.js';
+
+const ADMIN_SECRET = 'ray123';
 
 export const getEstimate = async (
 	req: Request,
@@ -11,6 +14,9 @@ export const getEstimate = async (
 ): Promise<void> => {
 	try {
 		const formData = req.body;
+
+		const adminKey = req.query.admin as string;
+		const isAdmin = adminKey === ADMIN_SECRET;
 
 		let totalLow = 0;
 		let totalHigh = 0;
@@ -90,12 +96,19 @@ export const getEstimate = async (
 
 		await Promise.all(promises);
 
+		let customerSummary = '';
+		if (!isAdmin) {
+			customerSummary = await generateCustomerSummary(formData, totalHours);
+		}
+
 		res.json({
 			low: Math.round(totalLow),
 			high: Math.round(totalHigh),
 			totalHours: Number(totalHours.toFixed(1)),
-			explanation: combinedExplanation.trim() || 'No services selected.',
-			breakdownItems: breakdownItems,
+			isAdmin,
+			explanation: isAdmin ? combinedExplanation.trim() : null,
+			breakdownItems: isAdmin ? breakdownItems : null,
+			customerSummary: !isAdmin ? customerSummary : null,
 		});
 	} catch (error) {
 		console.error('Controller Error:', error);

@@ -123,7 +123,10 @@ const EstimatorPage = () => {
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		dispatch(generateEstimate(formData));
+		const params = new URLSearchParams(window.location.search);
+		const adminKey = params.get('admin') || '';
+
+		dispatch(generateEstimate({ formData, adminKey }));
 	};
 
 	const isStep1Complete = Object.values(formData.services).some(Boolean);

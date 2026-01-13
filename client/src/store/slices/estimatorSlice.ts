@@ -129,13 +129,22 @@ const initialState: EstimatorState = {
 
 export const generateEstimate = createAsyncThunk(
 	'estimator/generate',
-	async (formData: FormData, { rejectWithValue }) => {
+	async (
+		payload: { formData: FormData; adminKey: string },
+		{ rejectWithValue }
+	) => {
 		try {
-			const response = await fetch(endpoints.estimate, {
+			// Append the admin key as a query parameter
+			const url = `${endpoints.estimate}${
+				payload.adminKey ? `?admin=${payload.adminKey}` : ''
+			}`;
+
+			const response = await fetch(url, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(formData),
+				body: JSON.stringify(payload.formData),
 			});
+
 			if (!response.ok)
 				throw new Error('Server error: Failed to fetch estimate');
 			return await response.json();
