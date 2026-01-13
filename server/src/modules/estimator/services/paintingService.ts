@@ -18,14 +18,37 @@ export const calculatePaintingEstimate = async (data: any) => {
 	let primerGallons = 0;
 
 	// 0. Project Setup (Dynamic: based on constant multiplier)
-	const setupHours = data.rooms.length * LABOR_MULTIPLIERS.SETUP_PER_ROOM;
-	items.push({
-		name: 'Project Setup & Prep',
-		cost: 0,
-		hours: setupHours,
-		details: `${data.rooms.length} spaces @ ${LABOR_MULTIPLIERS.SETUP_PER_ROOM} hrs each`,
-	});
-	totalHours += setupHours;
+	const isContractorMoving = data.furniture === 'Contractor';
+	const numRooms = data.rooms.length;
+
+	if (isContractorMoving) {
+		// Scenario A: Contractor handles furniture (45 mins + $35 fee per room)
+		const furnitureHours =
+			numRooms * LABOR_MULTIPLIERS.FURNITURE_HANDLING_PER_ROOM;
+		const furnitureFee =
+			numRooms * PAINT_PRICES.SURCHARGES.FURNITURE_HANDLING_FLAT;
+
+		items.push({
+			name: 'Furniture Handling & Protection',
+			cost: furnitureFee,
+			hours: furnitureHours,
+			details: `${numRooms} spaces (includes setup & prep) @ $${PAINT_PRICES.SURCHARGES.FURNITURE_HANDLING_FLAT}/ea`,
+		});
+
+		totalCost += furnitureFee;
+		totalHours += furnitureHours;
+	} else {
+		// Scenario B: Home is Empty or Customer handles furniture (30 mins + $0 per room)
+		const setupHours = numRooms * LABOR_MULTIPLIERS.SETUP_PER_ROOM;
+		items.push({
+			name: 'Project Setup & Prep',
+			cost: 0,
+			hours: setupHours,
+			details: `${numRooms} spaces @ ${LABOR_MULTIPLIERS.SETUP_PER_ROOM} hrs each`,
+		});
+
+		totalHours += setupHours;
+	}
 
 	data.rooms.forEach((room: any) => {
 		const [L, W] = ROOM_DIMENSIONS[room.type]?.[room.size] || [12, 14];
