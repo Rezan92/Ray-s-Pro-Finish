@@ -234,45 +234,52 @@ export const calculatePaintingEstimate = async (data: any) => {
 	});
 
 	// 7. Material Supply Logic
-	// Logic: If user didn't select "Client" (meaning they want us to provide), calculate supply cost
-	if (data.paintProvider !== 'Client') {
-		const gallonPrice =
-			data.paintProvider === 'Premium'
-				? PAINT_PRICES.SUPPLY.PREMIUM_GALLON
-				: PAINT_PRICES.SUPPLY.STANDARD_GALLON;
+	const isCustomerProviding = data.paintProvider === 'Customer';
 
-		// We round up per category because you can't buy 0.5 buckets of specific paint types/sheens
-		const wallQty = Math.round(wallGallons * 10) / 10;
-		const ceilQty = Math.round(ceilingGallons * 10) / 10;
-		const trimQty = Math.round(trimGallons * 10) / 10;
-		const primeQty = Math.round(primerGallons * 10) / 10;
+	// Calculate quantities regardless so we can show the user how much they need to buy
+	const wallQty = Math.round(wallGallons * 10) / 10;
+	const ceilQty = Math.round(ceilingGallons * 10) / 10;
+	const trimQty = Math.round(trimGallons * 10) / 10;
+	const primeQty = Math.round(primerGallons * 10) / 10;
 
-		const totalGallons = wallQty + ceilQty + trimQty + primeQty;
-		const materialCost = totalGallons * gallonPrice;
+	const totalGallons = wallQty + ceilQty + trimQty + primeQty;
 
-		if (totalGallons > 0) {
-			items.push({
-				name: 'Paint Supply Package',
-				cost: materialCost,
-				hours: 0,
-				details: `${totalGallons} total gallons (${data.paintProvider} Quality)`,
-			});
+	if (totalGallons > 0) {
+		let materialCost = 0;
+		let statusLabel = 'Customer Provided';
 
-			// Breakdown of specific buckets needed for transparency
-			let breakdownDetails = `Walls: ${wallQty}g`;
-			if (ceilQty > 0) breakdownDetails += `, Ceiling: ${ceilQty}g`;
-			if (trimQty > 0) breakdownDetails += `, Trim/Doors: ${trimQty}g`;
-			if (primeQty > 0) breakdownDetails += `, Primer: ${primeQty}g`;
+		// Only calculate cost if Ray's Pro Finish is providing the paint
+		if (!isCustomerProviding) {
+			const gallonPrice =
+				data.paintProvider === 'Premium'
+					? PAINT_PRICES.SUPPLY.PREMIUM_GALLON
+					: PAINT_PRICES.SUPPLY.STANDARD_GALLON;
 
-			items.push({
-				name: 'Gallon Breakdown',
-				cost: 0,
-				hours: 0,
-				details: breakdownDetails,
-			});
-
-			totalCost += materialCost;
+			materialCost = totalGallons * gallonPrice;
+			statusLabel = `${data.paintProvider} Quality`;
 		}
+
+		items.push({
+			name: 'Paint Supply Package',
+			cost: materialCost,
+			hours: 0,
+			details: `${totalGallons} total gallons (${statusLabel})`,
+		});
+
+		// Breakdown of specific buckets needed for transparency
+		let breakdownDetails = `Walls: ${wallQty}g`;
+		if (ceilQty > 0) breakdownDetails += `, Ceiling: ${ceilQty}g`;
+		if (trimQty > 0) breakdownDetails += `, Trim/Doors: ${trimQty}g`;
+		if (primeQty > 0) breakdownDetails += `, Primer: ${primeQty}g`;
+
+		items.push({
+			name: 'Gallon Breakdown',
+			cost: 0,
+			hours: 0,
+			details: breakdownDetails,
+		});
+
+		totalCost += materialCost;
 	}
 
 	const explanation = generateServiceBreakdown(
