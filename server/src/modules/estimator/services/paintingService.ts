@@ -52,7 +52,10 @@ export const calculatePaintingEstimate = async (data: any) => {
 
 	data.rooms.forEach((room: any) => {
 		const [L, W] = ROOM_DIMENSIONS[room.type]?.[room.size] || [12, 14];
-		const h = parseInt(room.ceilingHeight) || 8;
+
+		const rawHeight = room.ceilingHeight;
+		const h = rawHeight === '11ft+' ? 12 : parseInt(rawHeight) || 8;
+
 		const perimeter = 2 * (L + W);
 		const wallSqft = perimeter * h;
 		const ceilingSqft = L * W;
@@ -123,19 +126,27 @@ export const calculatePaintingEstimate = async (data: any) => {
 					ceilingSqft * PAINT_PRICES.SURCHARGES.POPCORN_CEILING_ADD;
 			}
 
-			const currentCeilingHours = ceilingSqft * LABOR_MULTIPLIERS.CEILING;
+			let heightFactor = LABOR_MULTIPLIERS.CEILING_HEIGHT_FACTORS.STANDARD;
+			if (rawHeight === '9ft' || rawHeight === '10ft') {
+				heightFactor = LABOR_MULTIPLIERS.CEILING_HEIGHT_FACTORS.MID;
+			} else if (rawHeight === '11ft+') {
+				heightFactor = LABOR_MULTIPLIERS.CEILING_HEIGHT_FACTORS.HIGH;
+			}
+
+			// UPDATE: Apply factor to BOTH cost and labor hours
+			const currentCeilingCost = ceilingBase * heightFactor;
+			const currentCeilingHours =
+				ceilingSqft * LABOR_MULTIPLIERS.CEILING * heightFactor;
 
 			items.push({
 				name: `${room.label} - Ceiling`,
-				cost: ceilingBase,
+				cost: currentCeilingCost,
 				hours: currentCeilingHours,
-				details: `${ceilingSqft} sqft @ $${PAINT_PRICES.CEILING_BASE_PER_SQFT}/sqft`,
+				details: `${ceilingSqft} sqft @ ${rawHeight} (${heightFactor}x difficulty factor)`,
 			});
 
-			roomCost += ceilingBase;
+			roomCost += currentCeilingCost;
 			roomHours += currentCeilingHours;
-
-			// Tally Ceiling Paint (2 coats)
 			ceilingGallons += ceilingSqft / PAINT_COVERAGE.CEILING_SQFT_PER_GALLON;
 		}
 
@@ -256,6 +267,24 @@ export const calculatePaintingEstimate = async (data: any) => {
 		totalHours += roomHours;
 	});
 
+	// 6.5 Equipment Rental Logic (Apply if ANY room is 11ft+)
+	const hasHighCeilings = data.rooms.some(
+		(r: any) => r.ceilingHeight === '11ft+'
+	);
+	if (hasHighCeilings) {
+		const estimatedDays = Math.ceil(totalHours / 8);
+		const rentalFee =
+			estimatedDays * PAINT_PRICES.SURCHARGES.HIGH_CEILING_EQUIPMENT_DAILY;
+
+		items.push({
+			name: 'High-Reach Equipment Rental',
+			cost: rentalFee,
+			hours: 0,
+			details: `Scaffolding/Ladder rental for ${estimatedDays} days @ $${PAINT_PRICES.SURCHARGES.HIGH_CEILING_EQUIPMENT_DAILY}/day`,
+		});
+		totalCost += rentalFee;
+	}
+
 	// 7. Material Supply Logic
 	const isCustomerProviding = data.paintProvider === 'Customer';
 
@@ -286,7 +315,7 @@ export const calculatePaintingEstimate = async (data: any) => {
 			name: 'Paint Supply Package',
 			cost: materialCost,
 			hours: 0,
-			details: `${totalGallons} total gallons (${statusLabel})`,
+			details: `${totalGallons.toFixed(1)} total gallons (${statusLabel})`,
 		});
 
 		// Breakdown of specific buckets needed for transparency
