@@ -1,61 +1,126 @@
-import { callGemini } from './aiHelper.js';
+import { REPAIR_PRICES, REPAIR_LABOR } from '../constants/repairConstants.js';
+import { RepairItem, RepairRequest } from '../types.js';
 
-const generateRepairPrompt = (data: any) => {
-	return `
-    You are an expert estimator for Drywall Repair.
-    Labor Rate: $70/hr. Minimum Job Charge: $150.
+export const calculateRepairEstimate = async (data: RepairRequest) => {
+	let totalCost = 0;
+	let totalHours = 0;
+	const items: any[] = [];
 
-    --- REPAIR ESTIMATION RULES ---
+	const locationGroups: Record<string, RepairItem[]> = {};
 
-    SECTION 1: REPAIR ITEMS (Base Hours Per Item)
-    * Hole / Impact Damage:
-      - Medium (<12"): 1.5 hrs (includes backing, patch, 3 coats)
-      - Large (1-3ft): 3.0 hrs
-      - X-Large (Sheet): 5.0 hrs
-    * Water Damage (Add 1.2x complexity to base):
-      - Medium: 2.0 hrs
-      - Large: 4.0 hrs
-      - X-Large: 6.0 hrs
-    * Stress Cracks / Tape: 1.5 hrs flat.
+	if (data.repairs && data.repairs.length > 0) {
+		data.repairs.forEach((repair: RepairItem) => {
+			const loc = repair.locationName || 'Unspecified Location';
+			if (!locationGroups[loc]) locationGroups[loc] = [];
+			locationGroups[loc].push(repair);
+		});
+	}
 
-    SECTION 2: DIFFICULTY & ACCESS MULTIPLIERS (Apply to Item Base)
-    * Accessibility (Crucial):
-      - "Standard": 1.0x
-      - "Ladder": 1.25x (Slower work pace)
-      - "High": 1.5x (Requires scaffolding/tall ladders, significant fatigue)
-    * Placement: 
-      - If Ceiling AND "High": Use 1.6x combined multiplier.
-      - If Ceiling (Standard height): 1.25x.
-    * Texture Matching:
-      - Smooth: 1.0x
-      - Orange Peel/Knockdown: +0.5 hrs (Setup spray hopper)
-      - Popcorn: +1.0 hrs (Difficult blend)
+	// FIX 1: Use Object.entries to avoid 'possibly undefined' error
+	Object.entries(locationGroups).forEach(([location, repairsInLocation]) => {
+		// Track if we've already charged the "First Patch (100%)" for this wall
+		let isFirstInLocation = true;
 
-    SECTION 3: SCOPE OF FINISH
-    * Patch Only: Baseline hours.
-    * Patch & Prime: +0.5 hrs per item.
-    * Patch, Prime & Paint: 
-      - "Customer has paint": +1.0 hrs per item.
-      - "Color Match needed": +2.0 hrs (includes trip to store).
-      - "Paint entire wall": +2.5 hrs per item (Assumes standard wall up to 150sqft).
+		repairsInLocation.forEach((repair) => {
+			let itemCost = 0;
+			let itemHours = 0;
 
-    SECTION 4: GLOBAL COSTS
-    * Site Protection (Plastic/Taping): Add +0.5 hrs flat for the whole job.
-    * Materials (Mud, Tape, Screws, Sandpaper):
-      - Add $15 per "Medium" repair.
-      - Add $30 per "Large/X-Large" repair.
+			// FIX 2: Since quantity is now typed as a number, we don't need parseInt
+			// If it might be a string from the form, we cast it safely: Number(repair.quantity)
+			const qty = Number(repair.quantity) || 1;
 
-    SECTION 5: SMALL REPAIRS
-    * Analyze 'smallRepairsDescription'.
-    * Assume ~0.5 hrs per small ding/pop mentioned.
-    * Minimum 1.0 hr if description exists but is vague.
+			// --- A. Base Calculation (Patch + Texture + Paint) ---
+			const basePrice =
+				REPAIR_PRICES.PATCH_AND_PAINT_BASE[
+					repair.size as keyof typeof REPAIR_PRICES.PATCH_AND_PAINT_BASE
+				] || 185;
+			const baseHours =
+				REPAIR_LABOR[repair.size as keyof typeof REPAIR_LABOR] || 1.5;
 
-    Calculate total hours, material cost, and provide a clean breakdown.
-    Customer Data: ${JSON.stringify(data)}
-  `;
-};
+			// --- B. Apply "Same Wall" Discount Logic ---
+			if (isFirstInLocation) {
+				itemCost = basePrice;
+				itemHours = baseHours;
+				isFirstInLocation = false;
+			} else {
+				// 30% price if full wall, 50% if patch-only touch-up
+				const discountFactor =
+					repair.paintMatching === 'Paint entire wall'
+						? REPAIR_PRICES.DISCOUNTS.SAME_WALL_SUBSEQUENT_FACTOR
+						: 0.5;
 
-export const calculateRepairEstimate = async (data: any) => {
-	const prompt = generateRepairPrompt(data);
-	return await callGemini(prompt);
+				itemCost = basePrice * discountFactor;
+				itemHours = baseHours * discountFactor;
+			}
+
+			const totalItemCost = itemCost * qty;
+			const totalItemHours = itemHours * qty;
+
+			// --- C. Scope Adjustment (If "Patch Only") ---
+			let finalCost = totalItemCost;
+			if (repair.scope === 'Patch Only') {
+				finalCost =
+					totalItemCost * (1 - REPAIR_PRICES.DISCOUNTS.PATCH_ONLY_DISCOUNT);
+			}
+
+			// --- D. Complexity Surcharges ---
+			if (repair.placement === 'Ceiling')
+				finalCost *= REPAIR_PRICES.SURCHARGES.CEILING_MULTIPLIER;
+			if (repair.accessibility !== 'Standard')
+				finalCost += REPAIR_PRICES.SURCHARGES.HIGH_ACCESSIBILITY;
+
+			const textureFee =
+				REPAIR_PRICES.SURCHARGES.TEXTURE_COMPLEXITY[
+					repair.texture as keyof typeof REPAIR_PRICES.SURCHARGES.TEXTURE_COMPLEXITY
+				] || 0;
+			finalCost += textureFee * qty;
+
+			items.push({
+				name: `${location}: ${repair.damageType} (x${qty})`,
+				cost: finalCost,
+				hours: totalItemHours,
+				details: `${repair.size} • ${repair.texture} • ${
+					repair.paintMatching || 'Touch-up only'
+				}`,
+			});
+
+			totalCost += finalCost;
+			totalHours += totalItemHours;
+		});
+	});
+
+	// 3. Small Repairs / Description Analysis
+	if (data.smallRepairsDescription) {
+		const smallRepairCost = 75; // Flat fee for a group of small dings
+		items.push({
+			name: 'General Surface Dings & Nail Pops',
+			cost: smallRepairCost,
+			hours: 1.0,
+			details: 'Minor patching based on description',
+		});
+		totalCost += smallRepairCost;
+		totalHours += 1.0;
+	}
+
+	// 4. Minimum Service Fee Check
+	if (totalCost > 0 && totalCost < REPAIR_PRICES.BASE_SERVICE_FEE) {
+		const adjustment = REPAIR_PRICES.BASE_SERVICE_FEE - totalCost;
+		items.push({
+			name: 'Minimum Service Call Adjustment',
+			cost: adjustment,
+			hours: 0,
+			details: `Adjustment to meet $${REPAIR_PRICES.BASE_SERVICE_FEE} minimum`,
+		});
+		totalCost = REPAIR_PRICES.BASE_SERVICE_FEE;
+	}
+
+	return {
+		low: Math.round(totalCost),
+		high: Math.round(totalCost * 1.2), // 20% range for repairs
+		totalHours: parseFloat(totalHours.toFixed(1)),
+		explanation: items
+			.map((i) => `${i.name}: $${Math.round(i.cost)}`)
+			.join('\n'),
+		breakdownItems: items,
+	};
 };

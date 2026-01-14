@@ -1,0 +1,85 @@
+/* Container for the whole repair service section */
+.repair-service-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Modal Overlay - Centered in middle of screen */
+.rf-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+/* Modal Content Box */
+.rf-modal-content {
+  background-color: #ffffff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 1200px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Close button in top right of modal */
+.rf-modal-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #999999;
+  transition: color 0.2s;
+}
+
+.rf-modal-close:hover {
+  color: var(--color-primary);
+}
+
+/* Repair list items */
+.rf-added-repair-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.rf-repair-info strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.rf-repair-meta {
+  font-size: 0.85rem;
+  color: #666666;
+}
+
+.rf-action-group {
+  display: flex;
+  gap: 12px;
+}
+
+/* Empty list state */
+.rf-empty-list {
+  padding: 2rem;
+  text-align: center;
+  border: 2px dashed #eeeeee;
+  border-radius: 8px;
+  color: #999999;
+}

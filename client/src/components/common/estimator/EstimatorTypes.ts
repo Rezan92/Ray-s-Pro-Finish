@@ -28,8 +28,10 @@ export interface RepairItem {
 	id: string;
 	damageType: string; // 'Hole', 'Crack', 'Water Damage', 'Tape Issues'
 	size: string; // 'Medium (<12")', 'Large (1-3ft)', 'X-Large (Sheet+)'
+	locationName: string; //e.g., "Living Room North Wall"
+	quantity: number; //Number of similar patches at this location
 	placement: string; // 'Wall', 'Ceiling'
-	accessibility: string; // 'Standard (Reach from floor)', 'Ladder (8-12ft)', 'High/Scaffold (12ft+)'
+	accessibility: string; // 'Standard', 'Ladder', 'High'
 	texture: string; // 'Smooth', 'Orange Peel', 'Knockdown', 'Popcorn'
 	scope: string; // 'Patch Only', 'Patch & Prime', 'Patch, Prime & Paint'
 	paintMatching?: string; // 'Customer has paint', 'Color Match needed', 'Paint entire wall'
