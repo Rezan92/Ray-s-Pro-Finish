@@ -10,7 +10,7 @@ export const REPAIR_PRICES = {
 	},
 
 	ADD_ON_FACTORS: {
-		SAME_WALL: 0.20, // 15% of base
+		SAME_WALL: 0.2, // 15% of base
 		DIFFERENT_ROOM: 0.4, // 40% of base
 	},
 
@@ -18,6 +18,7 @@ export const REPAIR_PRICES = {
 		LABOR_PER_SQFT: 1.5,
 		PAINT_PER_GALLON: 50.0,
 		SQFT_PER_GALLON: 350, // Industry standard for 1 coat coverage
+		PAINT_QUART: 25.0,
 	},
 
 	// Discounts for subsequent work at the SAME location (Wall/Ceiling)

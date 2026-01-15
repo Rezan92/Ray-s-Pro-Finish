@@ -73,6 +73,7 @@ const SERVICE_BLUEPRINTS: Record<string, ServiceBlueprint> = {
 			'Mention seamless texture matching (Orange Peel, Knockdown, etc.) as a key value point.',
 			'Mention dust containment and surface preparation.',
 			'Be specific about the types of damage (holes, cracks, water damage).',
+			"If 'Color Match needed' is selected, explicitly state that color matching on patches typically achieves an 80-90% blend and may not be a 100% perfect match to the original aged paint.",
 		],
 		examples: `
             EXAMPLE INPUT:
@@ -97,16 +98,26 @@ const SERVICE_BLUEPRINTS: Record<string, ServiceBlueprint> = {
 
 export const generateCustomerSummary = async (
 	formData: any,
-	totalHours: number
+	totalHours: number,
+	totalVisits?: number
 ) => {
 	const customerName = formData.contact?.name || 'there';
-	const estimatedDays = Math.ceil(totalHours / 8);
-	const dayText = estimatedDays === 1 ? '1 day' : `${estimatedDays} days`;
+	let timeStatement = '';
 
 	const activeService =
 		Object.keys(formData.services || {}).find(
 			(key) => formData.services[key] === true
 		) || 'painting';
+
+	if (activeService === 'patching' && totalVisits) {
+		// Use the visit logic for patching
+		timeStatement = `We expect this project to take approximately ${totalVisits} site visits to allow for proper drying and finishing.`;
+	} else {
+		// Use the standard day logic for painting/others
+		const estimatedDays = Math.ceil(totalHours / 8);
+		const dayText = estimatedDays === 1 ? '1 day' : `${estimatedDays} days`;
+		timeStatement = `We expect this project to take approximately ${dayText} to complete.`;
+	}
 
 	const blueprint =
 		SERVICE_BLUEPRINTS[activeService] || SERVICE_BLUEPRINTS.painting;
@@ -120,7 +131,7 @@ export const generateCustomerSummary = async (
 
         CORE RULES:
         1. Start with "Hi ${customerName}, thank you for using our free estimator!"
-        2. Mention time: "We expect this project to take approximately ${dayText} to complete."
+        2. Mention timing: "${timeStatement}"
         3. END with "Best regards, Ray's Pro Finish"
         4. NEVER mention technical square footage or specific prices.
         5. IMPORTANT: Group items logically. Do not list rooms/repairs one by one if they are similar.

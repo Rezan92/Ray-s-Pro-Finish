@@ -330,7 +330,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 											I have the original paint
 										</option>
 										<option value='Color Match needed'>
-											I need a color match (Sample required)
+											Only paint the patches with a color match (80% match)
 										</option>
 										<option value='Paint entire wall'>
 											Paint the entire wall (Best finish)

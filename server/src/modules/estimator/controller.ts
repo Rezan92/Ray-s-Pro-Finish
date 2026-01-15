@@ -21,6 +21,7 @@ export const getEstimate = async (
 		let totalLow = 0;
 		let totalHigh = 0;
 		let totalHours = 0;
+		let totalVisits = 0;
 		let combinedExplanation = '';
 		let breakdownItems: any[] = [];
 
@@ -52,6 +53,7 @@ export const getEstimate = async (
 						totalLow += est.low;
 						totalHigh += est.high;
 						totalHours += est.totalHours;
+						totalVisits = est.totalVisits;
 						combinedExplanation += `DRYWALL REPAIR:\n${est.explanation}\n\n`;
 						if (est.breakdownItems) {
 							breakdownItems = [...breakdownItems, ...est.breakdownItems];
@@ -101,7 +103,11 @@ export const getEstimate = async (
 
 		let customerSummary = '';
 		if (!isAdmin) {
-			customerSummary = await generateCustomerSummary(formData, totalHours);
+			customerSummary = await generateCustomerSummary(
+				formData,
+				totalHours,
+				totalVisits
+			);
 		}
 
 		res.json({

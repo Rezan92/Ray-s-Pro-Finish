@@ -5,6 +5,7 @@ import { generateServiceBreakdown } from '../utils/breakdownHelper.js';
 export const calculateRepairEstimate = async (data: RepairRequest) => {
 	let totalCost = 0;
 	let totalHours = 0;
+	let maxVisits = 0;
 	const items: any[] = [];
 
 	if (!data.repairs || data.repairs.length === 0)
@@ -31,6 +32,14 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 			maxBasePrice = base;
 			anchorIndex = idx;
 		}
+
+		let repairVisits = 2; // Default: Visit 1 (Prep/Mud), Visit 2 (Sand/Paint)
+		if (repair.size === 'X-Large (Sheet+)') {
+			repairVisits = 3; // Visit 1 (Hang/Tape), Visit 2 (Mud), Visit 3 (Sand/Paint)
+		}
+
+		// Track the highest number of visits required for the whole project
+		if (repairVisits > maxVisits) maxVisits = repairVisits;
 	});
 
 	// 2. PROCESS REPAIRS
@@ -138,6 +147,17 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 				});
 				totalCost += scaffoldFee;
 			}
+		} else if (repair.paintMatching === 'Color Match needed') {
+			const quartPrice = REPAIR_PRICES.WALL_PAINTING.PAINT_QUART;
+
+			items.push({
+				name: `  └ Paint Supply: Color Match Quart`,
+				cost: quartPrice,
+				hours: 0,
+				details: 'One quart of matched paint for patches',
+			});
+
+			totalCost += quartPrice; // Ensure this is added to the total!
 		}
 
 		processedLocations.push(repair.locationName);
@@ -167,6 +187,7 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 		low: Math.round(totalCost),
 		high: Math.round(totalCost * 1.2),
 		totalHours: parseFloat(totalHours.toFixed(1)),
+		totalVisits: maxVisits,
 		explanation: explanation,
 		breakdownItems: items,
 	};
