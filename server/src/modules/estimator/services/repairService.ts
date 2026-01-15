@@ -35,9 +35,11 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 
 	// 2. PROCESS REPAIRS
 	const processedLocations: string[] = [];
+	let isGlobalAnchorCharged = false;
 
 	data.repairs.forEach((repair, idx) => {
 		const qty = Number(repair.quantity) || 1;
+		const finalQty = Math.min(qty, 5); // Cap at 5 per wall
 		const baseUnitPrice =
 			REPAIR_PRICES.PATCH_AND_PAINT_BASE[
 				repair.damageType === 'Dings/Nail Pops'
@@ -45,37 +47,48 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 					: repair.size
 			] || 150;
 
-		let currentItemCost = 0;
-		let discountLabel = '';
+		let repairItemCost = 0;
+		let repairItemHours = (REPAIR_LABOR[repair.size] || 1) * finalQty;
 
-		// Determine Pricing Factor
-		if (idx === anchorIndex) {
-			currentItemCost = baseUnitPrice; // 100% for the first one (Anchor)
-		} else if (processedLocations.includes(repair.locationName)) {
-			currentItemCost = baseUnitPrice * REPAIR_PRICES.ADD_ON_FACTORS.SAME_WALL; // 15%
-			discountLabel = ` (Same Wall Add-on: ${
-				REPAIR_PRICES.ADD_ON_FACTORS.SAME_WALL * 100
-			}%)`;
-		} else {
-			currentItemCost =
-				baseUnitPrice * REPAIR_PRICES.ADD_ON_FACTORS.DIFFERENT_ROOM; // 40%
-			discountLabel = ` (Different Room Add-on: ${
-				REPAIR_PRICES.ADD_ON_FACTORS.DIFFERENT_ROOM * 100
-			}%)`;
+		// This array will store the "Math" for each patch to show in the Admin UI
+		const mathBreakdown: string[] = [];
+
+		// --- QUANTITY LOOP: Calculate and Document each patch individually ---
+		for (let i = 0; i < finalQty; i++) {
+			if (idx === anchorIndex && i === 0 && !isGlobalAnchorCharged) {
+				// Anchor Patch (100%)
+				repairItemCost += baseUnitPrice;
+				mathBreakdown.push(`Patch 1: $${baseUnitPrice} (100%)`);
+				isGlobalAnchorCharged = true;
+			} else if (processedLocations.includes(repair.locationName) || i > 0) {
+				// Same Wall Add-ons (15%)
+				const addonPrice =
+					baseUnitPrice * REPAIR_PRICES.ADD_ON_FACTORS.SAME_WALL;
+				repairItemCost += addonPrice;
+				mathBreakdown.push(`Patch ${i + 1}: $${addonPrice.toFixed(2)} (15%)`);
+			} else {
+				// Different Room Add-ons (40%)
+				const addonPrice =
+					baseUnitPrice * REPAIR_PRICES.ADD_ON_FACTORS.DIFFERENT_ROOM;
+				repairItemCost += addonPrice;
+				mathBreakdown.push(`Patch ${i + 1}: $${addonPrice.toFixed(2)} (40%)`);
+			}
 		}
-
-		// Cap at 5 patches per wall
-		const finalQty = Math.min(qty, 5);
-		const totalRepairCost = currentItemCost * finalQty;
 
 		items.push({
 			name: `${repair.locationName}: ${repair.damageType} (x${finalQty})`,
-			cost: totalRepairCost,
-			hours: (REPAIR_LABOR[repair.size] || 1) * finalQty,
-			details: `Base $${baseUnitPrice}${discountLabel}`,
+			cost: repairItemCost,
+			hours: repairItemHours,
+			// DYNAMIC DETAIL: Shows exactly how the $210 (or any total) was reached
+			details: `Breakdown: ${mathBreakdown.join(
+				' + '
+			)} = $${repairItemCost.toFixed(2)}`,
 		});
 
-		// 3. WALL PAINTING LOGIC (Square Footage)
+		totalCost += repairItemCost;
+		totalHours += repairItemHours;
+
+		// 3. WALL PAINTING LOGIC (Square Footage & Exact Paint)
 		if (repair.paintMatching === 'Paint entire wall') {
 			const hMap: any = {
 				'8ft (Standard)': 8,
@@ -94,32 +107,40 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 			const sqft = h * w;
 
 			const paintLabor = sqft * REPAIR_PRICES.WALL_PAINTING.LABOR_PER_SQFT;
-			const gallonsNeeded = Math.ceil(
-				sqft / REPAIR_PRICES.WALL_PAINTING.SQFT_PER_GALLON
-			);
+			const gallonsNeeded = sqft / REPAIR_PRICES.WALL_PAINTING.SQFT_PER_GALLON;
 			const paintSupply =
 				gallonsNeeded * REPAIR_PRICES.WALL_PAINTING.PAINT_PER_GALLON;
 
+			const totalWallPaintCost = paintLabor + paintSupply;
+			const totalWallPaintHours = sqft / 100;
+
 			items.push({
 				name: `  └ Paint Entire Wall (${sqft} sqft)`,
-				cost: paintLabor + paintSupply,
-				hours: sqft / 100, // Rough estimate: 1hr per 100sqft
-				details: `Labor: $${paintLabor} + Paint: $${paintSupply} (${gallonsNeeded}g)`,
+				cost: totalWallPaintCost,
+				hours: totalWallPaintHours,
+				details: `Labor: $${paintLabor.toFixed(
+					2
+				)} ($1.50/sqft) + Paint: $${paintSupply.toFixed(
+					2
+				)} ($50/gal x ${gallonsNeeded.toFixed(2)}g)`,
 			});
 
-			// Scaffolding Surcharge
+			totalCost += totalWallPaintCost;
+			totalHours += totalWallPaintHours;
+
 			if (repair.wallHeight === '11ft+ (Scaffold)') {
+				const scaffoldFee = REPAIR_PRICES.SURCHARGES.SCAFFOLD_RENTAL;
 				items.push({
 					name: `  └ Scaffold Rental Surcharge`,
-					cost: REPAIR_PRICES.SURCHARGES.SCAFFOLD_RENTAL,
+					cost: scaffoldFee,
 					hours: 0,
-					details: 'Required for high walls',
+					details: 'Required for walls 11ft and higher',
 				});
+				totalCost += scaffoldFee;
 			}
 		}
 
 		processedLocations.push(repair.locationName);
-		totalCost += totalRepairCost;
 	});
 
 	// Minimum Service Fee Check

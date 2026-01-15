@@ -10,7 +10,7 @@ export const REPAIR_PRICES = {
 	},
 
 	ADD_ON_FACTORS: {
-		SAME_WALL: 0.15, // 15% of base
+		SAME_WALL: 0.20, // 15% of base
 		DIFFERENT_ROOM: 0.4, // 40% of base
 	},
 
