@@ -35,6 +35,8 @@ export interface RepairItem {
 	texture: string; // 'Smooth', 'Orange Peel', 'Knockdown', 'Popcorn'
 	scope: string; // 'Patch Only', 'Patch & Prime', 'Patch, Prime & Paint'
 	paintMatching?: string; // 'Customer has paint', 'Color Match needed', 'Paint entire wall'
+	wallHeight?: string;
+	wallWidth?: string;
 }
 
 export interface InstallationData {

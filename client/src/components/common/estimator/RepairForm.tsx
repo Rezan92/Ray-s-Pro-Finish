@@ -22,6 +22,8 @@ const INITIAL_REPAIR: RepairItem = {
 	texture: 'Smooth',
 	scope: 'Patch Only',
 	paintMatching: 'Customer has paint',
+	wallHeight: '8ft (Standard)', // Default
+	wallWidth: '10ft (Medium)', // Default
 };
 
 export const RepairForm: React.FC<RepairFormProps> = ({
@@ -179,14 +181,12 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 						>
 							<X size={24} />
 						</button>
-
 						<h4
 							className='room-details-title'
 							style={{ color: 'var(--color-primary)', marginBottom: '1.5rem' }}
 						>
 							{editingId ? 'Edit Repair' : 'Add a Major Repair'}
 						</h4>
-
 						{/* 1. Location & Quantity */}
 						<div className='form-group-box'>
 							<div className='form-group-grid'>
@@ -212,7 +212,6 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 								</div>
 							</div>
 						</div>
-
 						{/* 2. Type & Placement */}
 						<div className='form-group-box'>
 							<div className='form-group-grid'>
@@ -223,6 +222,9 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 										value={newRepair.damageType}
 										onChange={handleNewRepairChange}
 									>
+										<option value='Dings/Nail Pops'>
+											Dings / Nail Pops (Surface only)
+										</option>
 										<option value='Hole'>Hole / Impact Damage</option>
 										<option value='Crack'>Stress Crack</option>
 										<option value='Water Damage'>Water Damage</option>
@@ -242,7 +244,6 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 								</div>
 							</div>
 						</div>
-
 						{/* 3. Size & Texture */}
 						<div className='form-group-box'>
 							<div className='form-group-grid'>
@@ -277,7 +278,6 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 								</div>
 							</div>
 						</div>
-
 						{/* 4. Scope & Paint */}
 						<div className='form-group-box'>
 							<div className='form-group-grid'>
@@ -317,7 +317,6 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 								</div>
 							</div>
 						</div>
-
 						{showPaintOptions && (
 							<div className='form-group-box'>
 								<div className='form-group'>
@@ -337,6 +336,40 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 											Paint the entire wall (Best finish)
 										</option>
 									</select>
+								</div>
+							</div>
+						)}
+						{/* Conditional Dimensions (Below the Paint Strategy dropdown)*/}
+						{newRepair.paintMatching === 'Paint entire wall' && (
+							<div className='form-group-box'>
+								<div className='form-group-grid'>
+									<div className='form-group'>
+										<label>Wall Height</label>
+										<select
+											name='wallHeight'
+											value={newRepair.wallHeight}
+											onChange={handleNewRepairChange}
+										>
+											<option value='8ft (Standard)'>8ft (Standard)</option>
+											<option value='9-10ft'>9-10ft</option>
+											<option value='11ft+ (Scaffold)'>11ft+ (Scaffold)</option>
+										</select>
+									</div>
+									<div className='form-group'>
+										<label>Wall Width</label>
+										<select
+											name='wallWidth'
+											value={newRepair.wallWidth}
+											onChange={handleNewRepairChange}
+										>
+											<option value='6ft (Small)'>6ft (Small)</option>
+											<option value='10ft (Medium)'>10ft (Medium)</option>
+											<option value='12ft (Large)'>12ft (Large)</option>
+											<option value='14ft+ (Very Large)'>
+												14ft+ (Very Large)
+											</option>
+										</select>
+									</div>
 								</div>
 							</div>
 						)}

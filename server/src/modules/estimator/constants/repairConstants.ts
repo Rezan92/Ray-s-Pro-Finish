@@ -3,9 +3,21 @@ export const REPAIR_PRICES = {
 
 	// 100% Unit Prices (Includes: Setup, Patch, Sand, Texture, and Basic Paint)
 	PATCH_AND_PAINT_BASE: {
-		'Medium (<12")': 185,
-		'Large (1-3ft)': 325,
+		'Dings/Nail Pops': 150, // New Category
+		'Medium (<12")': 150,
+		'Large (1-3ft)': 250,
 		'X-Large (Sheet+)': 650,
+	},
+
+	ADD_ON_FACTORS: {
+		SAME_WALL: 0.15, // 15% of base
+		DIFFERENT_ROOM: 0.4, // 40% of base
+	},
+
+	WALL_PAINTING: {
+		LABOR_PER_SQFT: 1.5,
+		PAINT_PER_GALLON: 50.0,
+		SQFT_PER_GALLON: 350, // Industry standard for 1 coat coverage
 	},
 
 	// Discounts for subsequent work at the SAME location (Wall/Ceiling)
@@ -18,6 +30,7 @@ export const REPAIR_PRICES = {
 	SURCHARGES: {
 		CEILING_MULTIPLIER: 1.35, // +35% for overhead work
 		HIGH_ACCESSIBILITY: 100, // Scaffolding or high ladders
+		SCAFFOLD_RENTAL: 200,
 		TEXTURE_COMPLEXITY: {
 			Smooth: 0,
 			'Orange Peel': 40,
@@ -29,7 +42,8 @@ export const REPAIR_PRICES = {
 };
 
 export const REPAIR_LABOR = {
+	'Dings/Nail Pops': 1.0,
 	'Medium (<12")': 1.5,
-	'Large (1-3ft)': 3.0,
+	'Large (1-3ft) ': 3.0,
 	'X-Large (Sheet+)': 6.0,
 };

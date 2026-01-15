@@ -53,6 +53,9 @@ export const getEstimate = async (
 						totalHigh += est.high;
 						totalHours += est.totalHours;
 						combinedExplanation += `DRYWALL REPAIR:\n${est.explanation}\n\n`;
+						if (est.breakdownItems) {
+							breakdownItems = [...breakdownItems, ...est.breakdownItems];
+						}
 					})
 				);
 			}

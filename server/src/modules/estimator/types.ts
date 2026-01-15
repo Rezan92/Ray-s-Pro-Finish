@@ -9,6 +9,12 @@ export interface RepairItem {
 	texture: 'Smooth' | 'Orange Peel' | 'Knockdown' | 'Popcorn';
 	scope: string;
 	paintMatching?: string;
+	wallHeight?: '8ft (Standard)' | '9-10ft' | '11ft+ (Scaffold)';
+	wallWidth?:
+		| '6ft (Small)'
+		| '10ft (Medium)'
+		| '12ft (Large)'
+		| '14ft+ (Very Large)';
 }
 
 export interface RepairRequest {
