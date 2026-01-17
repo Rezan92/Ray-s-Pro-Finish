@@ -16,8 +16,9 @@ import {
 	updateNestedForm,
 	updateContact,
 	generateEstimate,
-	addRepair, // <--- NEW
-	removeRepair, // <--- NEW
+	addRepair,
+	updateRepair,
+	removeRepair,
 } from '@/store/slices/estimatorSlice';
 
 // Components
@@ -183,6 +184,7 @@ const EstimatorPage = () => {
 								}
 								// Repair Handlers (NEW)
 								onAddRepair={(repair) => dispatch(addRepair(repair))}
+								onUpdateRepair={(repair) => dispatch(updateRepair(repair))}
 								onRemoveRepair={(id) => dispatch(removeRepair(id))}
 							/>
 							<div className='estimator-actions space-between'>

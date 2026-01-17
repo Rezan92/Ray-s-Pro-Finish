@@ -231,6 +231,16 @@ export const estimatorSlice = createSlice({
 		addRepair: (state, action: PayloadAction<RepairItem>) => {
 			state.formData.patching.repairs.push(action.payload);
 		},
+
+		updateRepair: (state, action: PayloadAction<RepairItem>) => {
+			const index = state.formData.patching.repairs.findIndex(
+				(r) => r.id === action.payload.id
+			);
+			if (index !== -1) {
+				state.formData.patching.repairs[index] = action.payload;
+			}
+		},
+
 		removeRepair: (state, action: PayloadAction<string>) => {
 			state.formData.patching.repairs = state.formData.patching.repairs.filter(
 				(r) => r.id !== action.payload
@@ -282,6 +292,7 @@ export const {
 	addRoom,
 	removeRoom,
 	addRepair,
+	updateRepair,
 	removeRepair,
 	updateRoomField,
 	updatePaintingGlobal,

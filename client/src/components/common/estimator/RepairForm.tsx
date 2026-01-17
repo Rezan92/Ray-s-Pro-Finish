@@ -8,6 +8,7 @@ interface RepairFormProps {
 	formData: FormData;
 	onNestedChange: (path: 'patching', field: string, value: any) => void;
 	onAddRepair: (repair: RepairItem) => void;
+	onUpdateRepair: (repair: RepairItem) => void;
 	onRemoveRepair: (id: string) => void;
 }
 
@@ -30,6 +31,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 	formData,
 	onNestedChange,
 	onAddRepair,
+	onUpdateRepair,
 	onRemoveRepair,
 }) => {
 	const { patching } = formData;
@@ -67,15 +69,17 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 			return;
 		}
 
-		// If we are editing, we remove the old version before adding the updated one
 		if (editingId) {
-			onRemoveRepair(editingId);
+			onUpdateRepair({
+				...newRepair,
+				id: editingId,
+			});
+		} else {
+			onAddRepair({
+				...newRepair,
+				id: Date.now().toString(),
+			});
 		}
-
-		onAddRepair({
-			...newRepair,
-			id: editingId || Date.now().toString(),
-		});
 
 		setNewRepair({ ...INITIAL_REPAIR });
 		setEditingId(null);

@@ -17,6 +17,7 @@ interface EstimatorStep2Props {
 
 	// Repair Handlers (NEW)
 	onAddRepair: (repair: RepairItem) => void;
+	onUpdateRepair: (repair: RepairItem) => void;
 	onRemoveRepair: (id: string) => void;
 
 	// Generic Handler
@@ -54,6 +55,7 @@ export const EstimatorStep2: React.FC<EstimatorStep2Props> = (props) => {
 					formData={formData}
 					onNestedChange={props.onNestedChange as any}
 					onAddRepair={props.onAddRepair}
+					onUpdateRepair={props.onUpdateRepair}
 					onRemoveRepair={props.onRemoveRepair}
 				/>
 			)}
