@@ -109,14 +109,21 @@ export const generateCustomerSummary = async (
 			(key) => formData.services[key] === true
 		) || 'painting';
 
+	const dayTextGenerator = () => {
+		const estimatedDays = Math.ceil(totalHours / 8);
+		const dayText = estimatedDays === 1 ? '1 day' : `${estimatedDays} days`;
+		const timeStatementText = `We expect this project to take approximately ${dayText} to complete.`;
+
+		return { dayText, timeStatementText };
+	};
+
+	const { dayText, timeStatementText } = dayTextGenerator();
+
 	if (activeService === 'patching' && totalVisits) {
 		// Use the visit logic for patching
 		timeStatement = `We expect this project to take approximately ${totalVisits} site visits to allow for proper drying and finishing.`;
 	} else {
-		// Use the standard day logic for painting/others
-		const estimatedDays = Math.ceil(totalHours / 8);
-		const dayText = estimatedDays === 1 ? '1 day' : `${estimatedDays} days`;
-		timeStatement = `We expect this project to take approximately ${dayText} to complete.`;
+		timeStatement = timeStatementText;
 	}
 
 	const blueprint =
