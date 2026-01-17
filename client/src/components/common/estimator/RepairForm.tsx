@@ -43,10 +43,24 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
 	) => {
 		const { name, value } = e.target;
-		setNewRepair({
+
+		let updatedRepair = {
 			...newRepair,
 			[name]: name === 'quantity' ? parseInt(value) || 1 : value,
-		});
+		};
+
+		if (name === 'scope' && !value.includes('Paint')) {
+			updatedRepair.paintMatching = 'Customer has paint';
+			updatedRepair.wallHeight = '8ft (Standard)';
+			updatedRepair.wallWidth = '10ft (Medium)';
+		}
+
+		if (name === 'paintMatching' && value !== 'Paint entire wall') {
+			updatedRepair.wallHeight = '8ft (Standard)';
+			updatedRepair.wallWidth = '10ft (Medium)';
+		}
+
+		setNewRepair(updatedRepair);
 	};
 
 	// Opens modal for a fresh repair
@@ -344,39 +358,42 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 							</div>
 						)}
 						{/* Conditional Dimensions (Below the Paint Strategy dropdown)*/}
-						{newRepair.paintMatching === 'Paint entire wall' && (
-							<div className='form-group-box'>
-								<div className='form-group-grid'>
-									<div className='form-group'>
-										<label>Wall Height</label>
-										<select
-											name='wallHeight'
-											value={newRepair.wallHeight}
-											onChange={handleNewRepairChange}
-										>
-											<option value='8ft (Standard)'>8ft (Standard)</option>
-											<option value='9-10ft'>9-10ft</option>
-											<option value='11ft+ (Scaffold)'>11ft+ (Scaffold)</option>
-										</select>
-									</div>
-									<div className='form-group'>
-										<label>Wall Width</label>
-										<select
-											name='wallWidth'
-											value={newRepair.wallWidth}
-											onChange={handleNewRepairChange}
-										>
-											<option value='6ft (Small)'>6ft (Small)</option>
-											<option value='10ft (Medium)'>10ft (Medium)</option>
-											<option value='12ft (Large)'>12ft (Large)</option>
-											<option value='14ft+ (Very Large)'>
-												14ft+ (Very Large)
-											</option>
-										</select>
+						{showPaintOptions &&
+							newRepair.paintMatching === 'Paint entire wall' && (
+								<div className='form-group-box'>
+									<div className='form-group-grid'>
+										<div className='form-group'>
+											<label>Wall Height</label>
+											<select
+												name='wallHeight'
+												value={newRepair.wallHeight}
+												onChange={handleNewRepairChange}
+											>
+												<option value='8ft (Standard)'>8ft (Standard)</option>
+												<option value='9-10ft'>9-10ft</option>
+												<option value='11ft+ (Scaffold)'>
+													11ft+ (Scaffold)
+												</option>
+											</select>
+										</div>
+										<div className='form-group'>
+											<label>Wall Width</label>
+											<select
+												name='wallWidth'
+												value={newRepair.wallWidth}
+												onChange={handleNewRepairChange}
+											>
+												<option value='6ft (Small)'>6ft (Small)</option>
+												<option value='10ft (Medium)'>10ft (Medium)</option>
+												<option value='12ft (Large)'>12ft (Large)</option>
+												<option value='14ft+ (Very Large)'>
+													14ft+ (Very Large)
+												</option>
+											</select>
+										</div>
 									</div>
 								</div>
-							</div>
-						)}
+							)}
 
 						<div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
 							<Button

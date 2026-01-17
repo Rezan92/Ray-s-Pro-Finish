@@ -98,7 +98,10 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 		totalHours += repairItemHours;
 
 		// 3. WALL PAINTING LOGIC (Square Footage & Exact Paint)
-		if (repair.paintMatching === 'Paint entire wall') {
+		if (
+			repair.scope.includes('Paint') &&
+			repair.paintMatching === 'Paint entire wall'
+		) {
 			const hMap: any = {
 				'8ft (Standard)': 8,
 				'9-10ft': 10,
