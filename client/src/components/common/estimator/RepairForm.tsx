@@ -44,9 +44,15 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 	) => {
 		const { name, value } = e.target;
 
+		let finalValue: any = value;
+		if (name === 'quantity') {
+			const parsed = parseInt(value) || 1;
+			finalValue = Math.max(1, Math.min(parsed, 5));
+		}
+
 		let updatedRepair = {
 			...newRepair,
-			[name]: name === 'quantity' ? parseInt(value) || 1 : value,
+			[name]: finalValue,
 		};
 
 		if (name === 'scope' && !value.includes('Paint')) {
@@ -205,31 +211,44 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 						>
 							{editingId ? 'Edit Repair' : 'Add a Major Repair'}
 						</h4>
+
 						{/* 1. Location & Quantity */}
 						<div className='form-group-box'>
 							<div className='form-group-grid'>
 								<div className='form-group'>
-									<label>Location (e.g. North Wall)*</label>
+									<label>
+										Specific Wall/Ceiling (e.g. Master Bedroom North Wall)*
+									</label>
 									<input
 										type='text'
 										name='locationName'
 										value={newRepair.locationName}
 										onChange={handleNewRepairChange}
-										placeholder='Be specific for location discounts'
+										placeholder='e.g. Living Room - West Wall'
 									/>
 								</div>
 								<div className='form-group'>
-									<label>Quantity of this patch</label>
+									<label>Number of patches on this specific wall</label>
 									<input
 										type='number'
 										name='quantity'
 										min='1'
+										max='5'
 										value={newRepair.quantity}
 										onChange={handleNewRepairChange}
 									/>
+									<p
+										className='form-hint-text'
+										style={{ marginTop: '4px', fontSize: '0.75rem' }}
+									>
+										Note: We cap estimates at 5 patches per wall. If you have
+										more, just select 5—our pros will assess additional surface
+										prep during the final walkthrough.
+									</p>
 								</div>
 							</div>
 						</div>
+
 						{/* 2. Type & Placement */}
 						<div className='form-group-box'>
 							<div className='form-group-grid'>
