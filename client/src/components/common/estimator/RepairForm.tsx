@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { FormData, RepairItem } from './EstimatorTypes';
 import { Plus, Trash2, AlertCircle, X, Edit2 } from 'lucide-react';
 import { Button } from '@/components/common/button/Button';
+import { InfoTooltip } from '@/components/common/infoTooltip/InfoTooltip';
 import './styles/RepairForm.css'; // Scoped styles for the repair module
 
 interface RepairFormProps {
@@ -228,7 +229,10 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 									/>
 								</div>
 								<div className='form-group'>
-									<label>Number of patches on this specific wall</label>
+									<label style={{ display: 'flex', alignItems: 'center' }}>
+										Number of patches on this specific wall
+										<InfoTooltip message='We cap estimates at 5 patches per wall. If you have more, just select 5—our pros will assess additional surface prep during the walkthrough.' />
+									</label>
 									<input
 										type='number'
 										name='quantity'
@@ -237,14 +241,6 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 										value={newRepair.quantity}
 										onChange={handleNewRepairChange}
 									/>
-									<p
-										className='form-hint-text'
-										style={{ marginTop: '4px', fontSize: '0.75rem' }}
-									>
-										Note: We cap estimates at 5 patches per wall. If you have
-										more, just select 5—our pros will assess additional surface
-										prep during the final walkthrough.
-									</p>
 								</div>
 							</div>
 						</div>
