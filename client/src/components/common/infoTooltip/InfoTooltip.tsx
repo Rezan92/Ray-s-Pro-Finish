@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { Info } from 'lucide-react';
 import './InfoTooltip.css';
@@ -13,30 +13,44 @@ export const InfoTooltip: React.FC<InfoTooltipProps> = ({ message }) => {
 	const triggerRef = useRef<HTMLButtonElement>(null);
 	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-	const showTooltip = () => {
-		if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
+	const updatePosition = useCallback(() => {
 		if (triggerRef.current) {
 			const rect = triggerRef.current.getBoundingClientRect();
 			setCoords({
-				top: rect.top + window.scrollY - 8,
-				left: rect.left + window.scrollX + rect.width / 2,
+				top: rect.top - 8,
+				left: rect.left + rect.width / 2,
 			});
 		}
+	}, []);
+
+	const showTooltip = () => {
+		if (timeoutRef.current) {
+			clearTimeout(timeoutRef.current);
+			timeoutRef.current = null;
+		}
+		updatePosition();
 		setIsVisible(true);
 	};
 
 	const hideTooltip = () => {
+		if (timeoutRef.current) clearTimeout(timeoutRef.current);
 		timeoutRef.current = setTimeout(() => {
 			setIsVisible(false);
+			timeoutRef.current = null;
 		}, 200);
 	};
 
 	useEffect(() => {
+		if (isVisible) {
+			window.addEventListener('scroll', updatePosition, true);
+			window.addEventListener('resize', updatePosition);
+		}
 		return () => {
+			window.removeEventListener('scroll', updatePosition, true);
+			window.removeEventListener('resize', updatePosition);
 			if (timeoutRef.current) clearTimeout(timeoutRef.current);
 		};
-	}, []);
+	}, [isVisible, updatePosition]);
 
 	return (
 		<div
@@ -60,7 +74,7 @@ export const InfoTooltip: React.FC<InfoTooltipProps> = ({ message }) => {
 						style={{
 							top: `${coords.top}px`,
 							left: `${coords.left}px`,
-							position: 'absolute',
+							position: 'fixed',
 						}}
 						onMouseEnter={showTooltip}
 						onMouseLeave={hideTooltip}

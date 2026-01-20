@@ -29,6 +29,7 @@
   z-index: 10000;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   pointer-events: auto;
+  margin-top: calc(-1 * var(--space-xs)); 
 }
 
 .info-tooltip-content::after {
