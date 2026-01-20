@@ -3,7 +3,7 @@ export const REPAIR_PRICES = {
 
 	// 100% Unit Prices (Includes: Setup, Patch, Sand, Texture, and Basic Paint)
 	PATCH_AND_PAINT_BASE: {
-		'Dings/Nail Pops': 150, // New Category
+		'Dings/Nail Pops': 150,
 		'Medium (<12")': 150,
 		'Large (1-3ft)': 250,
 		'X-Large (Sheet+)': 650,

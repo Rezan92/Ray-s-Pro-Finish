@@ -67,20 +67,26 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 			if (idx === anchorIndex && i === 0 && !isGlobalAnchorCharged) {
 				// Anchor Patch (100%)
 				repairItemCost += baseUnitPrice;
-				mathBreakdown.push(`Patch 1: $${baseUnitPrice} (100%)`);
+				mathBreakdown.push(
+					`Patch 1 (${repair.size}): $${baseUnitPrice} (100%)`
+				);
 				isGlobalAnchorCharged = true;
 			} else if (processedLocations.includes(repair.locationName) || i > 0) {
 				// Same Wall Add-ons (15%)
 				const addonPrice =
 					baseUnitPrice * REPAIR_PRICES.ADD_ON_FACTORS.SAME_WALL;
 				repairItemCost += addonPrice;
-				mathBreakdown.push(`Patch ${i + 1}: $${addonPrice.toFixed(2)} (15%)`);
+				mathBreakdown.push(
+					`Patch ${i + 1} (${repair.size}): $${addonPrice.toFixed(2)} (15%)`
+				);
 			} else {
 				// Different Room Add-ons (40%)
 				const addonPrice =
 					baseUnitPrice * REPAIR_PRICES.ADD_ON_FACTORS.DIFFERENT_ROOM;
 				repairItemCost += addonPrice;
-				mathBreakdown.push(`Patch ${i + 1}: $${addonPrice.toFixed(2)} (40%)`);
+				mathBreakdown.push(
+					`Patch ${i + 1} (${repair.size}): $${addonPrice.toFixed(2)} (40%)`
+				);
 			}
 		}
 
