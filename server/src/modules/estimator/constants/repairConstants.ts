@@ -1,7 +1,7 @@
 export const REPAIR_PRICES = {
 	BASE_SERVICE_FEE: 150, // Minimum for any repair trip
 
-	// 100% Unit Prices (Includes: Setup, Patch, Sand, Texture, and Basic Paint)
+	// 100% Unit Prices (Includes: Setup, Patch, Sand, and Texture)
 	PATCH_AND_PAINT_BASE: {
 		'Dings/Nail Pops': 150,
 		'Medium (<12")': 150,
@@ -9,8 +9,16 @@ export const REPAIR_PRICES = {
 		'X-Large (Sheet+)': 650,
 	},
 
+	PRIME_PRICE_PER_PATCH: 10,
+	PAINT_CREDITS: {
+		'Dings/Nail Pops': 25,
+		'Medium (<12")': 25,
+		'Large (1-3ft)': 50,
+		'X-Large (Sheet+)': 150,
+	},
+
 	ADD_ON_FACTORS: {
-		SAME_WALL: 0.2, // 15% of base
+		SAME_WALL: 0.2, // 20% of base
 		DIFFERENT_ROOM: 0.4, // 40% of base
 	},
 

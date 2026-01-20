@@ -48,7 +48,7 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 
 	data.repairs.forEach((repair, idx) => {
 		const qty = Number(repair.quantity) || 1;
-		const finalQty = Math.min(qty, 5); // Cap at 5 per wall
+		const finalQty = Math.min(qty, 5);
 		const baseUnitPrice =
 			REPAIR_PRICES.PATCH_AND_PAINT_BASE[
 				repair.damageType === 'Dings/Nail Pops'
@@ -58,29 +58,24 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 
 		let repairItemCost = 0;
 		let repairItemHours = (REPAIR_LABOR[repair.size] || 1) * finalQty;
-
-		// This array will store the "Math" for each patch to show in the Admin UI
 		const mathBreakdown: string[] = [];
 
-		// --- QUANTITY LOOP: Calculate and Document each patch individually ---
+		// --- QUANTITY LOOP: Drywall Base ---
 		for (let i = 0; i < finalQty; i++) {
 			if (idx === anchorIndex && i === 0 && !isGlobalAnchorCharged) {
-				// Anchor Patch (100%)
 				repairItemCost += baseUnitPrice;
 				mathBreakdown.push(
 					`Patch 1 (${repair.size}): $${baseUnitPrice} (100%)`
 				);
 				isGlobalAnchorCharged = true;
 			} else if (processedLocations.includes(repair.locationName) || i > 0) {
-				// Same Wall Add-ons (15%)
 				const addonPrice =
 					baseUnitPrice * REPAIR_PRICES.ADD_ON_FACTORS.SAME_WALL;
 				repairItemCost += addonPrice;
 				mathBreakdown.push(
-					`Patch ${i + 1} (${repair.size}): $${addonPrice.toFixed(2)} (15%)`
+					`Patch ${i + 1} (${repair.size}): $${addonPrice.toFixed(2)} (20%)`
 				);
 			} else {
-				// Different Room Add-ons (40%)
 				const addonPrice =
 					baseUnitPrice * REPAIR_PRICES.ADD_ON_FACTORS.DIFFERENT_ROOM;
 				repairItemCost += addonPrice;
@@ -90,11 +85,28 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 			}
 		}
 
+		// --- Priming Fee ---
+		if (repair.scope.includes('Paint') || repair.scope.includes('Prime')) {
+			const primeFee = REPAIR_PRICES.PRIME_PRICE_PER_PATCH * finalQty;
+			repairItemCost += primeFee;
+			mathBreakdown.push(`Priming (x${finalQty}): $${primeFee}`);
+		}
+
+		// --- Full Wall Painting Credit ---
+		if (repair.paintMatching === 'Paint entire wall') {
+			const creditKey =
+				repair.damageType === 'Dings/Nail Pops'
+					? 'Dings/Nail Pops'
+					: repair.size;
+			const credit = REPAIR_PRICES.PAINT_CREDITS[creditKey] || 0;
+			repairItemCost -= credit;
+			mathBreakdown.push(`Full Wall Credit: -$${credit}`);
+		}
+
 		items.push({
 			name: `${repair.locationName}: ${repair.damageType} (x${finalQty})`,
 			cost: repairItemCost,
 			hours: repairItemHours,
-			// DYNAMIC DETAIL: Shows exactly how the $210 (or any total) was reached
 			details: `Breakdown: ${mathBreakdown.join(
 				' + '
 			)} = $${repairItemCost.toFixed(2)}`,
@@ -126,8 +138,20 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 
 			const paintLabor = sqft * REPAIR_PRICES.WALL_PAINTING.LABOR_PER_SQFT;
 			const gallonsNeeded = sqft / REPAIR_PRICES.WALL_PAINTING.SQFT_PER_GALLON;
-			const paintSupply =
-				gallonsNeeded * REPAIR_PRICES.WALL_PAINTING.PAINT_PER_GALLON;
+			let paintSupply = 0;
+			let unitLabel = '';
+
+			if (gallonsNeeded <= 0.25) {
+				// If 1 quart (0.25 gal) or less is needed, charge for 1 quart
+				paintSupply = REPAIR_PRICES.WALL_PAINTING.PAINT_QUART;
+				unitLabel = `1 Quart ($${paintSupply})`;
+			} else {
+				// If more than a quart, round up to the nearest full gallon
+				const roundedGallons = Math.ceil(gallonsNeeded);
+				paintSupply =
+					roundedGallons * REPAIR_PRICES.WALL_PAINTING.PAINT_PER_GALLON;
+				unitLabel = `${roundedGallons} Gal ($${paintSupply})`;
+			}
 
 			const totalWallPaintCost = paintLabor + paintSupply;
 			const totalWallPaintHours = sqft / 100;
@@ -138,9 +162,7 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 				hours: totalWallPaintHours,
 				details: `Labor: $${paintLabor.toFixed(
 					2
-				)} ($1.50/sqft) + Paint: $${paintSupply.toFixed(
-					2
-				)} ($50/gal x ${gallonsNeeded.toFixed(2)}g)`,
+				)} ($1.50/sqft) + Paint: ${unitLabel}`,
 			});
 
 			totalCost += totalWallPaintCost;
@@ -158,15 +180,13 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 			}
 		} else if (repair.paintMatching === 'Color Match needed') {
 			const quartPrice = REPAIR_PRICES.WALL_PAINTING.PAINT_QUART;
-
 			items.push({
 				name: `  └ Paint Supply: Color Match Quart`,
 				cost: quartPrice,
 				hours: 0,
 				details: 'One quart of matched paint for patches',
 			});
-
-			totalCost += quartPrice; // Ensure this is added to the total!
+			totalCost += quartPrice;
 		}
 
 		processedLocations.push(repair.locationName);
