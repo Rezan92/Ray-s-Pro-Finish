@@ -53,7 +53,7 @@ export const InfoTooltip: React.FC<InfoTooltipProps> = ({ message }) => {
 				<Info size={14} />
 			</button>
 
-			{true &&
+			{isVisible &&
 				createPortal(
 					<div
 						className='info-tooltip-content'
