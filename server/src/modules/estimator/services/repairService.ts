@@ -6,6 +6,14 @@ const getBasePrice = (repair: RepairItem): number => {
 	const type = repair.damageType;
 	const size = repair.size;
 
+	if (type === 'Dings/Nail Pops') {
+		if (size.includes('1-5'))
+			return REPAIR_PRICES.DINGS_BASE_PRICES['Small (1-5 pops)'];
+		if (size.includes('6-15'))
+			return REPAIR_PRICES.DINGS_BASE_PRICES['Medium (6-15 pops)'];
+		return REPAIR_PRICES.DINGS_BASE_PRICES['Large (16+ pops)'];
+	}
+
 	if (type === 'Peeling Tape') {
 		if (size.includes('1-3ft'))
 			return REPAIR_PRICES.PEELING_TAPE_PRICES['Small (1-3ft)'];
@@ -27,11 +35,7 @@ const getBasePrice = (repair: RepairItem): number => {
 	if (type === 'Water Damage')
 		return REPAIR_PRICES.SPECIALTY_REPAIR_PRICES['Water Damage'];
 
-	return (
-		REPAIR_PRICES.PATCH_AND_PAINT_BASE[
-			type === 'Dings/Nail Pops' ? 'Dings/Nail Pops' : (size as any)
-		] || 150
-	);
+	return (REPAIR_PRICES.PATCH_AND_PAINT_BASE as any)[size] || 150;
 };
 
 export const calculateRepairEstimate = async (data: RepairRequest) => {

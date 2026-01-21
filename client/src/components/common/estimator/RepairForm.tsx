@@ -75,6 +75,17 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 
 	const getSizeOptions = () => {
 		const type = newRepair.damageType;
+
+		if (type === 'Dings/Nail Pops') {
+			return (
+				<>
+					<option value='Small (1-5 pops)'>Small (1-5 pops)</option>
+					<option value='Medium (6-15 pops)'>Medium (6-15 pops)</option>
+					<option value='Large (16+ pops)'>Large (16+ pops)</option>
+				</>
+			);
+		}
+
 		if (type === 'Stress Crack' || type === 'Peeling Tape') {
 			return (
 				<>
