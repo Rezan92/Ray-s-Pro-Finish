@@ -155,7 +155,7 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 		}
 
 		items.push({
-			name: `${repair.locationName}: ${repair.damageType} (x${finalQty})`,
+			name: `${repair.locationName}: ${repair.damageType} (x${finalQty} ${repair.size})`,
 			cost: repairItemCost,
 			hours: repairItemHours,
 			details: `Breakdown: ${mathBreakdown.join(
