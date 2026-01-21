@@ -2,6 +2,38 @@ import { REPAIR_PRICES, REPAIR_LABOR } from '../constants/repairConstants.js';
 import { RepairItem, RepairRequest } from '../types.js';
 import { generateServiceBreakdown } from '../utils/breakdownHelper.js';
 
+const getBasePrice = (repair: RepairItem): number => {
+	const type = repair.damageType;
+	const size = repair.size;
+
+	if (type === 'Peeling Tape') {
+		if (size.includes('1-3ft'))
+			return REPAIR_PRICES.PEELING_TAPE_PRICES['Small (1-3ft)'];
+		if (size.includes('3-5ft'))
+			return REPAIR_PRICES.PEELING_TAPE_PRICES['Medium (3-5ft)'];
+		return REPAIR_PRICES.PEELING_TAPE_PRICES['Large (5ft+)'];
+	}
+
+	if (type === 'Stress Crack' || type === 'Crack') {
+		if (size.includes('1-3ft'))
+			return REPAIR_PRICES.LINEAR_REPAIR_PRICES['Small (1-3ft)'];
+		if (size.includes('3-5ft'))
+			return REPAIR_PRICES.LINEAR_REPAIR_PRICES['Medium (3-5ft)'];
+		return REPAIR_PRICES.LINEAR_REPAIR_PRICES['Large (5ft+)'];
+	}
+
+	if (type === 'Corner Bead Repair')
+		return REPAIR_PRICES.SPECIALTY_REPAIR_PRICES['Corner Bead Repair'];
+	if (type === 'Water Damage')
+		return REPAIR_PRICES.SPECIALTY_REPAIR_PRICES['Water Damage'];
+
+	return (
+		REPAIR_PRICES.PATCH_AND_PAINT_BASE[
+			type === 'Dings/Nail Pops' ? 'Dings/Nail Pops' : (size as any)
+		] || 150
+	);
+};
+
 export const calculateRepairEstimate = async (data: RepairRequest) => {
 	let totalCost = 0;
 	let totalHours = 0;
@@ -17,28 +49,17 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 			breakdownItems: [],
 		};
 
-	// 1. FIND THE "ANCHOR" REPAIR (The most expensive 100% item)
+	// 1. FIND THE ANCHOR
 	let anchorIndex = -1;
 	let maxBasePrice = 0;
 
 	data.repairs.forEach((repair, idx) => {
-		const base =
-			REPAIR_PRICES.PATCH_AND_PAINT_BASE[
-				repair.damageType === 'Dings/Nail Pops'
-					? 'Dings/Nail Pops'
-					: repair.size
-			] || 150;
+		const base = getBasePrice(repair);
 		if (base > maxBasePrice) {
 			maxBasePrice = base;
 			anchorIndex = idx;
 		}
-
-		let repairVisits = 2; // Default: Visit 1 (Prep/Mud), Visit 2 (Sand/Paint)
-		if (repair.size === 'X-Large (Sheet+)') {
-			repairVisits = 3; // Visit 1 (Hang/Tape), Visit 2 (Mud), Visit 3 (Sand/Paint)
-		}
-
-		// Track the highest number of visits required for the whole project
+		const repairVisits = repair.size === 'X-Large (Sheet+)' ? 3 : 2;
 		if (repairVisits > maxVisits) maxVisits = repairVisits;
 	});
 
@@ -49,39 +70,31 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 	data.repairs.forEach((repair, idx) => {
 		const qty = Number(repair.quantity) || 1;
 		const finalQty = Math.min(qty, 5);
-		const baseUnitPrice =
-			REPAIR_PRICES.PATCH_AND_PAINT_BASE[
-				repair.damageType === 'Dings/Nail Pops'
-					? 'Dings/Nail Pops'
-					: repair.size
-			] || 150;
+		const baseUnitPrice = getBasePrice(repair);
 
 		let repairItemCost = 0;
-		let repairItemHours = (REPAIR_LABOR[repair.size] || 1) * finalQty;
+		const laborKey = (REPAIR_LABOR as any)[repair.size]
+			? repair.size
+			: 'Linear/Specialty';
+		let repairItemHours = (REPAIR_LABOR as any)[laborKey] * finalQty;
 		const mathBreakdown: string[] = [];
 
-		// --- QUANTITY LOOP: Drywall Base ---
+		// --- QUANTITY LOOP: Efficiency Logic ---
 		for (let i = 0; i < finalQty; i++) {
 			if (idx === anchorIndex && i === 0 && !isGlobalAnchorCharged) {
 				repairItemCost += baseUnitPrice;
-				mathBreakdown.push(
-					`Patch 1 (${repair.size}): $${baseUnitPrice} (100%)`
-				);
+				mathBreakdown.push(`Base: $${baseUnitPrice} (100%)`);
 				isGlobalAnchorCharged = true;
 			} else if (processedLocations.includes(repair.locationName) || i > 0) {
 				const addonPrice =
 					baseUnitPrice * REPAIR_PRICES.ADD_ON_FACTORS.SAME_WALL;
 				repairItemCost += addonPrice;
-				mathBreakdown.push(
-					`Patch ${i + 1} (${repair.size}): $${addonPrice.toFixed(2)} (20%)`
-				);
+				mathBreakdown.push(`Add-on: $${addonPrice.toFixed(2)} (20%)`);
 			} else {
 				const addonPrice =
 					baseUnitPrice * REPAIR_PRICES.ADD_ON_FACTORS.DIFFERENT_ROOM;
 				repairItemCost += addonPrice;
-				mathBreakdown.push(
-					`Patch ${i + 1} (${repair.size}): $${addonPrice.toFixed(2)} (40%)`
-				);
+				mathBreakdown.push(`Add-on: $${addonPrice.toFixed(2)} (40%)`);
 			}
 		}
 
@@ -89,18 +102,52 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 		if (repair.scope.includes('Paint') || repair.scope.includes('Prime')) {
 			const primeFee = REPAIR_PRICES.PRIME_PRICE_PER_PATCH * finalQty;
 			repairItemCost += primeFee;
-			mathBreakdown.push(`Priming (x${finalQty}): $${primeFee}`);
+			mathBreakdown.push(`Priming: $${primeFee}`);
 		}
 
 		// --- Full Wall Painting Credit ---
 		if (repair.paintMatching === 'Paint entire wall') {
-			const creditKey =
-				repair.damageType === 'Dings/Nail Pops'
-					? 'Dings/Nail Pops'
-					: repair.size;
-			const credit = REPAIR_PRICES.PAINT_CREDITS[creditKey] || 0;
+			const isLinear =
+				repair.damageType === 'Stress Crack' ||
+				repair.damageType === 'Peeling Tape' ||
+				repair.damageType === 'Corner Bead Repair';
+			const creditKey = isLinear
+				? 'Linear/Specialty'
+				: repair.damageType === 'Dings/Nail Pops'
+				? 'Dings/Nail Pops'
+				: repair.size;
+			const credit = (REPAIR_PRICES.PAINT_CREDITS as any)[creditKey] || 20;
 			repairItemCost -= credit;
 			mathBreakdown.push(`Full Wall Credit: -$${credit}`);
+		}
+
+		// --- Texture Surcharge ---
+		const textureFee =
+			(REPAIR_PRICES.SURCHARGES.TEXTURE_COMPLEXITY as any)[repair.texture] || 0;
+		if (textureFee > 0) {
+			repairItemCost += textureFee;
+			mathBreakdown.push(`${repair.texture} Texture: $${textureFee}`);
+		}
+
+		// --- Accessibility Surcharge ---
+		if (repair.accessibility === 'Ladder') {
+			repairItemCost += REPAIR_PRICES.SURCHARGES.LADDER_FEE;
+			mathBreakdown.push(
+				`Ladder Access: $${REPAIR_PRICES.SURCHARGES.LADDER_FEE}`
+			);
+		} else if (repair.accessibility === 'High') {
+			repairItemCost += REPAIR_PRICES.SURCHARGES.SCAFFOLD_RENTAL;
+			mathBreakdown.push(
+				`Scaffold Rental: $${REPAIR_PRICES.SURCHARGES.SCAFFOLD_RENTAL}`
+			);
+		}
+
+		// --- Ceiling Surcharge ---
+		if (repair.placement === 'Ceiling') {
+			const ceilingFee =
+				repairItemCost * (REPAIR_PRICES.SURCHARGES.CEILING_MULTIPLIER - 1);
+			repairItemCost += ceilingFee;
+			mathBreakdown.push(`Ceiling Surcharge: $${ceilingFee.toFixed(2)}`);
 		}
 
 		items.push({
@@ -115,7 +162,7 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 		totalCost += repairItemCost;
 		totalHours += repairItemHours;
 
-		// 3. WALL PAINTING LOGIC (Square Footage & Exact Paint)
+		// 3. WALL PAINTING LOGIC
 		if (
 			repair.scope.includes('Paint') &&
 			repair.paintMatching === 'Paint entire wall'
@@ -131,80 +178,64 @@ export const calculateRepairEstimate = async (data: RepairRequest) => {
 				'12ft (Large)': 12,
 				'14ft+ (Very Large)': 14,
 			};
-
 			const h = hMap[repair.wallHeight || '8ft (Standard)'];
 			const w = wMap[repair.wallWidth || '10ft (Medium)'];
 			const sqft = h * w;
 
 			const paintLabor = sqft * REPAIR_PRICES.WALL_PAINTING.LABOR_PER_SQFT;
 			const gallonsNeeded = sqft / REPAIR_PRICES.WALL_PAINTING.SQFT_PER_GALLON;
-			let paintSupply = 0;
-			let unitLabel = '';
-
-			if (gallonsNeeded <= 0.25) {
-				// If 1 quart (0.25 gal) or less is needed, charge for 1 quart
-				paintSupply = REPAIR_PRICES.WALL_PAINTING.PAINT_QUART;
-				unitLabel = `1 Quart ($${paintSupply})`;
-			} else {
-				// If more than a quart, round up to the nearest full gallon
-				const roundedGallons = Math.ceil(gallonsNeeded);
-				paintSupply =
-					roundedGallons * REPAIR_PRICES.WALL_PAINTING.PAINT_PER_GALLON;
-				unitLabel = `${roundedGallons} Gal ($${paintSupply})`;
-			}
-
-			const totalWallPaintCost = paintLabor + paintSupply;
-			const totalWallPaintHours = sqft / 100;
+			let paintSupply =
+				gallonsNeeded <= 0.25
+					? REPAIR_PRICES.WALL_PAINTING.PAINT_QUART
+					: Math.ceil(gallonsNeeded) *
+					  REPAIR_PRICES.WALL_PAINTING.PAINT_PER_GALLON;
+			let unitLabel =
+				gallonsNeeded <= 0.25 ? `1 Quart` : `${Math.ceil(gallonsNeeded)} Gal`;
 
 			items.push({
 				name: `  └ Paint Entire Wall (${sqft} sqft)`,
-				cost: totalWallPaintCost,
-				hours: totalWallPaintHours,
-				details: `Labor: $${paintLabor.toFixed(
-					2
-				)} ($1.50/sqft) + Paint: ${unitLabel}`,
+				cost: paintLabor + paintSupply,
+				hours: sqft / 100,
+				details: `Labor: $${paintLabor.toFixed(2)} + Paint: ${unitLabel}`,
 			});
 
-			totalCost += totalWallPaintCost;
-			totalHours += totalWallPaintHours;
+			totalCost += paintLabor + paintSupply;
+			totalHours += sqft / 100;
 
 			if (repair.wallHeight === '11ft+ (Scaffold)') {
-				const scaffoldFee = REPAIR_PRICES.SURCHARGES.SCAFFOLD_RENTAL;
+				totalCost += REPAIR_PRICES.SURCHARGES.SCAFFOLD_RENTAL;
 				items.push({
-					name: `  └ Scaffold Rental Surcharge`,
-					cost: scaffoldFee,
+					name: `  └ Scaffold Surcharge`,
+					cost: REPAIR_PRICES.SURCHARGES.SCAFFOLD_RENTAL,
 					hours: 0,
-					details: 'Required for walls 11ft and higher',
+					details: 'Required for high walls',
 				});
-				totalCost += scaffoldFee;
 			}
 		} else if (repair.paintMatching === 'Color Match needed') {
-			const quartPrice = REPAIR_PRICES.WALL_PAINTING.PAINT_QUART;
+			totalCost += REPAIR_PRICES.WALL_PAINTING.PAINT_QUART;
 			items.push({
 				name: `  └ Paint Supply: Color Match Quart`,
-				cost: quartPrice,
+				cost: REPAIR_PRICES.WALL_PAINTING.PAINT_QUART,
 				hours: 0,
-				details: 'One quart of matched paint for patches',
+				details: '1 Quart matched paint',
 			});
-			totalCost += quartPrice;
 		}
 
 		processedLocations.push(repair.locationName);
 	});
 
-	// Minimum Service Fee Check
+	// Minimum Service Fee
 	if (totalCost > 0 && totalCost < REPAIR_PRICES.BASE_SERVICE_FEE) {
 		const adjustment = REPAIR_PRICES.BASE_SERVICE_FEE - totalCost;
 		items.push({
-			name: 'Minimum Service Call Adjustment',
+			name: 'Minimum Service Adjustment',
 			cost: adjustment,
 			hours: 0,
-			details: `Brings project total up to the $${REPAIR_PRICES.BASE_SERVICE_FEE} minimum trip fee`,
+			details: 'Trip minimum',
 		});
 		totalCost = REPAIR_PRICES.BASE_SERVICE_FEE;
 	}
 
-	// Generate the professional text summary for the admin
 	const explanation = generateServiceBreakdown(
 		'Drywall Repair',
 		items,

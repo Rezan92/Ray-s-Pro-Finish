@@ -1,7 +1,8 @@
 export const REPAIR_PRICES = {
-	BASE_SERVICE_FEE: 150, // Minimum for any repair trip
+	BASE_SERVICE_FEE: 150,
+	PRIME_PRICE_PER_PATCH: 10,
 
-	// 100% Unit Prices (Includes: Setup, Patch, Sand, and Texture)
+	// CATEGORY 1: Area-Based (Holes / Impact)
 	PATCH_AND_PAINT_BASE: {
 		'Dings/Nail Pops': 150,
 		'Medium (<12")': 150,
@@ -9,36 +10,47 @@ export const REPAIR_PRICES = {
 		'X-Large (Sheet+)': 650,
 	},
 
-	PRIME_PRICE_PER_PATCH: 10,
+	LINEAR_REPAIR_PRICES: {
+		'Small (1-3ft)': 75,
+		'Medium (3-5ft)': 125,
+		'Large (5ft+)': 175,
+	},
+
+	PEELING_TAPE_PRICES: {
+		'Small (1-3ft)': 100,
+		'Medium (3-5ft)': 150,
+		'Large (5ft+)': 200,
+	},
+
+	// CATEGORY 3: Specialty
+	SPECIALTY_REPAIR_PRICES: {
+		'Corner Bead Repair': 185,
+		'Water Damage': 200,
+	},
+
 	PAINT_CREDITS: {
 		'Dings/Nail Pops': 25,
 		'Medium (<12")': 25,
 		'Large (1-3ft)': 50,
 		'X-Large (Sheet+)': 150,
+		'Linear/Specialty': 20,
 	},
 
 	ADD_ON_FACTORS: {
-		SAME_WALL: 0.2, // 20% of base
-		DIFFERENT_ROOM: 0.4, // 40% of base
+		SAME_WALL: 0.2,
+		DIFFERENT_ROOM: 0.4,
 	},
 
 	WALL_PAINTING: {
 		LABOR_PER_SQFT: 1.5,
 		PAINT_PER_GALLON: 50.0,
-		SQFT_PER_GALLON: 350, // Industry standard for 1 coat coverage
+		SQFT_PER_GALLON: 350,
 		PAINT_QUART: 25.0,
 	},
 
-	// Discounts for subsequent work at the SAME location (Wall/Ceiling)
-	DISCOUNTS: {
-		SAME_WALL_SUBSEQUENT_FACTOR: 0.3, // 2nd+ patch on same wall is 30% of base price
-		PATCH_ONLY_DISCOUNT: 0.2, // If user only wants patch (no wall roll), reduce base by 20%
-	},
-
-	// Surcharges for difficulty
 	SURCHARGES: {
-		CEILING_MULTIPLIER: 1.35, // +35% for overhead work
-		HIGH_ACCESSIBILITY: 100, // Scaffolding or high ladders
+		CEILING_MULTIPLIER: 1.35,
+    LADDER_FEE: 50,
 		SCAFFOLD_RENTAL: 200,
 		TEXTURE_COMPLEXITY: {
 			Smooth: 0,
@@ -46,13 +58,13 @@ export const REPAIR_PRICES = {
 			Knockdown: 65,
 			Popcorn: 85,
 		},
-		COLOR_MATCH_TRIP: 65, // Trip to store for matching if customer doesn't have paint
 	},
 };
 
 export const REPAIR_LABOR = {
 	'Dings/Nail Pops': 1.0,
 	'Medium (<12")': 1.5,
-	'Large (1-3ft) ': 3.0,
+	'Large (1-3ft)': 3.0,
 	'X-Large (Sheet+)': 6.0,
+	'Linear/Specialty': 1.5,
 };

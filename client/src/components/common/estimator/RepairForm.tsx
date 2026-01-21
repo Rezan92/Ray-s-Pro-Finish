@@ -15,7 +15,7 @@ interface RepairFormProps {
 
 const INITIAL_REPAIR: RepairItem = {
 	id: '',
-	damageType: 'Hole',
+	damageType: 'Hole / Impact Damage', // Matches backend default
 	size: 'Medium (<12")',
 	locationName: '',
 	quantity: 1,
@@ -24,8 +24,8 @@ const INITIAL_REPAIR: RepairItem = {
 	texture: 'Smooth',
 	scope: 'Patch Only',
 	paintMatching: 'Customer has paint',
-	wallHeight: '8ft (Standard)', // Default
-	wallWidth: '10ft (Medium)', // Default
+	wallHeight: '8ft (Standard)',
+	wallWidth: '10ft (Medium)',
 };
 
 export const RepairForm: React.FC<RepairFormProps> = ({
@@ -56,18 +56,44 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 			[name]: finalValue,
 		};
 
-		if (name === 'scope' && !value.includes('Paint')) {
-			updatedRepair.paintMatching = 'Customer has paint';
-			updatedRepair.wallHeight = '8ft (Standard)';
-			updatedRepair.wallWidth = '10ft (Medium)';
+		if (name === 'damageType') {
+			const isLinear = value === 'Stress Crack' || value === 'Peeling Tape';
+			const isSpecialty =
+				value === 'Corner Bead Repair' || value === 'Water Damage';
+
+			if (isLinear) updatedRepair.size = 'Small (1-3ft)';
+			else if (isSpecialty) updatedRepair.size = 'Standard';
+			else updatedRepair.size = 'Medium (<12")';
 		}
 
-		if (name === 'paintMatching' && value !== 'Paint entire wall') {
-			updatedRepair.wallHeight = '8ft (Standard)';
-			updatedRepair.wallWidth = '10ft (Medium)';
+		if (name === 'scope' && !value.includes('Paint')) {
+			updatedRepair.paintMatching = 'Customer has paint';
 		}
 
 		setNewRepair(updatedRepair);
+	};
+
+	const getSizeOptions = () => {
+		const type = newRepair.damageType;
+		if (type === 'Stress Crack' || type === 'Peeling Tape') {
+			return (
+				<>
+					<option value='Small (1-3ft)'>Small (1-3 linear feet)</option>
+					<option value='Medium (3-5ft)'>Medium (3-5 linear feet)</option>
+					<option value='Large (5ft+)'>Large (5+ linear feet)</option>
+				</>
+			);
+		}
+		if (type === 'Corner Bead Repair' || type === 'Water Damage') {
+			return <option value='Standard'>Standard Repair</option>;
+		}
+		return (
+			<>
+				<option value='Medium (<12")'>Medium (Plate size or smaller)</option>
+				<option value='Large (1-3ft)'>Large (1-3 feet)</option>
+				<option value='X-Large (Sheet+)'>X-Large (Full sheet or more)</option>
+			</>
+		);
 	};
 
 	// Opens modal for a fresh repair
@@ -258,10 +284,19 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 										<option value='Dings/Nail Pops'>
 											Dings / Nail Pops (Surface only)
 										</option>
-										<option value='Hole'>Hole / Impact Damage</option>
-										<option value='Crack'>Stress Crack</option>
-										<option value='Water Damage'>Water Damage</option>
-										<option value='Tape Issues'>Peeling Tape / Blisters</option>
+										<option value='Hole / Impact Damage'>
+											Hole / Impact Damage
+										</option>
+										<option value='Stress Crack'>Stress Crack</option>
+										<option value='Peeling Tape'>
+											Peeling Tape / Blisters
+										</option>
+										<option value='Corner Bead Repair'>
+											Corner Bead Repair
+										</option>
+										<option value='Water Damage'>
+											Water Damage Investigation
+										</option>
 									</select>
 								</div>
 								<div className='form-group'>
@@ -287,13 +322,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 										value={newRepair.size}
 										onChange={handleNewRepairChange}
 									>
-										<option value='Medium (<12")'>
-											Medium (Plate size or smaller)
-										</option>
-										<option value='Large (1-3ft)'>Large (1-3 feet)</option>
-										<option value='X-Large (Sheet+)'>
-											X-Large (Full sheet or more)
-										</option>
+										{getSizeOptions()}
 									</select>
 								</div>
 								<div className='form-group'>
