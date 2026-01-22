@@ -63,7 +63,24 @@ export const getEstimate = async (
 			}
 		}
 
-		// 3. Installation Service
+		// 3. Garage
+		if (formData.services.garage) {
+			promises.push(
+				Promise.resolve(calculateGarageEstimate(formData.garage, isAdmin)).then(
+					(est) => {
+						totalLow += est.low;
+						totalHigh += est.high;
+						totalHours += est.totalHours;
+						combinedExplanation += `GARAGE FINISH:\n${est.explanation}\n\n`;
+						if (isAdmin && est.breakdownItems) {
+							breakdownItems = [...breakdownItems, ...est.breakdownItems];
+						}
+					}
+				)
+			);
+		}
+
+		// 4. Installation Service
 		if (formData.services.installation) {
 			promises.push(
 				calculateInstallEstimate(formData.installation).then((est) => {
@@ -71,18 +88,6 @@ export const getEstimate = async (
 					totalHigh += est.high;
 					totalHours += est.totalHours;
 					combinedExplanation += `INSTALLATION:\n${est.explanation}\n\n`;
-				})
-			);
-		}
-
-		// 4. Garage
-		if (formData.services.garage) {
-			promises.push(
-				calculateGarageEstimate(formData.garage).then((est) => {
-					totalLow += est.low;
-					totalHigh += est.high;
-					totalHours += est.totalHours;
-					combinedExplanation += `GARAGE FINISH:\n${est.explanation}\n\n`;
 				})
 			);
 		}
