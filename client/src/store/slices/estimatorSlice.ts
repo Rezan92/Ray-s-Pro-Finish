@@ -5,12 +5,11 @@ import {
 } from '@reduxjs/toolkit';
 import type {
 	FormData,
-	Estimate,
 	PaintingRoom,
 	RepairItem,
+	EstimatorState,
 } from '@/components/common/estimator/EstimatorTypes';
 import { endpoints } from '@/config/api';
-
 const createNewRoom = (
 	type: string,
 	id: string,
@@ -60,14 +59,6 @@ const ROOM_LABELS: { [key: string]: string } = {
 	other: 'Other',
 };
 
-interface EstimatorState {
-	step: number;
-	formData: FormData;
-	estimate: Estimate | null;
-	status: 'idle' | 'loading' | 'succeeded' | 'failed';
-	error: string | null;
-}
-
 const initialState: EstimatorState = {
 	step: 1,
 	formData: {
@@ -78,11 +69,13 @@ const initialState: EstimatorState = {
 			garage: false,
 			basement: false,
 		},
+
 		painting: { rooms: [], paintProvider: 'Standard', furniture: 'None' },
 		patching: {
 			repairs: [],
 			smallRepairsDescription: '',
 		},
+
 		installation: {
 			projectType: 'Wall',
 			wallLength: 'Small (Under 10ft)',
@@ -94,16 +87,21 @@ const initialState: EstimatorState = {
 			finishLevel: 'Level 4',
 			includePaint: false,
 		},
+
 		garage: {
-			capacity: '2-Car',
-			scope: 'Both',
-			currentCondition: 'Open Studs',
-			finishLevel: 'Fire Tape (Code)',
-			includeInsulation: false,
-			includePaint: false,
-			includeEpoxy: false,
-			includeBaseboards: false,
+			size: '2-Car',
+			ceilingHeight: 'Standard (8-9ft)',
+			condition: 'Bare Studs',
+			includeCeiling: true,
+			occupancy: 'Empty',
+			services: {
+				insulation: true,
+				hanging: true,
+				taping: true,
+				painting: true,
+			},
 		},
+
 		basement: {
 			sqft: '',
 			ceilingHeight: 'Standard',

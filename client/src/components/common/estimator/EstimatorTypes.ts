@@ -54,23 +54,30 @@ export interface InstallationData {
 	additionalDetails?: string;
 }
 
+export type GarageSize = '1-Car' | '1.5-Car' | '2-Car' | '2.5-Car' | '3-Car';
+export type GarageHeight =
+	| 'Standard (8-9ft)'
+	| 'High (10-12ft)'
+	| 'Extra High (13ft+)';
+export type GarageCondition =
+	| 'Bare Studs'
+	| 'Drywall Hung'
+	| 'Taped & Rough'
+	| 'Finished/Bare';
+export type GarageOccupancy = 'Empty' | 'Customer Will Move' | 'Pro Move';
+
 export interface GarageData {
-	capacity: string; // '1-Car', '2-Car', '3-Car', '4-Car'
-	scope: string; // 'Walls Only', 'Ceiling Only', 'Both'
-
-	// Condition
-	currentCondition: string; // 'Open Studs', 'Insulated (No Board)', 'Existing Drywall (Needs Finish)'
-
-	// Finish
-	finishLevel: string; // 'Fire Tape (Code)', 'Level 3 (Work)', 'Level 4 (Smooth/Paint Ready)'
-
-	// Services
-	includeInsulation: boolean;
-	includePaint: boolean;
-	includeEpoxy: boolean;
-	includeBaseboards: boolean; // Rubber/Vinyl base
-
-	additionalDetails?: string;
+	size: GarageSize;
+	ceilingHeight: GarageHeight;
+	condition: GarageCondition;
+	includeCeiling: boolean;
+	occupancy: GarageOccupancy;
+	services: {
+		insulation: boolean;
+		hanging: boolean;
+		taping: boolean;
+		painting: boolean;
+	};
 }
 
 export interface BasementData {
@@ -124,6 +131,14 @@ export interface FormData {
 		email: string;
 		phone: string;
 	};
+}
+
+export interface EstimatorState {
+	step: number;
+	formData: FormData;
+	estimate: Estimate | null;
+	status: 'idle' | 'loading' | 'succeeded' | 'failed';
+	error: string | null;
 }
 
 export interface BreakdownItem {
