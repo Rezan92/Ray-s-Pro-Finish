@@ -21,3 +21,29 @@ export interface RepairRequest {
 	repairs: RepairItem[];
 	smallRepairsDescription?: string;
 }
+
+export type GarageSize = '1-Car' | '1.5-Car' | '2-Car' | '2.5-Car' | '3-Car';
+export type GarageHeight =
+	| 'Standard (8-9ft)'
+	| 'High (10-12ft)'
+	| 'Extra High (13ft+)';
+export type GarageCondition =
+	| 'Bare Studs'
+	| 'Drywall Hung'
+	| 'Taped & Rough'
+	| 'Finished/Bare';
+export type GarageOccupancy = 'Empty' | 'Customer Will Move' | 'Pro Move';
+
+export interface GarageRequest {
+	size: GarageSize;
+	ceilingHeight: GarageHeight;
+	condition: GarageCondition;
+	includeCeiling: boolean;
+	occupancy: GarageOccupancy;
+	services: {
+		insulation: boolean;
+		hanging: boolean;
+		taping: boolean;
+		painting: boolean;
+	};
+}
