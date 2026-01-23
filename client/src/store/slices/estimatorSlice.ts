@@ -96,10 +96,11 @@ const initialState: EstimatorState = {
 			occupancy: 'Empty',
 			services: {
 				insulation: true,
-				hanging: true,
-				taping: true,
+				drywall: true,
 				painting: true,
 			},
+			drywallLevel: 'Level 2',
+			paintLevel: 'Standard',
 		},
 
 		basement: {

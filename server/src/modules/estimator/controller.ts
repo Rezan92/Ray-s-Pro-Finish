@@ -53,7 +53,7 @@ export const getEstimate = async (
 						totalLow += est.low;
 						totalHigh += est.high;
 						totalHours += est.totalHours;
-						totalVisits = est.totalVisits;
+						totalVisits = est.totalVisits || 0;
 						combinedExplanation += `DRYWALL REPAIR:\n${est.explanation}\n\n`;
 						if (est.breakdownItems) {
 							breakdownItems = [...breakdownItems, ...est.breakdownItems];
