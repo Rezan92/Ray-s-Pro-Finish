@@ -1,9 +1,9 @@
-// server/src/modules/estimator/services/garageService.ts
 import {
 	GARAGE_DIMENSIONS,
 	GARAGE_PRICES,
 	HEIGHT_VALUES,
 } from '../constants/garageConstants.js';
+import { MASTER_RATES, RateDetail } from '../constants/masterRates.js';
 import { GarageRequest } from '../types.js';
 
 interface BreakdownItem {
@@ -40,7 +40,6 @@ export const calculateGarageEstimate = (
 	// 2. Areas
 	const perimeter = 2 * (dims.width + dims.depth);
 	const wallSqft = perimeter * height;
-	// CRITICAL: If includeCeiling is false, ceilingSqft is 0 for PRICING, but we might keep ref for notes
 	const ceilingSqft = includeCeiling ? dims.width * dims.depth : 0;
 	const totalSqft = wallSqft + ceilingSqft;
 
@@ -60,96 +59,149 @@ export const calculateGarageEstimate = (
 		}.`,
 	});
 
-	// Helper to calculate cost for a service splitting Wall vs Ceiling
-	const calcService = (
+	// --- Helper: Standardized Math for Labor/Material ---
+	const addService = (
 		name: string,
-		wallRate: number,
-		ceilRate: number,
-		hoursRate: number
+		wallRate: RateDetail,
+		ceilRate: RateDetail,
+		note: string
 	) => {
-		const wCost = wallSqft * wallRate * diffFactor;
-		const cCost = ceilingSqft * ceilRate; // Ceiling usually not affected by wall height factor, it's just "high" naturally
+		// LABOR
+		const laborW = wallSqft * wallRate.labor * diffFactor;
+		const laborC = ceilingSqft * ceilRate.labor; // Ceiling rate often already accounts for difficulty, but keeping consistent
+		const totalLabor = laborW + laborC;
 
-		const cost = wCost + cCost;
-		const hours = totalSqft * hoursRate * diffFactor;
+		// HOURS
+		const hoursW = wallSqft * wallRate.hoursPerSqft * diffFactor;
+		const hoursC = ceilingSqft * ceilRate.hoursPerSqft;
+		const totalHrs = hoursW + hoursC;
 
-		return {
-			cost,
-			hours,
-			details: `Walls: ${wallSqft}sqft, Ceilings: ${ceilingSqft}sqft`,
-		};
+		// MATERIAL (No height factor usually)
+		const matW = wallSqft * wallRate.material;
+		const matC = ceilingSqft * ceilRate.material;
+		const totalMat = matW + matC;
+
+		// Push Labor Item
+		breakdownItems.push({
+			name: `${name} (Labor)`,
+			cost: totalLabor,
+			hours: totalHrs,
+			details: `Walls: ${wallSqft}sf * $${(wallRate.labor * diffFactor).toFixed(
+				2
+			)} + Clg: ${ceilingSqft}sf * $${ceilRate.labor.toFixed(2)}`,
+		});
+
+		// Push Material Item
+		breakdownItems.push({
+			name: `${name} Supplies`,
+			cost: totalMat,
+			hours: 0,
+			details: `Walls: $${wallRate.material.toFixed(
+				2
+			)}/sf + Clg: $${ceilRate.material.toFixed(2)}/sf (${note})`,
+		});
+
+		totalCost += totalLabor + totalMat;
+		totalHours += totalHrs;
 	};
 
-	// B. Services
+	// --- B. Services ---
+
+	// 1. Insulation
 	if (services.insulation) {
-		const res = calcService(
+		addService(
 			'Insulation',
-			GARAGE_PRICES.INSULATION_WALL_SQFT,
-			GARAGE_PRICES.INSULATION_CEILING_SQFT,
-			GARAGE_PRICES.HOURS_PER_SQFT.INSULATION
+			MASTER_RATES.INSULATION.STANDARD.WALL,
+			MASTER_RATES.INSULATION.STANDARD.CEILING,
+			'R-13/R-19 Batts'
 		);
-		totalCost += res.cost;
-		totalHours += res.hours;
-		breakdownItems.push({
-			name: 'Insulation',
-			cost: res.cost,
-			hours: res.hours,
-			details: res.details,
-		});
 	}
 
-	if (services.hanging) {
-		const res = calcService(
-			'Drywall Hang',
-			GARAGE_PRICES.HANGING_WALL_SQFT,
-			GARAGE_PRICES.HANGING_CEILING_SQFT,
-			GARAGE_PRICES.HOURS_PER_SQFT.HANGING
+	// 2. Hanging & Taping Logic
+	// Complexity: User might check Hang, Tape, or Both.
+	// Data Source: Table 2 (Install) includes Tape. Table 3 (Finish) is Tape Only.
+
+	if (services.hanging && services.taping) {
+		// Scenario: Full Install (Hang + Tape + Finish)
+		// Using LEVEL 2 (Garage Standard: 1 Coat)
+		addService(
+			'Drywall Install & Finish',
+			MASTER_RATES.DRYWALL_INSTALL.LEVEL_2.WALL,
+			MASTER_RATES.DRYWALL_INSTALL.LEVEL_2.CEILING,
+			'Board, Tape, Mud (Level 2)'
 		);
-		totalCost += res.cost;
-		totalHours += res.hours;
-		breakdownItems.push({
-			name: 'Hanging (5/8" Fire)',
-			cost: res.cost,
-			hours: res.hours,
-			details: res.details,
-		});
+	} else if (services.hanging && !services.taping) {
+		// Scenario: Hang Only (Board Up, No Tape)
+		// Derivation: Install L1 (Hang+Tape) MINUS Finish L1 (Tape Only)
+		// This is a calculated "Board Only" rate
+		const hangWall: RateDetail = {
+			labor:
+				MASTER_RATES.DRYWALL_INSTALL.LEVEL_1.WALL.labor -
+				MASTER_RATES.DRYWALL_FINISH.LEVEL_1.WALL.labor,
+			material:
+				MASTER_RATES.DRYWALL_INSTALL.LEVEL_1.WALL.material -
+				MASTER_RATES.DRYWALL_FINISH.LEVEL_1.WALL.material,
+			hoursPerSqft:
+				MASTER_RATES.DRYWALL_INSTALL.LEVEL_1.WALL.hoursPerSqft -
+				MASTER_RATES.DRYWALL_FINISH.LEVEL_1.WALL.hoursPerSqft,
+		};
+		const hangCeil: RateDetail = {
+			labor:
+				MASTER_RATES.DRYWALL_INSTALL.LEVEL_1.CEILING.labor -
+				MASTER_RATES.DRYWALL_FINISH.LEVEL_1.CEILING.labor,
+			material:
+				MASTER_RATES.DRYWALL_INSTALL.LEVEL_1.CEILING.material -
+				MASTER_RATES.DRYWALL_FINISH.LEVEL_1.CEILING.material,
+			hoursPerSqft:
+				MASTER_RATES.DRYWALL_INSTALL.LEVEL_1.CEILING.hoursPerSqft -
+				MASTER_RATES.DRYWALL_FINISH.LEVEL_1.CEILING.hoursPerSqft,
+		};
+
+		addService(
+			'Drywall Hang Only',
+			hangWall,
+			hangCeil,
+			'5/8" Fire Board + Fasteners'
+		);
+	} else if (!services.hanging && services.taping) {
+		// Scenario: Finish Only (Board already up)
+		// Using LEVEL 2 (Tape + 1 Coat)
+		addService(
+			'Taping & Finishing',
+			MASTER_RATES.DRYWALL_FINISH.LEVEL_2.WALL,
+			MASTER_RATES.DRYWALL_FINISH.LEVEL_2.CEILING,
+			'Tape + 1 Coat'
+		);
 	}
 
-	if (services.taping) {
-		const res = calcService(
-			'Taping (Fire Tape)',
-			GARAGE_PRICES.TAPING_WALL_SQFT,
-			GARAGE_PRICES.TAPING_CEILING_SQFT,
-			GARAGE_PRICES.HOURS_PER_SQFT.TAPING
-		);
-		totalCost += res.cost;
-		totalHours += res.hours;
-		breakdownItems.push({
-			name: 'Taping',
-			cost: res.cost,
-			hours: res.hours,
-			details: res.details,
-		});
-	}
-
+	// 3. Painting
 	if (services.painting) {
-		const res = calcService(
-			'Painting',
-			GARAGE_PRICES.PAINTING_WALL_SQFT,
-			GARAGE_PRICES.PAINTING_CEILING_SQFT,
-			GARAGE_PRICES.HOURS_PER_SQFT.PAINTING
-		);
-		totalCost += res.cost;
-		totalHours += res.hours;
+		// Scenario: Garage Standard = Primer + 1 Coat
+		// We sum the "Primer" rate and "One Coat" rate from Master Table
+		const paintWall: RateDetail = {
+			labor:
+				MASTER_RATES.PAINTING.PRIMER.WALL.labor +
+				MASTER_RATES.PAINTING.ONE_COAT.WALL.labor,
+			material:
+				MASTER_RATES.PAINTING.PRIMER.WALL.material +
+				MASTER_RATES.PAINTING.ONE_COAT.WALL.material,
+			hoursPerSqft:
+				MASTER_RATES.PAINTING.PRIMER.WALL.hoursPerSqft +
+				MASTER_RATES.PAINTING.ONE_COAT.WALL.hoursPerSqft,
+		};
+		const paintCeil: RateDetail = {
+			labor:
+				MASTER_RATES.PAINTING.PRIMER.CEILING.labor +
+				MASTER_RATES.PAINTING.ONE_COAT.CEILING.labor,
+			material:
+				MASTER_RATES.PAINTING.PRIMER.CEILING.material +
+				MASTER_RATES.PAINTING.ONE_COAT.CEILING.material,
+			hoursPerSqft:
+				MASTER_RATES.PAINTING.PRIMER.CEILING.hoursPerSqft +
+				MASTER_RATES.PAINTING.ONE_COAT.CEILING.hoursPerSqft,
+		};
 
-		// Material Transparency (Like Painting Service)
-		const gallons = totalSqft / GARAGE_PRICES.COVERAGE_SQFT_PER_GALLON;
-		breakdownItems.push({
-			name: 'Prime & Paint',
-			cost: res.cost,
-			hours: res.hours,
-			details: `${res.details} (~${Math.ceil(gallons)} gals included)`,
-		});
+		addService('Prime & Paint', paintWall, paintCeil, 'PVA Primer + 1 Coat');
 	}
 
 	// C. Fees
@@ -160,7 +212,7 @@ export const calculateGarageEstimate = (
 			name: 'Contents Handling',
 			cost: GARAGE_PRICES.PRO_MOVE_HANDLING_FEE,
 			hours: GARAGE_PRICES.PRO_MOVE_HOURS,
-			details: 'Move & Cover Items',
+			details: 'Flat Fee: Move & Cover Items',
 		});
 	}
 
