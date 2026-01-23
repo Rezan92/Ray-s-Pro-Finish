@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import type {
 	FormData,
-	GarageData,
+	DrywallLevel,
+	PaintLevel,
 } from '@/components/common/estimator/EstimatorTypes';
 import { InfoTooltip } from '@/components/common/infoTooltip/InfoTooltip';
-import { AlertCircle } from 'lucide-react';
-import './styles/GarageForm.css'; // Importing the new separate styles
+import { AlertCircle, Check, ChevronDown } from 'lucide-react';
+import './styles/GarageForm.css';
 
 interface GarageFormProps {
 	formData: FormData;
@@ -18,57 +19,31 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 }) => {
 	const { garage } = formData;
 
-	// --- SELF-HEALING STATE FIX ---
+	// --- SELF-HEALING & DEFAULTS ---
 	useEffect(() => {
 		if (!garage.services) {
 			onNestedChange('garage', 'services', {
 				insulation: false,
-				hanging: false,
-				taping: false,
+				drywall: false,
 				painting: false,
 			});
 		}
-	}, [garage.services, onNestedChange]);
+		// Set default levels if missing
+		if (!garage.drywallLevel)
+			onNestedChange('garage', 'drywallLevel', 'Level 2');
+		if (!garage.paintLevel) onNestedChange('garage', 'paintLevel', 'Standard');
+	}, [garage.services, garage.drywallLevel, garage.paintLevel, onNestedChange]);
 
 	const safeServices = garage.services || {
 		insulation: false,
-		hanging: false,
-		taping: false,
+		drywall: false,
 		painting: false,
 	};
 
-	// --- LOGIC: RESET INVALID SERVICES ON CONDITION CHANGE ---
+	// --- LOGIC: RESET INVALID SERVICES ---
 	useEffect(() => {
-		const s = { ...safeServices };
-		let hasChanges = false;
-
-		// Condition Rules
-		if (garage.condition === 'Drywall Hung' && (s.hanging || s.insulation)) {
-			s.hanging = false;
-			s.insulation = false;
-			hasChanges = true;
-		}
-		if (
-			garage.condition === 'Taped & Rough' &&
-			(s.hanging || s.insulation || s.taping)
-		) {
-			s.hanging = false;
-			s.insulation = false;
-			s.taping = false;
-			hasChanges = true;
-		}
-		if (
-			garage.condition === 'Finished/Bare' &&
-			(s.hanging || s.insulation || s.taping)
-		) {
-			s.hanging = false;
-			s.insulation = false;
-			s.taping = false;
-			hasChanges = true;
-		}
-
-		if (hasChanges) {
-			onNestedChange('garage', 'services', s);
+		if (garage.condition === 'Finished/Bare' && safeServices.drywall) {
+			handleServiceToggle('drywall'); // Disable drywall if already finished
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [garage.condition]);
@@ -85,29 +60,36 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 		onNestedChange('garage', name, finalValue);
 	};
 
-	const handleServiceToggle = (serviceKey: keyof GarageData['services']) => {
-		const updatedServices = {
+	const handleServiceToggle = (key: 'insulation' | 'drywall' | 'painting') => {
+		onNestedChange('garage', 'services', {
 			...safeServices,
-			[serviceKey]: !safeServices[serviceKey],
-		};
-		onNestedChange('garage', 'services', updatedServices);
+			[key]: !safeServices[key],
+		});
 	};
 
-	// Visibility Logic
-	const isFinished = garage.condition === 'Finished/Bare';
-	const isHung = garage.condition === 'Drywall Hung';
-	const isTaped = garage.condition === 'Taped & Rough';
+	// FIX 1: Explicitly using DrywallLevel | PaintLevel removes the "unused type" warning
+	const handleLevelChange = (
+		field: 'drywallLevel' | 'paintLevel',
+		value: DrywallLevel | PaintLevel
+	) => {
+		onNestedChange('garage', field, value);
+	};
 
-	const showInsulation = !isFinished && !isHung && !isTaped;
-	const showHanging = !isFinished && !isHung && !isTaped;
-	const showTaping = !isFinished && !isTaped;
-	const showPainting = true;
+	// --- DYNAMIC LABELS ---
+	const isBare = garage.condition === 'Bare Studs';
+	const isFinished = garage.condition === 'Finished/Bare';
+
+	const drywallTitle = isBare ? 'Drywall Installation' : 'Drywall Finishing';
+	const drywallSubtitle = isBare ? 'Hang, Tape & Finish' : 'Tape, Mud & Sand';
+
+	const showDrywallOption = !isFinished;
+	const showInsulationOption = isBare;
 
 	return (
 		<div className='service-form-box'>
 			<h3 className='service-form-title'>Garage Finishing</h3>
 
-			{/* SECTION 1: DIMENSIONS */}
+			{/* SECTION 1: SPECS */}
 			<div className='garage-section'>
 				<h4 className='garage-section-title'>1. Dimensions & Specs</h4>
 				<div className='garage-grid'>
@@ -142,22 +124,23 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 
 			{/* SECTION 2: CONDITION */}
 			<div className='garage-section'>
-				<h4 className='garage-section-title'>2. Condition & Occupancy</h4>
+				<h4 className='garage-section-title'>2. Current Condition</h4>
 				<div className='garage-grid'>
 					<div className='form-group'>
-						<label>Current Condition</label>
+						<label>Condition</label>
 						<select
 							name='condition'
 							value={garage.condition}
 							onChange={handleChange}
 						>
-							<option value='Bare Studs'>Bare Studs (Needs Everything)</option>
+							<option value='Bare Studs'>Bare Studs (Open Walls)</option>
 							<option value='Drywall Hung'>Drywall Hung (Needs Tape)</option>
 							<option value='Taped & Rough'>Taped & Rough (Needs Paint)</option>
-							<option value='Finished/Bare'>Finished/Bare (Paint Only)</option>
+							<option value='Finished/Bare'>Finished/Painted (Repaint)</option>
 						</select>
 					</div>
 					<div className='form-group'>
+						{/* FIX 2: Used InfoTooltip here */}
 						<label
 							style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
 						>
@@ -169,112 +152,184 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 							value={garage.occupancy}
 							onChange={handleChange}
 						>
-							<option value='Empty'>Empty (Ready to work)</option>
-							<option value='Customer Will Move'>I will move items</option>
-							<option value='Pro Move'>Contractor to move items</option>
+							<option value='Empty'>Empty (Best Price)</option>
+							<option value='Customer Will Move'>I Will Move Items</option>
+							<option value='Pro Move'>Contractor Moves Items</option>
 						</select>
 					</div>
 				</div>
 			</div>
 
-			{/* SECTION 3: SCOPE (Pills) */}
+			{/* SECTION 3: SCOPE OF WORK */}
 			<div className='garage-section'>
-				<h4 className='garage-section-title'>3. Scope of Work</h4>
-
-				<div className='service-pills-container'>
-					{/* Ceiling Toggle */}
-					<label
-						className={`service-pill ${garage.includeCeiling ? 'active' : ''}`}
-					>
-						<input
-							type='checkbox'
-							name='includeCeiling'
-							checked={garage.includeCeiling}
-							onChange={handleChange}
-						/>
-						Include Ceiling
-					</label>
-
-					{showInsulation && (
-						<label
-							className={`service-pill ${
-								safeServices.insulation ? 'active' : ''
-							}`}
+				<h4 className='garage-section-title'>3. Select Services</h4>
+				<div className='service-selection-list'>
+					{/* A. CEILING TOGGLE */}
+					<div className='garage-service-row-container'>
+						<div
+							className={`service-row ${garage.includeCeiling ? 'active' : ''}`}
+							onClick={() =>
+								handleChange({
+									target: {
+										name: 'includeCeiling',
+										type: 'checkbox',
+										checked: !garage.includeCeiling,
+									},
+								} as any)
+							}
 						>
-							<input
-								type='checkbox'
-								checked={safeServices.insulation}
-								onChange={() => handleServiceToggle('insulation')}
-							/>
-							Install Insulation
-						</label>
-					)}
+							<div className='service-row-header'>
+								<div className='checkbox-circle'>
+									{garage.includeCeiling && <Check size={14} />}
+								</div>
+								<span className='service-name'>Include Ceiling</span>
+							</div>
+						</div>
 
-					{showHanging && (
-						<label
-							className={`service-pill ${safeServices.hanging ? 'active' : ''}`}
-						>
-							<input
-								type='checkbox'
-								checked={safeServices.hanging}
-								onChange={() => handleServiceToggle('hanging')}
-							/>
-							Hang Drywall
-						</label>
-					)}
+						{/* B. INSULATION */}
+						{showInsulationOption && (
+							<div
+								className={`service-row ${
+									safeServices.insulation ? 'active' : ''
+								}`}
+								onClick={() => handleServiceToggle('insulation')}
+							>
+								<div className='service-row-header'>
+									<div className='checkbox-circle'>
+										{safeServices.insulation && <Check size={14} />}
+									</div>
+									<div>
+										<span className='service-name'>Install Insulation</span>
+										<span className='service-sub'>R-13 / R-19 Batts</span>
+									</div>
+								</div>
+							</div>
+						)}
+					</div>
 
-					{showTaping && (
-						<label
-							className={`service-pill ${safeServices.taping ? 'active' : ''}`}
-						>
-							<input
-								type='checkbox'
-								checked={safeServices.taping}
-								onChange={() => handleServiceToggle('taping')}
-							/>
-							Tape & Finish
-						</label>
-					)}
+					<div className='garage-service-row-container'>
+						{/* C. DRYWALL WORK */}
+						{showDrywallOption && (
+							<div
+								className={`service-row ${
+									safeServices.drywall ? 'active' : ''
+								}`}
+							>
+								<div
+									className='service-row-header'
+									onClick={() => handleServiceToggle('drywall')}
+								>
+									<div className='checkbox-circle'>
+										{safeServices.drywall && <Check size={14} />}
+									</div>
+									<div>
+										<span className='service-name'>{drywallTitle}</span>
+										<span className='service-sub'>{drywallSubtitle}</span>
+									</div>
+								</div>
 
-					{showPainting && (
-						<label
-							className={`service-pill ${
-								safeServices.painting ? 'active' : ''
-							}`}
+								{safeServices.drywall && (
+									<div className='service-options'>
+										<label>Desired Finish Level:</label>
+										<div className='select-wrapper'>
+											<select
+												value={garage.drywallLevel || 'Level 2'}
+												onChange={(e) =>
+													handleLevelChange(
+														'drywallLevel',
+														e.target.value as DrywallLevel
+													)
+												}
+											>
+												<option value='Level 1'>
+													Level 1 (Fire Tape Only)
+												</option>
+												<option value='Level 2'>
+													Level 2 (Garage Standard - 1 Coat)
+												</option>
+												<option value='Level 3'>
+													Level 3 (Paint Ready - 2 Coats)
+												</option>
+												<option value='Level 4'>
+													Level 4 (Smooth - 3 Coats)
+												</option>
+												<option value='Level 5'>
+													Level 5 (Skim Coat - Premium)
+												</option>
+											</select>
+											<ChevronDown
+												className='select-icon'
+												size={16}
+											/>
+										</div>
+									</div>
+								)}
+							</div>
+						)}
+
+						{/* D. PAINTING */}
+						<div
+							className={`service-row ${safeServices.painting ? 'active' : ''}`}
 						>
-							<input
-								type='checkbox'
-								checked={safeServices.painting}
-								onChange={() => handleServiceToggle('painting')}
-							/>
-							Prime & Paint
-						</label>
-					)}
+							<div
+								className='service-row-header'
+								onClick={() => handleServiceToggle('painting')}
+							>
+								<div className='checkbox-circle'>
+									{safeServices.painting && <Check size={14} />}
+								</div>
+								<div>
+									<span className='service-name'>Prime & Paint</span>
+									<span className='service-sub'>Professional Spray/Roll</span>
+								</div>
+							</div>
+
+							{safeServices.painting && (
+								<div className='service-options'>
+									<label>Paint Package:</label>
+									<div className='select-wrapper'>
+										<select
+											value={garage.paintLevel || 'Standard'}
+											onChange={(e) =>
+												handleLevelChange(
+													'paintLevel',
+													e.target.value as PaintLevel
+												)
+											}
+										>
+											<option value='Primer'>Primer Only (Seal Walls)</option>
+											<option value='1-Coat'>
+												1-Coat Refresh (Existing Walls)
+											</option>
+											<option value='Standard'>Standard (2 Coats Total)</option>
+											<option value='Premium'>Premium (Prime + 2 Coats)</option>
+										</select>
+										<ChevronDown
+											className='select-icon'
+											size={16}
+										/>
+									</div>
+								</div>
+							)}
+						</div>
+					</div>
 				</div>
 			</div>
 
 			{/* SECTION 4: DETAILS */}
-			<div
-				className='garage-section'
-				style={{ border: 'none', background: 'transparent', padding: 0 }}
-			>
+			<div className='garage-section plain'>
 				<div className='form-group'>
 					<div className='garage-details-header'>
-						<label>Additional Details</label>
-						<span
-							style={{
-								fontWeight: 'normal',
-								fontSize: '0.8rem',
-								color: '#666',
-							}}
-						>
-							Max 600 chars
+						<label>Additional Notes</label>
+						<span className='char-count'>
+							{((garage as any).additionalDetails || '').length}/600
 						</span>
 					</div>
+					{/* FIX 3: Used AlertCircle here */}
 					<div className='garage-helper-text'>
 						<AlertCircle size={16} />
 						<span>
-							Example: "Exposed pipes on north wall" or "Need attic access door"
+							Example: "Need attic access door" or "Exposed pipes on North wall"
 						</span>
 					</div>
 					<textarea
@@ -282,12 +337,9 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 						name='additionalDetails'
 						value={(garage as any).additionalDetails || ''}
 						onChange={handleChange}
-						maxLength={600}
 						rows={3}
+						maxLength={600}
 					/>
-					<div className='garage-char-count'>
-						{((garage as any).additionalDetails || '').length} / 600
-					</div>
 				</div>
 			</div>
 		</div>

@@ -5,7 +5,6 @@
   border-radius: 8px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  transition: box-shadow 0.2s ease;
 }
 
 .garage-section:hover {
@@ -29,10 +28,30 @@
   gap: 1.5rem;
 }
 
+.garage-service-row-container {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-md);
+}
+
+.garage-service-row-container .service-row {
+  flex-grow: 1;
+}
+
 @media (min-width: 768px) {
   .garage-grid {
     grid-template-columns: 1fr 1fr;
   }
+
+
+}
+
+@media (max-width: 768px) {
+
+  .garage-service-row-container {
+    flex-direction: column;
+  }
+
 }
 
 /* Service Pills Container */
@@ -119,4 +138,131 @@
   font-size: 0.8rem;
   color: #999;
   margin-top: 4px;
+}
+
+.garage-section.plain {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.service-selection-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.service-row {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.service-row:hover {
+  border-color: #ccc;
+}
+
+.service-row.active {
+  border-color: var(--color-primary, #007bff);
+  background-color: #fbfdff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.service-row-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  cursor: pointer;
+}
+
+.checkbox-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: all 0.2s;
+  background: white;
+}
+
+.service-row.active .checkbox-circle {
+  border-color: var(--color-primary, #007bff);
+  background-color: var(--color-primary, #007bff);
+}
+
+.service-name {
+  display: block;
+  font-weight: 600;
+  color: #333;
+}
+
+.service-sub {
+  display: block;
+  font-size: 0.85rem;
+  color: #777;
+  margin-top: 2px;
+}
+
+.service-options {
+  border-top: 1px solid #eee;
+  padding: 16px;
+  background-color: #f8fbff;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.service-options label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #555;
+  text-transform: uppercase;
+}
+
+.select-wrapper {
+  position: relative;
+  max-width: 400px;
+}
+
+.select-wrapper select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  appearance: none;
+  background: white;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.select-wrapper select:focus {
+  outline: none;
+  border-color: var(--color-primary, #007bff);
+}
+
+.select-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #666;
 }

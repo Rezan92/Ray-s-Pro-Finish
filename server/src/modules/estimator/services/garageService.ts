@@ -6,6 +6,22 @@ import {
 import { MASTER_RATES, RateDetail } from '../constants/masterRates.js';
 import { GarageRequest } from '../types.js';
 
+// Map UI Values to Master Rate Keys
+const LEVEL_MAP: Record<string, keyof typeof MASTER_RATES.DRYWALL_INSTALL> = {
+	'Level 1': 'LEVEL_1',
+	'Level 2': 'LEVEL_2',
+	'Level 3': 'LEVEL_3',
+	'Level 4': 'LEVEL_4',
+	'Level 5': 'LEVEL_5',
+};
+
+const PAINT_MAP: Record<string, keyof typeof MASTER_RATES.PAINTING> = {
+	Primer: 'PRIMER',
+	'1-Coat': 'ONE_COAT',
+	Standard: 'STANDARD',
+	Premium: 'FULL',
+};
+
 interface BreakdownItem {
 	name: string;
 	cost: number;
@@ -25,13 +41,14 @@ export const calculateGarageEstimate = (
 		occupancy,
 		services,
 	} = data;
+	const drywallLvl = data.drywallLevel || 'Level 2';
+	const paintLvl = data.paintLevel || 'Standard';
 
 	const dims = GARAGE_DIMENSIONS[size];
 	if (!dims) throw new Error('Invalid garage size');
 
 	// 1. Dimensions
 	const height = HEIGHT_VALUES[ceilingHeight] || 9;
-	const isHighCeiling = height > 9;
 	const diffFactor =
 		GARAGE_PRICES.HEIGHT_FACTORS[
 			ceilingHeight as keyof typeof GARAGE_PRICES.HEIGHT_FACTORS
@@ -41,71 +58,76 @@ export const calculateGarageEstimate = (
 	const perimeter = 2 * (dims.width + dims.depth);
 	const wallSqft = perimeter * height;
 	const ceilingSqft = includeCeiling ? dims.width * dims.depth : 0;
-	const totalSqft = wallSqft + ceilingSqft;
+	// const totalSqft = wallSqft + ceilingSqft; // (Not used directly in new math logic)
 
 	const breakdownItems: BreakdownItem[] = [];
 	let totalCost = 0;
 	let totalHours = 0;
 
-	// A. Scope Header
+	// Header
 	breakdownItems.push({
 		name: 'Project Dimensions',
 		cost: 0,
 		hours: 0,
 		details: `${size} (${dims.width}'x${
 			dims.depth
-		}'). Walls: ${wallSqft} sqft. Ceiling: ${
+		}'). Walls: ${wallSqft} sf. Clg: ${
 			includeCeiling ? ceilingSqft : 'Excluded'
-		}.`,
+		} sf.`,
 	});
 
-	// --- Helper: Standardized Math for Labor/Material ---
+	// --- Helper: Explicit Math String ---
 	const addService = (
 		name: string,
-		wallRate: RateDetail,
-		ceilRate: RateDetail,
+		wRate: RateDetail,
+		cRate: RateDetail,
 		note: string
 	) => {
 		// LABOR
-		const laborW = wallSqft * wallRate.labor * diffFactor;
-		const laborC = ceilingSqft * ceilRate.labor; // Ceiling rate often already accounts for difficulty, but keeping consistent
-		const totalLabor = laborW + laborC;
+		const wLaborRate = wRate.labor * diffFactor;
+		const lCost = wallSqft * wLaborRate + ceilingSqft * cRate.labor;
+		const lHrs =
+			wallSqft * wRate.hoursPerSqft * diffFactor +
+			ceilingSqft * cRate.hoursPerSqft;
 
-		// HOURS
-		const hoursW = wallSqft * wallRate.hoursPerSqft * diffFactor;
-		const hoursC = ceilingSqft * ceilRate.hoursPerSqft;
-		const totalHrs = hoursW + hoursC;
+		// MATERIAL
+		const mCost = wallSqft * wRate.material + ceilingSqft * cRate.material;
 
-		// MATERIAL (No height factor usually)
-		const matW = wallSqft * wallRate.material;
-		const matC = ceilingSqft * ceilRate.material;
-		const totalMat = matW + matC;
+		totalCost += lCost + mCost;
+		totalHours += lHrs;
 
-		// Push Labor Item
+		// Formatted Strings for Admin Transparency
+		// Ex: Walls: 480sf * $0.65 + Clg: 240sf * $0.85
+		const laborDetails =
+			`Walls: ${wallSqft}sf * $${wLaborRate.toFixed(2)}` +
+			(includeCeiling
+				? ` + Clg: ${ceilingSqft}sf * $${cRate.labor.toFixed(2)}`
+				: '');
+
+		const materialDetails =
+			`Walls: ${wallSqft}sf * $${wRate.material.toFixed(2)}` +
+			(includeCeiling
+				? ` + Clg: ${ceilingSqft}sf * $${cRate.material.toFixed(2)}`
+				: '');
+
+		// 1. Labor Line
 		breakdownItems.push({
 			name: `${name} (Labor)`,
-			cost: totalLabor,
-			hours: totalHrs,
-			details: `Walls: ${wallSqft}sf * $${(wallRate.labor * diffFactor).toFixed(
-				2
-			)} + Clg: ${ceilingSqft}sf * $${ceilRate.labor.toFixed(2)}`,
+			cost: lCost,
+			hours: lHrs,
+			details: laborDetails,
 		});
 
-		// Push Material Item
+		// 2. Supply Line (Indented with L-shape)
 		breakdownItems.push({
-			name: `${name} Supplies`,
-			cost: totalMat,
+			name: `↳ ${name} Supplies`,
+			cost: mCost,
 			hours: 0,
-			details: `Walls: $${wallRate.material.toFixed(
-				2
-			)}/sf + Clg: $${ceilRate.material.toFixed(2)}/sf (${note})`,
+			details: `↳ ${materialDetails} (${note})`,
 		});
-
-		totalCost += totalLabor + totalMat;
-		totalHours += totalHrs;
 	};
 
-	// --- B. Services ---
+	// --- Services ---
 
 	// 1. Insulation
 	if (services.insulation) {
@@ -113,98 +135,46 @@ export const calculateGarageEstimate = (
 			'Insulation',
 			MASTER_RATES.INSULATION.STANDARD.WALL,
 			MASTER_RATES.INSULATION.STANDARD.CEILING,
-			'R-13/R-19 Batts'
+			'R-13 Batts'
 		);
 	}
 
-	// 2. Hanging & Taping Logic
-	// Complexity: User might check Hang, Tape, or Both.
-	// Data Source: Table 2 (Install) includes Tape. Table 3 (Finish) is Tape Only.
+	// 2. Drywall Work
+	if (services.drywall) {
+		const key = LEVEL_MAP[drywallLvl] || 'LEVEL_2';
 
-	if (services.hanging && services.taping) {
-		// Scenario: Full Install (Hang + Tape + Finish)
-		// Using LEVEL 2 (Garage Standard: 1 Coat)
-		addService(
-			'Drywall Install & Finish',
-			MASTER_RATES.DRYWALL_INSTALL.LEVEL_2.WALL,
-			MASTER_RATES.DRYWALL_INSTALL.LEVEL_2.CEILING,
-			'Board, Tape, Mud (Level 2)'
-		);
-	} else if (services.hanging && !services.taping) {
-		// Scenario: Hang Only (Board Up, No Tape)
-		// Derivation: Install L1 (Hang+Tape) MINUS Finish L1 (Tape Only)
-		// This is a calculated "Board Only" rate
-		const hangWall: RateDetail = {
-			labor:
-				MASTER_RATES.DRYWALL_INSTALL.LEVEL_1.WALL.labor -
-				MASTER_RATES.DRYWALL_FINISH.LEVEL_1.WALL.labor,
-			material:
-				MASTER_RATES.DRYWALL_INSTALL.LEVEL_1.WALL.material -
-				MASTER_RATES.DRYWALL_FINISH.LEVEL_1.WALL.material,
-			hoursPerSqft:
-				MASTER_RATES.DRYWALL_INSTALL.LEVEL_1.WALL.hoursPerSqft -
-				MASTER_RATES.DRYWALL_FINISH.LEVEL_1.WALL.hoursPerSqft,
-		};
-		const hangCeil: RateDetail = {
-			labor:
-				MASTER_RATES.DRYWALL_INSTALL.LEVEL_1.CEILING.labor -
-				MASTER_RATES.DRYWALL_FINISH.LEVEL_1.CEILING.labor,
-			material:
-				MASTER_RATES.DRYWALL_INSTALL.LEVEL_1.CEILING.material -
-				MASTER_RATES.DRYWALL_FINISH.LEVEL_1.CEILING.material,
-			hoursPerSqft:
-				MASTER_RATES.DRYWALL_INSTALL.LEVEL_1.CEILING.hoursPerSqft -
-				MASTER_RATES.DRYWALL_FINISH.LEVEL_1.CEILING.hoursPerSqft,
-		};
-
-		addService(
-			'Drywall Hang Only',
-			hangWall,
-			hangCeil,
-			'5/8" Fire Board + Fasteners'
-		);
-	} else if (!services.hanging && services.taping) {
-		// Scenario: Finish Only (Board already up)
-		// Using LEVEL 2 (Tape + 1 Coat)
-		addService(
-			'Taping & Finishing',
-			MASTER_RATES.DRYWALL_FINISH.LEVEL_2.WALL,
-			MASTER_RATES.DRYWALL_FINISH.LEVEL_2.CEILING,
-			'Tape + 1 Coat'
-		);
+		if (condition === 'Bare Studs') {
+			// Full Install
+			const wRate = MASTER_RATES.DRYWALL_INSTALL[key].WALL;
+			const cRate = MASTER_RATES.DRYWALL_INSTALL[key].CEILING;
+			addService(
+				`Drywall Install (${drywallLvl})`,
+				wRate,
+				cRate,
+				'Board, Tape, Mud'
+			);
+		} else {
+			// Finish Only (Hung)
+			const wRate = MASTER_RATES.DRYWALL_FINISH[key].WALL;
+			const cRate = MASTER_RATES.DRYWALL_FINISH[key].CEILING;
+			addService(
+				`Drywall Finish (${drywallLvl})`,
+				wRate,
+				cRate,
+				'Tape & Mud Only'
+			);
+		}
 	}
 
 	// 3. Painting
 	if (services.painting) {
-		// Scenario: Garage Standard = Primer + 1 Coat
-		// We sum the "Primer" rate and "One Coat" rate from Master Table
-		const paintWall: RateDetail = {
-			labor:
-				MASTER_RATES.PAINTING.PRIMER.WALL.labor +
-				MASTER_RATES.PAINTING.ONE_COAT.WALL.labor,
-			material:
-				MASTER_RATES.PAINTING.PRIMER.WALL.material +
-				MASTER_RATES.PAINTING.ONE_COAT.WALL.material,
-			hoursPerSqft:
-				MASTER_RATES.PAINTING.PRIMER.WALL.hoursPerSqft +
-				MASTER_RATES.PAINTING.ONE_COAT.WALL.hoursPerSqft,
-		};
-		const paintCeil: RateDetail = {
-			labor:
-				MASTER_RATES.PAINTING.PRIMER.CEILING.labor +
-				MASTER_RATES.PAINTING.ONE_COAT.CEILING.labor,
-			material:
-				MASTER_RATES.PAINTING.PRIMER.CEILING.material +
-				MASTER_RATES.PAINTING.ONE_COAT.CEILING.material,
-			hoursPerSqft:
-				MASTER_RATES.PAINTING.PRIMER.CEILING.hoursPerSqft +
-				MASTER_RATES.PAINTING.ONE_COAT.CEILING.hoursPerSqft,
-		};
-
-		addService('Prime & Paint', paintWall, paintCeil, 'PVA Primer + 1 Coat');
+		const key = PAINT_MAP[paintLvl] || 'STANDARD';
+		const wRate = MASTER_RATES.PAINTING[key].WALL;
+		const cRate = MASTER_RATES.PAINTING[key].CEILING;
+		addService(`Painting (${paintLvl})`, wRate, cRate, 'Paint & Supplies');
 	}
 
-	// C. Fees
+	// Fees
 	if (occupancy === 'Pro Move') {
 		totalCost += GARAGE_PRICES.PRO_MOVE_HANDLING_FEE;
 		totalHours += GARAGE_PRICES.PRO_MOVE_HOURS;
@@ -212,17 +182,17 @@ export const calculateGarageEstimate = (
 			name: 'Contents Handling',
 			cost: GARAGE_PRICES.PRO_MOVE_HANDLING_FEE,
 			hours: GARAGE_PRICES.PRO_MOVE_HOURS,
-			details: 'Flat Fee: Move & Cover Items',
+			details: 'Flat Fee',
 		});
 	}
 
-	if (isHighCeiling) {
+	if (height > 9) {
 		totalCost += GARAGE_PRICES.SCAFFOLD_RENTAL_FLAT;
 		breakdownItems.push({
 			name: 'Equipment Fee',
 			cost: GARAGE_PRICES.SCAFFOLD_RENTAL_FLAT,
 			hours: 0,
-			details: 'Scaffold/Lift Rental',
+			details: 'Scaffold Rental',
 		});
 	}
 
@@ -230,9 +200,7 @@ export const calculateGarageEstimate = (
 		low: Math.round(totalCost * 0.95),
 		high: Math.round(totalCost * 1.1),
 		totalHours: Number(totalHours.toFixed(1)),
-		explanation: `Garage Finish (${size}). Scope: ${Object.keys(services)
-			.filter((k) => services[k as keyof typeof services])
-			.join(', ')}.`,
+		explanation: `Garage (${size}). Level: ${drywallLvl}, Paint: ${paintLvl}.`,
 		breakdownItems: isAdmin ? breakdownItems : [],
 		customerSummary: `Estimate for ${size} Garage.`,
 	};

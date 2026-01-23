@@ -66,6 +66,14 @@ export type GarageCondition =
 	| 'Finished/Bare';
 export type GarageOccupancy = 'Empty' | 'Customer Will Move' | 'Pro Move';
 
+export type DrywallLevel =
+	| 'Level 1'
+	| 'Level 2'
+	| 'Level 3'
+	| 'Level 4'
+	| 'Level 5';
+export type PaintLevel = 'Primer' | '1-Coat' | 'Standard' | 'Premium';
+
 export interface GarageData {
 	size: GarageSize;
 	ceilingHeight: GarageHeight;
@@ -74,10 +82,14 @@ export interface GarageData {
 	occupancy: GarageOccupancy;
 	services: {
 		insulation: boolean;
-		hanging: boolean;
-		taping: boolean;
+		drywall: boolean;
 		painting: boolean;
 	};
+
+	drywallLevel?: DrywallLevel;
+	paintLevel?: PaintLevel;
+
+	additionalDetails?: string;
 }
 
 export interface BasementData {

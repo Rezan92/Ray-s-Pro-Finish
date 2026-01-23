@@ -40,10 +40,13 @@ export interface GarageRequest {
 	condition: GarageCondition;
 	includeCeiling: boolean;
 	occupancy: GarageOccupancy;
+
+	drywallLevel?: string;
+	paintLevel?: string;
+
 	services: {
 		insulation: boolean;
-		hanging: boolean;
-		taping: boolean;
+		drywall: boolean;
 		painting: boolean;
 	};
 }
