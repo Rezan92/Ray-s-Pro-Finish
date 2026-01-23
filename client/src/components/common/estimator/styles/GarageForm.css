@@ -1,0 +1,122 @@
+/* Container for the specific sections (Gray Box Look) */
+.garage-section {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: box-shadow 0.2s ease;
+}
+
+.garage-section:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.garage-section-title {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 2-Column Grid Layout for Inputs */
+.garage-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .garage-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Service Pills Container */
+.service-pills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* The Service Pill (Checkbox Card) */
+.service-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #444;
+  flex: 1 1 200px;
+  /* Responsive: Grow/Shrink but base at 200px */
+  max-width: 320px;
+  user-select: none;
+}
+
+.service-pill:hover {
+  border-color: #ccc;
+  background-color: #fafafa;
+}
+
+/* Active State for Pill (Using Global Primary Color) */
+.service-pill.active {
+  background-color: #f0f9ff;
+  border-color: var(--color-primary, #007bff);
+  /* Fallback if var missing */
+  color: var(--color-primary, #007bff);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.service-pill input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary, #007bff);
+  cursor: pointer;
+}
+
+/* Helper Text Area */
+.garage-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.garage-helper-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.garage-textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.garage-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary, #007bff);
+}
+
+.garage-char-count {
+  text-align: right;
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 4px;
+}

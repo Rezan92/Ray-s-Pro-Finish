@@ -86,7 +86,8 @@ export const EstimatorStep3: React.FC<EstimatorStep3Props> = ({
 												{item.cost > 0 ? `$${Math.round(item.cost)}` : '--'}
 											</td>
 											<td style={{ padding: '10px' }}>
-												{item.hours.toFixed(1)} hrs
+												{/* FIX: Default to 0 if undefined to prevent crash */}
+												{(item.hours || 0).toFixed(1)} hrs
 											</td>
 											<td
 												style={{
@@ -109,7 +110,8 @@ export const EstimatorStep3: React.FC<EstimatorStep3Props> = ({
 											${Math.round(estimation.low)}*
 										</td>
 										<td style={{ padding: '10px' }}>
-											{estimation.totalHours.toFixed(1)} hrs
+											{/* FIX: Default to 0 if undefined to prevent crash */}
+											{(estimation.totalHours || 0).toFixed(1)} hrs
 										</td>
 										<td style={{ padding: '10px' }}></td>
 									</tr>

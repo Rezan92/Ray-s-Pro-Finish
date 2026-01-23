@@ -1,6 +1,11 @@
-import React from 'react';
-import type { FormData } from './EstimatorTypes';
+import React, { useEffect } from 'react';
+import type {
+	FormData,
+	GarageData,
+} from '@/components/common/estimator/EstimatorTypes';
+import { InfoTooltip } from '@/components/common/infoTooltip/InfoTooltip';
 import { AlertCircle } from 'lucide-react';
+import './styles/GarageForm.css'; // Importing the new separate styles
 
 interface GarageFormProps {
 	formData: FormData;
@@ -13,151 +18,249 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 }) => {
 	const { garage } = formData;
 
+	// --- SELF-HEALING STATE FIX ---
+	useEffect(() => {
+		if (!garage.services) {
+			onNestedChange('garage', 'services', {
+				insulation: false,
+				hanging: false,
+				taping: false,
+				painting: false,
+			});
+		}
+	}, [garage.services, onNestedChange]);
+
+	const safeServices = garage.services || {
+		insulation: false,
+		hanging: false,
+		taping: false,
+		painting: false,
+	};
+
+	// --- LOGIC: RESET INVALID SERVICES ON CONDITION CHANGE ---
+	useEffect(() => {
+		const s = { ...safeServices };
+		let hasChanges = false;
+
+		// Condition Rules
+		if (garage.condition === 'Drywall Hung' && (s.hanging || s.insulation)) {
+			s.hanging = false;
+			s.insulation = false;
+			hasChanges = true;
+		}
+		if (
+			garage.condition === 'Taped & Rough' &&
+			(s.hanging || s.insulation || s.taping)
+		) {
+			s.hanging = false;
+			s.insulation = false;
+			s.taping = false;
+			hasChanges = true;
+		}
+		if (
+			garage.condition === 'Finished/Bare' &&
+			(s.hanging || s.insulation || s.taping)
+		) {
+			s.hanging = false;
+			s.insulation = false;
+			s.taping = false;
+			hasChanges = true;
+		}
+
+		if (hasChanges) {
+			onNestedChange('garage', 'services', s);
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [garage.condition]);
+
+	// Helpers
 	const handleChange = (
 		e: React.ChangeEvent<
 			HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
 		>
 	) => {
-		const value =
-			e.target.type === 'checkbox'
-				? (e.target as HTMLInputElement).checked
-				: e.target.value;
-		onNestedChange('garage', e.target.name, value);
+		const { name, value, type } = e.target;
+		const finalValue =
+			type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
+		onNestedChange('garage', name, finalValue);
 	};
+
+	const handleServiceToggle = (serviceKey: keyof GarageData['services']) => {
+		const updatedServices = {
+			...safeServices,
+			[serviceKey]: !safeServices[serviceKey],
+		};
+		onNestedChange('garage', 'services', updatedServices);
+	};
+
+	// Visibility Logic
+	const isFinished = garage.condition === 'Finished/Bare';
+	const isHung = garage.condition === 'Drywall Hung';
+	const isTaped = garage.condition === 'Taped & Rough';
+
+	const showInsulation = !isFinished && !isHung && !isTaped;
+	const showHanging = !isFinished && !isHung && !isTaped;
+	const showTaping = !isFinished && !isTaped;
+	const showPainting = true;
 
 	return (
 		<div className='service-form-box'>
 			<h3 className='service-form-title'>Garage Finishing</h3>
 
-			{/* 1. Size & Scope */}
-			<div className='form-group-box'>
-				<div className='form-group-grid'>
+			{/* SECTION 1: DIMENSIONS */}
+			<div className='garage-section'>
+				<h4 className='garage-section-title'>1. Dimensions & Specs</h4>
+				<div className='garage-grid'>
 					<div className='form-group'>
 						<label>Garage Size</label>
 						<select
-							name='capacity'
-							value={garage.capacity}
+							name='size'
+							value={garage.size}
 							onChange={handleChange}
 						>
-							<option value='1-Car'>1-Car (Approx 250 sqft)</option>
-							<option value='2-Car'>2-Car (Approx 450 sqft)</option>
-							<option value='3-Car'>3-Car (Approx 650 sqft)</option>
-							<option value='4-Car'>4-Car / Oversized (800+ sqft)</option>
+							<option value='1-Car'>1-Car (12' x 22')</option>
+							<option value='1.5-Car'>1.5-Car (16' x 24')</option>
+							<option value='2-Car'>2-Car (20' x 24')</option>
+							<option value='2.5-Car'>2.5-Car (24' x 26')</option>
+							<option value='3-Car'>3-Car (32' x 24')</option>
 						</select>
 					</div>
 					<div className='form-group'>
-						<label>What are we finishing?</label>
+						<label>Ceiling Height</label>
 						<select
-							name='scope'
-							value={garage.scope}
+							name='ceilingHeight'
+							value={garage.ceilingHeight}
 							onChange={handleChange}
 						>
-							<option value='Walls Only'>Walls Only</option>
-							<option value='Ceiling Only'>Ceiling Only</option>
-							<option value='Both'>Full Garage (Walls & Ceiling)</option>
+							<option value='Standard (8-9ft)'>Standard (8-9ft)</option>
+							<option value='High (10-12ft)'>High (10-12ft)</option>
+							<option value='Extra High (13ft+)'>Extra High (13ft+)</option>
 						</select>
 					</div>
 				</div>
 			</div>
 
-			{/* 2. Condition & Finish */}
-			<div className='form-group-box'>
-				<div className='form-group-grid'>
+			{/* SECTION 2: CONDITION */}
+			<div className='garage-section'>
+				<h4 className='garage-section-title'>2. Condition & Occupancy</h4>
+				<div className='garage-grid'>
 					<div className='form-group'>
 						<label>Current Condition</label>
 						<select
-							name='currentCondition'
-							value={garage.currentCondition}
+							name='condition'
+							value={garage.condition}
 							onChange={handleChange}
 						>
-							<option value='Open Studs'>Open Studs (Needs Board)</option>
-							<option value='Insulated (No Board)'>
-								Insulated (Ready for Board)
-							</option>
-							<option value='Existing Drywall'>
-								Drywall is up (Needs Taping)
-							</option>
+							<option value='Bare Studs'>Bare Studs (Needs Everything)</option>
+							<option value='Drywall Hung'>Drywall Hung (Needs Tape)</option>
+							<option value='Taped & Rough'>Taped & Rough (Needs Paint)</option>
+							<option value='Finished/Bare'>Finished/Bare (Paint Only)</option>
 						</select>
 					</div>
 					<div className='form-group'>
-						<label>Desired Finish Level</label>
+						<label
+							style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+						>
+							Occupancy
+							<InfoTooltip message="We charge a flat fee for 'Pro Move' to cover labor time moving items." />
+						</label>
 						<select
-							name='finishLevel'
-							value={garage.finishLevel}
+							name='occupancy'
+							value={garage.occupancy}
 							onChange={handleChange}
 						>
-							<option value='Fire Tape (Code)'>
-								Fire Tape Only (Basic/Code)
-							</option>
-							<option value='Level 3 (Work)'>
-								Level 3 (Workshop Standard)
-							</option>
-							<option value='Level 4 (Smooth)'>
-								Level 4 (Smooth / Paint Ready)
-							</option>
+							<option value='Empty'>Empty (Ready to work)</option>
+							<option value='Customer Will Move'>I will move items</option>
+							<option value='Pro Move'>Contractor to move items</option>
 						</select>
 					</div>
 				</div>
 			</div>
 
-			{/* 3. The Upsells */}
-			<div className='form-group-box'>
-				<h4
-					className='room-details-title'
-					style={{ fontSize: '1rem', color: '#666', marginBottom: '1rem' }}
-				>
-					Add-on Services
-				</h4>
-				<div
-					className='checkbox-group horizontal wrap'
-					style={{ justifyContent: 'flex-start' }}
-				>
-					{garage.currentCondition === 'Open Studs' && (
-						<label className='checkbox-label'>
+			{/* SECTION 3: SCOPE (Pills) */}
+			<div className='garage-section'>
+				<h4 className='garage-section-title'>3. Scope of Work</h4>
+
+				<div className='service-pills-container'>
+					{/* Ceiling Toggle */}
+					<label
+						className={`service-pill ${garage.includeCeiling ? 'active' : ''}`}
+					>
+						<input
+							type='checkbox'
+							name='includeCeiling'
+							checked={garage.includeCeiling}
+							onChange={handleChange}
+						/>
+						Include Ceiling
+					</label>
+
+					{showInsulation && (
+						<label
+							className={`service-pill ${
+								safeServices.insulation ? 'active' : ''
+							}`}
+						>
 							<input
 								type='checkbox'
-								name='includeInsulation'
-								checked={garage.includeInsulation}
-								onChange={handleChange}
+								checked={safeServices.insulation}
+								onChange={() => handleServiceToggle('insulation')}
 							/>
-							Install Insulation (R-13/R-19)
+							Install Insulation
 						</label>
 					)}
-					<label className='checkbox-label'>
-						<input
-							type='checkbox'
-							name='includePaint'
-							checked={garage.includePaint}
-							onChange={handleChange}
-						/>
-						Prime & Paint
-					</label>
-					<label className='checkbox-label'>
-						<input
-							type='checkbox'
-							name='includeBaseboards'
-							checked={garage.includeBaseboards}
-							onChange={handleChange}
-						/>
-						Vinyl Baseboards
-					</label>
-					<label className='checkbox-label'>
-						<input
-							type='checkbox'
-							name='includeEpoxy'
-							checked={garage.includeEpoxy}
-							onChange={handleChange}
-						/>
-						Epoxy Floor Coating
-					</label>
+
+					{showHanging && (
+						<label
+							className={`service-pill ${safeServices.hanging ? 'active' : ''}`}
+						>
+							<input
+								type='checkbox'
+								checked={safeServices.hanging}
+								onChange={() => handleServiceToggle('hanging')}
+							/>
+							Hang Drywall
+						</label>
+					)}
+
+					{showTaping && (
+						<label
+							className={`service-pill ${safeServices.taping ? 'active' : ''}`}
+						>
+							<input
+								type='checkbox'
+								checked={safeServices.taping}
+								onChange={() => handleServiceToggle('taping')}
+							/>
+							Tape & Finish
+						</label>
+					)}
+
+					{showPainting && (
+						<label
+							className={`service-pill ${
+								safeServices.painting ? 'active' : ''
+							}`}
+						>
+							<input
+								type='checkbox'
+								checked={safeServices.painting}
+								onChange={() => handleServiceToggle('painting')}
+							/>
+							Prime & Paint
+						</label>
+					)}
 				</div>
 			</div>
 
-			{/* 4. Additional Details (NEW) */}
-			<div className='form-group-box'>
+			{/* SECTION 4: DETAILS */}
+			<div
+				className='garage-section'
+				style={{ border: 'none', background: 'transparent', padding: 0 }}
+			>
 				<div className='form-group'>
-					<label style={{ display: 'flex', justifyContent: 'space-between' }}>
-						<span>Additional Details</span>
+					<div className='garage-details-header'>
+						<label>Additional Details</label>
 						<span
 							style={{
 								fontWeight: 'normal',
@@ -167,39 +270,23 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 						>
 							Max 600 chars
 						</span>
-					</label>
-					<div
-						style={{
-							display: 'flex',
-							alignItems: 'center',
-							gap: '8px',
-							marginBottom: '8px',
-							fontSize: '0.9rem',
-							color: '#666',
-						}}
-					>
+					</div>
+					<div className='garage-helper-text'>
 						<AlertCircle size={16} />
 						<span>
-							Any high ceilings (12ft+), exposed pipes, or specific concerns?
+							Example: "Exposed pipes on north wall" or "Need attic access door"
 						</span>
 					</div>
 					<textarea
+						className='garage-textarea'
 						name='additionalDetails'
-						value={garage.additionalDetails || ''}
+						value={(garage as any).additionalDetails || ''}
 						onChange={handleChange}
 						maxLength={600}
 						rows={3}
-						placeholder='e.g. 14ft high ceilings, exposed conduit pipes on one wall...'
 					/>
-					<div
-						style={{
-							textAlign: 'right',
-							fontSize: '0.8rem',
-							color: '#999',
-							marginTop: '4px',
-						}}
-					>
-						{(garage.additionalDetails || '').length} / 600
+					<div className='garage-char-count'>
+						{((garage as any).additionalDetails || '').length} / 600
 					</div>
 				</div>
 			</div>
