@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import type {
 	FormData,
 	DrywallLevel,
@@ -19,7 +19,8 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 }) => {
 	const { garage } = formData;
 
-	// --- SELF-HEALING & DEFAULTS ---
+	const prevConditionRef = useRef(garage.condition);
+
 	useEffect(() => {
 		if (!garage.services) {
 			onNestedChange('garage', 'services', {
@@ -28,7 +29,6 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 				painting: false,
 			});
 		}
-		// Set default levels if missing
 		if (!garage.drywallLevel)
 			onNestedChange('garage', 'drywallLevel', 'Level 2');
 		if (!garage.paintLevel) onNestedChange('garage', 'paintLevel', 'Standard');
@@ -40,15 +40,17 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 		painting: false,
 	};
 
-	// --- LOGIC: RESET INVALID SERVICES ---
 	useEffect(() => {
-		if (garage.condition === 'Finished/Bare' && safeServices.drywall) {
-			handleServiceToggle('drywall'); // Disable drywall if already finished
+		if (prevConditionRef.current !== garage.condition) {
+			onNestedChange('garage', 'services', {
+				insulation: false,
+				drywall: false,
+				painting: false,
+			});
+			prevConditionRef.current = garage.condition;
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [garage.condition]);
+	}, [garage.condition, onNestedChange]);
 
-	// Helpers
 	const handleChange = (
 		e: React.ChangeEvent<
 			HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -67,7 +69,6 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 		});
 	};
 
-	// FIX 1: Explicitly using DrywallLevel | PaintLevel removes the "unused type" warning
 	const handleLevelChange = (
 		field: 'drywallLevel' | 'paintLevel',
 		value: DrywallLevel | PaintLevel
@@ -140,7 +141,6 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 						</select>
 					</div>
 					<div className='form-group'>
-						{/* FIX 2: Used InfoTooltip here */}
 						<label
 							style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
 						>
@@ -164,7 +164,7 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 			<div className='garage-section'>
 				<h4 className='garage-section-title'>3. Select Services</h4>
 				<div className='service-selection-list'>
-					{/* A. CEILING TOGGLE */}
+					{/* A. CEILING TOGGLE & INSULATION (Grouped) */}
 					<div className='garage-service-row-container'>
 						<div
 							className={`service-row ${garage.includeCeiling ? 'active' : ''}`}
@@ -325,7 +325,6 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 							{((garage as any).additionalDetails || '').length}/600
 						</span>
 					</div>
-					{/* FIX 3: Used AlertCircle here */}
 					<div className='garage-helper-text'>
 						<AlertCircle size={16} />
 						<span>
