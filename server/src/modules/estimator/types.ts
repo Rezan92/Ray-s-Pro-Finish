@@ -50,3 +50,25 @@ export interface GarageRequest {
 		painting: boolean;
 	};
 }
+
+export interface BasementRequest {
+	sqft: number;
+	ceilingHeight: 'Standard (8ft)' | 'Low (<7ft)' | 'High (9ft+)';
+
+	condition: 'Bare Concrete' | 'Framed' | 'Framed & Insulated';
+	perimeterInsulation: 'Standard (Vapor Barrier)' | 'Premium (Rigid Foam)';
+
+	// This specific type fixes the "Implicit Any" error in the service
+	soffitWork: 'Minimal' | 'Average' | 'Complex';
+
+	numBedrooms: number;
+	numBathrooms: number;
+	hasWetBar: boolean;
+
+	services: {
+		framing: boolean;
+		drywall: boolean;
+		painting: boolean;
+		ceilingFinish: 'Drywall' | 'Drop Ceiling' | 'Painted/Industrial';
+	};
+}
