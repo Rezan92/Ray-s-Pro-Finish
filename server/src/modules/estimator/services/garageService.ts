@@ -87,9 +87,8 @@ export const calculateGarageEstimate = (
 		const wLaborRate = wRate.labor * diffFactor;
 		const lCost = wallSqft * wLaborRate + ceilingSqft * cRate.labor;
 		const lHrs =
-			wallSqft * wRate.hoursPerSqft * diffFactor +
-			ceilingSqft * cRate.hoursPerSqft;
-
+			wallSqft * (wRate.hoursPerSqft || 0) * diffFactor +
+			ceilingSqft * (cRate.hoursPerSqft || 0);
 		// MATERIAL
 		const mCost = wallSqft * wRate.material + ceilingSqft * cRate.material;
 
