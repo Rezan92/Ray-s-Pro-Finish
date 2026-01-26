@@ -95,11 +95,16 @@ export const getEstimate = async (
 		// 5. Basement
 		if (formData.services.basement) {
 			promises.push(
-				calculateBasementEstimate(formData.basement).then((est) => {
+				Promise.resolve(
+					calculateBasementEstimate(formData.basement, isAdmin)
+				).then((est) => {
 					totalLow += est.low;
 					totalHigh += est.high;
 					totalHours += est.totalHours;
 					combinedExplanation += `BASEMENT FINISH:\n${est.explanation}\n\n`;
+					if (isAdmin && est.breakdownItems) {
+						breakdownItems = [...breakdownItems, ...est.breakdownItems];
+					}
 				})
 			);
 		}

@@ -92,23 +92,38 @@ export interface GarageData {
 	additionalDetails?: string;
 }
 
+export type BasementCondition =
+	| 'Bare Concrete'
+	| 'Framed'
+	| 'Framed & Insulated';
+export type BasementHeight = 'Standard (8ft)' | 'Low (<7ft)' | 'High (9ft+)';
+export type SoffitCondition = 'Minimal' | 'Average' | 'Complex';
+export type InsulationType =
+	| 'Standard (Vapor Barrier)'
+	| 'Premium (Rigid Foam)';
+
 export interface BasementData {
+	// 1. Dims
 	sqft: string;
-	ceilingHeight: string; // 'Standard', 'Low (<7ft)', 'High (9ft+)'
-	currentCondition: string; // 'Bare Concrete', 'Framed', 'Partially Finished'
-	numBedrooms: string; // '0', '1', '2', '3+'
+	ceilingHeight: BasementHeight;
 
-	egressWindow: string; // 'Existing/Code Compliant', 'Need to Install (Cut Foundation)'
+	// 2. Layout (The Math Drivers)
+	condition: BasementCondition;
+	perimeterInsulation: InsulationType;
+	soffitWork: SoffitCondition;
 
-	bathroom: string; // 'None', 'Half Bath', 'Full Bath'
-	plumbingRoughIn: string; // 'Yes, pipes visible', 'No, need concrete work'
-	wetBar: string; // 'None', 'Wet Bar', 'Kitchenette'
+	// 3. Rooms (Inference Counters)
+	numBedrooms: number;
+	numBathrooms: number;
+	hasWetBar: boolean;
 
-	hvac: string;
-	stairs: string;
-	ceilingType: string; // 'Drywall', 'Drop Ceiling', 'Industrial (Black)'
-	flooring: string; // 'LVP', 'Carpet', 'Tile', 'None'
-	electrical: string; // 'Standard', 'Upgraded (Cans)'
+	// 4. Services (Scope)
+	services: {
+		framing: boolean;
+		drywall: boolean;
+		painting: boolean;
+		ceilingFinish: 'Drywall' | 'Drop Ceiling' | 'Painted/Industrial';
+	};
 
 	additionalDetails?: string;
 }

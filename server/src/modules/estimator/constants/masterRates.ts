@@ -21,6 +21,19 @@ export interface ServiceRates {
  * Source of truth for all modules.
  */
 export const MASTER_RATES = {
+	CEILING_SYSTEMS: {
+		DROP_CEILING: {
+			labor: 1.85, // Grid + Tile install
+			material: 1.5, // Tiles + Runners + Wires
+			hoursPerSqft: 0.025, // ~40 sqft/hr
+		},
+		PAINTED_INDUSTRIAL: {
+			labor: 0.95, // Masking everything + Spraying black/white
+			material: 0.4, // Paint + Masking plastic
+			hoursPerSqft: 0.015,
+		},
+	},
+
 	// --- SECTION 1: FRAMING (Linear Foot Based) ---
 	FRAMING: {
 		WOOD_FLOOR: {
