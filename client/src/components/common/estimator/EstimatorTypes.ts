@@ -102,30 +102,30 @@ export type InsulationType =
 	| 'Standard (Vapor Barrier)'
 	| 'Premium (Rigid Foam)';
 
+export interface RoomDetail {
+	id: string;
+	type: 'Bedroom' | 'Bathroom';
+	size: 'Small (10x10)' | 'Medium (12x12)' | 'Large (Master)';
+	bathType?: 'Half Bath' | 'Full Bath';
+}
+
 export interface BasementData {
-	// 1. Dims
 	sqft: string;
 	ceilingHeight: BasementHeight;
-
-	// 2. Layout (The Math Drivers)
 	condition: BasementCondition;
 	perimeterInsulation: InsulationType;
 	soffitWork: SoffitCondition;
-
-	// 3. Rooms (Inference Counters)
-	numBedrooms: number;
-	numBathrooms: number;
-	hasWetBar: boolean;
-
-	// 4. Services (Scope)
+	rooms: RoomDetail[];
 	services: {
 		framing: boolean;
 		drywall: boolean;
 		painting: boolean;
 		ceilingFinish: 'Drywall' | 'Drop Ceiling' | 'Painted/Industrial';
 	};
-
+	hasWetBar: boolean;
 	additionalDetails?: string;
+	numBedrooms?: number;
+	numBathrooms?: number;
 }
 
 export interface FormData {

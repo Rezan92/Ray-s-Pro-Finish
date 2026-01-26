@@ -1,6 +1,8 @@
+// client/src/components/common/estimator/BasementForm.tsx
+
 import React, { useEffect } from 'react';
-import type { FormData } from './EstimatorTypes';
-import { Ruler, Layout, Hammer } from 'lucide-react';
+import type { FormData, RoomDetail } from './EstimatorTypes';
+import { Ruler, Layout, Hammer, Plus, Trash2 } from 'lucide-react';
 import { InfoTooltip } from '@/components/common/infoTooltip/InfoTooltip';
 import './styles/BasementForm.css';
 
@@ -25,12 +27,15 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 				ceilingFinish: 'Drywall',
 			});
 		}
+		if (!basement.rooms) {
+			onNestedChange('basement', 'rooms', []);
+		}
+		// Initialize numeric fields to 0 to avoid controlled/uncontrolled warnings
 		if (basement.numBedrooms === undefined)
 			onNestedChange('basement', 'numBedrooms', 0);
-		if (basement.numBathrooms === undefined)
-			onNestedChange('basement', 'numBathrooms', 0);
 	}, []);
 
+	// --- HANDLERS ---
 	const handleChange = (
 		e: React.ChangeEvent<
 			HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -48,11 +53,55 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 		});
 	};
 
+	// --- ROOM MANAGER LOGIC ---
+	// Filter rooms by type for display/counting
+	const bedrooms = (basement.rooms || []).filter((r) => r.type === 'Bedroom');
+	const bathrooms = (basement.rooms || []).filter((r) => r.type === 'Bathroom');
+
+	const addRoom = (type: 'Bedroom' | 'Bathroom') => {
+		// Limits Check
+		if (type === 'Bedroom' && bedrooms.length >= 5) return;
+		if (type === 'Bathroom' && bathrooms.length >= 2) return;
+
+		const newRoom: RoomDetail = {
+			id: Math.random().toString(36).substr(2, 9),
+			type,
+			size: 'Medium (12x12)', // Default
+			bathType: type === 'Bathroom' ? 'Full Bath' : undefined,
+		};
+
+		const updatedRooms = [...(basement.rooms || []), newRoom];
+		onNestedChange('basement', 'rooms', updatedRooms);
+
+		// Update the old counters just in case backend still relies on them for now
+		if (type === 'Bedroom')
+			onNestedChange('basement', 'numBedrooms', bedrooms.length + 1);
+		if (type === 'Bathroom')
+			onNestedChange('basement', 'numBathrooms', bathrooms.length + 1);
+	};
+
+	const removeRoom = (id: string, type: 'Bedroom' | 'Bathroom') => {
+		const updatedRooms = (basement.rooms || []).filter((r) => r.id !== id);
+		onNestedChange('basement', 'rooms', updatedRooms);
+
+		if (type === 'Bedroom')
+			onNestedChange('basement', 'numBedrooms', bedrooms.length - 1);
+		if (type === 'Bathroom')
+			onNestedChange('basement', 'numBathrooms', bathrooms.length - 1);
+	};
+
+	const updateRoom = (id: string, field: keyof RoomDetail, value: any) => {
+		const updatedRooms = (basement.rooms || []).map((r) =>
+			r.id === id ? { ...r, [field]: value } : r
+		);
+		onNestedChange('basement', 'rooms', updatedRooms);
+	};
+
 	return (
 		<div className='service-form-box'>
 			<h3 className='service-form-title'>Basement Finishing</h3>
 
-			{/* SECTION 1: DIMENSIONS & CONDITION */}
+			{/* SECTION 1: DIMENSIONS */}
 			<div className='basement-section'>
 				<h4 className='basement-section-title'>
 					<Ruler size={18} />
@@ -113,55 +162,134 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 				</div>
 			</div>
 
-			{/* SECTION 2: LAYOUT */}
+			{/* SECTION 2: ROOMS & LAYOUT */}
 			<div className='basement-section'>
 				<div className='basement-section-title'>
 					<Layout size={18} />
-					<span>2. Planned Layout</span>
-					<InfoTooltip message='We use these counts to estimate interior partition walls (Framing & Drywall).' />
+					<span>2. Rooms & Layout</span>
+					<InfoTooltip message='Add rooms to calculate interior partition walls.' />
 				</div>
+
 				<div className='basement-grid'>
-					<div className='form-group'>
-						<label>Bedrooms</label>
-						<select
-							name='numBedrooms'
-							value={basement.numBedrooms}
-							onChange={handleChange}
-						>
-							<option value={0}>0 (Open Space)</option>
-							<option value={1}>1 Bedroom</option>
-							<option value={2}>2 Bedrooms</option>
-							<option value={3}>3+ Bedrooms</option>
-						</select>
+					{/* COLUMN 1: BEDROOMS */}
+					<div>
+						<div className='room-manager-header'>
+							<span className='room-manager-label'>
+								Bedrooms ({bedrooms.length}/5)
+							</span>
+							<button
+								type='button' /* CRITICAL FIX: Prevents Form Submission */
+								className='add-room-btn-small'
+								onClick={() => addRoom('Bedroom')}
+								disabled={bedrooms.length >= 5}
+							>
+								<Plus size={14} /> Add
+							</button>
+						</div>
+
+						{bedrooms.map((room, index) => (
+							<div
+								key={room.id}
+								className='room-item-row'
+							>
+								<span className='room-item-label'>Bed {index + 1}</span>
+								<select
+									className='room-select'
+									value={room.size}
+									onChange={(e) => updateRoom(room.id, 'size', e.target.value)}
+								>
+									<option value='Small (10x10)'>Small (10x10)</option>
+									<option value='Medium (12x12)'>Medium (12x12)</option>
+									<option value='Large (Master)'>Large (Master)</option>
+								</select>
+								<button
+									type='button'
+									className='remove-room-btn'
+									onClick={() => removeRoom(room.id, 'Bedroom')}
+								>
+									<Trash2 size={16} />
+								</button>
+							</div>
+						))}
+						{bedrooms.length === 0 && (
+							<div style={{ color: '#999', fontSize: '0.85rem' }}>
+								No bedrooms added
+							</div>
+						)}
 					</div>
-					<div className='form-group'>
-						<label>Bathrooms</label>
-						<select
-							name='numBathrooms'
-							value={basement.numBathrooms || 0}
-							onChange={handleChange}
-						>
-							<option value={0}>None</option>
-							<option value={1}>1 Bathroom</option>
-							<option value={2}>2 Bathrooms</option>
-						</select>
-					</div>
-					<div className='form-group'>
-						<label>Wet Bar / Kitchenette</label>
-						<select
-							name='hasWetBar'
-							value={basement.hasWetBar ? 'Yes' : 'No'}
-							onChange={(e) =>
-								onNestedChange(
-									'basement',
-									'hasWetBar',
-									e.target.value === 'Yes'
-								)
-							}
-						>
-							<option value='No'>None</option>
-							<option value='Yes'>Yes (Add Wall Backing)</option>
-						</select>
+
+					{/* COLUMN 2: BATHROOMS */}
+					<div>
+						<div className='room-manager-header'>
+							<span className='room-manager-label'>
+								Bathrooms ({bathrooms.length}/2)
+							</span>
+							<button
+								type='button' /* CRITICAL FIX */
+								className='add-room-btn-small'
+								onClick={() => addRoom('Bathroom')}
+								disabled={bathrooms.length >= 2}
+							>
+								<Plus size={14} /> Add
+							</button>
+						</div>
+
+						{bathrooms.map((room, index) => (
+							<div
+								key={room.id}
+								className='room-item-row'
+							>
+								<span className='room-item-label'>Bath {index + 1}</span>
+								<select
+									className='room-select'
+									value={room.bathType}
+									onChange={(e) =>
+										updateRoom(room.id, 'bathType', e.target.value)
+									}
+								>
+									<option value='Half Bath'>Half Bath (Toilet/Sink)</option>
+									<option value='Full Bath'>Full Bath (Shower/Tub)</option>
+								</select>
+								<button
+									type='button'
+									className='remove-room-btn'
+									onClick={() => removeRoom(room.id, 'Bathroom')}
+								>
+									<Trash2 size={16} />
+								</button>
+							</div>
+						))}
+						{bathrooms.length === 0 && (
+							<div style={{ color: '#999', fontSize: '0.85rem' }}>
+								No bathrooms added
+							</div>
+						)}
+
+						{/* Wet Bar Toggle under Bathrooms */}
+						<div style={{ marginTop: '1.5rem' }}>
+							<div className='form-group'>
+								<label
+									style={{ fontSize: '0.9rem', fontWeight: 600, color: '#444' }}
+								>
+									Wet Bar / Kitchenette
+								</label>
+								<select
+									style={{ marginTop: '4px' }}
+									name='hasWetBar'
+									value={basement.hasWetBar ? 'Yes' : 'No'}
+									onChange={(e) =>
+										onNestedChange(
+											'basement',
+											'hasWetBar',
+											e.target.value === 'Yes'
+										)
+									}
+								>
+									<option value='No'>None</option>
+									<option value='Yes'>Yes (Add Wall Backing)</option>
+								</select>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

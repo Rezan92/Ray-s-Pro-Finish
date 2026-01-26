@@ -51,18 +51,23 @@ export interface GarageRequest {
 	};
 }
 
+export interface RoomDetail {
+	id: string;
+	type: 'Bedroom' | 'Bathroom';
+	size: 'Small (10x10)' | 'Medium (12x12)' | 'Large (Master)';
+	bathType?: 'Half Bath' | 'Full Bath';
+}
+
 export interface BasementRequest {
 	sqft: number;
 	ceilingHeight: 'Standard (8ft)' | 'Low (<7ft)' | 'High (9ft+)';
 
 	condition: 'Bare Concrete' | 'Framed' | 'Framed & Insulated';
 	perimeterInsulation: 'Standard (Vapor Barrier)' | 'Premium (Rigid Foam)';
-
-	// This specific type fixes the "Implicit Any" error in the service
 	soffitWork: 'Minimal' | 'Average' | 'Complex';
 
-	numBedrooms: number;
-	numBathrooms: number;
+	rooms: RoomDetail[];
+
 	hasWetBar: boolean;
 
 	services: {

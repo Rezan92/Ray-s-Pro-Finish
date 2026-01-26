@@ -2,15 +2,21 @@ export const BASEMENT_CONSTANTS = {
 	// MATH FACTORS
 	PERIMETER_MULTIPLIER: 4.2,
 
-	// PARTITION WALL INFERENCE
-	LF_PER_BEDROOM: 30,
-	LF_PER_BATHROOM: 25,
-	LF_PER_WETBAR: 12,
+	LF_ROOMS: {
+		BEDROOM_SMALL: 25, // ~10x10
+		BEDROOM_MEDIUM: 35, // ~12x12 + Closet
+		BEDROOM_LARGE: 45, // ~14x14 + Walk-in
+		BATH_HALF: 15, // Powder room
+		BATH_FULL: 25, // Tub/Shower walls
+		WETBAR: 12,
+	},
 
 	// OPENING INFERENCE
-	OPENINGS_PER_BEDROOM: 2,
-	OPENINGS_PER_BATHROOM: 1,
-	OPENINGS_BASE_EGRESS: 1,
+	OPENINGS: {
+		BEDROOM: 2,
+		BATHROOM: 1,
+		BASE_EGRESS: 1,
+	},
 
 	// SOFFIT INFERENCE
 	SOFFIT_FACTORS: {
@@ -19,7 +25,7 @@ export const BASEMENT_CONSTANTS = {
 		Complex: 0.45,
 	},
 
-	// MOVED: Height Logic definitions
+	// HEIGHT MAP
 	HEIGHT_MAP: {
 		'Standard (8ft)': 8.0,
 		'Low (<7ft)': 7.0,
