@@ -22,15 +22,23 @@ export interface ServiceRates {
  */
 export const MASTER_RATES = {
 	CEILING_SYSTEMS: {
-		DROP_CEILING: {
-			labor: 1.85, // Grid + Tile install
-			material: 1.5, // Tiles + Runners + Wires
-			hoursPerSqft: 0.025, // ~40 sqft/hr
+		// Option A: Standard 2x4 Grid
+		DROP_CEILING_2X4: {
+			labor: 4.0,
+			material: 3.5,
+			hoursPerSqft: 0.025, // Based on 40 sqft/hr
 		},
+		// Option B: Premium 2x2 Grid
+		DROP_CEILING_2X2: {
+			labor: 5.5,
+			material: 4.5,
+			hoursPerSqft: 0.04, // Based on 25 sqft/hr
+		},
+		// Option C: Industrial Spray
 		PAINTED_INDUSTRIAL: {
-			labor: 0.95, // Masking everything + Spraying black/white
-			material: 0.4, // Paint + Masking plastic
-			hoursPerSqft: 0.015,
+			labor: 2.0,
+			material: 1.0,
+			hoursPerSqft: 0.01, // Based on 100 sqft/hr
 		},
 	},
 

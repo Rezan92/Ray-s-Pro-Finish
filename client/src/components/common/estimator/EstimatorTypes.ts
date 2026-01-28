@@ -123,6 +123,7 @@ export interface BasementData {
 		ceilingFinish: 'Drywall' | 'Drop Ceiling' | 'Painted/Industrial';
 	};
 	hasWetBar: boolean;
+	ceilingGrid: string;
 	additionalDetails?: string;
 	numBedrooms?: number;
 	numBathrooms?: number;

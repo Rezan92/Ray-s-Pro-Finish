@@ -65,15 +65,14 @@ export interface BasementRequest {
 	condition: 'Bare Concrete' | 'Framed' | 'Framed & Insulated';
 	perimeterInsulation: 'Standard (Vapor Barrier)' | 'Premium (Rigid Foam)';
 	soffitWork: 'Minimal' | 'Average' | 'Complex';
-
 	rooms: RoomDetail[];
-
 	hasWetBar: boolean;
-
+	ceilingGrid?: '2x2' | '2x4';
 	services: {
 		framing: boolean;
 		drywall: boolean;
 		painting: boolean;
 		ceilingFinish: 'Drywall' | 'Drop Ceiling' | 'Painted/Industrial';
 	};
+	additionalDetails?: string;
 }

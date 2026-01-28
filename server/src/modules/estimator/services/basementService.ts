@@ -1,6 +1,8 @@
+// server/src/modules/estimator/services/basementService.ts
+
 import { BASEMENT_CONSTANTS } from '../constants/basementConstants.js';
 import { MASTER_RATES, RateDetail } from '../constants/masterRates.js';
-import { BasementRequest, RoomDetail } from '../types.js';
+import { BasementRequest } from '../types.js';
 
 interface BreakdownItem {
 	name: string;
@@ -22,40 +24,54 @@ export const calculateBasementEstimate = (
 		services,
 		perimeterInsulation,
 		soffitWork,
+		ceilingGrid,
 	} = data;
 
 	// --- 1. GEOMETRY ENGINE ---
 	const wallHeight = BASEMENT_CONSTANTS.HEIGHT_MAP[ceilingHeight] || 8.0;
 
-	// A. Perimeter
+	// A. Perimeter (Shell)
 	const perimeterLF = Math.ceil(
 		Math.sqrt(sqft) * BASEMENT_CONSTANTS.PERIMETER_MULTIPLIER
 	);
 
-	// B. Partitions (The New Loop)
+	// B. Partitions (Interior Walls)
 	let partitionLF = 0;
 	let bedCount = 0;
 	let bathCount = 0;
 
-	// Loop through the rooms array to calculate logic
+	// Track linear footage per type for the breakdown message
+	let bedLF = 0;
+	let bathLF = 0;
+	let wetBarLF = 0;
+
 	rooms.forEach((room) => {
 		if (room.type === 'Bedroom') {
 			bedCount++;
+			let lfToAdd = BASEMENT_CONSTANTS.LF_ROOMS.BEDROOM_MEDIUM;
 			if (room.size.includes('Small'))
-				partitionLF += BASEMENT_CONSTANTS.LF_ROOMS.BEDROOM_SMALL;
+				lfToAdd = BASEMENT_CONSTANTS.LF_ROOMS.BEDROOM_SMALL;
 			else if (room.size.includes('Large'))
-				partitionLF += BASEMENT_CONSTANTS.LF_ROOMS.BEDROOM_LARGE;
-			else partitionLF += BASEMENT_CONSTANTS.LF_ROOMS.BEDROOM_MEDIUM; // Default
+				lfToAdd = BASEMENT_CONSTANTS.LF_ROOMS.BEDROOM_LARGE;
+
+			partitionLF += lfToAdd;
+			bedLF += lfToAdd;
 		} else if (room.type === 'Bathroom') {
 			bathCount++;
+			let lfToAdd = BASEMENT_CONSTANTS.LF_ROOMS.BATH_HALF;
 			if (room.bathType === 'Full Bath')
-				partitionLF += BASEMENT_CONSTANTS.LF_ROOMS.BATH_FULL;
-			else partitionLF += BASEMENT_CONSTANTS.LF_ROOMS.BATH_HALF;
+				lfToAdd = BASEMENT_CONSTANTS.LF_ROOMS.BATH_FULL;
+
+			partitionLF += lfToAdd;
+			bathLF += lfToAdd;
 		}
 	});
 
-	// Add Wet Bar
-	if (hasWetBar) partitionLF += BASEMENT_CONSTANTS.LF_ROOMS.WETBAR;
+	if (hasWetBar) {
+		const wbVal = BASEMENT_CONSTANTS.LF_ROOMS.WETBAR;
+		partitionLF += wbVal;
+		wetBarLF = wbVal;
+	}
 
 	// C. Soffits
 	const workLevel = soffitWork || 'Average';
@@ -65,8 +81,14 @@ export const calculateBasementEstimate = (
 	// D. Areas
 	const perimeterWallSqft = perimeterLF * wallHeight;
 	const partitionWallSqftOneSide = partitionLF * wallHeight;
+
+	// Interior walls have 2 sides (Front/Back)
 	const partitionWallSqftTotal = partitionWallSqftOneSide * 2;
-	const totalWallSqft = perimeterWallSqft + partitionWallSqftTotal;
+
+	// NEW: Soffit Surface Area (Approx 2ft width per LF of soffit for drywall/paint)
+	const soffitSqft = soffitLF * 2;
+
+	const totalWallSqft = perimeterWallSqft + partitionWallSqftTotal + soffitSqft;
 	const ceilingSqft = sqft;
 
 	// --- 2. COST CALCULATION ---
@@ -75,13 +97,12 @@ export const calculateBasementEstimate = (
 	let totalCost = 0;
 	let totalHours = 0;
 
-	// --- HELPER: Cleaner Names & Indentation ---
 	const addDetailItem = (
-		categoryName: string, // e.g., "Exterior Wall Framing"
+		categoryName: string,
 		qty: number,
 		unit: string,
 		rate: RateDetail,
-		mathEquation: string
+		explanation: string // Renamed for clarity
 	) => {
 		if (qty <= 0) return;
 
@@ -93,65 +114,67 @@ export const calculateBasementEstimate = (
 		totalCost += laborCost + materialCost;
 		totalHours += laborHours;
 
-		// Line 1: Parent (Labor)
+		// Parent Line (Labor + Explanation)
 		breakdownItems.push({
 			name: categoryName,
 			cost: laborCost,
 			hours: laborHours,
-			details: `${mathEquation} * $${rate.labor.toFixed(2)} (Labor)`,
+			details: `${explanation}\n   Formula: ${qty} ${unit} * $${rate.labor.toFixed(2)} (Labor)`,
 		});
 
-		// Line 2: Child (Materials) - Indented
+		// Child Line (Material)
 		breakdownItems.push({
-			name: `   ↳ Materials`, // Visual Indentation in Name
+			name: `   ↳ Materials`,
 			cost: materialCost,
 			hours: 0,
-			details: `      $${rate.material.toFixed(2)}/${unit} * ${qty} ${unit}`, // Deep indent in details
+			details: `      $${rate.material.toFixed(2)}/${unit} * ${qty} ${unit}`,
 		});
 	};
 
-	// --- SECTION 0: MATH EXPLAINER ---
+	// --- SECTION 0: MATH EXPLAINER (Your Requested Format) ---
+	// Calculate percentages for display
+	const soffitPercent = Math.round(soffitFactor * 100);
+
 	breakdownItems.push({
 		name: '📐 Dimensions & Math',
 		cost: 0,
 		hours: 0,
-		details: [
-			`Floor: ${sqft}sf`,
-			`Perimeter: ${perimeterLF} LF (Shell)`,
-			`Partitions: ${partitionLF} LF (Calculated from ${rooms.length} Rooms)`,
-			`Rooms: ${rooms.map((r) => (r.type === 'Bedroom' ? r.size : r.bathType)).join(', ')}`,
-		].join('\n'),
+		details: `Floor: ${sqft}sf. Height: ${wallHeight}ft.
+    • Perimeter: √${sqft} * 4.2 = ${perimeterLF} LF (Exterior Shell)
+    • Partitions: ${bedCount} Bed (${bedLF} LF) + ${bathCount} Bath (${bathLF} LF)${hasWetBar ? ` + Wet Bar (${wetBarLF} LF)` : ''} = ${partitionLF} LF
+    • Soffits: ${perimeterLF} LF * ${soffitPercent}% = ${soffitLF} LF (Bulkheads)
+    • Wall Area: (${perimeterLF} * ${wallHeight}) + (${partitionLF} * ${wallHeight} * 2 sides) + (${soffitLF} * 2 soffit face) = ${totalWallSqft} sf`,
 	});
 
 	// --- STEP 1: FRAMING ---
 	if (services.framing) {
 		if (condition === 'Bare Concrete') {
 			addDetailItem(
-				'Framing: Exterior Walls', // Cleaner Name
+				'Framing: Exterior Walls',
 				perimeterLF,
 				'LF',
 				MASTER_RATES.FRAMING.CONCRETE_FLOOR,
-				`${perimeterLF} LF`
+				`${perimeterLF} LF (Total Perimeter)`
 			);
 		}
 
 		if (partitionLF > 0) {
 			addDetailItem(
-				'Framing: Interior Rooms', // Cleaner Name
+				'Framing: Interior Rooms',
 				partitionLF,
 				'LF',
 				MASTER_RATES.FRAMING.CONCRETE_FLOOR,
-				`${partitionLF} LF`
+				`${partitionLF} LF (Beds, Baths, Closets)`
 			);
 		}
 
 		if (soffitLF > 0) {
 			addDetailItem(
-				'Framing: Soffits & Bulkheads', // Cleaner Name
+				'Framing: Soffits & Bulkheads',
 				soffitLF,
 				'LF',
 				MASTER_RATES.FRAMING.CONCRETE_FLOOR,
-				`${soffitLF} LF`
+				`${soffitLF} LF (Based on ${soffitWork} complexity)`
 			);
 		}
 
@@ -171,7 +194,7 @@ export const calculateBasementEstimate = (
 				name: 'Framing: Door/Window Headers',
 				cost: cost,
 				hours: hrs,
-				details: `${numOpenings} units * $${openRate.labor.toFixed(2)}`,
+				details: `${numOpenings} Openings (Inferred from rooms) * $${openRate.labor.toFixed(2)}`,
 			});
 		}
 	}
@@ -184,7 +207,7 @@ export const calculateBasementEstimate = (
 				perimeterWallSqft,
 				'sf',
 				MASTER_RATES.INSULATION.RIGID_FOAM.WALL,
-				`${perimeterWallSqft} sf`
+				`${perimeterWallSqft} sf (${perimeterLF} LF * ${wallHeight} ft)`
 			);
 		}
 		addDetailItem(
@@ -192,7 +215,7 @@ export const calculateBasementEstimate = (
 			perimeterWallSqft,
 			'sf',
 			MASTER_RATES.INSULATION.STANDARD.WALL,
-			`${perimeterWallSqft} sf`
+			`${perimeterWallSqft} sf (${perimeterLF} LF * ${wallHeight} ft)`
 		);
 	}
 
@@ -200,44 +223,63 @@ export const calculateBasementEstimate = (
 	if (services.drywall) {
 		const dwRate = MASTER_RATES.DRYWALL_INSTALL.LEVEL_2;
 
-		// Perimeter
+		// Note: Drywall Level is hardcoded to Level 2 (Standard Basement) in logic currently,
+		// but we can expose that if needed.
+		const levelDesc = 'Level 2 Finish';
+
 		if (condition !== 'Framed & Insulated') {
 			addDetailItem(
-				'Drywall: Exterior Walls',
+				`Drywall: Exterior Walls (${levelDesc})`,
 				perimeterWallSqft,
 				'sf',
 				dwRate.WALL,
-				`${perimeterWallSqft} sf`
+				`${perimeterWallSqft} sf (${perimeterLF} LF * ${wallHeight} ft)`
 			);
 		}
 
-		// Partitions
 		if (partitionWallSqftTotal > 0) {
 			addDetailItem(
-				'Drywall: Interior Rooms',
+				`Drywall: Interior Rooms (${levelDesc})`,
 				partitionWallSqftTotal,
 				'sf',
 				dwRate.WALL,
-				`${partitionWallSqftTotal} sf`
+				`${partitionWallSqftTotal} sf (${partitionLF} LF * ${wallHeight} ft * 2 sides)`
 			);
 		}
 
-		// Ceiling
+		// Soffit Drywall (NEW)
+		if (soffitSqft > 0) {
+			addDetailItem(
+				`Drywall: Soffits/Box-outs`,
+				soffitSqft,
+				'sf',
+				dwRate.WALL,
+				`${soffitSqft} sf (Face area of ductwork boxes)`
+			);
+		}
+
+		// Ceiling Logic
 		if (services.ceilingFinish === 'Drywall') {
 			addDetailItem(
 				'Drywall: Ceiling',
 				ceilingSqft,
 				'sf',
 				dwRate.CEILING,
-				`${ceilingSqft} sf`
+				`${ceilingSqft} sf (Floor Area)`
 			);
 		} else if (services.ceilingFinish === 'Drop Ceiling') {
+			const gridRate =
+				ceilingGrid === '2x2'
+					? MASTER_RATES.CEILING_SYSTEMS.DROP_CEILING_2X2
+					: MASTER_RATES.CEILING_SYSTEMS.DROP_CEILING_2X4;
+			const gridName = ceilingGrid === '2x2' ? '2x2 Designer' : '2x4 Standard';
+
 			addDetailItem(
-				'Ceiling System: Grid & Tile',
+				`Ceiling System: ${gridName}`,
 				ceilingSqft,
 				'sf',
-				MASTER_RATES.CEILING_SYSTEMS.DROP_CEILING,
-				`${ceilingSqft} sf`
+				gridRate,
+				`${ceilingSqft} sf (Floor Area)`
 			);
 		}
 	}
@@ -246,11 +288,11 @@ export const calculateBasementEstimate = (
 	if (services.painting) {
 		const pRate = MASTER_RATES.PAINTING.STANDARD;
 		addDetailItem(
-			'Painting: All Walls',
+			'Painting: All Walls & Soffits',
 			totalWallSqft,
 			'sf',
 			pRate.WALL,
-			`${totalWallSqft} sf`
+			`${totalWallSqft} sf (Exterior + Interior + Soffits)`
 		);
 
 		if (services.ceilingFinish === 'Drywall') {
@@ -259,7 +301,7 @@ export const calculateBasementEstimate = (
 				ceilingSqft,
 				'sf',
 				pRate.CEILING,
-				`${ceilingSqft} sf`
+				`${ceilingSqft} sf (Floor Area)`
 			);
 		} else if (services.ceilingFinish === 'Painted/Industrial') {
 			addDetailItem(
@@ -267,7 +309,7 @@ export const calculateBasementEstimate = (
 				ceilingSqft,
 				'sf',
 				MASTER_RATES.CEILING_SYSTEMS.PAINTED_INDUSTRIAL,
-				`${ceilingSqft} sf`
+				`${ceilingSqft} sf (Exposed Deck)`
 			);
 		}
 	}

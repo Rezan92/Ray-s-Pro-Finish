@@ -1,5 +1,3 @@
-// client/src/components/common/estimator/BasementForm.tsx
-
 import React, { useEffect } from 'react';
 import type { FormData, RoomDetail } from './EstimatorTypes';
 import { Ruler, Layout, Hammer, Plus, Trash2 } from 'lucide-react';
@@ -30,9 +28,14 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 		if (!basement.rooms) {
 			onNestedChange('basement', 'rooms', []);
 		}
-		// Initialize numeric fields to 0 to avoid controlled/uncontrolled warnings
-		if (basement.numBedrooms === undefined)
-			onNestedChange('basement', 'numBedrooms', 0);
+		// Ensure strict string match for framing logic
+		if (!basement.condition) {
+			onNestedChange('basement', 'condition', 'Bare Concrete');
+		}
+		// Default Grid Size
+		if (!basement.ceilingGrid) {
+			onNestedChange('basement', 'ceilingGrid', '2x4');
+		}
 	}, []);
 
 	// --- HANDLERS ---
@@ -53,8 +56,11 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 		});
 	};
 
+	const handleGridChange = (size: '2x2' | '2x4') => {
+		onNestedChange('basement', 'ceilingGrid', size);
+	};
+
 	// --- ROOM MANAGER LOGIC ---
-	// Filter rooms by type for display/counting
 	const bedrooms = (basement.rooms || []).filter((r) => r.type === 'Bedroom');
 	const bathrooms = (basement.rooms || []).filter((r) => r.type === 'Bathroom');
 
@@ -72,22 +78,11 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 
 		const updatedRooms = [...(basement.rooms || []), newRoom];
 		onNestedChange('basement', 'rooms', updatedRooms);
-
-		// Update the old counters just in case backend still relies on them for now
-		if (type === 'Bedroom')
-			onNestedChange('basement', 'numBedrooms', bedrooms.length + 1);
-		if (type === 'Bathroom')
-			onNestedChange('basement', 'numBathrooms', bathrooms.length + 1);
 	};
 
-	const removeRoom = (id: string, type: 'Bedroom' | 'Bathroom') => {
+	const removeRoom = (id: string) => {
 		const updatedRooms = (basement.rooms || []).filter((r) => r.id !== id);
 		onNestedChange('basement', 'rooms', updatedRooms);
-
-		if (type === 'Bedroom')
-			onNestedChange('basement', 'numBedrooms', bedrooms.length - 1);
-		if (type === 'Bathroom')
-			onNestedChange('basement', 'numBathrooms', bathrooms.length - 1);
 	};
 
 	const updateRoom = (id: string, field: keyof RoomDetail, value: any) => {
@@ -178,7 +173,7 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 								Bedrooms ({bedrooms.length}/5)
 							</span>
 							<button
-								type='button' /* CRITICAL FIX: Prevents Form Submission */
+								type='button'
 								className='add-room-btn-small'
 								onClick={() => addRoom('Bedroom')}
 								disabled={bedrooms.length >= 5}
@@ -205,7 +200,7 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 								<button
 									type='button'
 									className='remove-room-btn'
-									onClick={() => removeRoom(room.id, 'Bedroom')}
+									onClick={() => removeRoom(room.id)}
 								>
 									<Trash2 size={16} />
 								</button>
@@ -225,7 +220,7 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 								Bathrooms ({bathrooms.length}/2)
 							</span>
 							<button
-								type='button' /* CRITICAL FIX */
+								type='button'
 								className='add-room-btn-small'
 								onClick={() => addRoom('Bathroom')}
 								disabled={bathrooms.length >= 2}
@@ -247,13 +242,17 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 										updateRoom(room.id, 'bathType', e.target.value)
 									}
 								>
-									<option value='Half Bath'>Half Bath (Toilet/Sink)</option>
-									<option value='Full Bath'>Full Bath (Shower/Tub)</option>
+									<option value='Half Bath'>
+										Half Bath (Toilet/Sink - Approx 5x8)
+									</option>
+									<option value='Full Bath'>
+										Full Bath (Tub/Shower - Approx 8x10)
+									</option>
 								</select>
 								<button
 									type='button'
 									className='remove-room-btn'
-									onClick={() => removeRoom(room.id, 'Bathroom')}
+									onClick={() => removeRoom(room.id)}
 								>
 									<Trash2 size={16} />
 								</button>
@@ -301,6 +300,7 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 					3. Scope of Work
 				</h4>
 				<div className='basement-grid'>
+					{/* CEILING FINISH */}
 					<div className='form-group'>
 						<label>Ceiling Finish</label>
 						<select
@@ -315,9 +315,77 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 								Industrial (Spray Black)
 							</option>
 						</select>
+
+						{/* Drop Ceiling Sub-Selection */}
+						{basement.services?.ceilingFinish === 'Drop Ceiling' && (
+							<div style={{ marginTop: '10px', marginLeft: '5px' }}>
+								<label
+									style={{
+										fontSize: '0.85rem',
+										color: '#666',
+										display: 'block',
+										marginBottom: '5px',
+									}}
+								>
+									Grid Tile Size
+								</label>
+								<div style={{ display: 'flex', gap: '15px' }}>
+									<label
+										style={{
+											display: 'flex',
+											alignItems: 'center',
+											gap: '5px',
+											fontSize: '0.9rem',
+											cursor: 'pointer',
+										}}
+									>
+										<input
+											type='radio'
+											name='gridSize'
+											value='2x4'
+											checked={
+												basement.ceilingGrid === '2x4' || !basement.ceilingGrid
+											}
+											onChange={() => handleGridChange('2x4')}
+										/>
+										Standard (2x4)
+									</label>
+									<label
+										style={{
+											display: 'flex',
+											alignItems: 'center',
+											gap: '5px',
+											fontSize: '0.9rem',
+											cursor: 'pointer',
+										}}
+									>
+										<input
+											type='radio'
+											name='gridSize'
+											value='2x2'
+											checked={basement.ceilingGrid === '2x2'}
+											onChange={() => handleGridChange('2x2')}
+										/>
+										Premium (2x2)
+									</label>
+								</div>
+							</div>
+						)}
 					</div>
+
+					{/* MOISTURE PROTECTION WITH TOOLTIP */}
 					<div className='form-group'>
-						<label>Moisture Protection</label>
+						<div
+							style={{
+								display: 'flex',
+								alignItems: 'center',
+								gap: '8px',
+								marginBottom: '4px',
+							}}
+						>
+							<label style={{ marginBottom: 0 }}>Moisture Protection</label>
+							<InfoTooltip message='Standard: Vapor barrier only (Code Min). Premium: Rigid foam insulation against concrete for thermal break + vapor barrier (Recommended).' />
+						</div>
 						<select
 							name='perimeterInsulation'
 							value={basement.perimeterInsulation || 'Standard (Vapor Barrier)'}
