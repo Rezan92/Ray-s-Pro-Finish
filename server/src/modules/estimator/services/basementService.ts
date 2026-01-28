@@ -17,8 +17,7 @@ export const calculateBasementEstimate = (
 		sqft,
 		ceilingHeight,
 		condition,
-		// REMOVED: numBedrooms, numBathrooms (Calculated below now)
-		rooms = [], // Default to empty array
+		rooms = [],
 		hasWetBar,
 		services,
 		perimeterInsulation,
