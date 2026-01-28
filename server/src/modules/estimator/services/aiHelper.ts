@@ -77,10 +77,37 @@ const SERVICE_BLUEPRINTS: Record<string, ServiceBlueprint> = {
 		],
 		examples: `
             EXAMPLE INPUT:
-            Name: Sarah, Time: 1 day, Data: { repairs: [{ locationName: "Living Room", damageType: "Large Hole", texture: "Orange Peel" }, { locationName: "Living Room", damageType: "Stress Crack", texture: "Orange Peel" }] }
+            Name: Sarah, Time: 1 day, Data: { repairs: [{ locationName: "Living Room", damageType: "Large Hole", texture: "Orange Peel" }] }
             EXAMPLE OUTPUT:
-            "Hi Sarah, thank you for using our free estimator! This estimate covers professional drywall repairs in your Living Room, specifically addressing the large hole and stress cracks with seamless Orange Peel texture matching. We expect this project to take approximately 1 day to complete. We prioritize dust containment and a clean workspace. Best regards, Ray's Pro Finish."
+            "Hi Sarah, thank you for using our free estimator! This estimate covers professional drywall repairs in your Living Room, specifically addressing the large hole with seamless Orange Peel texture matching. We expect this project to take approximately 1 day to complete. We prioritize dust containment and a clean workspace. Best regards, Ray's Pro Finish."
         `,
+	},
+	garage: {
+		rules: [
+			'Mention that the estimate includes insulation, drywall installation, and taping.',
+			"If 'Paint' is selected, mention the specific level of finish (e.g., Level 2 Fire Tape vs. Full Paint).",
+			'Emphasize that we handle the full process from bare studs to finished walls.',
+		],
+		examples: `
+			EXAMPLE INPUT:
+			Name: Alex, Time: 3 days, Data: { size: "2-Car", services: { insulation: true, drywall: true, painting: true } }
+			EXAMPLE OUTPUT:
+			"Hi Alex, thank you for using our free estimator! This estimate covers the full finishing of your 2-Car Garage, including R-13 insulation, drywall installation, and a professional paint finish. We expect this project to take approximately 3 days to complete. Best regards, Ray's Pro Finish."
+		`,
+	},
+	basement: {
+		rules: [
+			'Mention the scope explicitly: Framing, Insulation, Drywall, and Painting.',
+			'If specific rooms (Bedrooms/Bathrooms) are added, mention that partition walls for these rooms are included.',
+			'Highlight the Ceiling Choice (e.g., "Industrial Black Spray" or "Drop Ceiling").',
+			'IMPORTANT: Do NOT imply we are doing Electrical, Plumbing, or Flooring.',
+		],
+		examples: `
+			EXAMPLE INPUT:
+			Name: David, Time: 15 days, Data: { sqft: 800, rooms: [{ type: 'Bedroom' }], services: { ceilingFinish: 'Painted/Industrial' } }
+			EXAMPLE OUTPUT:
+			"Hi David, thank you for using our free estimator! This estimate covers the complete Framing, Insulation, and Drywall finishing for your 800sqft basement, including partition walls for the Bedroom. It also includes the modern Industrial Black Spray finish for the ceiling. We expect this project to take approximately 15 days to complete. Best regards, Ray's Pro Finish."
+		`,
 	},
 	installation: {
 		rules: [
@@ -89,9 +116,9 @@ const SERVICE_BLUEPRINTS: Record<string, ServiceBlueprint> = {
 		],
 		examples: `
             EXAMPLE INPUT:
-            Name: Mike, Time: 5 days, Data: { areas: ["Garage", "Basement Storage"] }
+            Name: Mike, Time: 5 days, Data: { projectType: "Wall", wallLength: "Medium" }
             EXAMPLE OUTPUT:
-            "Hi Mike, thank you for using our free estimator! This estimate covers the full installation and finishing of new drywall in your Garage and Basement Storage areas to a paint-ready smooth finish. We expect this project to take approximately 5 days to complete. Best regards, Ray's Pro Finish."
+            "Hi Mike, thank you for using our free estimator! This estimate covers the full installation and finishing of your new drywall project to a paint-ready smooth finish. We expect this project to take approximately 5 days to complete. Best regards, Ray's Pro Finish."
         `,
 	},
 };
@@ -104,9 +131,10 @@ export const generateCustomerSummary = async (
 	const customerName = formData.contact?.name || 'there';
 	let timeStatement = '';
 
+	// Determine active service
 	const activeService =
 		Object.keys(formData.services || {}).find(
-			(key) => formData.services[key] === true
+			(key) => formData.services[key] === true && key !== 'painting'
 		) || 'painting';
 
 	const dayTextGenerator = () => {
@@ -120,7 +148,6 @@ export const generateCustomerSummary = async (
 	const { dayText, timeStatementText } = dayTextGenerator();
 
 	if (activeService === 'patching' && totalVisits) {
-		// Use the visit logic for patching
 		timeStatement = `We expect this project to take approximately ${totalVisits} site visits to allow for proper drying and finishing.`;
 	} else {
 		timeStatement = timeStatementText;
@@ -129,8 +156,9 @@ export const generateCustomerSummary = async (
 	const blueprint =
 		SERVICE_BLUEPRINTS[activeService] || SERVICE_BLUEPRINTS.painting;
 
+	// DEFAULT FALLBACK
 	if (!blueprint || !blueprint.rules) {
-		return `Hi ${customerName}, thank you for using our free estimator! We expect your project to take approximately ${dayText}. Best regards, Ray's Pro Finish.`;
+		return `Hi ${customerName}, thank you for using our free estimator! We expect your project to take approximately ${dayText}. Please note: This is a rough estimate. Final pricing will be verified during an on-site visit. Best regards, Ray's Pro Finish.`;
 	}
 
 	const prompt = `
@@ -141,7 +169,8 @@ export const generateCustomerSummary = async (
         2. Mention timing: "${timeStatement}"
         3. END with "Best regards, Ray's Pro Finish"
         4. NEVER mention technical square footage or specific prices.
-        5. IMPORTANT: Group items logically. Do not list rooms/repairs one by one if they are similar.
+        5. IMPORTANT: Group items logically.
+        6. MANDATORY DISCLAIMER: You MUST include this sentence near the end: "Please note: This is a preliminary estimate. Final pricing will be verified during an on-site consultation."
 
         ${activeService.toUpperCase()} SPECIFIC RULES:
         ${blueprint.rules
@@ -177,6 +206,6 @@ export const generateCustomerSummary = async (
 			: 'Thank you for your request. We will contact you shortly.';
 	} catch (error) {
 		console.error('AI Summary Error:', error);
-		return `Hi ${customerName}, thank you for using our free estimator! We estimate your ${activeService} project will take about ${dayText}. Best regards, Ray's Pro Finish.`;
+		return `Hi ${customerName}, thank you for using our free estimator! We estimate your ${activeService} project will take about ${dayText}. Please note: This is a preliminary estimate. Final pricing will be verified during an on-site consultation. Best regards, Ray's Pro Finish.`;
 	}
 };
