@@ -1,0 +1,146 @@
+/* Container: Fixed position in top-left as requested */
+.floating-alert {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 9999;
+  /* Ensure it sits on top of everything */
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+
+  min-width: 300px;
+  max-width: 450px;
+  padding: 16px;
+
+  background-color: var(--color-bg-primary);
+  border-left: 4px solid var(--color-primary);
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: slideIn 0.3s forwards ease-out;
+}
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Content Layout --- */
+.alert-content {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+}
+
+.alert-icon-wrapper {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.alert-text-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.alert-title {
+  margin: 0;
+  font-family: var(--font-family-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.alert-message {
+  margin: 0;
+  font-family: var(--font-family-body);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+}
+
+/* --- Close Button --- */
+.alert-close-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--color-text-secondary);
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  margin-left: 8px;
+  margin-top: -4px;
+}
+
+.alert-close-btn:hover {
+  opacity: 1;
+}
+
+/* --- Variants --- */
+
+/* Warning (Yellowish) */
+.floating-alert.alert-warning {
+  background-color: #fff9e6;
+  /* Light yellow background */
+  border-left-color: #faad14;
+  /* Darker yellow border */
+}
+
+.floating-alert.alert-warning .alert-title {
+  color: #d48806;
+}
+
+.floating-alert.alert-warning .alert-icon-wrapper {
+  color: #faad14;
+}
+
+/* Info (Default/Brand) */
+.floating-alert.alert-info {
+  background-color: #e6f7ff;
+  border-left-color: var(--color-primary);
+}
+
+.floating-alert.alert-info .alert-title {
+  color: var(--color-brand-dark);
+}
+
+.floating-alert.alert-info .alert-icon-wrapper {
+  color: var(--color-primary);
+}
+
+/* Error */
+.floating-alert.alert-error {
+  background-color: #fff1f0;
+  border-left-color: var(--color-error);
+}
+
+.floating-alert.alert-error .alert-title {
+  color: var(--color-error);
+}
+
+.floating-alert.alert-error .alert-icon-wrapper {
+  color: var(--color-error);
+}
+
+/* Success */
+.floating-alert.alert-success {
+  background-color: #f6ffed;
+  border-left-color: var(--color-success);
+}
+
+.floating-alert.alert-success .alert-title {
+  color: var(--color-success);
+}
+
+.floating-alert.alert-success .alert-icon-wrapper {
+  color: var(--color-success);
+}

@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { FormData, RoomDetail } from './EstimatorTypes';
 import { Ruler, Layout, Hammer, Plus, Trash2 } from 'lucide-react';
 import { InfoTooltip } from '@/components/common/infoTooltip/InfoTooltip';
+import { FloatingAlert } from '@/components/common/floatingAlert/FloatingAlert';
 import './styles/BasementForm.css';
 
 interface BasementFormProps {
@@ -14,6 +15,8 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 	onNestedChange,
 }) => {
 	const { basement } = formData;
+
+	const [showScopeWarning, setShowScopeWarning] = useState(true);
 
 	// Defaults Initialization
 	useEffect(() => {
@@ -28,11 +31,9 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 		if (!basement.rooms) {
 			onNestedChange('basement', 'rooms', []);
 		}
-		// Ensure strict string match for framing logic
 		if (!basement.condition) {
 			onNestedChange('basement', 'condition', 'Bare Concrete');
 		}
-		// Default Grid Size
 		if (!basement.ceilingGrid) {
 			onNestedChange('basement', 'ceilingGrid', '2x4');
 		}
@@ -65,17 +66,15 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 	const bathrooms = (basement.rooms || []).filter((r) => r.type === 'Bathroom');
 
 	const addRoom = (type: 'Bedroom' | 'Bathroom') => {
-		// Limits Check
 		if (type === 'Bedroom' && bedrooms.length >= 5) return;
 		if (type === 'Bathroom' && bathrooms.length >= 2) return;
 
 		const newRoom: RoomDetail = {
 			id: Math.random().toString(36).substr(2, 9),
 			type,
-			size: 'Medium (12x12)', // Default
+			size: 'Medium (12x12)',
 			bathType: type === 'Bathroom' ? 'Full Bath' : undefined,
 		};
-
 		const updatedRooms = [...(basement.rooms || []), newRoom];
 		onNestedChange('basement', 'rooms', updatedRooms);
 	};
@@ -95,6 +94,14 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 	return (
 		<div className='service-form-box'>
 			<h3 className='service-form-title'>Basement Finishing</h3>
+
+			<FloatingAlert
+				isVisible={showScopeWarning}
+				onClose={() => setShowScopeWarning(false)}
+				type='warning'
+				title='Scope of Estimate'
+				message='This calculator estimates Framing, Insulation, Drywall, and Painting. Electrical, Plumbing, and Flooring are NOT included in this instant price.'
+			/>
 
 			{/* SECTION 1: DIMENSIONS */}
 			<div className='basement-section'>
@@ -218,6 +225,7 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 						<div className='room-manager-header'>
 							<span className='room-manager-label'>
 								Bathrooms ({bathrooms.length}/2)
+								<InfoTooltip message='A half bath consists of a toilet and sink only. A full bath includes a toilet sink and shower.' />
 							</span>
 							<button
 								type='button'
@@ -242,12 +250,8 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 										updateRoom(room.id, 'bathType', e.target.value)
 									}
 								>
-									<option value='Half Bath'>
-										Half Bath (Toilet/Sink - Approx 5x8)
-									</option>
-									<option value='Full Bath'>
-										Full Bath (Tub/Shower - Approx 8x10)
-									</option>
+									<option value='Half Bath'>Half Bath (~5x8)</option>
+									<option value='Full Bath'>Full Bath (~8x10)</option>
 								</select>
 								<button
 									type='button'
