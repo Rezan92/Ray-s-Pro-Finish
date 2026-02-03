@@ -207,7 +207,7 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 								<button
 									type='button'
 									className={styles.removeRoomBtn}
-									onClick={() => removeRoom(id)}
+									onClick={() => removeRoom(room.id)}
 								>
 									<Trash2 size={16} />
 								</button>
@@ -256,7 +256,7 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 								<button
 									type='button'
 									className={styles.removeRoomBtn}
-									onClick={() => removeRoom(id)}
+									onClick={() => removeRoom(room.id)}
 								>
 									<Trash2 size={16} />
 								</button>
