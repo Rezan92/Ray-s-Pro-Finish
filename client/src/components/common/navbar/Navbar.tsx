@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { Button } from '../button/Button';
 import { Menu } from 'lucide-react';
-import './Navbar.css';
+import styles from './Navbar.module.css';
 
 // --- Redux Imports ---
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -25,18 +25,20 @@ const Navbar = () => {
 	const handleClose = () => dispatch(closeMobileMenu());
 
 	return (
-		<nav className='navbar'>
-			<div className='container'>
+		<nav className={styles.navbar}>
+			<div className={styles.container}>
 				{/* --- Desktop Navigation --- */}
-				<div className='nav-desktop'>
-					<ul className='nav-links-list'>
+				<div className={styles.navDesktop}>
+					<ul className={styles.navLinksList}>
 						{navLinks.map((link) => (
 							<li key={link.label}>
 								<NavLink
 									to={link.to}
 									// This 'className' prop from NavLink gives us the active state
 									className={({ isActive }) =>
-										isActive ? 'nav-link active' : 'nav-link'
+										isActive
+											? `${styles.navLink} ${styles.active}`
+											: styles.navLink
 									}
 								>
 									{link.label}
@@ -53,15 +55,15 @@ const Navbar = () => {
 				</div>
 
 				{/* --- Mobile Navigation --- */}
-				<div className='nav-mobile'>
+				<div className={styles.navMobile}>
 					{/* Hamburger Menu Button */}
 					<button
 						onClick={handleToggle}
-						className='menu-toggle-btn'
+						className={styles.menuToggleBtn}
 					>
 						{<Menu size={28} />}
 					</button>
-					<span className='nav-mobile-title'>Menu</span>
+					<span className={styles.navMobileTitle}>Menu</span>
 				</div>
 			</div>
 
@@ -69,14 +71,20 @@ const Navbar = () => {
 			{/* This is the sliding panel. We apply the 'open' class based on state
         to trigger the CSS animation.
       */}
-			<div className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}>
-				<ul className='mobile-links-list'>
+			<div
+				className={`${styles.mobileMenu} ${
+					isMobileMenuOpen ? styles.open : ''
+				}`}
+			>
+				<ul className={styles.mobileLinksList}>
 					{navLinks.map((link) => (
 						<li key={link.label}>
 							<NavLink
 								to={link.to}
 								className={({ isActive }) =>
-									isActive ? 'mobile-link active' : 'mobile-link'
+									isActive
+										? `${styles.mobileLink} ${styles.active}`
+										: styles.mobileLink
 								}
 								onClick={handleClose} // Close on click
 							>
@@ -88,7 +96,7 @@ const Navbar = () => {
 				<Button
 					to='/contact'
 					variant='dark'
-					className='mobile-menu-btn'
+					className={styles.mobileMenuBtn}
 					// We can attach onClick to Button component if it supports it,
 					// or wrap it to close menu when clicked.
 					onClick={handleClose}

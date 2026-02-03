@@ -9,17 +9,17 @@ import {
 	Facebook,
 	Instagram,
 } from 'lucide-react';
-import './Footer.css';
+import styles from './Footer.module.css';
 
 // A small sub-component for consistent link styling
 const FooterLink: React.FC<{ to: string; label: string }> = ({ to, label }) => (
 	<NavLink
 		to={to}
-		className='footer-link-item'
+		className={styles.footerLinkItem}
 	>
 		<ChevronRight
 			size={16}
-			className='footer-link-icon'
+			className={styles.footerLinkIcon}
 		/>
 		<span>{label}</span>
 	</NavLink>
@@ -30,25 +30,25 @@ const ContactItem: React.FC<{ icon: React.ReactNode; text: string }> = ({
 	icon,
 	text,
 }) => (
-	<div className='footer-contact-item'>
-		<div className='footer-contact-icon'>{icon}</div>
+	<div className={styles.footerContactItem}>
+		<div className={styles.footerContactIcon}>{icon}</div>
 		<span>{text}</span>
 	</div>
 );
 
 export const Footer: React.FC = () => {
 	return (
-		<footer className='footer-section'>
-			<div className='footer-grid'>
+		<footer className={styles.footerSection}>
+			<div className={styles.footerGrid}>
 				{/* Column 1: About */}
-				<div className='footer-column'>
-					<h3 className='footer-column-title'>ABOUT</h3>
-					<p className='footer-about-text'>
+				<div className={styles.footerColumn}>
+					<h3 className={styles.footerColumnTitle}>ABOUT</h3>
+					<p className={styles.footerAboutText}>
 						Ray's Pro Finish specializes in expert drywall repair and
 						high-quality interior painting. We're committed to delivering a
 						flawless finish and professional service to every homeowner.
 					</p>
-					<div className='footer-social-icons'>
+					<div className={styles.footerSocialIcons}>
 						<a
 							href='https://twitter.com'
 							target='_blank'
@@ -77,9 +77,9 @@ export const Footer: React.FC = () => {
 				</div>
 
 				{/* Column 2: Links */}
-				<div className='footer-column'>
-					<h3 className='footer-column-title'>LINKS</h3>
-					<nav className='footer-links-list'>
+				<div className={styles.footerColumn}>
+					<h3 className={styles.footerColumnTitle}>LINKS</h3>
+					<nav className={styles.footerLinksList}>
 						<FooterLink
 							to='/projects'
 							label='Projects'
@@ -104,9 +104,9 @@ export const Footer: React.FC = () => {
 				</div>
 
 				{/* Column 3: Services */}
-				<div className='footer-column'>
-					<h3 className='footer-column-title'>SERVICES</h3>
-					<div className='footer-links-list'>
+				<div className={styles.footerColumn}>
+					<h3 className={styles.footerColumnTitle}>SERVICES</h3>
+					<div className={styles.footerLinksList}>
 						{/* You can update these links as needed */}
 						<FooterLink
 							to='/services'
@@ -124,9 +124,9 @@ export const Footer: React.FC = () => {
 				</div>
 
 				{/* Column 4: Have a Questions? */}
-				<div className='footer-column'>
-					<h3 className='footer-column-title'>HAVE A QUESTIONS?</h3>
-					<div className='footer-contact-list'>
+				<div className={styles.footerColumn}>
+					<h3 className={styles.footerColumnTitle}>HAVE A QUESTIONS?</h3>
+					<div className={styles.footerContactList}>
 						<ContactItem
 							icon={<MapPin size={20} />}
 							text='Service Area: Wheaton, Lombard & Chicagoland Suburbs'

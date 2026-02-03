@@ -1,5 +1,5 @@
 import React from 'react';
-import './PageHeader.css';
+import styles from './PageHeader.module.css';
 
 // 1. Import all hero images
 import defaultHeroImage from '@/assets/hero/Hero.png';
@@ -30,10 +30,10 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title }) => {
 	};
 
 	return (
-		<section className='page-header' style={headerStyle}>
-			<div className='page-header-overlay'></div>
-			<div className='page-header-container'>
-				<h1 className='page-header-title'>{title}</h1>
+		<section className={styles.pageHeader} style={headerStyle}>
+			<div className={styles.pageHeaderOverlay}></div>
+			<div className={styles.pageHeaderContainer}>
+				<h1 className={styles.pageHeaderTitle}>{title}</h1>
 			</div>
 		</section>
 	);

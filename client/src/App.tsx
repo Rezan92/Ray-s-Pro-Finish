@@ -1,4 +1,4 @@
-import './App.css';
+import styles from './App.module.css';
 import { Routes, Route } from 'react-router-dom';
 import HomePage from './pages/homePage/HomePage';
 import AboutPage from './pages/aboutPage/AboutPage';
@@ -13,7 +13,7 @@ import { ModalManager } from './components/common/modal/ModalManager';
 
 function App() {
 	return (
-		<div className='App'>
+		<div className={styles.App}>
 			<TopBar />
 			<Navbar />
 			<ModalManager />
