@@ -1,6 +1,6 @@
 /* src/components/home/StatCard.css */
 
-.stat-card {
+.statCard {
   display: flex;
   align-items: center;
   padding: var(--space-lg);
@@ -8,25 +8,25 @@
   width: 300px; /* Fixed width for this design */
 }
 
-.stat-card-icon-wrapper {
+.iconWrapper {
   margin-right: var(--space-md);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.stat-card-content {
+.content {
   display: flex;
   flex-direction: column;
 }
 
-.stat-card-count {
+.count {
   font-family: var(--font-family-heading);
   font-size: 2rem; /* 32px */
   font-weight: var(--font-weight-bold);
 }
 
-.stat-card-label {
+.label {
   font-family: var(--font-family-body);
   font-size: 0.875rem; /* 14px */
   font-weight: 600;
@@ -38,32 +38,31 @@
 /* --- Variants --- */
 
 /* Primary (Orange) Variant */
-.stat-card-primary {
+.primary {
   background-color: var(--color-primary);
 }
 
-.stat-card-primary .stat-card-icon {
+.primary .icon {
   color: var(--color-text-inverted);
 }
-.stat-card-primary .stat-card-count {
+.primary .count {
   color: var(--color-text-inverted);
 }
-.stat-card-primary .stat-card-label {
+.primary .label {
   color: rgba(255, 255, 255, 0.9);
 }
 
 /* Light (White) Variant */
-.stat-card-light {
+.light {
   background-color: var(--color-bg-primary);
 }
 
-.stat-card-light .stat-card-icon {
+.light .icon {
   color: var(--color-primary);
 }
-.stat-card-light .stat-card-count {
+.light .count {
   color: var(--color-brand-dark);
 }
-.stat-card-light .stat-card-label {
+.light .label {
   color: var(--color-text-secondary);
 }
-

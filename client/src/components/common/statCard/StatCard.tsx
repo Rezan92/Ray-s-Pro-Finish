@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './StatCard.css';
+import styles from './StatCard.module.css';
 import { Icon } from 'lucide-react';
 
 type StatCardProps = {
@@ -69,22 +69,18 @@ export const StatCard = ({
     return () => observer.disconnect();
   }, [target]); // Rerun if the target number ever changes
 
-  // Use the variant to apply different classes
-  const variantClass =
-    variant === 'primary' ? 'stat-card-primary' : 'stat-card-light';
-
   return (
     // Attach the ref to this element
-    <div className={`stat-card ${variantClass}`} ref={ref}>
-      <div className="stat-card-icon-wrapper">
-        <IconComponent size={60} className="stat-card-icon" />
+    <div className={`${styles.statCard} ${styles[variant]}`} ref={ref}>
+      <div className={styles.iconWrapper}>
+        <IconComponent size={60} className={styles.icon} />
       </div>
-      <div className="stat-card-content">
+      <div className={styles.content}>
         {/* Display the animated count, formatted with commas */}
-        <span className="stat-card-count">
+        <span className={styles.count}>
           {currentCount.toLocaleString('en-US')}
         </span>
-        <span className="stat-card-label">{label}</span>
+        <span className={styles.label}>{label}</span>
       </div>
     </div>
   );

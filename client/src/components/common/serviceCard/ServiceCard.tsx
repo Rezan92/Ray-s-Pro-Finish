@@ -1,9 +1,9 @@
-import React from 'react';
-import './ServiceCard.css';
-import { Icon } from 'lucide-react';
+import styles from './ServiceCard.module.css';
+import {type LucideIcon } from 'lucide-react';
+import { Button } from '../button/Button';
 
 type ServiceCardProps = {
-	icon: Icon;
+	icon: LucideIcon;
 	imageSrc: string;
 	title: string;
 	description: string;
@@ -15,39 +15,39 @@ export const ServiceCard = ({
 	imageSrc,
 	title,
 	description,
-	onClick, // ADDED
+	onClick,
 }: ServiceCardProps) => {
 	return (
-		<div className='service-card'>
-			<div className='service-card-image-wrapper'>
+		<div className={styles.serviceCard}>
+			<div className={styles.imageWrapper}>
 				<img
 					src={imageSrc}
 					alt={title}
-					className='service-card-image'
+					className={styles.image}
 					onError={(e) => {
 						// Fallback placeholder
 						e.currentTarget.src =
 							'https://placehold.co/400x300/e0e0e0/777?text=Image';
 					}}
 				/>
-				<div className='service-card-icon-wrapper'>
+				<div className={styles.iconWrapper}>
 					<IconComponent
 						size={50}
-						className='service-card-icon'
+						className={styles.icon}
 					/>
 				</div>
 			</div>
-			<div className='service-card-content'>
-				<h3 className='service-card-title'>{title}</h3>
-				<p className='service-card-description'>{description}</p>
+			<div className={styles.content}>
+				<h3 className={styles.title}>{title}</h3>
+				<p className={styles.description}>{description}</p>
 
-				{/* UPDATED: This is now a standard <button> that triggers the onClick */}
-				<button
+				<Button
 					onClick={onClick}
-					className='btn dark service-card-button'
+					variant='dark'
+					className={styles.button}
 				>
 					READ MORE
-				</button>
+				</Button>
 			</div>
 		</div>
 	);

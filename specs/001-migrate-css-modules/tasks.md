@@ -54,10 +54,10 @@ description: "Task list for migrating core components to CSS Modules"
 
 ### Implementation for User Story 2
 
-- [ ] T009 [P] [US2] Rename `StatCard.css` to `StatCard.module.css` and refactor `client/src/components/common/statCard/StatCard.tsx`
-- [ ] T010 [P] [US2] Rename `FeatureCard.css` to `FeatureCard.module.css` and refactor `client/src/components/common/featureCard/FeatureCard.tsx`
-- [ ] T011 [P] [US2] Rename `ProjectCard.css` to `ProjectCard.module.css` and refactor `client/src/components/common/projectCard/ProjectCard.tsx`
-- [ ] T012 [P] [US2] Rename `ServiceCard.css` to `ServiceCard.module.css` and refactor `client/src/components/common/serviceCard/ServiceCard.tsx`
+- [x] T009 [P] [US2] Rename `StatCard.css` to `StatCard.module.css` and refactor `client/src/components/common/statCard/StatCard.tsx`
+- [x] T010 [P] [US2] Rename `FeatureCard.css` to `FeatureCard.module.css` and refactor `client/src/components/common/featureCard/FeatureCard.tsx`
+- [x] T011 [P] [US2] Rename `ProjectCard.css` to `ProjectCard.module.css` and refactor `client/src/components/common/projectCard/ProjectCard.tsx`
+- [x] T012 [P] [US2] Rename `ServiceCard.css` to `ServiceCard.module.css` and refactor `client/src/components/common/serviceCard/ServiceCard.tsx`
 - [ ] T013 [US2] Manual visual verification of card components (check styles and global utility preservation)
 
 **Checkpoint**: All 8 components fully migrated and verified.

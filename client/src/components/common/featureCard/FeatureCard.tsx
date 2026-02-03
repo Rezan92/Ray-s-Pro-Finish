@@ -1,4 +1,4 @@
-import './FeatureCard.css';
+import styles from './FeatureCard.module.css';
 import { Icon } from 'lucide-react'; // Import the Icon type
 
 type FeatureCardProps = {
@@ -13,7 +13,7 @@ export const FeatureCard = ({ icon: Icon , title, description, variant, animatio
   
   // Combine classes: base 'feature-card', the variant ('dark' or 'primary'),
   // and 'animate-slide-up' for the animation.
-  const cardClasses = `feature-card ${variant} animate-slide-up`;
+  const cardClasses = `${styles.featureCard} ${styles[variant]} ${styles.animateSlideUp}`;
 
   // Apply the animation delay as an inline style
   const cardStyle = {
@@ -22,13 +22,13 @@ export const FeatureCard = ({ icon: Icon , title, description, variant, animatio
 
   return (
     <div className={cardClasses} style={cardStyle}>
-      <div className="icon-wrapper">
+      <div className={styles.iconWrapper}>
         <Icon size={60} />
       </div>
-      <h3 className="card-title">{title}</h3>
-      <p className="card-description">{description}</p>
+      <h3 className={styles.cardTitle}>{title}</h3>
+      <p className={styles.cardDescription}>{description}</p>
       {/* This is the diagonal sheen effect */}
-      <div className="card-sheen"></div>
+      <div className={styles.cardSheen}></div>
     </div>
   );
 };

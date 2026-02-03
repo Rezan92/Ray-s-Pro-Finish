@@ -1,6 +1,6 @@
-/* src/components/home/FeatureCard.css */
+/* src/components/home/FeatureCard.module.css */
 
-.feature-card {
+.featureCard {
   position: relative; /* Required for the ::after sheen */
   padding: var(--space-xxl) var(--space-xl);
   color: var(--color-text-inverted);
@@ -11,14 +11,14 @@
 }
 
 /* --- Variants --- */
-.feature-card.dark {
+.dark {
   background-color: var(--color-brand-dark);
 }
-.feature-card.primary {
+.primary {
   background-color: var(--color-primary);
 }
 
-.icon-wrapper {
+.iconWrapper {
   margin: 0 auto var(--space-lg);
   width: 80px;
   height: 80px;
@@ -26,22 +26,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.1); /* Faint white bg */
+  background-color: var(--color-white-10); /* Faint white bg */
   color: var(--color-text-inverted);
 }
 
-.feature-card.primary .icon-wrapper {
+.primary .iconWrapper {
   background-color: var(--color-brand-dark);
   color: var(--color-primary); 
   border: 2px solid var(--color-brand-dark);
 }
 
-.feature-card.dark .icon-wrapper {
+.dark .iconWrapper {
   background-color: var(--color-primary);
   color: var(--color-brand-dark);
 }
 
-.card-title {
+.cardTitle {
   font-family: var(--font-family-heading);
   font-size: 1.25rem; /* 20px */
   font-weight: var(--font-weight-bold);
@@ -49,32 +49,32 @@
   margin-bottom: var(--space-md);
 }
 
-.card-description {
+.cardDescription {
   font-family: var(--font-family-body);
   font-size: 1rem; /* 16px */
-  color: rgba(255, 255, 255, 0.8); /* Slightly transparent white */
+  color: var(--color-white-80); /* Slightly transparent white */
   line-height: 1.6;
 }
 
 /* --- Sheen Effect --- */
-.card-sheen {
+.cardSheen {
   position: absolute;
   top: -50%;
   left: -50%;
   width: 20px;
   height: 200%;
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--color-white-15);
   transform: rotate(20deg);
   opacity: 0.8;
 }
 
 /* Hide sheen on the primary card (it's not visible in screenshot) */
-.feature-card.primary .card-sheen {
+.primary .cardSheen {
   display: none;
 }
 
 /* --- Animation --- */
-.animate-slide-up {
+.animateSlideUp {
   /* Connect to the keyframes animation */
   animation: slideUpFadeIn 0.6s ease-out forwards;
 }
@@ -90,4 +90,3 @@
     transform: translateY(0);
   }
 }
-
