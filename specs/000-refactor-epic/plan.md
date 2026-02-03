@@ -8,9 +8,9 @@
 **Artifacts**: `specs/000-refactor-epic/01-css-migration/`
 
 - [x] **Priority 1**: Core Components (`specs/001-migrate-css-modules` - *Completed*)
-- [ ] **Priority 2**: Layout & Global Structure (Navbar, Footer, Layout)
-- [ ] **Priority 3**: Feature Components (Estimator forms)
-- [ ] **Priority 4**: Page-Level Styles (Page wrappers)
+- [x] **Priority 2**: Layout & Global Structure (Navbar, Footer, Layout)
+- [x] **Priority 3**: Feature Components (Estimator forms)
+- [x] **Priority 4**: Page-Level Styles (Page wrappers)
 - [ ] **Priority 5**: Content Sections (Marketing blocks)
 
 ## Phase 2: Redux Split (Pillar 2)
