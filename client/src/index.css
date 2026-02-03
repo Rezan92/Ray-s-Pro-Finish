@@ -28,7 +28,22 @@
 
   /* Utility Colors */
   --color-error: #D93025;
+  --color-error-bg: #fff1f0;
   --color-success: #1E8E3E;
+  --color-success-bg: #f6ffed;
+  --color-warning: #faad14;
+  --color-warning-bg: #fff9e6;
+  --color-warning-text: #d48806;
+  --color-info-bg: #e6f7ff;
+
+  /* Translucent Helpers */
+  --color-white-10: rgba(255, 255, 255, 0.1);
+  --color-white-15: rgba(255, 255, 255, 0.15);
+  --color-white-20: rgba(255, 255, 255, 0.2);
+  --color-white-50: rgba(255, 255, 255, 0.5);
+  --color-white-80: rgba(255, 255, 255, 0.8);
+  --color-white-90: rgba(255, 255, 255, 0.9);
+  --color-primary-10: rgba(241, 90, 36, 0.1);
 
 /* 2. TYPOGRAPHY
   (Based on Section 2 of README.md)

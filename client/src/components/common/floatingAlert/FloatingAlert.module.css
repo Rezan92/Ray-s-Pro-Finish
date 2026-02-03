@@ -1,5 +1,7 @@
+/* src/components/common/floatingAlert/FloatingAlert.module.css */
+
 /* Container: Fixed position in top-left as requested */
-.floating-alert {
+.floatingAlert {
   position: fixed;
   top: 20px;
   left: 20px;
@@ -33,26 +35,26 @@
 }
 
 /* --- Content Layout --- */
-.alert-content {
+.alertContent {
   display: flex;
   gap: 12px;
   flex: 1;
 }
 
-.alert-icon-wrapper {
+.iconWrapper {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   margin-top: 2px;
 }
 
-.alert-text-wrapper {
+.textWrapper {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.alert-title {
+.alertTitle {
   margin: 0;
   font-family: var(--font-family-heading);
   font-size: 0.95rem;
@@ -60,7 +62,7 @@
   line-height: 1.2;
 }
 
-.alert-message {
+.alertMessage {
   margin: 0;
   font-family: var(--font-family-body);
   font-size: 0.85rem;
@@ -69,7 +71,7 @@
 }
 
 /* --- Close Button --- */
-.alert-close-btn {
+.closeBtn {
   background: transparent;
   border: none;
   cursor: pointer;
@@ -81,66 +83,64 @@
   margin-top: -4px;
 }
 
-.alert-close-btn:hover {
+.closeBtn:hover {
   opacity: 1;
 }
 
 /* --- Variants --- */
 
 /* Warning (Yellowish) */
-.floating-alert.alert-warning {
-  background-color: #fff9e6;
-  /* Light yellow background */
-  border-left-color: #faad14;
-  /* Darker yellow border */
+.warning {
+  background-color: var(--color-warning-bg);
+  border-left-color: var(--color-warning);
 }
 
-.floating-alert.alert-warning .alert-title {
-  color: #d48806;
+.warning .alertTitle {
+  color: var(--color-warning-text);
 }
 
-.floating-alert.alert-warning .alert-icon-wrapper {
-  color: #faad14;
+.warning .iconWrapper {
+  color: var(--color-warning);
 }
 
 /* Info (Default/Brand) */
-.floating-alert.alert-info {
-  background-color: #e6f7ff;
+.info {
+  background-color: var(--color-info-bg);
   border-left-color: var(--color-primary);
 }
 
-.floating-alert.alert-info .alert-title {
+.info .alertTitle {
   color: var(--color-brand-dark);
 }
 
-.floating-alert.alert-info .alert-icon-wrapper {
+.info .iconWrapper {
   color: var(--color-primary);
 }
 
 /* Error */
-.floating-alert.alert-error {
-  background-color: #fff1f0;
+.error {
+  background-color: var(--color-error-bg);
   border-left-color: var(--color-error);
 }
 
-.floating-alert.alert-error .alert-title {
+.error .alertTitle {
   color: var(--color-error);
 }
 
-.floating-alert.alert-error .alert-icon-wrapper {
+.error .iconWrapper {
   color: var(--color-error);
 }
 
 /* Success */
-.floating-alert.alert-success {
-  background-color: #f6ffed;
+.success {
+  background-color: var(--color-success-bg);
   border-left-color: var(--color-success);
 }
 
-.floating-alert.alert-success .alert-title {
+.success .alertTitle {
   color: var(--color-success);
 }
 
-.floating-alert.alert-success .alert-icon-wrapper {
+.success .iconWrapper {
   color: var(--color-success);
 }

@@ -13,7 +13,7 @@ description: "Task list for migrating core components to CSS Modules"
 
 **Purpose**: Verify environment readiness for CSS Modules migration
 
-- [ ] T001 Verify project builds successfully before changes
+- [x] T001 Verify project builds successfully before changes
 
 ---
 
@@ -21,8 +21,8 @@ description: "Task list for migrating core components to CSS Modules"
 
 **Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
 
-- [ ] T002 Identify all hardcoded colors in target components, map them to existing `index.css` variables, and document any missing variables
-- [ ] T003 Add any missing CSS variables identified in T002 to `client/src/index.css` to ensure full coverage
+- [x] T002 Identify all hardcoded colors in target components, map them to existing `index.css` variables, and document any missing variables
+- [x] T003 Add any missing CSS variables identified in T002 to `client/src/index.css` to ensure full coverage
 
 **Checkpoint**: Variable mapping strategy defined - user story implementation can now begin
 
@@ -36,10 +36,10 @@ description: "Task list for migrating core components to CSS Modules"
 
 ### Implementation for User Story 1
 
-- [ ] T004 [P] [US1] Rename `Button.css` to `Button.module.css` and refactor `client/src/components/common/button/Button.tsx`
-- [ ] T005 [P] [US1] Rename `FloatingAlert.css` to `FloatingAlert.module.css` and refactor `client/src/components/common/floatingAlert/FloatingAlert.tsx`
-- [ ] T006 [P] [US1] Rename `InfoTooltip.css` to `InfoTooltip.module.css` and refactor `client/src/components/common/infoTooltip/InfoTooltip.tsx`
-- [ ] T007 [P] [US1] Rename `Logo.css` to `Logo.module.css` and refactor `client/src/components/common/logo/Logo.tsx`
+- [x] T004 [P] [US1] Rename `Button.css` to `Button.module.css` and refactor `client/src/components/common/button/Button.tsx`
+- [x] T005 [P] [US1] Rename `FloatingAlert.css` to `FloatingAlert.module.css` and refactor `client/src/components/common/floatingAlert/FloatingAlert.tsx`
+- [x] T006 [P] [US1] Rename `InfoTooltip.css` to `InfoTooltip.module.css` and refactor `client/src/components/common/infoTooltip/InfoTooltip.tsx`
+- [x] T007 [P] [US1] Rename `Logo.css` to `Logo.module.css` and refactor `client/src/components/common/logo/Logo.tsx`
 - [ ] T008 [US1] Manual visual verification of atomic components (check styles and global utility preservation)
 
 **Checkpoint**: Atomic components fully migrated and verified.

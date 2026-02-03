@@ -1,0 +1,10 @@
+/* src/components/common/logo/Logo.module.css */
+.logoLink {
+  display: inline-block;
+}
+
+.logoImage {
+  max-height: 60px; 
+  width: auto;
+  display: block;
+}

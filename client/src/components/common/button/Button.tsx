@@ -1,5 +1,5 @@
 import React from 'react';
-import './Button.css';
+import styles from './Button.module.css';
 import { Link } from 'react-router-dom';
 
 // We can define the different styles our button can have
@@ -27,7 +27,7 @@ export const Button: React.FC<ButtonProps> = ({
 	type = 'button', // <--- Default to 'button' to prevent accidental form submissions
 }) => {
 	// Combine the base class, the variant class, and any extra classes
-	const classes = `btn ${variant} ${className}`;
+	const classes = `${styles.btn} ${styles[variant]} ${className}`;
 
 	// If 'href' is provided, render a standard <a> tag
 	// This is perfect for external links.

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { Info } from 'lucide-react';
-import './InfoTooltip.css';
+import styles from './InfoTooltip.module.css';
 
 interface InfoTooltipProps {
 	message: string;
@@ -54,14 +54,14 @@ export const InfoTooltip: React.FC<InfoTooltipProps> = ({ message }) => {
 
 	return (
 		<div
-			className='info-tooltip-container'
+			className={styles.container}
 			onMouseEnter={showTooltip}
 			onMouseLeave={hideTooltip}
 		>
 			<button
 				ref={triggerRef}
 				type='button'
-				className='info-tooltip-trigger'
+				className={styles.trigger}
 				aria-label='Information'
 			>
 				<Info size={14} />
@@ -70,7 +70,7 @@ export const InfoTooltip: React.FC<InfoTooltipProps> = ({ message }) => {
 			{isVisible &&
 				createPortal(
 					<div
-						className='info-tooltip-content'
+						className={styles.content}
 						style={{
 							top: `${coords.top}px`,
 							left: `${coords.left}px`,
@@ -79,7 +79,7 @@ export const InfoTooltip: React.FC<InfoTooltipProps> = ({ message }) => {
 						onMouseEnter={showTooltip}
 						onMouseLeave={hideTooltip}
 					>
-						<p className='info-tooltip-message'>{message}</p>
+						<p className={styles.message}>{message}</p>
 					</div>,
 					document.body
 				)}
