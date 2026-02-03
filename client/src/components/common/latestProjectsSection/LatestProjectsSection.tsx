@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './LatestProjectsSection.css';
 import { ProjectCard } from '../projectCard/ProjectCard';
 import type { Project } from '../projectCard/ProjectCard';

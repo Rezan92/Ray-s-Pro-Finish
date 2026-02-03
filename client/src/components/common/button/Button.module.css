@@ -1,4 +1,4 @@
-/* src/components/common/button/Button.css */
+/* src/components/common/button/Button.module.css */
 
 /* Base styles for all buttons */
 .btn {
@@ -21,53 +21,53 @@
 /* --- Variant Styles --- */
 
 /* Primary (Orange) */
-.btn.primary {
+.primary {
   background-color: var(--color-primary);
   color: var(--color-text-inverted);
 }
 
-.btn.primary:hover {
+.primary:hover {
   background-color: var(--color-brand-dark);
   /* As per our README */
   color: var(--color-text-inverted);
 }
 
 /* Dark (Navy) */
-.btn.dark {
+.dark {
   background-color: var(--color-bg-btn-dark);
   color: var(--color-text-inverted);
 }
 
-.btn.dark:hover {
+.dark:hover {
   background-color: var(--color-primary);
   /* As per our README */
   color: var(--color-text-inverted);
 }
 
-.btn.light {
+.light {
   background-color: var(--color-bg-light);
   color: var(--color-text-primary);
 }
 
-.btn.light:hover {
+.light:hover {
   background-color: var(--color-bg-btn-dark);
   /* As per our README */
   color: var(--color-text-inverted);
 }
 
 /* Outline (New style from screenshot) */
-.btn.outline {
+.outline {
   background-color: transparent;
   color: var(--color-text-inverted);
-  border-color: rgba(255, 255, 255, 0.5);
-  /* Faded white border */
+  border-color: var(--color-white-50);
 }
 
-.btn.outline:hover {
+.outline:hover {
   background-color: var(--color-primary);
   color: var(--color-text-inverted);
   border-color: var(--color-primary);
 }
-.hero-button {
+
+.heroButton {
   margin: 0;
 }

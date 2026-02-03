@@ -1,6 +1,6 @@
 import React from 'react';
 import { X, AlertTriangle, CheckCircle, Info, AlertCircle } from 'lucide-react';
-import './FloatingAlert.css';
+import styles from './FloatingAlert.module.css';
 
 export type AlertType = 'info' | 'warning' | 'error' | 'success';
 
@@ -36,16 +36,16 @@ export const FloatingAlert: React.FC<FloatingAlertProps> = ({
 	};
 
 	return (
-		<div className={`floating-alert alert-${type}`}>
-			<div className='alert-content'>
-				<div className='alert-icon-wrapper'>{getIcon()}</div>
-				<div className='alert-text-wrapper'>
-					{title && <h4 className='alert-title'>{title}</h4>}
-					<p className='alert-message'>{message}</p>
+		<div className={`${styles.floatingAlert} ${styles[type]}`}>
+			<div className={styles.alertContent}>
+				<div className={styles.iconWrapper}>{getIcon()}</div>
+				<div className={styles.textWrapper}>
+					{title && <h4 className={styles.alertTitle}>{title}</h4>}
+					<p className={styles.alertMessage}>{message}</p>
 				</div>
 			</div>
 			<button
-				className='alert-close-btn'
+				className={styles.closeBtn}
 				onClick={onClose}
 				aria-label='Close'
 			>

@@ -12,6 +12,7 @@ export interface PaintingRoom {
 		trim: boolean;
 		doors: boolean;
 		crownMolding: boolean;
+		windows: boolean;
 	};
 	wallCondition: string; // 'Good', 'Fair', 'Poor'
 	colorChange: string; // 'Similar', 'Dark-to-Light'

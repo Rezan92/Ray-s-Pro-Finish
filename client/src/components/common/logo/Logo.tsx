@@ -1,13 +1,13 @@
 import logoImage from '@/assets/logo/Ray Drywall 1.png'; 
-import './Logo.css';
+import styles from './Logo.module.css';
 
 function Logo() {
   return (
-    <a href="/" className="logo-link">
+    <a href="/" className={styles.logoLink}>
       <img 
         src={logoImage} 
         alt="Ray Drywall Logo" 
-        className="logo-image" 
+        className={styles.logoImage} 
       />
     </a>
   )

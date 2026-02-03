@@ -1,5 +1,5 @@
 import React from 'react';
-import './Button.css';
+import styles from './Button.module.css';
 import { Link } from 'react-router-dom';
 
 // We can define the different styles our button can have
@@ -14,6 +14,9 @@ interface ButtonProps {
 	className?: string; // Allow passing extra classes
 	target?: string; // For opening in a new tab (e.g., _blank)
 	type?: 'submit' | 'button' | 'reset'; // <--- Ensure this is defined
+	disabled?: boolean;
+	style?: React.CSSProperties;
+	size?: string; // Accepted to satisfy interface but visually handled by classes if needed
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -25,9 +28,11 @@ export const Button: React.FC<ButtonProps> = ({
 	className = '',
 	target,
 	type = 'button', // <--- Default to 'button' to prevent accidental form submissions
+	disabled,
+	style,
 }) => {
 	// Combine the base class, the variant class, and any extra classes
-	const classes = `btn ${variant} ${className}`;
+	const classes = `${styles.btn} ${styles[variant]} ${className}`;
 
 	// If 'href' is provided, render a standard <a> tag
 	// This is perfect for external links.
@@ -38,6 +43,7 @@ export const Button: React.FC<ButtonProps> = ({
 				className={classes}
 				target={target}
 				rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+				style={style}
 			>
 				{children}
 			</a>
@@ -50,6 +56,7 @@ export const Button: React.FC<ButtonProps> = ({
 			<Link
 				to={to}
 				className={classes}
+				style={style}
 			>
 				{children}
 			</Link>
@@ -62,6 +69,8 @@ export const Button: React.FC<ButtonProps> = ({
 			type={type} // <--- CRITICAL FIX: Pass the type prop to the DOM element
 			onClick={onClick}
 			className={classes}
+			disabled={disabled}
+			style={style}
 		>
 			{children}
 		</button>

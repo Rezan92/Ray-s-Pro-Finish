@@ -1,12 +1,15 @@
 import React from 'react';
 import './ServiceModal.css'; // Import the new CSS
 import { X } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 // Define the shape of a Service
 export type Service = {
 	title: string;
 	image: string;
 	details: string[]; // An array of paragraphs for the description
+	icon: LucideIcon;
+	description: string;
 };
 
 type ServiceModalProps = {

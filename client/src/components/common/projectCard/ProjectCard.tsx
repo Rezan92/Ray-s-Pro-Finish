@@ -1,5 +1,5 @@
 import React from 'react';
-import './ProjectCard.css';
+import styles from './ProjectCard.module.css';
 import { MapPin } from 'lucide-react';
 
 // Define the shape of a project
@@ -22,18 +22,21 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   onClick,
 }) => {
   return (
-    <div className="project-card" onClick={onClick}>
-      <div className="project-card-image-wrapper">
+    <div className={styles.projectCard} onClick={onClick}>
+      <div className={styles.imageWrapper}>
         <img
           src={project.image}
           alt={project.title}
-          className="project-card-image"
+          className={styles.image}
         />
+        <div className={styles.plusOverlay}>
+          {/* You can add an icon here if needed, or rely on CSS/image */}
+        </div>
       </div>
-      <div className="project-card-content">
-        <span className="project-card-tag">{project.tag}</span>
-        <h3 className="project-card-title">{project.title}</h3>
-        <div className="project-card-location">
+      <div className={styles.content}>
+        <span className={styles.tag}>{project.tag}</span>
+        <h3 className={styles.title}>{project.title}</h3>
+        <div className={styles.location}>
           <MapPin size={16} />
           <span>{project.location}</span>
         </div>

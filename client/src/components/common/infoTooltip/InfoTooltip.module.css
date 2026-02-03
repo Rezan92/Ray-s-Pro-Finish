@@ -1,23 +1,25 @@
-.info-tooltip-container {
+/* src/components/common/infoTooltip/InfoTooltip.module.css */
+
+.container {
   display: inline-flex;
   align-items: center;
   margin-left: var(--space-xs);
 }
 
-.info-tooltip-message {
+.message {
   margin: 0;
 }
 
-.info-tooltip-trigger {
+.trigger {
   background: none;
   border: none;
-  color: var(--color-primary, #007bff);
+  color: var(--color-primary);
   cursor: help;
   padding: var(--space-xs);
   display: flex;
 }
 
-.info-tooltip-content {
+.content {
   transform: translate(-50%, -100%);
   width: 200px;
   background-color: var(--color-bg-secondary);
@@ -32,7 +34,7 @@
   margin-top: calc(-1 * var(--space-xs)); 
 }
 
-.info-tooltip-content::after {
+.content::after {
   content: '';
   position: absolute;
   top: 100%;
@@ -40,5 +42,5 @@
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: #222 transparent transparent transparent;
+  border-color: var(--color-bg-secondary) transparent transparent transparent;
 }
