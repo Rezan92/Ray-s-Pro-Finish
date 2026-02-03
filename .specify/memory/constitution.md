@@ -1,7 +1,7 @@
 <!-- Sync Impact Report
-- Version: 1.0.0 -> 1.1.0 (Minor)
+- Version: 1.1.0 -> 1.2.0 (Minor)
 - Changes:
-  - Principle I (Styling & Visual System): Added rule to suggest adding new variables to index.css for repeated values instead of hardcoding.
+  - Principle I (Styling & Visual System): Added explicit rule to preserve global utility classes as string literals when using CSS Modules.
 - Templates Status:
   - .specify/templates/plan-template.md: ✅ Compatible
   - .specify/templates/spec-template.md: ✅ Compatible
@@ -14,7 +14,7 @@ A high-performance, type-safe business platform for Ray Pro Finish.
 ## Core Principles
 
 ### I. Styling & Visual System
-**Variable-First:** All colors, spacing, and shadows must use CSS variables from `index.css`. Never hardcode HEX or RGB values in component styles. If a variable does not exist for a repeated color or value, you must suggest adding it to `index.css`. **Isolation:** Use CSS Modules exclusively for component-level styling. Filenames must be `[ComponentName].module.css`. **Responsive:** Every component must follow a "Mobile-First" approach.
+**Variable-First:** All colors, spacing, and shadows must use CSS variables from `index.css`. Never hardcode HEX or RGB values in component styles. If a variable does not exist for a repeated color or value, you must suggest adding it to `index.css`. **Isolation:** Use CSS Modules exclusively for component-level styling. Filenames must be `[ComponentName].module.css`. **Responsive:** Every component must follow a "Mobile-First" approach. **Mixed Usage:** When a component requires both isolated styles and global utilities (e.g. `dark` theme class), combine them: ``className={`${styles.componentClass} global-utility`}``.
 
 ### II. State & Data Logic
 **Modular Redux:** Slices must be feature-specific. The "Estimator" must be divided into sub-slices (painting, basement, etc.) to prevent a "God Slice." **Immutable Pricing:** Pricing logic and rates are prohibited from being hardcoded in components. They must be fetched from `masterRates.ts` or the server.
@@ -43,4 +43,4 @@ All Pull Requests and code reviews must verify compliance with these principles.
 - **Complexity** must be justified against these rules.
 - **Violations** block merging until resolved or explicitly exempted via a Constitution Amendment.
 
-**Version**: 1.1.0 | **Ratified**: 2026-02-03 | **Last Amended**: 2026-02-03
+**Version**: 1.2.0 | **Ratified**: 2026-02-03 | **Last Amended**: 2026-02-03
