@@ -1,8 +1,8 @@
 import styles from './FeatureCard.module.css';
-import { Icon } from 'lucide-react'; // Import the Icon type
+import type { LucideIcon } from 'lucide-react'; // Import the Icon type
 
 type FeatureCardProps = {
-  icon: typeof Icon; // Use the Icon type
+  icon: LucideIcon; // Use the Icon type
   title: string;
   description: string;
   variant: 'dark' | 'primary';

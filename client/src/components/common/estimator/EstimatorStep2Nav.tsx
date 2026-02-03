@@ -40,7 +40,7 @@ export const EstimatorStep2Nav: React.FC<EstimatorStep2NavProps> = ({
 	// 2. Add the dynamic rooms, indented
 	if (formData.services.painting && formData.painting.rooms.length > 0) {
 		formData.painting.rooms.forEach((room) => {
-			tasks.push({ id: room.id, label: room.name, isRoom: true });
+			tasks.push({ id: room.id, label: room.label, isRoom: true });
 		});
 	}
 

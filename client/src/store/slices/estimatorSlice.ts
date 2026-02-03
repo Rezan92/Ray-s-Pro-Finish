@@ -30,6 +30,7 @@ const createNewRoom = (
 			trim: false,
 			doors: false,
 			crownMolding: false,
+			windows: false,
 		},
 		wallCondition: 'Good',
 		colorChange: 'Similar',
@@ -250,7 +251,7 @@ export const estimatorSlice = createSlice({
 		updateNestedForm: (
 			state,
 			action: PayloadAction<{
-				path: 'patching' | 'installation' | 'garage' | 'basement';
+				path: 'patching' | 'installation' | 'garage' | 'basement' | 'painting';
 				field: string;
 				value: any;
 			}>

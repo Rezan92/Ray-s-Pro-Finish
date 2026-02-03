@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from './StatCard.module.css';
-import { Icon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 type StatCardProps = {
-  icon: Icon;
+  icon: LucideIcon;
   count: string; // Keep as string (e.g., "48,000")
   label: string;
   variant: 'primary' | 'light';
