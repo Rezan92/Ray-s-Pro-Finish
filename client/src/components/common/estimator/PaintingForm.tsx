@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { PaintingRoomCard } from './PaintingRoomCard';
 import type { FormData } from './EstimatorTypes';
+import styles from './styles/PaintingForm.module.css';
 
 // Define the props it will receive from EstimatorPage
 interface PaintingFormProps {
@@ -55,20 +56,20 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 	}, [painting.rooms]);
 
 	return (
-		<div className='service-form-box'>
-			<h3 className='service-form-title'>Interior Painting</h3>
+		<div className={styles.serviceFormBox}>
+			<h3 className={styles.serviceFormTitle}>Interior Painting</h3>
 
 			{/* --- A. The Room Builder --- */}
-			<div className='form-group-box'>
-				<div className='form-group'>
+			<div className={styles.formGroupBox}>
+				<div className={styles.formGroup}>
 					<label>Please add the spaces you'd like us to paint.</label>
-					<div className='checkbox-group two-column'>
+					<div className={styles.checkboxGroupTwoColumn}>
 						{ROOM_TYPES.map((type) => {
 							const isChecked = checkedTypes.get(type.key) || false;
 							return (
 								<label
 									key={type.key}
-									className='checkbox-label'
+									className={styles.checkboxLabel}
 								>
 									<input
 										type='checkbox'
@@ -110,8 +111,8 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 			})}
 
 			{/* --- C. Global Painting Questions --- */}
-			<div className='form-group-box global-questions'>
-				<div className='form-group'>
+			<div className={`${styles.formGroupBox} ${styles.globalQuestions}`}>
+				<div className={styles.formGroup}>
 					<label>Who will provide the paint?</label>
 					<select
 						name='paintProvider'
@@ -128,7 +129,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 						</option>
 					</select>
 				</div>
-				<div className='form-group'>
+				<div className={styles.formGroup}>
 					<label>What about furniture?</label>
 					<select
 						name='furniture'
@@ -148,7 +149,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 
 				{/* NEW Additional Details Section */}
 				<div
-					className='form-group'
+					className={styles.formGroup}
 					style={{ marginTop: '1rem' }}
 				>
 					<label>

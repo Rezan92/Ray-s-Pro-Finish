@@ -3,7 +3,7 @@ import type { FormData, RoomDetail } from './EstimatorTypes';
 import { Ruler, Layout, Hammer, Plus, Trash2 } from 'lucide-react';
 import { InfoTooltip } from '@/components/common/infoTooltip/InfoTooltip';
 import { FloatingAlert } from '@/components/common/floatingAlert/FloatingAlert';
-import './styles/BasementForm.css';
+import styles from './styles/BasementForm.module.css';
 
 interface BasementFormProps {
 	formData: FormData;
@@ -92,8 +92,8 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 	};
 
 	return (
-		<div className='service-form-box'>
-			<h3 className='service-form-title'>Basement Finishing</h3>
+		<div className={styles.serviceFormBox}>
+			<h3 className={styles.serviceFormTitle}>Basement Finishing</h3>
 
 			<FloatingAlert
 				isVisible={showScopeWarning}
@@ -104,13 +104,13 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 			/>
 
 			{/* SECTION 1: DIMENSIONS */}
-			<div className='basement-section'>
-				<h4 className='basement-section-title'>
+			<div className={styles.basementSection}>
+				<h4 className={styles.basementSectionTitle}>
 					<Ruler size={18} />
 					1. Dimensions & Condition
 				</h4>
-				<div className='basement-grid'>
-					<div className='form-group'>
+				<div className={styles.basementGrid}>
+					<div className={styles.formGroup}>
 						<label>Project Area (Sq Ft)</label>
 						<input
 							type='number'
@@ -121,7 +121,7 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 							min='0'
 						/>
 					</div>
-					<div className='form-group'>
+					<div className={styles.formGroup}>
 						<label>Ceiling Height</label>
 						<select
 							name='ceilingHeight'
@@ -133,7 +133,7 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 							<option value='High (9ft+)'>High (9ft+)</option>
 						</select>
 					</div>
-					<div className='form-group'>
+					<div className={styles.formGroup}>
 						<label>Current Condition</label>
 						<select
 							name='condition'
@@ -149,7 +149,7 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 							</option>
 						</select>
 					</div>
-					<div className='form-group'>
+					<div className={styles.formGroup}>
 						<label>Soffit / Ductwork Complexity</label>
 						<select
 							name='soffitWork'
@@ -165,23 +165,23 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 			</div>
 
 			{/* SECTION 2: ROOMS & LAYOUT */}
-			<div className='basement-section'>
-				<div className='basement-section-title'>
+			<div className={styles.basementSection}>
+				<div className={styles.basementSectionTitle}>
 					<Layout size={18} />
 					<span>2. Rooms & Layout</span>
 					<InfoTooltip message='Add rooms to calculate interior partition walls.' />
 				</div>
 
-				<div className='basement-grid'>
+				<div className={styles.basementGrid}>
 					{/* COLUMN 1: BEDROOMS */}
 					<div>
-						<div className='room-manager-header'>
-							<span className='room-manager-label'>
+						<div className={styles.roomManagerHeader}>
+							<span className={styles.roomManagerLabel}>
 								Bedrooms ({bedrooms.length}/5)
 							</span>
 							<button
 								type='button'
-								className='add-room-btn-small'
+								className={styles.addRoomBtnSmall}
 								onClick={() => addRoom('Bedroom')}
 								disabled={bedrooms.length >= 5}
 							>
@@ -192,11 +192,11 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 						{bedrooms.map((room, index) => (
 							<div
 								key={room.id}
-								className='room-item-row'
+								className={styles.roomItemRow}
 							>
-								<span className='room-item-label'>Bed {index + 1}</span>
+								<span className={styles.roomItemLabel}>Bed {index + 1}</span>
 								<select
-									className='room-select'
+									className={styles.roomSelect}
 									value={room.size}
 									onChange={(e) => updateRoom(room.id, 'size', e.target.value)}
 								>
@@ -206,8 +206,8 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 								</select>
 								<button
 									type='button'
-									className='remove-room-btn'
-									onClick={() => removeRoom(room.id)}
+									className={styles.removeRoomBtn}
+									onClick={() => removeRoom(id)}
 								>
 									<Trash2 size={16} />
 								</button>
@@ -222,14 +222,14 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 
 					{/* COLUMN 2: BATHROOMS */}
 					<div>
-						<div className='room-manager-header'>
-							<span className='room-manager-label'>
+						<div className={styles.roomManagerHeader}>
+							<span className={styles.roomManagerLabel}>
 								Bathrooms ({bathrooms.length}/2)
 								<InfoTooltip message='A half bath consists of a toilet and sink only. A full bath includes a toilet sink and shower.' />
 							</span>
 							<button
 								type='button'
-								className='add-room-btn-small'
+								className={styles.addRoomBtnSmall}
 								onClick={() => addRoom('Bathroom')}
 								disabled={bathrooms.length >= 2}
 							>
@@ -240,11 +240,11 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 						{bathrooms.map((room, index) => (
 							<div
 								key={room.id}
-								className='room-item-row'
+								className={styles.roomItemRow}
 							>
-								<span className='room-item-label'>Bath {index + 1}</span>
+								<span className={styles.roomItemLabel}>Bath {index + 1}</span>
 								<select
-									className='room-select'
+									className={styles.roomSelect}
 									value={room.bathType}
 									onChange={(e) =>
 										updateRoom(room.id, 'bathType', e.target.value)
@@ -255,8 +255,8 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 								</select>
 								<button
 									type='button'
-									className='remove-room-btn'
-									onClick={() => removeRoom(room.id)}
+									className={styles.removeRoomBtn}
+									onClick={() => removeRoom(id)}
 								>
 									<Trash2 size={16} />
 								</button>
@@ -270,7 +270,7 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 
 						{/* Wet Bar Toggle under Bathrooms */}
 						<div style={{ marginTop: '1.5rem' }}>
-							<div className='form-group'>
+							<div className={styles.formGroup}>
 								<label
 									style={{ fontSize: '0.9rem', fontWeight: 600, color: '#444' }}
 								>
@@ -298,14 +298,14 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 			</div>
 
 			{/* SECTION 3: SCOPE */}
-			<div className='basement-section'>
-				<h4 className='basement-section-title'>
+			<div className={styles.basementSection}>
+				<h4 className={styles.basementSectionTitle}>
 					<Hammer size={18} />
 					3. Scope of Work
 				</h4>
-				<div className='basement-grid'>
+				<div className={styles.basementGrid}>
 					{/* CEILING FINISH */}
-					<div className='form-group'>
+					<div className={styles.formGroup}>
 						<label>Ceiling Finish</label>
 						<select
 							value={basement.services?.ceilingFinish || 'Drywall'}
@@ -378,7 +378,7 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 					</div>
 
 					{/* MOISTURE PROTECTION WITH TOOLTIP */}
-					<div className='form-group'>
+					<div className={styles.formGroup}>
 						<div
 							style={{
 								display: 'flex',
@@ -407,11 +407,11 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 			</div>
 
 			{/* SECTION 4: NOTES */}
-			<div className='basement-section plain'>
-				<div className='form-group'>
+			<div className={`${styles.basementSection} ${styles.plain}`}>
+				<div className={styles.formGroup}>
 					<label>Additional Notes</label>
 					<textarea
-						className='basement-textarea'
+						className={styles.basementTextarea}
 						name='additionalDetails'
 						value={basement.additionalDetails || ''}
 						onChange={handleChange}

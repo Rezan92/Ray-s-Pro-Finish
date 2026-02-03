@@ -6,7 +6,7 @@ import type {
 } from '@/components/common/estimator/EstimatorTypes';
 import { InfoTooltip } from '@/components/common/infoTooltip/InfoTooltip';
 import { AlertCircle, Check, ChevronDown } from 'lucide-react';
-import './styles/GarageForm.css';
+import styles from './styles/GarageForm.module.css';
 
 interface GarageFormProps {
 	formData: FormData;
@@ -87,14 +87,14 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 	const showInsulationOption = isBare;
 
 	return (
-		<div className='service-form-box'>
-			<h3 className='service-form-title'>Garage Finishing</h3>
+		<div className={styles.serviceFormBox}>
+			<h3 className={styles.serviceFormTitle}>Garage Finishing</h3>
 
 			{/* SECTION 1: SPECS */}
-			<div className='garage-section'>
-				<h4 className='garage-section-title'>1. Dimensions & Specs</h4>
-				<div className='garage-grid'>
-					<div className='form-group'>
+			<div className={styles.garageSection}>
+				<h4 className={styles.garageSectionTitle}>1. Dimensions & Specs</h4>
+				<div className={styles.garageGrid}>
+					<div className={styles.formGroup}>
 						<label>Garage Size</label>
 						<select
 							name='size'
@@ -108,7 +108,7 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 							<option value='3-Car'>3-Car (32' x 24')</option>
 						</select>
 					</div>
-					<div className='form-group'>
+					<div className={styles.formGroup}>
 						<label>Ceiling Height</label>
 						<select
 							name='ceilingHeight'
@@ -124,10 +124,10 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 			</div>
 
 			{/* SECTION 2: CONDITION */}
-			<div className='garage-section'>
-				<h4 className='garage-section-title'>2. Current Condition</h4>
-				<div className='garage-grid'>
-					<div className='form-group'>
+			<div className={styles.garageSection}>
+				<h4 className={styles.garageSectionTitle}>2. Current Condition</h4>
+				<div className={styles.garageGrid}>
+					<div className={styles.formGroup}>
 						<label>Condition</label>
 						<select
 							name='condition'
@@ -140,7 +140,7 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 							<option value='Finished/Bare'>Finished/Painted (Repaint)</option>
 						</select>
 					</div>
-					<div className='form-group'>
+					<div className={styles.formGroup}>
 						<label
 							style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
 						>
@@ -161,13 +161,15 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 			</div>
 
 			{/* SECTION 3: SCOPE OF WORK */}
-			<div className='garage-section'>
-				<h4 className='garage-section-title'>3. Select Services</h4>
-				<div className='service-selection-list'>
+			<div className={styles.garageSection}>
+				<h4 className={styles.garageSectionTitle}>3. Select Services</h4>
+				<div className={styles.serviceSelectionList}>
 					{/* A. CEILING TOGGLE & INSULATION (Grouped) */}
-					<div className='garage-service-row-container'>
+					<div className={styles.garageServiceRowContainer}>
 						<div
-							className={`service-row ${garage.includeCeiling ? 'active' : ''}`}
+							className={`${styles.serviceRow} ${
+								garage.includeCeiling ? styles.active : ''
+							}`}
 							onClick={() =>
 								handleChange({
 									target: {
@@ -178,60 +180,60 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 								} as any)
 							}
 						>
-							<div className='service-row-header'>
-								<div className='checkbox-circle'>
+							<div className={styles.serviceRowHeader}>
+								<div className={styles.checkboxCircle}>
 									{garage.includeCeiling && <Check size={14} />}
 								</div>
-								<span className='service-name'>Include Ceiling</span>
+								<span className={styles.serviceName}>Include Ceiling</span>
 							</div>
 						</div>
 
 						{/* B. INSULATION */}
 						{showInsulationOption && (
 							<div
-								className={`service-row ${
-									safeServices.insulation ? 'active' : ''
+								className={`${styles.serviceRow} ${
+									safeServices.insulation ? styles.active : ''
 								}`}
 								onClick={() => handleServiceToggle('insulation')}
 							>
-								<div className='service-row-header'>
-									<div className='checkbox-circle'>
+								<div className={styles.serviceRowHeader}>
+									<div className={styles.checkboxCircle}>
 										{safeServices.insulation && <Check size={14} />}
 									</div>
 									<div>
-										<span className='service-name'>Install Insulation</span>
-										<span className='service-sub'>R-13 / R-19 Batts</span>
+										<span className={styles.serviceName}>Install Insulation</span>
+										<span className={styles.serviceSub}>R-13 / R-19 Batts</span>
 									</div>
 								</div>
 							</div>
 						)}
 					</div>
 
-					<div className='garage-service-row-container'>
+					<div className={styles.garageServiceRowContainer}>
 						{/* C. DRYWALL WORK */}
 						{showDrywallOption && (
 							<div
-								className={`service-row ${
-									safeServices.drywall ? 'active' : ''
+								className={`${styles.serviceRow} ${
+									safeServices.drywall ? styles.active : ''
 								}`}
 							>
 								<div
-									className='service-row-header'
+									className={styles.serviceRowHeader}
 									onClick={() => handleServiceToggle('drywall')}
 								>
-									<div className='checkbox-circle'>
+									<div className={styles.checkboxCircle}>
 										{safeServices.drywall && <Check size={14} />}
 									</div>
 									<div>
-										<span className='service-name'>{drywallTitle}</span>
-										<span className='service-sub'>{drywallSubtitle}</span>
+										<span className={styles.serviceName}>{drywallTitle}</span>
+										<span className={styles.serviceSub}>{drywallSubtitle}</span>
 									</div>
 								</div>
 
 								{safeServices.drywall && (
-									<div className='service-options'>
+									<div className={styles.serviceOptions}>
 										<label>Desired Finish Level:</label>
-										<div className='select-wrapper'>
+										<div className={styles.selectWrapper}>
 											<select
 												value={garage.drywallLevel || 'Level 2'}
 												onChange={(e) =>
@@ -258,7 +260,7 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 												</option>
 											</select>
 											<ChevronDown
-												className='select-icon'
+												className={styles.selectIcon}
 												size={16}
 											/>
 										</div>
@@ -269,25 +271,29 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 
 						{/* D. PAINTING */}
 						<div
-							className={`service-row ${safeServices.painting ? 'active' : ''}`}
+							className={`${styles.serviceRow} ${
+								safeServices.painting ? styles.active : ''
+							}`}
 						>
 							<div
-								className='service-row-header'
+								className={styles.serviceRowHeader}
 								onClick={() => handleServiceToggle('painting')}
 							>
-								<div className='checkbox-circle'>
+								<div className={styles.checkboxCircle}>
 									{safeServices.painting && <Check size={14} />}
 								</div>
 								<div>
-									<span className='service-name'>Prime & Paint</span>
-									<span className='service-sub'>Professional Spray/Roll</span>
+									<span className={styles.serviceName}>Prime & Paint</span>
+									<span className={styles.serviceSub}>
+										Professional Spray/Roll
+									</span>
 								</div>
 							</div>
 
 							{safeServices.painting && (
-								<div className='service-options'>
+								<div className={styles.serviceOptions}>
 									<label>Paint Package:</label>
-									<div className='select-wrapper'>
+									<div className={styles.selectWrapper}>
 										<select
 											value={garage.paintLevel || 'Standard'}
 											onChange={(e) =>
@@ -305,7 +311,7 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 											<option value='Premium'>Premium (Prime + 2 Coats)</option>
 										</select>
 										<ChevronDown
-											className='select-icon'
+											className={styles.selectIcon}
 											size={16}
 										/>
 									</div>
@@ -317,22 +323,22 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 			</div>
 
 			{/* SECTION 4: DETAILS */}
-			<div className='garage-section plain'>
-				<div className='form-group'>
-					<div className='garage-details-header'>
+			<div className={`${styles.garageSection} ${styles.plain}`}>
+				<div className={styles.formGroup}>
+					<div className={styles.garageDetailsHeader}>
 						<label>Additional Notes</label>
-						<span className='char-count'>
+						<span className={styles.garageCharCount}>
 							{((garage as any).additionalDetails || '').length}/600
 						</span>
 					</div>
-					<div className='garage-helper-text'>
+					<div className={styles.garageHelperText}>
 						<AlertCircle size={16} />
 						<span>
 							Example: "Need attic access door" or "Exposed pipes on North wall"
 						</span>
 					</div>
 					<textarea
-						className='garage-textarea'
+						className={styles.garageTextarea}
 						name='additionalDetails'
 						value={(garage as any).additionalDetails || ''}
 						onChange={handleChange}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/common/button/Button';
 import type { Estimate } from './EstimatorTypes';
+import styles from './styles/EstimatorStep3.module.css';
 
 interface EstimatorStep3Props {
 	estimation: Estimate | null;
@@ -16,36 +17,24 @@ export const EstimatorStep3: React.FC<EstimatorStep3Props> = ({
 	onBack,
 }) => {
 	return (
-		<div className='estimator-step result-step'>
-			<h2 className='estimator-title'>Your Preliminary Estimate</h2>
+		<div className={`${styles.estimatorStep} ${styles.resultStep}`}>
+			<h2 className={styles.estimatorTitle}>Your Preliminary Estimate</h2>
 
 			{isLoading && (
-				<div className='loading-spinner'>Calculating your estimate...</div>
+				<div className={styles.loadingSpinner}>Calculating your estimate...</div>
 			)}
 
-			{error && <div className='estimator-error'>{error}</div>}
+			{error && <div className={styles.estimatorError}>{error}</div>}
 
 			{estimation && (
-				<div className='estimation-result'>
-					<div className='estimate-display'>
+				<div className={styles.estimationResult}>
+					<div className={styles.estimateDisplay}>
 						${estimation.low} - ${estimation.high}
 					</div>
 
 					{/* CUSTOMER VIEW: Professional AI Message */}
 					{!estimation.isAdmin && estimation.customerSummary && (
-						<div
-							className='customer-summary'
-							style={{
-								textAlign: 'left',
-								margin: '2rem 0',
-								whiteSpace: 'pre-wrap',
-								lineHeight: '1.6',
-								background: '#fcfcfc',
-								padding: '20px',
-								borderRadius: '8px',
-								border: '1px solid #eee',
-							}}
-						>
+						<div className={styles.customerSummary}>
 							{estimation.customerSummary}
 						</div>
 					)}
@@ -53,94 +42,57 @@ export const EstimatorStep3: React.FC<EstimatorStep3Props> = ({
 					{/* ADMIN VIEW: Show Technical Table */}
 
 					{estimation.isAdmin && estimation.breakdownItems && (
-						<div
-							className='breakdown-container'
-							style={{ margin: '2rem 0', overflowX: 'auto' }}
-						>
-							<table
-								className='breakdown-table'
-								style={{
-									width: '100%',
-									borderCollapse: 'collapse',
-									textAlign: 'left',
-								}}
-							>
+						<div className={styles.breakdownContainer}>
+							<table className={styles.breakdownTable}>
 								<thead>
-									<tr style={{ borderBottom: '2px solid #eee' }}>
-										<th style={{ padding: '10px' }}>Item / Surface</th>
-										<th style={{ padding: '10px' }}>Price</th>
-										<th style={{ padding: '10px' }}>Time</th>
-										<th style={{ padding: '10px' }}>Details</th>
+									<tr>
+										<th>Item / Surface</th>
+										<th>Price</th>
+										<th>Time</th>
+										<th>Details</th>
 									</tr>
 								</thead>
 								<tbody>
 									{estimation.breakdownItems.map((item, index) => (
-										<tr
-											key={index}
-											style={{ borderBottom: '1px solid #f9f9f9' }}
-										>
-											<td style={{ padding: '10px', fontWeight: '500' }}>
-												{item.name}
-											</td>
-											<td style={{ padding: '10px' }}>
+										<tr key={index}>
+											<td className={styles.tableItemName}>{item.name}</td>
+											<td>
 												{item.cost > 0 ? `$${Math.round(item.cost)}` : '--'}
 											</td>
-											<td style={{ padding: '10px' }}>
+											<td>
 												{/* FIX: Default to 0 if undefined to prevent crash */}
 												{(item.hours || 0).toFixed(1)} hrs
 											</td>
-											<td
-												style={{
-													padding: '10px',
-													fontSize: '0.85rem',
-													color: '#666',
-												}}
-											>
-												{item.details}
-											</td>
+											<td className={styles.tableItemDetails}>{item.details}</td>
 										</tr>
 									))}
 								</tbody>
 								<tfoot>
-									<tr
-										style={{ backgroundColor: '#f8f9fa', fontWeight: 'bold' }}
-									>
-										<td style={{ padding: '10px' }}>Total Project</td>
-										<td style={{ padding: '10px' }}>
-											${Math.round(estimation.low)}*
-										</td>
-										<td style={{ padding: '10px' }}>
+									<tr className={styles.tableFooter}>
+										<td>Total Project</td>
+										<td>${Math.round(estimation.low)}*</td>
+										<td>
 											{/* FIX: Default to 0 if undefined to prevent crash */}
 											{(estimation.totalHours || 0).toFixed(1)} hrs
 										</td>
-										<td style={{ padding: '10px' }}></td>
+										<td></td>
 									</tr>
 								</tfoot>
 							</table>
 						</div>
 					)}
 
-					<p
-						className='estimator-disclaimer'
-						style={{ fontStyle: 'italic', marginTop: '1rem' }}
-					>
+					<p className={styles.estimatorDisclaimer}>
 						*Prices shown are estimates based on standard assumptions. The final
 						price will be confirmed after a free, on-site inspection.
 					</p>
 
-					<div
-						style={{
-							marginTop: '2rem',
-							display: 'flex',
-							gap: '1rem',
-							justifyContent: 'center',
-						}}
-					>
+					<div className={styles.actionsContainer}>
 						<Button
 							type='button'
 							variant='dark'
 							onClick={onBack}
-							className='result-back-btn'
+							className={styles.resultBackBtn}
 						>
 							Go Back & Edit
 						</Button>

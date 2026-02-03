@@ -1,0 +1,144 @@
+/* src/components/common/estimator/styles/EstimatorStep3.module.css */
+
+.estimatorStep {
+  padding: var(--space-xl);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  margin-bottom: var(--space-xl);
+}
+
+.resultStep {
+  text-align: center;
+}
+
+.estimatorTitle {
+  font-family: var(--font-family-heading);
+  font-size: 2rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-brand-dark);
+  text-align: center;
+  margin-bottom: var(--space-sm);
+}
+
+.loadingSpinner {
+  font-size: 1.25rem;
+  color: var(--color-text-secondary);
+  padding: var(--space-xxxl) 0;
+}
+
+.estimatorError {
+  background-color: rgba(217, 48, 37, 0.1);
+  border: 1px solid var(--color-error);
+  color: var(--color-error);
+  padding: var(--space-md);
+  border-radius: var(--border-radius-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.estimationResult {
+  background-color: var(--color-bg-light);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-xl);
+}
+
+.estimateDisplay {
+  font-family: var(--font-family-heading);
+  font-size: 3rem;
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-primary);
+  margin-bottom: var(--space-md);
+}
+
+.customerSummary {
+  text-align: left;
+  margin: 2rem 0;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  background: #fcfcfc;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.breakdownContainer {
+  margin: 2rem 0;
+  overflow-x: auto;
+}
+
+.breakdownTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.breakdownTable thead tr {
+  border-bottom: 2px solid #eee;
+}
+
+.breakdownTable th {
+  padding: 10px;
+}
+
+.breakdownTable tbody tr {
+  border-bottom: 1px solid #f9f9f9;
+}
+
+.breakdownTable td {
+  padding: 10px;
+}
+
+.tableItemName {
+  font-weight: 500;
+}
+
+.tableItemDetails {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.tableFooter {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+
+.estimatorDisclaimer {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xl);
+  font-style: italic;
+  margin-top: 1rem;
+}
+
+.actionsContainer {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.resultBackBtn {
+  background: none;
+  color: var(--color-text-secondary);
+}
+
+.resultBackBtn:hover {
+  background: none;
+  color: var(--color-brand-dark);
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .estimatorStep {
+    padding: 0;
+  }
+  
+  .estimatorTitle {
+    font-size: 1.75rem;
+  }
+
+  .estimateDisplay {
+    font-size: 2.5rem;
+  }
+}

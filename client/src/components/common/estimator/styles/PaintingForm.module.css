@@ -1,0 +1,118 @@
+/* src/components/common/estimator/styles/PaintingForm.module.css */
+
+.paintingFormContainer {
+  /* ... */
+}
+
+/* --- Shared Form Styles (Copied for Isolation) --- */
+.serviceFormBox {
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-md);
+	padding: var(--space-lg);
+	margin-top: var(--space-lg);
+}
+
+.serviceFormTitle {
+	font-size: 1.5rem;
+	font-weight: var(--font-weight-bold);
+	color: var(--color-primary);
+	margin-bottom: var(--space-lg);
+	padding-bottom: var(--space-md);
+	border-bottom: 2px solid var(--color-primary);
+}
+
+.formGroupBox {
+  background-color: var(--color-bg-light);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+.formGroup {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-sm);
+}
+
+.formGroup label {
+	font-family: var(--font-family-heading);
+	font-size: 1rem;
+	font-weight: var(--font-weight-bold);
+	color: var(--color-brand-dark);
+}
+
+.formGroup select,
+.formGroup textarea,
+.formGroup input[type='text'],
+.formGroup input[type='number'] {
+	font-family: var(--font-family-body);
+	font-size: 1rem;
+	padding: var(--space-md);
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-sm);
+	background-color: #fff;
+	transition: border-color 0.3s ease;
+	width: 100%;
+}
+
+.formGroup select:focus,
+.formGroup textarea:focus,
+.formGroup input[type='text']:focus,
+.formGroup input[type='number']:focus {
+	outline: none;
+	border-color: var(--color-primary);
+	box-shadow: 0 0 0 2px rgba(241, 90, 36, 0.2);
+}
+
+.checkboxGroupTwoColumn {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: var(--space-md);
+  background-color: var(--color-bg-light);
+  padding: var(--space-sm);
+  border-radius: var(--border-radius-sm);
+}
+
+.checkboxLabel {
+	display: flex;
+	align-items: center;
+	gap: var(--space-sm);
+	font-family: var(--font-family-body);
+	font-size: 1rem;
+	color: var(--color-text-primary);
+	cursor: pointer;
+}
+
+.checkboxLabel input {
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	border: 2px solid var(--color-border);
+	border-radius: var(--border-radius-sm);
+	cursor: pointer;
+	position: relative;
+	top: -1px;
+}
+
+.checkboxLabel input:checked {
+	background-color: var(--color-primary);
+	border-color: var(--color-primary);
+}
+
+.checkboxLabel input:checked::after {
+	content: '✔';
+	color: white;
+	font-size: 14px;
+	font-weight: bold;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.globalQuestions {
+	margin-top: var(--space-xl);
+	border-top: 2px solid var(--color-primary);
+}

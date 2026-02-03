@@ -1,0 +1,208 @@
+/* Container for the whole repair service section */
+.repairServiceContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* --- Shared Form Styles (Copied for Isolation) --- */
+.serviceFormBox {
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-md);
+	padding: var(--space-lg);
+	margin-top: var(--space-lg);
+}
+
+.serviceFormTitle {
+	font-size: 1.5rem;
+	font-weight: var(--font-weight-bold);
+	color: var(--color-primary);
+	margin-bottom: var(--space-lg);
+	padding-bottom: var(--space-md);
+	border-bottom: 2px solid var(--color-primary);
+}
+
+.formGroupBox {
+  background-color: var(--color-bg-light);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+.formGroup {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-sm);
+}
+
+.formGroupGrid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: var(--space-lg);
+}
+
+.formGroup label {
+	font-family: var(--font-family-heading);
+	font-size: 1rem;
+	font-weight: var(--font-weight-bold);
+	color: var(--color-brand-dark);
+}
+
+.formGroup select,
+.formGroup textarea,
+.formGroup input[type='text'],
+.formGroup input[type='number'] {
+	font-family: var(--font-family-body);
+	font-size: 1rem;
+	padding: var(--space-md);
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-sm);
+	background-color: #fff;
+	transition: border-color 0.3s ease;
+	width: 100%;
+}
+
+.formGroup select:focus,
+.formGroup textarea:focus,
+.formGroup input[type='text']:focus,
+.formGroup input[type='number']:focus {
+	outline: none;
+	border-color: var(--color-primary);
+	box-shadow: 0 0 0 2px rgba(241, 90, 36, 0.2);
+}
+
+.formHintText {
+	font-size: 0.875rem;
+	color: var(--color-text-secondary);
+	margin: 0;
+}
+
+.roomDetailsTitle {
+	font-size: 1.125rem;
+	font-weight: bold;
+	color: var(--color-brand-dark);
+	margin-bottom: var(--space-md);
+}
+
+.addedRepairsList {
+    margin-top: 1rem;
+}
+
+.flexHeaderBetween {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.btnRemove {
+	background: none;
+	border: none;
+	color: var(--color-error);
+	font-family: var(--font-family-body);
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	gap: var(--space-xs);
+	cursor: pointer;
+	padding: var(--space-xs);
+}
+
+/* Modal Overlay - Centered in middle of screen */
+.rfModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+/* Modal Content Box */
+.rfModalContent {
+  background-color: #ffffff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 1200px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Modal Inputs Styling (Must be explicit inside modal if not global) */
+.rfModalContent input,
+.rfModalContent select {
+	font-family: var(--font-family-body);
+	font-size: 1rem;
+	padding: var(--space-md);
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-sm);
+	background-color: #fff;
+	transition: border-color 0.3s ease;
+	width: 100%;
+}
+
+.rfModalContent input:focus,
+.rfModalContent select:focus {
+	outline: none;
+	border-color: var(--color-primary);
+}
+
+/* Close button in top right of modal */
+.rfModalClose {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #999999;
+  transition: color 0.2s;
+}
+
+.rfModalClose:hover {
+  color: var(--color-primary);
+}
+
+/* Repair list items */
+.rfAddedRepairItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.rfRepairInfo strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.rfRepairMeta {
+  font-size: 0.85rem;
+  color: #666666;
+}
+
+.rfActionGroup {
+  display: flex;
+  gap: 12px;
+}
+
+/* Empty list state */
+.rfEmptyList {
+  padding: 2rem;
+  text-align: center;
+  border: 2px dashed #eeeeee;
+  border-radius: 8px;
+  color: #999999;
+}
