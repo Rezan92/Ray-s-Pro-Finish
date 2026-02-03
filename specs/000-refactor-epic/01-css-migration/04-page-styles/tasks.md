@@ -13,8 +13,8 @@ description: "Task list for migrating Page-Level Styles to CSS Modules"
 
 **Purpose**: Verify environment readiness
 
-- [ ] T001 Verify project builds successfully before Page changes
-- [ ] T002 Identify all hardcoded colors in Page CSS files and map to `index.css` variables
+- [x] T001 Verify project builds successfully before Page changes
+- [x] T002 Identify all hardcoded colors in Page CSS files and map to `index.css` variables
 
 **Checkpoint**: Variable mapping ready
 
@@ -24,11 +24,11 @@ description: "Task list for migrating Page-Level Styles to CSS Modules"
 
 **Goal**: Isolate About, Contact, Services, and Projects pages.
 
-- [ ] T003 [P] [US1] Rename `pages/aboutPage/AboutPage.css` to `AboutPage.module.css` and refactor `AboutPage.tsx`
-- [ ] T004 [P] [US1] Rename `pages/contact/ContactPage.css` to `ContactPage.module.css` and refactor `ContactPage.tsx`
-- [ ] T005 [P] [US1] Rename `pages/services/ServicesPage.css` to `ServicesPage.module.css` and refactor `ServicesPage.tsx`
-- [ ] T006 [P] [US1] Rename `pages/projects/ProjectsPage.css` to `ProjectsPage.module.css` and refactor `ProjectsPage.tsx`
-- [ ] T007 [US1] Manual visual verification of Static Pages (layout, container widths)
+- [x] T003 [P] [US1] Rename `pages/aboutPage/AboutPage.css` to `AboutPage.module.css` and refactor `AboutPage.tsx`
+- [x] T004 [P] [US1] Rename `pages/contact/ContactPage.css` to `ContactPage.module.css` and refactor `ContactPage.tsx`
+- [x] T005 [P] [US1] Rename `pages/services/ServicesPage.css` to `ServicesPage.module.css` and refactor `ServicesPage.tsx`
+- [x] T006 [P] [US1] Rename `pages/projects/ProjectsPage.css` to `ProjectsPage.module.css` and refactor `ProjectsPage.tsx`
+- [x] T007 [US1] Manual visual verification of Static Pages (layout, container widths)
 
 **Checkpoint**: Static pages fully migrated.
 
@@ -38,9 +38,9 @@ description: "Task list for migrating Page-Level Styles to CSS Modules"
 
 **Goal**: Isolate Estimator page wrapper.
 
-- [ ] T008 [US2] Rename `pages/estimatorPage/EstimatorPage.css` to `EstimatorPage.module.css` and refactor `EstimatorPage.tsx`
-- [ ] T009 [US2] Ensure all wizard step styles (e.g. progress bar) are correctly scoped or moved to sub-component modules if not already done.
-- [ ] T010 [US2] Manual visual verification of Estimator Page wrapper
+- [x] T008 [US2] Rename `pages/estimatorPage/EstimatorPage.css` to `EstimatorPage.module.css` and refactor `EstimatorPage.tsx`
+- [x] T009 [US2] Ensure all wizard step styles (e.g. progress bar) are correctly scoped or moved to sub-component modules if not already done.
+- [x] T010 [US2] Manual visual verification of Estimator Page wrapper
 
 **Checkpoint**: Estimator wrapper fully migrated.
 
@@ -50,8 +50,8 @@ description: "Task list for migrating Page-Level Styles to CSS Modules"
 
 **Purpose**: Final verification
 
-- [ ] T011 Verify application build success (SC-003)
-- [ ] T012 Verify zero visual regressions across all top-level pages (SC-002)
+- [x] T011 Verify application build success (SC-003)
+- [x] T012 Verify zero visual regressions across all top-level pages (SC-002)
 
 ---
 

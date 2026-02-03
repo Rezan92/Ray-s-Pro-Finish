@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { PageHeader } from '@/components/common/pageHeader/PageHeader';
 import { Button } from '@/components/common/button/Button';
-import './EstimatorPage.css';
+import styles from './EstimatorPage.module.css';
 
 // Redux Hooks
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -31,7 +31,7 @@ const EstimatorProgressBar: React.FC<{ currentStep: number }> = ({
 }) => {
 	const steps = ['Services', 'Details', 'Contact', 'Estimate'];
 	return (
-		<div className='estimator-progress-bar'>
+		<div className={styles.estimatorProgressBar}>
 			{steps.map((label, index) => {
 				const stepNum = index + 1;
 				let status = '';
@@ -40,7 +40,7 @@ const EstimatorProgressBar: React.FC<{ currentStep: number }> = ({
 				return (
 					<div
 						key={label}
-						className={`step-item ${status}`}
+						className={`${styles.stepItem} ${styles[status]}`}
 					>
 						{label}
 					</div>
@@ -53,14 +53,14 @@ const EstimatorProgressBar: React.FC<{ currentStep: number }> = ({
 const EstimatorStepContact: React.FC<{ contact: any }> = ({ contact }) => {
 	const dispatch = useAppDispatch();
 	return (
-		<div className='estimator-step'>
-			<h2 className='estimator-title'>Your Information</h2>
-			<p className='estimator-subtitle'>
+		<div className={styles.estimatorStep}>
+			<h2 className={styles.estimatorTitle}>Your Information</h2>
+			<p className={styles.estimatorSubtitle}>
 				One last step. Please provide your contact info to see your instant
 				estimate.
 			</p>
-			<div className='form-group-grid'>
-				<div className='form-group'>
+			<div className={styles.formGroupGrid}>
+				<div className={styles.formGroup}>
 					<label htmlFor='name'>Full Name*</label>
 					<input
 						type='text'
@@ -73,7 +73,7 @@ const EstimatorStepContact: React.FC<{ contact: any }> = ({ contact }) => {
 						}
 					/>
 				</div>
-				<div className='form-group'>
+				<div className={styles.formGroup}>
 					<label htmlFor='email'>Email*</label>
 					<input
 						type='email'
@@ -87,7 +87,7 @@ const EstimatorStepContact: React.FC<{ contact: any }> = ({ contact }) => {
 					/>
 				</div>
 			</div>
-			<div className='form-group'>
+			<div className={styles.formGroup}>
 				<label htmlFor='phone'>Phone</label>
 				<input
 					type='tel'
@@ -99,7 +99,7 @@ const EstimatorStepContact: React.FC<{ contact: any }> = ({ contact }) => {
 					}
 				/>
 			</div>
-			<p className='form-hint'>
+			<p className={styles.formHint}>
 				We'll use this to email you a copy of your estimate.
 			</p>
 		</div>
@@ -136,9 +136,9 @@ const EstimatorPage = () => {
 	const isStep1Complete = Object.values(formData.services).some(Boolean);
 
 	return (
-		<div className='estimator-page-wrapper'>
+		<div className={styles.estimatorPageWrapper}>
 			<PageHeader title='Instant Estimator' />
-			<div className='estimator-container'>
+			<div className={styles.estimatorContainer}>
 				<EstimatorProgressBar currentStep={step} />
 
 				<form onSubmit={handleSubmit}>
@@ -149,12 +149,12 @@ const EstimatorPage = () => {
 								handleServiceChange={handleServiceChange}
 							/>
 							{isStep1Complete && (
-								<div className='estimator-actions'>
+								<div className={styles.estimatorActions}>
 									<Button
 										type='button'
 										variant='primary'
 										onClick={handleNext}
-										className='estimator-submit-btn'
+										className={styles.estimatorSubmitBtn}
 									>
 										Next: Project Details
 									</Button>
@@ -187,12 +187,12 @@ const EstimatorPage = () => {
 								onUpdateRepair={(repair) => dispatch(updateRepair(repair))}
 								onRemoveRepair={(id) => dispatch(removeRepair(id))}
 							/>
-							<div className='estimator-actions space-between'>
+							<div className={`${styles.estimatorActions} ${styles.spaceBetween}`}>
 								<Button
 									type='button'
 									variant='dark'
 									onClick={handleBack}
-									className='result-back-btn'
+									className={styles.resultBackBtn}
 								>
 									Back
 								</Button>
@@ -210,12 +210,12 @@ const EstimatorPage = () => {
 					{step === 3 && (
 						<>
 							<EstimatorStepContact contact={formData.contact} />
-							<div className='estimator-actions space-between'>
+							<div className={`${styles.estimatorActions} ${styles.spaceBetween}`}>
 								<Button
 									type='button'
 									variant='dark'
 									onClick={handleBack}
-									className='result-back-btn'
+									className={styles.resultBackBtn}
 								>
 									Back
 								</Button>
