@@ -5,6 +5,7 @@ import { RepairForm } from './RepairForm';
 import { InstallationForm } from './InstallationForm';
 import { GarageForm } from './GarageForm';
 import { BasementForm } from './BasementForm';
+import styles from './styles/EstimatorStep2.module.css';
 
 interface EstimatorStep2Props {
 	formData: FormData;
@@ -33,9 +34,9 @@ export const EstimatorStep2: React.FC<EstimatorStep2Props> = (props) => {
 	const { services } = formData;
 
 	return (
-		<div className='estimator-step'>
-			<h2 className='estimator-title'>Project Details</h2>
-			<p className='estimator-subtitle'>
+		<div className={styles.estimatorStep}>
+			<h2 className={styles.estimatorTitle}>Project Details</h2>
+			<p className={styles.estimatorSubtitle}>
 				Please provide as much detail as possible for each service you selected.
 			</p>
 

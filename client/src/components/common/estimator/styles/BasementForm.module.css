@@ -1,4 +1,4 @@
-.basement-section {
+.basementSection {
   background-color: #f9f9fc;
   padding: 1.5rem;
   border-radius: 6px;
@@ -6,13 +6,13 @@
   margin-bottom: 1.5rem;
 }
 
-.basement-section.plain {
+.basementSection.plain {
   background-color: transparent;
   border: none;
   padding: 0;
 }
 
-.basement-section-title {
+.basementSectionTitle {
   font-size: 0.95rem;
   font-weight: 600;
   color: #666;
@@ -24,13 +24,13 @@
   gap: 8px;
 }
 
-.basement-grid {
+.basementGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
 }
 
-.room-manager-header {
+.roomManagerHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -39,13 +39,13 @@
   padding-bottom: 8px;
 }
 
-.room-manager-label {
+.roomManagerLabel {
   font-size: 0.9rem;
   font-weight: 600;
   color: #444;
 }
 
-.add-room-btn-small {
+.addRoomBtnSmall {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -60,18 +60,18 @@
   transition: all 0.2s;
 }
 
-.add-room-btn-small:hover {
+.addRoomBtnSmall:hover {
   background: #e6f7ff;
   border-color: #b8daff;
 }
 
-.add-room-btn-small:disabled {
+.addRoomBtnSmall:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   filter: grayscale(1);
 }
 
-.room-item-row {
+.roomItemRow {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -82,14 +82,14 @@
   border-radius: 4px;
 }
 
-.room-item-label {
+.roomItemLabel {
   font-size: 0.85rem;
   font-weight: 500;
   color: #555;
   min-width: 70px;
 }
 
-.room-select {
+.roomSelect {
   flex: 1;
   padding: 6px;
   border: 1px solid #ddd;
@@ -97,8 +97,8 @@
   font-size: 0.9rem;
 }
 
-.remove-room-btn {
-  color: #ff4d4f;
+.removeRoomBtn {
+  color: var(--color-error);
   background: none;
   border: none;
   cursor: pointer;
@@ -109,17 +109,11 @@
   transition: opacity 0.2s;
 }
 
-.remove-room-btn:hover {
+.removeRoomBtn:hover {
   opacity: 1;
 }
 
-@media (max-width: 768px) {
-  .basement-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.basement-helper-text {
+.basementHelperText {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -128,11 +122,70 @@
   margin-bottom: 0.5rem;
 }
 
-.basement-textarea {
+.basementTextarea {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid #ddd;
   border-radius: 4px;
   resize: vertical;
   font-family: inherit;
+}
+
+@media (max-width: 768px) {
+  .basementGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Shared Form Styles (Copied for Isolation) --- */
+.serviceFormBox {
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-md);
+	padding: var(--space-lg);
+	margin-top: var(--space-lg);
+}
+
+.serviceFormTitle {
+	font-size: 1.5rem;
+	font-weight: var(--font-weight-bold);
+	color: var(--color-primary);
+	margin-bottom: var(--space-lg);
+	padding-bottom: var(--space-md);
+	border-bottom: 2px solid var(--color-primary);
+}
+
+.formGroup {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-sm);
+}
+
+.formGroup label {
+	font-family: var(--font-family-heading);
+	font-size: 1rem;
+	font-weight: var(--font-weight-bold);
+	color: var(--color-brand-dark);
+}
+
+.formGroup select,
+.formGroup textarea,
+.formGroup input[type='text'],
+.formGroup input[type='number'] {
+	font-family: var(--font-family-body);
+	font-size: 1rem;
+	padding: var(--space-md);
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-sm);
+	background-color: #fff;
+	transition: border-color 0.3s ease;
+	width: 100%;
+}
+
+.formGroup select:focus,
+.formGroup textarea:focus,
+.formGroup input[type='text']:focus,
+.formGroup input[type='number']:focus {
+	outline: none;
+	border-color: var(--color-primary);
+	box-shadow: 0 0 0 2px rgba(241, 90, 36, 0.2);
 }

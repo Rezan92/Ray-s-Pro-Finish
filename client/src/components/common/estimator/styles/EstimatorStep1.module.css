@@ -1,0 +1,100 @@
+/* src/components/common/estimator/styles/EstimatorStep1.module.css */
+
+.estimatorStep {
+  padding: var(--space-xl);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  margin-bottom: var(--space-xl);
+}
+
+.estimatorTitle {
+  font-family: var(--font-family-heading);
+  font-size: 2rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-brand-dark);
+  text-align: center;
+  margin-bottom: var(--space-sm);
+}
+
+.estimatorSubtitle {
+  font-family: var(--font-family-body);
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin-bottom: var(--space-xxl);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.checkboxGroup {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: var(--space-sm);
+  background-color: var(--color-bg-light);
+  padding: var(--space-sm);
+  border-radius: var(--border-radius-sm);
+}
+
+.checkboxLabelLarge {
+  font-family: var(--font-family-heading);
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-brand-dark);
+  background-color: var(--color-bg-light);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-lg);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.checkboxLabelLarge:hover {
+  border-color: var(--color-primary);
+}
+
+.checkboxLabelLarge input {
+  width: 24px;
+  height: 24px;
+  appearance: none;
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  position: relative;
+  top: -1px;
+}
+
+.checkboxLabelLarge input:checked {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.checkboxLabelLarge input:checked::after {
+  content: '✔';
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media (max-width: 768px) {
+  .estimatorStep {
+    padding: 0;
+  }
+  
+  .estimatorTitle {
+    font-size: 1.75rem;
+  }
+}

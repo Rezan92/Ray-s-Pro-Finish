@@ -3,7 +3,7 @@ import type { FormData, RepairItem } from './EstimatorTypes';
 import { Plus, Trash2, AlertCircle, X, Edit2 } from 'lucide-react';
 import { Button } from '@/components/common/button/Button';
 import { InfoTooltip } from '@/components/common/infoTooltip/InfoTooltip';
-import './styles/RepairForm.css'; // Scoped styles for the repair module
+import styles from './styles/RepairForm.module.css';
 
 interface RepairFormProps {
 	formData: FormData;
@@ -147,30 +147,22 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 	const showPaintOptions = newRepair.scope.includes('Paint');
 
 	return (
-		<div className='service-form-box repair-service-container'>
-			<h3 className='service-form-title'>Drywall Repair & Patching</h3>
+		<div className={`${styles.serviceFormBox} ${styles.repairServiceContainer}`}>
+			<h3 className={styles.serviceFormTitle}>Drywall Repair & Patching</h3>
 
 			{/* Instruction Box */}
-			<div className='form-group-box'>
-				<p className='form-hint-text'>
+			<div className={styles.formGroupBox}>
+				<p className={styles.formHintText}>
 					Add specific repairs to your list. For minor surface dings, use the
 					description box below.
 				</p>
 			</div>
 
 			{/* List of Added Repairs */}
-			<div className='added-repairs-list'>
-				<div
-					className='flex-header-between'
-					style={{
-						display: 'flex',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-						marginBottom: '1rem',
-					}}
-				>
+			<div className={styles.addedRepairsList}>
+				<div className={styles.flexHeaderBetween}>
 					<h4
-						className='room-details-title'
+						className={styles.roomDetailsTitle}
 						style={{ margin: 0 }}
 					>
 						Your Repair List ({patching.repairs.length})
@@ -186,24 +178,24 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 				</div>
 
 				{patching.repairs.length === 0 ? (
-					<div className='rf-empty-list'>No major repairs added yet.</div>
+					<div className={styles.rfEmptyList}>No major repairs added yet.</div>
 				) : (
 					patching.repairs.map((item, index) => (
 						<div
 							key={item.id}
-							className='rf-added-repair-item'
+							className={styles.rfAddedRepairItem}
 						>
-							<div className='rf-repair-info'>
+							<div className={styles.rfRepairInfo}>
 								<strong>
 									{index + 1}. {item.locationName} (x{item.quantity})
 								</strong>
-								<div className='rf-repair-meta'>
+								<div className={styles.rfRepairMeta}>
 									{item.damageType} • {item.size} • {item.texture} •{' '}
 									{item.scope}
 								</div>
 							</div>
 							<div
-								className='rf-action-group'
+								className={styles.rfActionGroup}
 								style={{ display: 'flex', gap: '8px' }}
 							>
 								<button
@@ -221,7 +213,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 								</button>
 								<button
 									type='button'
-									className='btn-remove'
+									className={styles.btnRemove}
 									onClick={() => onRemoveRepair(item.id)}
 									title='Remove Repair'
 								>
@@ -235,25 +227,25 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 
 			{/* --- THE REPAIR MODAL --- */}
 			{isModalOpen && (
-				<div className='rf-modal-overlay'>
-					<div className='rf-modal-content'>
+				<div className={styles.rfModalOverlay}>
+					<div className={styles.rfModalContent}>
 						<button
-							className='rf-modal-close'
+							className={styles.rfModalClose}
 							onClick={() => setIsModalOpen(false)}
 						>
 							<X size={24} />
 						</button>
 						<h4
-							className='room-details-title'
+							className={styles.roomDetailsTitle}
 							style={{ color: 'var(--color-primary)', marginBottom: '1.5rem' }}
 						>
 							{editingId ? 'Edit Repair' : 'Add a Major Repair'}
 						</h4>
 
 						{/* 1. Location & Quantity */}
-						<div className='form-group-box'>
-							<div className='form-group-grid'>
-								<div className='form-group'>
+						<div className={styles.formGroupBox}>
+							<div className={styles.formGroupGrid}>
+								<div className={styles.formGroup}>
 									<label>
 										Specific Wall/Ceiling (e.g. Master Bedroom North Wall)*
 									</label>
@@ -265,7 +257,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 										placeholder='e.g. Living Room - West Wall'
 									/>
 								</div>
-								<div className='form-group'>
+								<div className={styles.formGroup}>
 									<label style={{ display: 'flex', alignItems: 'center' }}>
 										Number of patches on this specific wall
 										<InfoTooltip message='We cap estimates at 5 patches per wall. If you have more, just select 5—our pros will assess additional surface prep during the walkthrough.' />
@@ -283,9 +275,9 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 						</div>
 
 						{/* 2. Type & Placement */}
-						<div className='form-group-box'>
-							<div className='form-group-grid'>
-								<div className='form-group'>
+						<div className={styles.formGroupBox}>
+							<div className={styles.formGroupGrid}>
+								<div className={styles.formGroup}>
 									<label>Damage Type</label>
 									<select
 										name='damageType'
@@ -310,7 +302,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 										</option>
 									</select>
 								</div>
-								<div className='form-group'>
+								<div className={styles.formGroup}>
 									<label>Placement</label>
 									<select
 										name='placement'
@@ -324,9 +316,9 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 							</div>
 						</div>
 						{/* 3. Size & Texture */}
-						<div className='form-group-box'>
-							<div className='form-group-grid'>
-								<div className='form-group'>
+						<div className={styles.formGroupBox}>
+							<div className={styles.formGroupGrid}>
+								<div className={styles.formGroup}>
 									<label>Size of Damage</label>
 									<select
 										name='size'
@@ -336,7 +328,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 										{getSizeOptions()}
 									</select>
 								</div>
-								<div className='form-group'>
+								<div className={styles.formGroup}>
 									<label>Texture Matching</label>
 									<select
 										name='texture'
@@ -352,9 +344,9 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 							</div>
 						</div>
 						{/* 4. Scope & Paint */}
-						<div className='form-group-box'>
-							<div className='form-group-grid'>
-								<div className='form-group'>
+						<div className={styles.formGroupBox}>
+							<div className={styles.formGroupGrid}>
+								<div className={styles.formGroup}>
 									<label>Scope of Work</label>
 									<select
 										name='scope'
@@ -370,7 +362,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 										</option>
 									</select>
 								</div>
-								<div className='form-group'>
+								<div className={styles.formGroup}>
 									<label>Accessibility</label>
 									<select
 										name='accessibility'
@@ -391,8 +383,8 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 							</div>
 						</div>
 						{showPaintOptions && (
-							<div className='form-group-box'>
-								<div className='form-group'>
+							<div className={styles.formGroupBox}>
+								<div className={styles.formGroup}>
 									<label>Paint Strategy</label>
 									<select
 										name='paintMatching'
@@ -415,9 +407,9 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 						{/* Conditional Dimensions (Below the Paint Strategy dropdown)*/}
 						{showPaintOptions &&
 							newRepair.paintMatching === 'Paint entire wall' && (
-								<div className='form-group-box'>
-									<div className='form-group-grid'>
-										<div className='form-group'>
+								<div className={styles.formGroupBox}>
+									<div className={styles.formGroupGrid}>
+										<div className={styles.formGroup}>
 											<label>Wall Height</label>
 											<select
 												name='wallHeight'
@@ -431,7 +423,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 												</option>
 											</select>
 										</div>
-										<div className='form-group'>
+										<div className={styles.formGroup}>
 											<label>Wall Width</label>
 											<select
 												name='wallWidth'
@@ -474,10 +466,10 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 
 			{/* --- Small Repairs Box --- */}
 			<div
-				className='form-group-box'
+				className={styles.formGroupBox}
 				style={{ marginTop: '2rem' }}
 			>
-				<div className='form-group'>
+				<div className={styles.formGroup}>
 					<label style={{ display: 'flex', justifyContent: 'space-between' }}>
 						<span>Small Repairs / Description</span>
 						<span

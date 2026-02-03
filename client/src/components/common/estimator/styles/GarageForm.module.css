@@ -1,5 +1,5 @@
 /* Container for the specific sections (Gray Box Look) */
-.garage-section {
+.garageSection {
   background-color: #f8f9fa;
   border: 1px solid #e9ecef;
   border-radius: 8px;
@@ -7,11 +7,11 @@
   margin-bottom: 1.5rem;
 }
 
-.garage-section:hover {
+.garageSection:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
-.garage-section-title {
+.garageSectionTitle {
   margin-top: 0;
   margin-bottom: 1rem;
   font-size: 1rem;
@@ -22,47 +22,43 @@
 }
 
 /* 2-Column Grid Layout for Inputs */
-.garage-grid {
+.garageGrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
 }
 
-.garage-service-row-container {
+.garageServiceRowContainer {
   display: flex;
   flex-direction: row;
   gap: var(--space-md);
 }
 
-.garage-service-row-container .service-row {
+.garageServiceRowContainer .serviceRow {
   flex-grow: 1;
 }
 
 @media (min-width: 768px) {
-  .garage-grid {
+  .garageGrid {
     grid-template-columns: 1fr 1fr;
   }
-
-
 }
 
 @media (max-width: 768px) {
-
-  .garage-service-row-container {
+  .garageServiceRowContainer {
     flex-direction: column;
   }
-
 }
 
 /* Service Pills Container */
-.service-pills-container {
+.servicePillsContainer {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
 }
 
 /* The Service Pill (Checkbox Card) */
-.service-pill {
+.servicePill {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -81,36 +77,36 @@
   user-select: none;
 }
 
-.service-pill:hover {
+.servicePill:hover {
   border-color: #ccc;
   background-color: #fafafa;
 }
 
 /* Active State for Pill (Using Global Primary Color) */
-.service-pill.active {
+.servicePill.active {
   background-color: #f0f9ff;
-  border-color: var(--color-primary, #007bff);
+  border-color: var(--color-primary);
   /* Fallback if var missing */
-  color: var(--color-primary, #007bff);
+  color: var(--color-primary);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.service-pill input[type='checkbox'] {
+.servicePill input[type='checkbox'] {
   width: 18px;
   height: 18px;
-  accent-color: var(--color-primary, #007bff);
+  accent-color: var(--color-primary);
   cursor: pointer;
 }
 
 /* Helper Text Area */
-.garage-details-header {
+.garageDetailsHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
 }
 
-.garage-helper-text {
+.garageHelperText {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -119,7 +115,7 @@
   font-size: 0.85rem;
 }
 
-.garage-textarea {
+.garageTextarea {
   width: 100%;
   padding: 12px;
   border-radius: 8px;
@@ -128,31 +124,31 @@
   resize: vertical;
 }
 
-.garage-textarea:focus {
+.garageTextarea:focus {
   outline: none;
-  border-color: var(--color-primary, #007bff);
+  border-color: var(--color-primary);
 }
 
-.garage-char-count {
+.garageCharCount {
   text-align: right;
   font-size: 0.8rem;
   color: #999;
   margin-top: 4px;
 }
 
-.garage-section.plain {
+.garageSection.plain {
   background: transparent;
   border: none;
   padding: 0;
 }
 
-.service-selection-list {
+.serviceSelectionList {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.service-row {
+.serviceRow {
   background: white;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -160,17 +156,17 @@
   transition: all 0.2s ease;
 }
 
-.service-row:hover {
+.serviceRow:hover {
   border-color: #ccc;
 }
 
-.service-row.active {
-  border-color: var(--color-primary, #007bff);
+.serviceRow.active {
+  border-color: var(--color-primary);
   background-color: #fbfdff;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.service-row-header {
+.serviceRowHeader {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -178,7 +174,7 @@
   cursor: pointer;
 }
 
-.checkbox-circle {
+.checkboxCircle {
   width: 24px;
   height: 24px;
   border-radius: 50%;
@@ -191,25 +187,25 @@
   background: white;
 }
 
-.service-row.active .checkbox-circle {
-  border-color: var(--color-primary, #007bff);
-  background-color: var(--color-primary, #007bff);
+.serviceRow.active .checkboxCircle {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
 }
 
-.service-name {
+.serviceName {
   display: block;
   font-weight: 600;
   color: #333;
 }
 
-.service-sub {
+.serviceSub {
   display: block;
   font-size: 0.85rem;
   color: #777;
   margin-top: 2px;
 }
 
-.service-options {
+.serviceOptions {
   border-top: 1px solid #eee;
   padding: 16px;
   background-color: #f8fbff;
@@ -228,7 +224,7 @@
   }
 }
 
-.service-options label {
+.serviceOptions label {
   display: block;
   font-size: 0.85rem;
   font-weight: 600;
@@ -237,12 +233,12 @@
   text-transform: uppercase;
 }
 
-.select-wrapper {
+.selectWrapper {
   position: relative;
   max-width: 400px;
 }
 
-.select-wrapper select {
+.selectWrapper select {
   width: 100%;
   padding: 10px 14px;
   border: 1px solid #ccc;
@@ -253,16 +249,69 @@
   cursor: pointer;
 }
 
-.select-wrapper select:focus {
+.selectWrapper select:focus {
   outline: none;
-  border-color: var(--color-primary, #007bff);
+  border-color: var(--color-primary);
 }
 
-.select-icon {
+.selectIcon {
   position: absolute;
   right: 14px;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
   color: #666;
+}
+
+/* --- Shared Form Styles (Copied for Isolation) --- */
+.serviceFormBox {
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-md);
+	padding: var(--space-lg);
+	margin-top: var(--space-lg);
+}
+
+.serviceFormTitle {
+	font-size: 1.5rem;
+	font-weight: var(--font-weight-bold);
+	color: var(--color-primary);
+	margin-bottom: var(--space-lg);
+	padding-bottom: var(--space-md);
+	border-bottom: 2px solid var(--color-primary);
+}
+
+.formGroup {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-sm);
+}
+
+.formGroup label {
+	font-family: var(--font-family-heading);
+	font-size: 1rem;
+	font-weight: var(--font-weight-bold);
+	color: var(--color-brand-dark);
+}
+
+.formGroup select,
+.formGroup textarea,
+.formGroup input[type='text'],
+.formGroup input[type='number'] {
+	font-family: var(--font-family-body);
+	font-size: 1rem;
+	padding: var(--space-md);
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius-sm);
+	background-color: #fff;
+	transition: border-color 0.3s ease;
+	width: 100%;
+}
+
+.formGroup select:focus,
+.formGroup textarea:focus,
+.formGroup input[type='text']:focus,
+.formGroup input[type='number']:focus {
+	outline: none;
+	border-color: var(--color-primary);
+	box-shadow: 0 0 0 2px rgba(241, 90, 36, 0.2);
 }

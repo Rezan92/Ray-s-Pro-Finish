@@ -1,5 +1,6 @@
 import React from 'react';
 import type { FormData } from './EstimatorTypes';
+import styles from './styles/EstimatorStep1.module.css';
 
 interface EstimatorStep1Props {
 	services: FormData['services'];
@@ -11,15 +12,15 @@ export const EstimatorStep1: React.FC<EstimatorStep1Props> = ({
 	handleServiceChange,
 }) => {
 	return (
-		<div className='estimator-step'>
-			<h2 className='estimator-title'>What services do you need?</h2>
-			<p className='estimator-subtitle'>
+		<div className={styles.estimatorStep}>
+			<h2 className={styles.estimatorTitle}>What services do you need?</h2>
+			<p className={styles.estimatorSubtitle}>
 				Check all that apply. You can get an estimate for multiple services at
 				once.
 			</p>
-			<div className='form-group'>
-				<div className='checkbox-group'>
-					<label className='checkbox-label large'>
+			<div className={styles.formGroup}>
+				<div className={styles.checkboxGroup}>
+					<label className={styles.checkboxLabelLarge}>
 						<input
 							type='checkbox'
 							name='painting'
@@ -29,7 +30,7 @@ export const EstimatorStep1: React.FC<EstimatorStep1Props> = ({
 						Interior Painting
 					</label>
 
-					<label className='checkbox-label large'>
+					<label className={styles.checkboxLabelLarge}>
 						<input
 							type='checkbox'
 							name='patching'
@@ -39,7 +40,7 @@ export const EstimatorStep1: React.FC<EstimatorStep1Props> = ({
 						Drywall Patching
 					</label>
 
-					<label className='checkbox-label large'>
+					<label className={styles.checkboxLabelLarge}>
 						<input
 							type='checkbox'
 							name='installation'
@@ -49,7 +50,7 @@ export const EstimatorStep1: React.FC<EstimatorStep1Props> = ({
 						Framing, Remodeling & Drywall
 					</label>
 
-					<label className='checkbox-label large'>
+					<label className={styles.checkboxLabelLarge}>
 						<input
 							type='checkbox'
 							name='garage'
@@ -59,7 +60,7 @@ export const EstimatorStep1: React.FC<EstimatorStep1Props> = ({
 						Garage Finishing
 					</label>
 
-					<label className='checkbox-label large'>
+					<label className={styles.checkboxLabelLarge}>
 						<input
 							type='checkbox'
 							name='basement'

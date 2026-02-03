@@ -1,6 +1,7 @@
 import React from 'react';
 import type { FormData } from './EstimatorTypes';
 import { AlertTriangle, Info } from 'lucide-react';
+import styles from './styles/InstallationForm.module.css';
 
 interface InstallationFormProps {
 	formData: FormData;
@@ -45,12 +46,12 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 		isHangingOnly;
 
 	return (
-		<div className='service-form-box'>
-			<h3 className='service-form-title'>Framing & Remodeling</h3>
+		<div className={styles.serviceFormBox}>
+			<h3 className={styles.serviceFormTitle}>Framing & Remodeling</h3>
 
 			{/* 1. Project Type */}
-			<div className='form-group-box'>
-				<div className='form-group'>
+			<div className={styles.formGroupBox}>
+				<div className={styles.formGroup}>
 					<label>What are we working on?</label>
 					<select
 						name='projectType'
@@ -68,12 +69,12 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 			</div>
 
 			{/* 2. Dimensions & Scope */}
-			<div className='form-group-box'>
-				<div className='form-group-grid'>
+			<div className={styles.formGroupBox}>
+				<div className={styles.formGroupGrid}>
 					{/* Linear Projects (Length) */}
 					{isLinearProject && (
 						<>
-							<div className='form-group'>
+							<div className={styles.formGroup}>
 								<label>Approximate Length</label>
 								<select
 									name='wallLength'
@@ -85,7 +86,7 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 									<option value='Large (20ft+)'>Large (20ft+)</option>
 								</select>
 							</div>
-							<div className='form-group'>
+							<div className={styles.formGroup}>
 								<label>Height</label>
 								<select
 									name='ceilingHeight'
@@ -103,7 +104,7 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 					{/* Area Projects (Sq Ft) */}
 					{isAreaProject && (
 						<>
-							<div className='form-group'>
+							<div className={styles.formGroup}>
 								<label>Total Area (Sq Ft)</label>
 								<input
 									type='number'
@@ -114,7 +115,7 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 									min='0'
 								/>
 							</div>
-							<div className='form-group'>
+							<div className={styles.formGroup}>
 								<label>Height</label>
 								<select
 									name='ceilingHeight'
@@ -134,16 +135,16 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 			{/* 3. DEMOLITION SPECIFICS */}
 			{isDemo && (
 				<div
-					className='form-group-box'
+					className={styles.formGroupBox}
 					style={{ borderLeft: '4px solid #dc2626' }}
 				>
 					<h4
-						className='room-details-title'
+						className={styles.roomDetailsTitle}
 						style={{ fontSize: '1rem', color: '#dc2626', marginBottom: '1rem' }}
 					>
 						Demolition Safety
 					</h4>
-					<div className='form-group'>
+					<div className={styles.formGroup}>
 						<label
 							style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
 						>
@@ -164,10 +165,10 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 						</select>
 					</div>
 					<div
-						className='form-group'
+						className={styles.formGroup}
 						style={{ marginTop: '1rem' }}
 					>
-						<label className='checkbox-label'>
+						<label className={styles.checkboxLabel}>
 							<input
 								type='checkbox'
 								name='includeDemolition'
@@ -182,11 +183,11 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 
 			{/* 4. CONSTRUCTION SPECS (Hidden for Demo) */}
 			{!isDemo && (
-				<div className='form-group-box'>
-					<div className='form-group-grid'>
+				<div className={styles.formGroupBox}>
+					<div className={styles.formGroupGrid}>
 						{/* Framing - Only for Wall/Partition/Room */}
 						{showFraming && (
-							<div className='form-group'>
+							<div className={styles.formGroup}>
 								<label>Framing Status</label>
 								<select
 									name='framing'
@@ -207,7 +208,7 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 						{/* Door Logic */}
 						{(installation.projectType === 'Partition' ||
 							installation.projectType === 'Room') && (
-							<div className='form-group'>
+							<div className={styles.formGroup}>
 								<label>Doors/Openings Needed?</label>
 								<input
 									type='number'
@@ -223,10 +224,10 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 
 					{/* Finishes - Always visible unless Demo */}
 					<div
-						className='form-group-grid'
+						className={styles.formGroupGrid}
 						style={{ marginTop: showFraming ? '0' : '0' }}
 					>
-						<div className='form-group'>
+						<div className={styles.formGroup}>
 							<label>Desired Finish Level</label>
 							<select
 								name='finishLevel'
@@ -238,13 +239,13 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 								<option value='Level 5'>Level 5 (Premium Skim Coat)</option>
 							</select>
 						</div>
-						<div className='form-group'>
+						<div className={styles.formGroup}>
 							<label>Painting Service</label>
 							<div
-								className='checkbox-group'
+								className={styles.checkboxGroup}
 								style={{ padding: '12px', justifyContent: 'flex-start' }}
 							>
-								<label className='checkbox-label'>
+								<label className={styles.checkboxLabel}>
 									<input
 										type='checkbox'
 										name='includePaint'
@@ -260,8 +261,8 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 			)}
 
 			{/* 5. Additional Details (GENERIC) */}
-			<div className='form-group-box'>
-				<div className='form-group'>
+			<div className={styles.formGroupBox}>
+				<div className={styles.formGroup}>
 					<label style={{ display: 'flex', justifyContent: 'space-between' }}>
 						<span>Additional Details</span>
 						<span

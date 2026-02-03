@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { PaintingRoom } from './EstimatorTypes';
 import { ChevronDown, Plus, Trash2 } from 'lucide-react';
 import { ROOM_SIZE_OPTIONS } from './roomSizeData';
+import styles from './styles/PaintingRoomCard.module.css';
 
 interface PaintingRoomCardProps {
 	room: PaintingRoom;
@@ -63,27 +64,19 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 		room.surfaces.windows; // Added windows check
 
 	return (
-		<div
-			className='room-card'
-			style={{
-				marginBottom: '1rem',
-				border: '1px solid var(--color-border)',
-				borderRadius: '8px',
-				backgroundColor: '#fff',
-			}}
-		>
+		<div className={styles.roomCard}>
 			{/* --- Card Header --- */}
 			<button
 				type='button'
-				className={`accordion-header ${isOpen ? 'open' : ''}`}
+				className={`${styles.accordionHeader} ${isOpen ? styles.open : ''}`}
 				onClick={() => setIsOpen(!isOpen)}
 			>
-				<span className='accordion-title'>{room.label}</span>
-				<div className='accordion-actions'>
+				<span className={styles.accordionTitle}>{room.label}</span>
+				<div className={styles.accordionActions}>
 					{onRoomRemove && (
 						<button
 							type='button'
-							className='btn-remove'
+							className={styles.btnRemove}
 							onClick={(e) => {
 								e.stopPropagation();
 								onRoomRemove(room.id);
@@ -94,21 +87,18 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 					)}
 					<ChevronDown
 						size={20}
-						className='accordion-icon'
+						className={styles.accordionIcon}
 					/>
 				</div>
 			</button>
 
 			{/* --- Collapsible Card Body --- */}
 			{isOpen && (
-				<div
-					className='accordion-content'
-					style={{ padding: '1.5rem' }}
-				>
+				<div className={styles.accordionContent}>
 					{/* 1. Description (Only for Other) */}
 					{room.type === 'other' && (
-						<div className='form-group-box'>
-							<div className='form-group'>
+						<div className={styles.formGroupBox}>
+							<div className={styles.formGroup}>
 								<label
 									style={{ display: 'flex', justifyContent: 'space-between' }}
 								>
@@ -136,9 +126,9 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 					)}
 
 					{/* 2. Dimensions */}
-					<div className='form-group-box'>
-						<div className='form-group-grid'>
-							<div className='form-group'>
+					<div className={styles.formGroupBox}>
+						<div className={styles.formGroupGrid}>
+							<div className={styles.formGroup}>
 								<label>Approximate Size</label>
 								<select
 									name='size'
@@ -155,7 +145,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									))}
 								</select>
 							</div>
-							<div className='form-group'>
+							<div className={styles.formGroup}>
 								<label>Ceiling Height</label>
 								<select
 									name='ceilingHeight'
@@ -173,8 +163,8 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 
 					{/* 3. NEW: Closet Size (Only for Bedroom) */}
 					{room.type === 'bedroom' && (
-						<div className='form-group-box'>
-							<div className='form-group'>
+						<div className={styles.formGroupBox}>
+							<div className={styles.formGroup}>
 								<label>Does this bedroom have a closet to paint?</label>
 								<select
 									name='closetSize'
@@ -191,11 +181,11 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 					)}
 
 					{/* 4. Surfaces Selection (Added Windows checkbox) */}
-					<div className='form-group-box'>
-						<div className='form-group'>
+					<div className={styles.formGroupBox}>
+						<div className={styles.formGroup}>
 							<label>What needs painting?</label>
-							<div className='checkbox-group horizontal'>
-								<label className='checkbox-label'>
+							<div className={styles.checkboxGroupHorizontal}>
+								<label className={styles.checkboxLabel}>
 									<input
 										type='checkbox'
 										name='walls'
@@ -204,7 +194,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									/>{' '}
 									Walls
 								</label>
-								<label className='checkbox-label'>
+								<label className={styles.checkboxLabel}>
 									<input
 										type='checkbox'
 										name='ceiling'
@@ -213,7 +203,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									/>{' '}
 									Ceiling
 								</label>
-								<label className='checkbox-label'>
+								<label className={styles.checkboxLabel}>
 									<input
 										type='checkbox'
 										name='trim'
@@ -222,7 +212,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									/>{' '}
 									Trim
 								</label>
-								<label className='checkbox-label'>
+								<label className={styles.checkboxLabel}>
 									<input
 										type='checkbox'
 										name='doors'
@@ -231,7 +221,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									/>{' '}
 									Doors
 								</label>
-								<label className='checkbox-label'>
+								<label className={styles.checkboxLabel}>
 									<input
 										type='checkbox'
 										name='crownMolding'
@@ -240,7 +230,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									/>{' '}
 									Crown Molding
 								</label>
-								<label className='checkbox-label'>
+								<label className={styles.checkboxLabel}>
 									<input
 										type='checkbox'
 										name='windows'
@@ -255,10 +245,10 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 
 					{/* 5. Surface Details (Conditional - Added Windows Count) */}
 					{showDetails && (
-						<div className='form-group-box'>
-							<div className='conditional-fields-container'>
+						<div className={styles.formGroupBox}>
+							<div className={styles.conditionalFieldsContainer}>
 								{room.surfaces.ceiling && (
-									<div className='form-group'>
+									<div className={styles.formGroup}>
 										<label>Ceiling Texture</label>
 										<select
 											name='ceilingTexture'
@@ -272,7 +262,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									</div>
 								)}
 								{room.surfaces.trim && (
-									<div className='form-group'>
+									<div className={styles.formGroup}>
 										<label>Trim Condition</label>
 										<select
 											name='trimCondition'
@@ -285,7 +275,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									</div>
 								)}
 								{room.surfaces.crownMolding && (
-									<div className='form-group'>
+									<div className={styles.formGroup}>
 										<label>Crown Molding Style</label>
 										<select
 											name='crownMoldingStyle'
@@ -299,18 +289,18 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 								)}
 								{room.surfaces.doors && (
 									<>
-										<div className='form-group'>
+										<div className={styles.formGroup}>
 											<label>How many doors?</label>
 											<input
 												type='number'
 												name='doorCount'
-												className='small-input'
+												className={styles.smallInput}
 												min='0'
 												value={room.doorCount || '1'}
 												onChange={handleFieldChange}
 											/>
 										</div>
-										<div className='form-group'>
+										<div className={styles.formGroup}>
 											<label>Door Style</label>
 											<select
 												name='doorStyle'
@@ -324,12 +314,12 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									</>
 								)}
 								{room.surfaces.windows && (
-									<div className='form-group'>
+									<div className={styles.formGroup}>
 										<label>How many windows?</label>
 										<input
 											type='number'
 											name='windowCount'
-											className='small-input'
+											className={styles.smallInput}
 											min='0'
 											value={room.windowCount || 0}
 											onChange={handleFieldChange}
@@ -341,9 +331,9 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 					)}
 
 					{/* 6. General Condition & Color */}
-					<div className='form-group-box'>
-						<div className='form-group-grid'>
-							<div className='form-group'>
+					<div className={styles.formGroupBox}>
+						<div className={styles.formGroupGrid}>
+							<div className={styles.formGroup}>
 								<label>Surface Condition</label>
 								<select
 									name='wallCondition'
@@ -355,7 +345,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									<option value='Poor'>Poor (Cracks, stains)</option>
 								</select>
 							</div>
-							<div className='form-group'>
+							<div className={styles.formGroup}>
 								<label>Color Change</label>
 								<select
 									name='colorChange'
@@ -373,8 +363,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 					{onRoomAdd && (
 						<button
 							type='button'
-							className='btn-add-room'
-							style={{ marginTop: '1rem' }}
+							className={styles.btnAddRoom}
 							onClick={() => onRoomAdd(room.type)}
 						>
 							<Plus size={16} /> Add another {room.type}

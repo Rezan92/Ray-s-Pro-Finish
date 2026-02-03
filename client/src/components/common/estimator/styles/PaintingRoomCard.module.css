@@ -1,0 +1,158 @@
+/* src/components/common/estimator/styles/PaintingRoomCard.module.css */
+
+.roomCard {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top: 1px solid var(--color-primary);
+  background-color: #fdfdfd;
+  margin-bottom: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.accordionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: var(--space-sm);
+  cursor: pointer;
+  text-align: left;
+}
+
+.accordionTitle {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--color-primary);
+}
+
+.accordionActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.btnRemove {
+  background: none;
+  border: none;
+  color: var(--color-error);
+  font-family: var(--font-family-body);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  cursor: pointer;
+  padding: var(--space-xs);
+}
+
+.accordionIcon {
+  color: var(--color-text-secondary);
+  transition: transform 0.3s ease;
+}
+
+.accordionHeader.open .accordionIcon {
+  transform: rotate(180deg);
+}
+
+.accordionContent {
+  padding: 1.5rem;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.formGroupBox {
+  background-color: var(--color-bg-light);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.formGroup label {
+  font-family: var(--font-family-heading);
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-brand-dark);
+}
+
+.formGroup textarea,
+.formGroup select,
+.formGroup input[type='text'],
+.formGroup input[type='number'] {
+  font-family: var(--font-family-body);
+  font-size: 1rem;
+  padding: var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-sm);
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+  width: 100%;
+}
+
+.formGroupGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+.checkboxGroupHorizontal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  align-items: center;
+  background-color: var(--color-bg-light);
+  padding: var(--space-sm);
+  border-radius: var(--border-radius-sm);
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-family-body);
+  font-size: 1rem;
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.conditionalFieldsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-md);
+  border-left: 3px solid var(--color-primary);
+  padding-left: var(--space-lg);
+}
+
+.smallInput {
+  width: 100px !important;
+}
+
+.btnAddRoom {
+  background-color: var(--color-bg-light);
+  border: 1px dashed var(--color-primary);
+  color: var(--color-primary);
+  font-family: var(--font-family-heading);
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  margin-top: var(--space-md);
+}
+
+.btnAddRoom:hover {
+  background-color: #fefaf8;
+}
