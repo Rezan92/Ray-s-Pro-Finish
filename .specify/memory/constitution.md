@@ -1,7 +1,7 @@
 <!-- Sync Impact Report
-- Version: 1.1.0 -> 1.2.0 (Minor)
+- Version: 1.2.0 -> 1.3.0 (Minor)
 - Changes:
-  - Principle I (Styling & Visual System): Added explicit rule to preserve global utility classes as string literals when using CSS Modules.
+  - Principle III (TypeScript & Standards): Added "Zero Tolerance" for warnings/unused imports and "Clean Code" rules for comments.
 - Templates Status:
   - .specify/templates/plan-template.md: ✅ Compatible
   - .specify/templates/spec-template.md: ✅ Compatible
@@ -20,7 +20,7 @@ A high-performance, type-safe business platform for Ray Pro Finish.
 **Modular Redux:** Slices must be feature-specific. The "Estimator" must be divided into sub-slices (painting, basement, etc.) to prevent a "God Slice." **Immutable Pricing:** Pricing logic and rates are prohibited from being hardcoded in components. They must be fetched from `masterRates.ts` or the server.
 
 ### III. TypeScript & Standards
-**Strict Mode:** No usage of `any`. All props, states, and API responses must have explicit interfaces. **Error Handling:** Use a unified notification pattern (e.g., the `FloatingAlert` component) for all user feedback. Browser `alert()` is prohibited.
+**Strict Mode:** No usage of `any`. All props, states, and API responses must have explicit interfaces. **Zero Tolerance:** Treat all compiler and linter warnings (including unused imports and variables) as blocking errors. **Clean Code:** Comments must only explain *why* complex logic exists, never *what* it does. Remove all unused code and comments immediately. **Error Handling:** Use a unified notification pattern (e.g., the `FloatingAlert` component) for all user feedback. Browser `alert()` is prohibited.
 
 ### IV. Backend Integrity
 **Service Layer:** Controllers only handle requests; Services handle calculation and business logic. **Contract-First:** API routes must return standardized JSON structures that match frontend TypeScript interfaces.
@@ -43,4 +43,4 @@ All Pull Requests and code reviews must verify compliance with these principles.
 - **Complexity** must be justified against these rules.
 - **Violations** block merging until resolved or explicitly exempted via a Constitution Amendment.
 
-**Version**: 1.2.0 | **Ratified**: 2026-02-03 | **Last Amended**: 2026-02-03
+**Version**: 1.3.0 | **Ratified**: 2026-02-03 | **Last Amended**: 2026-02-03
