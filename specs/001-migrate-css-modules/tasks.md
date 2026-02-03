@@ -40,7 +40,7 @@ description: "Task list for migrating core components to CSS Modules"
 - [x] T005 [P] [US1] Rename `FloatingAlert.css` to `FloatingAlert.module.css` and refactor `client/src/components/common/floatingAlert/FloatingAlert.tsx`
 - [x] T006 [P] [US1] Rename `InfoTooltip.css` to `InfoTooltip.module.css` and refactor `client/src/components/common/infoTooltip/InfoTooltip.tsx`
 - [x] T007 [P] [US1] Rename `Logo.css` to `Logo.module.css` and refactor `client/src/components/common/logo/Logo.tsx`
-- [ ] T008 [US1] Manual visual verification of atomic components (check styles and global utility preservation)
+- [x] T008 [US1] Manual visual verification of atomic components (check styles and global utility preservation)
 
 **Checkpoint**: Atomic components fully migrated and verified.
 
