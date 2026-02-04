@@ -11,7 +11,7 @@
 - [x] **Priority 2**: Layout & Global Structure (Navbar, Footer, Layout)
 - [x] **Priority 3**: Feature Components (Estimator forms)
 - [x] **Priority 4**: Page-Level Styles (Page wrappers)
-- [ ] **Priority 5**: Content Sections (Marketing blocks)
+- [/] **Priority 5**: Content Sections (Marketing blocks & Cleanup)
 
 ## Phase 2: Redux Split (Pillar 2)
 **Status**: Pending
