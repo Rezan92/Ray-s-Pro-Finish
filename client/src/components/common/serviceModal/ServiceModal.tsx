@@ -1,5 +1,5 @@
 import React from 'react';
-import './ServiceModal.css'; // Import the new CSS
+import styles from './ServiceModal.module.css'; // Import the new CSS
 import { X } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -24,12 +24,12 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({
 	return (
 		<>
 			<div
-				className='modal-overlay'
+				className={styles.modalOverlay}
 				onClick={onClose}
 			></div>
-			<div className='modal-content'>
+			<div className={styles.modalContent}>
 				<button
-					className='modal-close-btn'
+					className={styles.modalCloseBtn}
 					onClick={onClose}
 				>
 					<X size={24} />
@@ -37,16 +37,16 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({
 				<img
 					src={service.image}
 					alt={service.title}
-					className='modal-image'
+					className={styles.modalImage}
 				/>
-				<div className='modal-text-content'>
-					<h2 className='modal-title'>{service.title}</h2>
-					<div className='modal-divider'></div>
+				<div className={styles.modalTextContent}>
+					<h2 className={styles.modalTitle}>{service.title}</h2>
+					<div className={styles.modalDivider}></div>
 					{/* Loop over the details array and render each as a paragraph */}
 					{service.details.map((paragraph, index) => (
 						<p
 							key={index}
-							className='modal-details'
+							className={styles.modalDetails}
 						>
 							{paragraph}
 						</p>

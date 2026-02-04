@@ -1,4 +1,4 @@
-.contact-details-wrapper {
+.contactDetailsWrapper {
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
@@ -8,7 +8,7 @@
   justify-content: space-around;
 }
 
-.contact-details-title {
+.contactDetailsTitle {
   font-family: var(--font-family-heading);
   font-size: 2rem;
   font-weight: var(--font-weight-bold);
@@ -16,7 +16,7 @@
   margin-bottom: 0;
 }
 
-.contact-details-intro {
+.contactDetailsIntro {
   font-family: var(--font-family-body);
   font-size: 1rem;
   color: var(--color-text-secondary);
@@ -24,13 +24,13 @@
   margin: 0;
 }
 
-.contact-details-blocks {
+.contactDetailsBlocks {
   display: flex;
   flex-direction: column;
   gap: var(--space-xl);
 }
 
-.btn.whatsapp-btn {
+.whatsappBtn {
   width: 100%;
   margin-top: var(--space-md);
   margin-right: 0; /* Override default button margin */
@@ -41,7 +41,7 @@
   color: var(--color-text-inverted); /* ADDED: Ensures text is white */
 }
 
-.whatsapp-btn:hover {
+.whatsappBtn:hover {
   background-color: #1DAE54;
   border-color: #1DAE54;
   color: var(--color-text-inverted); /* ADDED: Ensures text is white on hover */

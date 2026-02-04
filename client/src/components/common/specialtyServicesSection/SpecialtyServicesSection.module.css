@@ -1,6 +1,6 @@
-/* src/components/common/specialtyServicesSection/SpecialtyServicesSection.css */
+/* src/components/common/specialtyServicesSection/SpecialtyServicesSection.module.css */
 
-.specialty-services-section {
+.specialtyServicesSection {
 	width: 100%;
 	margin: 3rem auto;
 	padding: var(--space-xxxl) var(--space-xl);
@@ -8,12 +8,12 @@
 	border-radius: var(--border-radius-md);
 }
 
-.specialty-services-header {
+.specialtyServicesHeader {
 	text-align: center;
 	margin-bottom: var(--space-xxl);
 }
 
-.specialty-services-subtitle {
+.specialtyServicesSubtitle {
 	font-size: 0.875rem;
 	font-weight: var(--font-weight-medium);
 	color: var(--color-primary);
@@ -21,7 +21,7 @@
 	letter-spacing: 1px;
 }
 
-.specialty-services-title {
+.specialtyServicesTitle {
 	font-family: var(--font-family-heading);
 	font-size: 2.5rem;
 	font-weight: var(--font-weight-bold);
@@ -29,7 +29,7 @@
 	margin: var(--space-sm) 0 0 0;
 }
 
-.specialty-services-grid {
+.specialtyServicesGrid {
 	display: grid;
 	/* 3 columns, but auto-fit lets them wrap nicely */
 	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -38,14 +38,14 @@
 	margin: 0 auto; /* Center the grid */
 }
 
-.specialty-item {
+.specialtyItem {
 	display: flex;
 	align-items: center;
 	gap: var(--space-md);
 	padding: var(--space-sm) 0;
 }
 
-.specialty-item-icon {
+.specialtyItemIcon {
 	flex-shrink: 0;
 	width: 24px;
 	height: 24px;
@@ -55,7 +55,7 @@
 	border-radius: 50%;
 }
 
-.specialty-item-title {
+.specialtyItemTitle {
 	font-family: var(--font-family-body);
 	font-size: 1rem;
 	font-weight: var(--font-weight-medium);
@@ -64,13 +64,13 @@
 
 /* --- Responsive --- */
 @media (max-width: 640px) {
-	.specialty-services-title {
+	.specialtyServicesTitle {
 		font-size: 2rem;
 	}
-	.specialty-services-section {
+	.specialtyServicesSection {
 		padding: var(--space-xxl) var(--space-lg);
 	}
-	.specialty-services-grid {
+	.specialtyServicesGrid {
 		/* Stack to 1 column on mobile */
 		grid-template-columns: 1fr;
 	}

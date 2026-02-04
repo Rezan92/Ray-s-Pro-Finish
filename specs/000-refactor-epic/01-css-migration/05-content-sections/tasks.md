@@ -28,17 +28,17 @@
 **Goal**: Migrate services, projects, contact, and modal components.
 **Independent Test**: Verify all service grids, project galleries, and contact forms render identically.
 
-- [ ] T007 [P] [US1] Migrate ServicesSection styles to module in `client/src/components/common/servicesSection/ServicesSection.tsx` and `client/src/components/common/servicesSection/ServicesSection.module.css`
-- [ ] T008 [P] [US1] Migrate IndustrialServicesSection styles to module in `client/src/components/common/industrialServicesSection/IndustrialServicesSection.tsx` and `client/src/components/common/industrialServicesSection/IndustrialServicesSection.module.css`
-- [ ] T009 [P] [US1] Migrate SpecialtyServicesSection styles to module in `client/src/components/common/specialtyServicesSection/SpecialtyServicesSection.tsx` and `client/src/components/common/specialtyServicesSection/SpecialtyServicesSection.module.css`
-- [ ] T010 [P] [US1] Migrate LatestProjectsSection styles to module in `client/src/components/common/latestProjectsSection/LatestProjectsSection.tsx` and `client/src/components/common/latestProjectsSection/LatestProjectsSection.module.css`
-- [ ] T011 [P] [US1] Migrate ProjectGallerySection styles to module in `client/src/components/common/projectGallerySection/ProjectGallerySection.tsx` and `client/src/components/common/projectGallerySection/ProjectGallerySection.module.css`
-- [ ] T012 [P] [US1] Migrate OurProcessSection styles to module in `client/src/components/common/ourProcessSection/OurProcessSection.tsx` and `client/src/components/common/ourProcessSection/OurProcessSection.module.css`
-- [ ] T013 [P] [US1] Migrate ContactDetails styles to module in `client/src/components/common/contactDetails/ContactDetails.tsx` and `client/src/components/common/contactDetails/ContactDetails.module.css`
-- [ ] T014 [P] [US1] Migrate ContactForm styles to module in `client/src/components/common/contactForm/ContactForm.tsx` and `client/src/components/common/contactForm/ContactForm.module.css`
-- [ ] T015 [P] [US1] Migrate ContactInfoBlock styles to module in `client/src/components/common/contactInfoBlock/ContactInfoBlock.tsx` and `client/src/components/common/contactInfoBlock/ContactInfoBlock.module.css`
-- [ ] T016 [P] [US1] Migrate RequestQuoteSection styles to module in `client/src/components/common/requestQuoteSection/RequestQuoteSection.tsx` and `client/src/components/common/requestQuoteSection/RequestQuoteSection.module.css`
-- [ ] T017 [P] [US1] Migrate ProjectModal and ServiceModal styles to modules in `client/src/components/common/projectModal/ProjectModal.module.css` and `client/src/components/common/serviceModal/ServiceModal.module.css`
+- [x] T007 [P] [US1] Migrate ServicesSection styles to module in `client/src/components/common/servicesSection/ServicesSection.tsx` and `client/src/components/common/servicesSection/ServicesSection.module.css`
+- [x] T008 [P] [US1] Migrate IndustrialServicesSection styles to module in `client/src/components/common/industrialServicesSection/IndustrialServicesSection.tsx` and `client/src/components/common/industrialServicesSection/IndustrialServicesSection.module.css`
+- [x] T009 [P] [US1] Migrate SpecialtyServicesSection styles to module in `client/src/components/common/specialtyServicesSection/SpecialtyServicesSection.tsx` and `client/src/components/common/specialtyServicesSection/SpecialtyServicesSection.module.css`
+- [x] T010 [P] [US1] Migrate LatestProjectsSection styles to module in `client/src/components/common/latestProjectsSection/LatestProjectsSection.tsx` and `client/src/components/common/latestProjectsSection/LatestProjectsSection.module.css`
+- [x] T011 [P] [US1] Migrate ProjectGallerySection styles to module in `client/src/components/common/projectGallerySection/ProjectGallerySection.tsx` and `client/src/components/common/projectGallerySection/ProjectGallerySection.module.css`
+- [x] T012 [P] [US1] Migrate OurProcessSection styles to module in `client/src/components/common/ourProcessSection/OurProcessSection.tsx` and `client/src/components/common/ourProcessSection/OurProcessSection.module.css`
+- [x] T013 [P] [US1] Migrate ContactDetails styles to module in `client/src/components/common/contactDetails/ContactDetails.tsx` and `client/src/components/common/contactDetails/ContactDetails.module.css`
+- [x] T014 [P] [US1] Migrate ContactForm styles to module in `client/src/components/common/contactForm/ContactForm.tsx` and `client/src/components/common/contactForm/ContactForm.module.css`
+- [x] T015 [P] [US1] Migrate ContactInfoBlock styles to module in `client/src/components/common/contactInfoBlock/ContactInfoBlock.tsx` and `client/src/components/common/contactInfoBlock/ContactInfoBlock.module.css`
+- [x] T016 [P] [US1] Migrate RequestQuoteSection styles to module in `client/src/components/common/requestQuoteSection/RequestQuoteSection.tsx` and `client/src/components/common/requestQuoteSection/RequestQuoteSection.module.css`
+- [x] T017 [P] [US1] Migrate ProjectModal and ServiceModal styles to modules in `client/src/components/common/projectModal/ProjectModal.module.css` and `client/src/components/common/serviceModal/ServiceModal.module.css`
 
 ## Phase 5: Page Wrapper Isolation (User Story 2)
 **Goal**: Migrate page-level layout styles to modules.

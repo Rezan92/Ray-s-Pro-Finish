@@ -1,18 +1,18 @@
 /* src/components/Header/ContactInfoBlock.module.css */
-.contact-block {
+.contactBlock {
   display: flex;
   align-items: flex-start;
   gap: var(--space-md);
 }
 
-.contactInfo-icon-wrapper {
+.contactInfoIconWrapper {
   color: var(--color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.text-wrapper {
+.textWrapper {
   display: flex;
   flex-direction: column;
 }
@@ -36,4 +36,3 @@
   color: var(--color-text-secondary);
   line-height: 1.2;
 }
-

@@ -1,4 +1,4 @@
-import './ContactInfoBlock.css';
+import styles from './ContactInfoBlock.module.css';
 
 interface ContactInfoBlockProps {
 	// We pass the icon component itself as a prop
@@ -15,16 +15,16 @@ function ContactInfoBlock({
 	subtitle,
 }: ContactInfoBlockProps) {
 	return (
-		<div className='contact-block'>
-			<div className='contactInfo-icon-wrapper'>
+		<div className={styles.contactBlock}>
+			<div className={styles.contactInfoIconWrapper}>
 				<Icon size={30} />
 			</div>
-			<div className='text-wrapper'>
-				<span className='title'>
-					<span className='bold'>{bold}</span>
+			<div className={styles.textWrapper}>
+				<span className={styles.title}>
+					<span className={styles.bold}>{bold}</span>
 					{title}
 				</span>
-				<span className='subtitle'>{subtitle}</span>
+				<span className={styles.subtitle}>{subtitle}</span>
 			</div>
 		</div>
 	);

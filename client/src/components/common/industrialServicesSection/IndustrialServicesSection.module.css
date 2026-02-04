@@ -1,16 +1,11 @@
-/* src/components/home/IndustrialServicesSection.css */
+/* src/components/home/IndustrialServicesSection.module.css */
 
-.industrial-services-section {
-  /* display: grid; */
-  /* grid-template-columns: 1fr 1fr; */
-  /* Two equal columns */
-  /* width: 100%; */
-  /* min-height: 600px; */
+.industrialServicesSection {
   background-color: var(--color-brand-dark);
   position: relative;
 }
 
-.industrial-services-section-container {
+.industrialServicesSectionContainer {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
@@ -20,7 +15,7 @@
   z-index: 2;
 }
 
-.industrial-services-right-bg {
+.industrialServicesRightBg {
   background-size: cover;
   background-position: center;
   width: 50%;
@@ -30,7 +25,7 @@
   z-index: 1;
 }
 
-.industrial-services-right-bg::after {
+.industrialServicesRightBg::after {
   content:'';
   width: 100%;
   height: 100%;
@@ -42,7 +37,7 @@
 } 
 
 /* --- Left Column --- */
-.industrial-services-left-content {
+.industrialServicesLeftContent {
   padding: var(--space-xxxl) 0;
   display: flex;
   flex-direction: column;
@@ -50,7 +45,7 @@
   max-width: 600px;
 }
 
-.industrial-services-subtitle {
+.industrialServicesSubtitle {
   font-family: var(--font-family-heading);
   font-size: 0.875rem;
   /* 14px */
@@ -61,7 +56,7 @@
   margin-bottom: var(--space-md);
 }
 
-.industrial-services-title {
+.industrialServicesTitle {
   font-family: var(--font-family-heading);
   font-size: 2.5rem;
   /* 40px */
@@ -71,7 +66,7 @@
   padding: 0 var(--space-sm);
 }
 
-.industrial-services-description {
+.industrialServicesDescription {
   font-family: var(--font-family-body);
   font-size: 1rem;
   /* 16px */
@@ -81,7 +76,7 @@
   padding: 0 var(--space-sm);
 }
 
-.industrial-services-stats-wrapper {
+.industrialServicesStatsWrapper {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -93,16 +88,16 @@
 @media (max-width: 1220px) {
 
   /* Move stats to be centered on tablet */
-  .industrial-services-stats-wrapper {
+  .industrialServicesStatsWrapper {
     left: var(--space-xl);
     margin: auto;
   }
 
-  .industrial-services-section-container {
+  .industrialServicesSectionContainer {
     flex-direction: column;
   }
 
-  .industrial-services-right-bg {
+  .industrialServicesRightBg {
     width: 100%;
   }
 }
@@ -110,18 +105,18 @@
 @media (max-width: 768px) {
 
   /* Stack to one column */
-  .industrial-services-section {
+  .industrialServicesSection {
     grid-template-columns: 1fr;
   }
 
 
-  .industrial-services-title {
+  .industrialServicesTitle {
     font-size: 2rem;
     /* 32px */
   }
 
   /* Center stats on mobile */
-  .industrial-services-stats-wrapper {
+  .industrialServicesStatsWrapper {
     position: relative;
     /* Un-pin it */
     top: 0;
@@ -133,7 +128,9 @@
     padding: 1rem;
   }
 
-  .stat-card {
+  /* Note: statCard should probably be handled in its own module if possible, 
+     but keeping it here for now if it was targeted from here */
+  .statCard {
     width: 100%;
     max-width: 350px;
     margin: auto;

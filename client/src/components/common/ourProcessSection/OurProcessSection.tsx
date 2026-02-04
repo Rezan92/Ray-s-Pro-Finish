@@ -1,6 +1,6 @@
 import React from 'react';
 import { ClipboardList, ShieldCheck, PaintRoller, Sparkles } from 'lucide-react';
-import './OurProcessSection.css';
+import styles from './OurProcessSection.module.css';
 
 // A sub-component for each step
 const ProcessStep: React.FC<{
@@ -10,14 +10,14 @@ const ProcessStep: React.FC<{
 	description: string;
 }> = ({ icon: Icon, step, title, description }) => {
 	return (
-		<div className='process-step'>
-			<div className='process-step-icon-wrapper'>
+		<div className={styles.processStep}>
+			<div className={styles.processStepIconWrapper}>
 				<Icon size={40} />
 			</div>
-			<div className='process-step-content'>
-				<span className='process-step-number'>{step}</span>
-				<h3 className='process-step-title'>{title}</h3>
-				<p className='process-step-description'>{description}</p>
+			<div className={styles.processStepContent}>
+				<span className={styles.processStepNumber}>{step}</span>
+				<h3 className={styles.processStepTitle}>{title}</h3>
+				<p className={styles.processStepDescription}>{description}</p>
 			</div>
 		</div>
 	);
@@ -25,12 +25,12 @@ const ProcessStep: React.FC<{
 
 export const OurProcessSection: React.FC = () => {
 	return (
-		<section className='our-process-section'>
-			<div className='our-process-header'>
-				<span className='our-process-subtitle'>HOW IT WORKS</span>
-				<h2 className='our-process-title'>Our Professional Process</h2>
+		<section className={styles.ourProcessSection}>
+			<div className={styles.ourProcessHeader}>
+				<span className={styles.ourProcessSubtitle}>HOW IT WORKS</span>
+				<h2 className={styles.ourProcessTitle}>Our Professional Process</h2>
 			</div>
-			<div className='our-process-grid'>
+			<div className={styles.ourProcessGrid}>
 				<ProcessStep
 					icon={ClipboardList}
 					step='Step 01'

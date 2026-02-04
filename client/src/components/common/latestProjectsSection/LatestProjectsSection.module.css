@@ -1,18 +1,18 @@
-/* src/components/home/LatestProjectsSection.css */
+/* src/components/home/LatestProjectsSection.module.css */
 
-.latest-projects-section {
+.latestProjectsSection {
   width: 100%;
   max-width: 1140px;
   margin: 0 auto;
   padding: var(--space-xxxl) var(--space-lg);
 }
 
-.latest-projects-header {
+.latestProjectsHeader {
   text-align: center;
   margin-bottom: var(--space-xxl);
 }
 
-.latest-projects-subtitle {
+.latestProjectsSubtitle {
   font-size: 0.875rem;
   font-weight: var(--font-weight-medium);
   color: var(--color-primary);
@@ -20,7 +20,7 @@
   letter-spacing: 1px;
 }
 
-.latest-projects-title {
+.latestProjectsTitle {
   font-family: var(--font-family-heading);
   font-size: 2.5rem; /* 40px */
   font-weight: var(--font-weight-bold);
@@ -28,7 +28,7 @@
   margin: var(--space-sm) 0 0 0;
 }
 
-.latest-projects-grid {
+.latestProjectsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-xl);
@@ -36,18 +36,17 @@
 
 /* --- Mobile Responsiveness --- */
 @media (max-width: 900px) { /* Tablet */
-  .latest-projects-grid {
+  .latestProjectsGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 640px) { /* Mobile */
-  .latest-projects-grid {
+  .latestProjectsGrid {
     grid-template-columns: 1fr; /* Stacks to a single column */
   }
 
-  .latest-projects-title {
+  .latestProjectsTitle {
     font-size: 2rem;
   }
 }
-

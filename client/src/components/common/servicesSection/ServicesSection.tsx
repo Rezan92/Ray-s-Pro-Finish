@@ -1,5 +1,5 @@
 import { ServiceCard } from '../serviceCard/ServiceCard';
-import './ServicesSection.css';
+import styles from './ServicesSection.module.css';
 import { PaintRoller, Sheet, Wand2 } from 'lucide-react';
 import paintingImage from '@/assets/serviceSection/Painting.png';
 import patchingImage from '@/assets/serviceSection/Patching.png';
@@ -57,15 +57,15 @@ export const ServicesSection = () => {
 	};
 
 	return (
-		<section className='services-section'>
-			<div className='services-section-header'>
-				<span className='services-section-subtitle'>Our Services</span>
-				<h2 className='services-section-title'>
+		<section className={styles.servicesSection}>
+			<div className={styles.servicesSectionHeader}>
+				<span className={styles.servicesSectionSubtitle}>Our Services</span>
+				<h2 className={styles.servicesSectionTitle}>
 					Our Painting & Drywall Services
 				</h2>
 			</div>
 
-			<div className='services-section-grid'>
+			<div className={styles.servicesSectionGrid}>
 				{servicesData.map((service) => (
 					<ServiceCard
 						key={service.title}

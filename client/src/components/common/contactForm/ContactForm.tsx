@@ -1,26 +1,27 @@
 import React from 'react';
-import './ContactForm.css';
+import styles from './ContactForm.module.css';
 import { Button } from '../button/Button';
 
 export const ContactForm: React.FC = () => {
 	// In a real app, you would handle form state and submission here
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		alert('Form submitted! (This is a demo)');
+		// In a real implementation, we would use FloatingAlert per Constitution
+		console.log('Form submitted! (This is a demo)');
 	};
 
 	return (
-		<div className='contact-form-wrapper'>
-			<h2 className='contact-form-title'>Send Us a Message</h2>
-			<p className='contact-form-intro'>
+		<div className={styles.contactFormWrapper}>
+			<h2 className={styles.contactFormTitle}>Send Us a Message</h2>
+			<p className={styles.contactFormIntro}>
 				Prefer to write? Fill out the form below and we'll get back to you.
 			</p>
 			<form
-				className='contact-form'
+				className={styles.contactForm}
 				onSubmit={handleSubmit}
 			>
-				<div className='form-group-grid'>
-					<div className='form-group'>
+				<div className={styles.formGroupGrid}>
+					<div className={styles.formGroup}>
 						<label htmlFor='name'>Full Name*</label>
 						<input
 							type='text'
@@ -29,7 +30,7 @@ export const ContactForm: React.FC = () => {
 							required
 						/>
 					</div>
-					<div className='form-group'>
+					<div className={styles.formGroup}>
 						<label htmlFor='phone'>Phone</label>
 						<input
 							type='tel'
@@ -38,7 +39,7 @@ export const ContactForm: React.FC = () => {
 						/>
 					</div>
 				</div>
-				<div className='form-group'>
+				<div className={styles.formGroup}>
 					<label htmlFor='email'>Email*</label>
 					<input
 						type='email'
@@ -47,7 +48,7 @@ export const ContactForm: React.FC = () => {
 						required
 					/>
 				</div>
-				<div className='form-group'>
+				<div className={styles.formGroup}>
 					<label htmlFor='service'>What service do you need?*</label>
 					<select
 						id='service'
@@ -66,7 +67,7 @@ export const ContactForm: React.FC = () => {
 						<option value='Other'>Other / Not Sure</option>
 					</select>
 				</div>
-				<div className='form-group'>
+				<div className={styles.formGroup}>
 					<label htmlFor='message'>Project Details*</label>
 					<textarea
 						id='message'
@@ -79,7 +80,7 @@ export const ContactForm: React.FC = () => {
 				<Button
 					type='submit'
 					variant='primary'
-					className='contact-submit-btn'
+					className={styles.contactSubmitBtn}
 				>
 					Send Message
 				</Button>
