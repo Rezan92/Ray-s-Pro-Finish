@@ -9,13 +9,13 @@
 ## Phase 1: Setup
 **Goal**: Prepare the environment and create shared slices for global state.
 
-- [ ] T001 [US1] Create `projectSlice.ts` for shared state (clientId, projectId) in `client/src/store/slices/projectSlice.ts`
-- [ ] T002 [US3] Create `uiSlice.ts` for global UI state (modals, loading) in `client/src/store/slices/uiSlice.ts`
+- [x] T001 [US1] Create `projectSlice.ts` for shared state (clientId, projectId) in `client/src/store/slices/projectSlice.ts`
+- [x] T002 [US3] Create `uiSlice.ts` for global UI state (modals, loading) in `client/src/store/slices/uiSlice.ts`
 
 ## Phase 2: Foundational
 **Goal**: Establish the new root store structure.
 
-- [ ] T003 [US1] Update `store.ts` to include the new `project` and `ui` reducers while keeping `estimator` temporarily in `client/src/store/store.ts`
+- [x] T003 [US1] Update `store.ts` to include the new `project` and `ui` reducers while keeping `estimator` temporarily in `client/src/store/store.ts`
 
 ## Phase 3: Painting Feature Slice (User Story 1 & 2)
 **Goal**: Migrate Painting logic to its own slice and implement selectors.

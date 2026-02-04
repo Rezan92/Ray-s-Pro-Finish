@@ -9,6 +9,11 @@ interface UiState {
 		type: 'project' | 'service' | null;
 		data: Project | Service | null;
 	};
+	estimator: {
+		currentStep: number;
+		isLoading: boolean;
+		errors: Record<string, string>;
+	};
 }
 
 const initialState: UiState = {
@@ -18,6 +23,11 @@ const initialState: UiState = {
 		type: null,
 		data: null,
 	},
+	estimator: {
+		currentStep: 1,
+		isLoading: false,
+		errors: {},
+	},
 };
 
 export const uiSlice = createSlice({
@@ -25,7 +35,6 @@ export const uiSlice = createSlice({
 	initialState,
 	reducers: {
 		toggleMobileMenu: (state, action: PayloadAction<boolean | undefined>) => {
-			// If value provided, set it; otherwise toggle
 			state.isMobileMenuOpen = action.payload ?? !state.isMobileMenuOpen;
 		},
 		openProjectModal: (state, action: PayloadAction<Project>) => {
@@ -46,6 +55,22 @@ export const uiSlice = createSlice({
 		closeMobileMenu: (state) => {
 			state.isMobileMenuOpen = false;
 		},
+		// Estimator UI Reducers
+		setEstimatorStep: (state, action: PayloadAction<number>) => {
+			state.estimator.currentStep = action.payload;
+		},
+		setEstimatorLoading: (state, action: PayloadAction<boolean>) => {
+			state.estimator.isLoading = action.payload;
+		},
+		setEstimatorError: (
+			state,
+			action: PayloadAction<{ field: string; message: string }>
+		) => {
+			state.estimator.errors[action.payload.field] = action.payload.message;
+		},
+		clearEstimatorErrors: (state) => {
+			state.estimator.errors = {};
+		},
 	},
 });
 
@@ -55,6 +80,10 @@ export const {
 	openServiceModal,
 	closeModal,
 	closeMobileMenu,
+	setEstimatorStep,
+	setEstimatorLoading,
+	setEstimatorError,
+	clearEstimatorErrors,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;
