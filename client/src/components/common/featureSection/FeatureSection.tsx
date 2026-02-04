@@ -1,4 +1,4 @@
-import './FeatureSection.css';
+import styles from './FeatureSection.module.css';
 import { PaintRoller, Smile, Wand2 } from 'lucide-react'; // Icons from screenshot
 import { FeatureCard } from '../featureCard/FeatureCard';
 
@@ -31,8 +31,8 @@ export const FeatureSection = () => {
 	];
 
 	return (
-		<section className='feature-section'>
-			<div className='feature-grid'>
+		<section className={styles.featureSection}>
+			<div className={styles.featureGrid}>
 				{cardData.map((card, index) => (
 					<FeatureCard
 						key={index}

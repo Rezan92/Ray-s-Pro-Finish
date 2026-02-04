@@ -9,7 +9,7 @@
 ## Phase 1: Setup
 **Goal**: Prepare environment for final CSS migration.
 
-- [ ] T001 [P] Verify current variable availability in `index.css` to ensure all hardcoded colors map to existing variables in `client/src/index.css`
+- [x] T001 [P] Verify current variable availability in `index.css` to ensure all hardcoded colors map to existing variables in `client/src/index.css`
 
 ## Phase 2: Foundational
 **Goal**: N/A (Standard Refactoring Pattern established)
@@ -18,11 +18,11 @@
 **Goal**: Migrate core marketing sections to CSS Modules.
 **Independent Test**: Verify Hero, About, Feature, and Testimonial sections render identically.
 
-- [ ] T002 [P] [US1] Migrate Hero styles to module in `client/src/components/common/hero/Hero.tsx` and `client/src/components/common/hero/Hero.module.css`
-- [ ] T003 [P] [US1] Migrate AboutSection styles to module in `client/src/components/common/aboutSection/AboutSection.tsx` and `client/src/components/common/aboutSection/AboutSection.module.css`
-- [ ] T004 [P] [US1] Migrate FeatureSection styles to module in `client/src/components/common/featureSection/FeatureSection.tsx` and `client/src/components/common/featureSection/FeatureSection.module.css`
-- [ ] T005 [P] [US1] Migrate TestimonialSection styles to module in `client/src/components/common/testimonialSection/TestimonialSection.tsx` and `client/src/components/common/testimonialSection/TestimonialSection.module.css`
-- [ ] T006 [P] [US1] Migrate TestimonialSlider styles to module in `client/src/components/common/testimonialSlider/TestimonialSlider.tsx` and `client/src/components/common/testimonialSlider/TestimonialSlider.module.css`
+- [x] T002 [P] [US1] Migrate Hero styles to module in `client/src/components/common/hero/Hero.tsx` and `client/src/components/common/hero/Hero.module.css`
+- [x] T003 [P] [US1] Migrate AboutSection styles to module in `client/src/components/common/aboutSection/AboutSection.tsx` and `client/src/components/common/aboutSection/AboutSection.module.css`
+- [x] T004 [P] [US1] Migrate FeatureSection styles to module in `client/src/components/common/featureSection/FeatureSection.tsx` and `client/src/components/common/featureSection/FeatureSection.module.css`
+- [x] T005 [P] [US1] Migrate TestimonialSection styles to module in `client/src/components/common/testimonialSection/TestimonialSection.tsx` and `client/src/components/common/testimonialSection/TestimonialSection.module.css`
+- [x] T006 [P] [US1] Migrate TestimonialSlider styles to module in `client/src/components/common/testimonialSlider/TestimonialSlider.tsx` and `client/src/components/common/testimonialSlider/TestimonialSlider.module.css`
 
 ## Phase 4: Service & Interaction Component Refactor (User Story 1 Extended)
 **Goal**: Migrate services, projects, contact, and modal components.

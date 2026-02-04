@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './TestimonialSlider.css';
+import styles from './TestimonialSlider.module.css';
 
 export interface Testimonial {
   id: number;
@@ -14,7 +14,7 @@ interface TestimonialSliderProps {
 }
 
 const QuoteIcon: React.FC = () => (
-	<div className='slider-author__quote-icon'>
+	<div className={styles.sliderAuthorQuoteIcon}>
 		<svg
 			xmlns='http://www.w3.org/2000/svg'
 			width='24'
@@ -99,50 +99,50 @@ export const TestimonialSlider: React.FC<TestimonialSliderProps> = ({
 	const activeDisplayIndex = currentIndex % testimonials.length;
 
 	return (
-		<div className='testimonial-slider'>
-			<div className='slider-viewport'>
+		<div className={styles.testimonialSlider}>
+			<div className={styles.sliderViewport}>
 				<div
 					ref={sliderTrackRef}
-					className='slider-track'
+					className={styles.sliderTrack}
 					style={{ transform: `translateX(-${currentIndex * 100}%)` }}
 				>
 					{loopedTestimonials.map((testimonial, index) => (
 						<div
 							key={index}
-							className='slide'
+							className={styles.slide}
 						>
-							<p className='slide__quote'>{testimonial.quote}</p>
+							<p className={styles.slideQuote}>{testimonial.quote}</p>
 						</div>
 					))}
 				</div>
 			</div>
 
-			<div className='slider-author'>
-				<div className='slider-author__image-wrapper'>
+			<div className={styles.sliderAuthor}>
+				<div className={styles.sliderAuthorImageWrapper}>
 					<img
 						src={testimonials[activeDisplayIndex].imageUrl}
 						alt={testimonials[activeDisplayIndex].author}
-						className='slider-author__image'
+						className={styles.sliderAuthorImage}
 					/>
 					<QuoteIcon />
 				</div>
-				<div className='slider-author__info'>
-					<p className='slider-author__name'>
+				<div className={styles.sliderAuthorInfo}>
+					<p className={styles.sliderAuthorName}>
 						{testimonials[activeDisplayIndex].author}
 					</p>
-					<p className='slider-author__role'>
+					<p className={styles.sliderAuthorRole}>
 						{testimonials[activeDisplayIndex].role}
 					</p>
 				</div>
 			</div>
 
-			<div className='slider-dots'>
+			<div className={styles.sliderDots}>
 				{testimonials.map((_, index) => (
 					<button
 						key={index}
 						onClick={() => handleDotClick(index)}
-						className={`slider-dots__dot ${
-							index === activeDisplayIndex ? 'slider-dots__dot--active' : ''
+						className={`${styles.sliderDotsDot} ${
+							index === activeDisplayIndex ? styles.sliderDotsDotActive : ''
 						}`}
 						aria-label={`Go to slide ${index + 1}`}
 					/>
