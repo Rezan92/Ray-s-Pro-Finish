@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { Project } from '@/components/common/projectCard/ProjectCard';
 import type { Service } from '@/components/common/serviceModal/ServiceModal';
-import { generateEstimate } from './estimatorSlice';
+import { generateEstimate } from './estimationSlice';
 
 interface UiState {
 	isMobileMenuOpen: boolean;

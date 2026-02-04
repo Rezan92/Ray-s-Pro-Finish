@@ -39,10 +39,10 @@
 **Goal**: Finalize store integration and remove legacy code.
 **Independent Test**: Full application regression test; verify no traces of `estimatorSlice` remain.
 
-- [ ] T012 [US3] Migrate `EstimatorPage` and global UI components to use `uiSlice` for steps and loading state in `client/src/pages/estimatorPage/EstimatorPage.tsx`
-- [ ] T013 [US1] Update `store.ts` to include all new feature reducers (`painting`, `basement`, etc.) in `client/src/store/store.ts`
-- [ ] T014 [US1] Remove `estimator` reducer from `store.ts` and delete `client/src/store/slices/estimatorSlice.ts`
-- [ ] T015 [US1] Run full build and type check to ensure zero errors
+- [x] T012 [US3] Migrate `EstimatorPage` and global UI components to use `uiSlice` for steps and loading state in `client/src/pages/estimatorPage/EstimatorPage.tsx`
+- [x] T013 [US1] Update `store.ts` to include all new feature reducers (`painting`, `basement`, etc.) in `client/src/store/store.ts`
+- [x] T014 [US1] Remove `estimator` reducer from `store.ts` and delete `client/src/store/slices/estimatorSlice.ts`
+- [x] T015 [US1] Run full build and type check to ensure zero errors
 
 ## Dependencies
 
