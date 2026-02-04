@@ -22,6 +22,21 @@ import {
 	updateRoomField,
 	updatePaintingGlobal,
 } from '@/store/slices/paintingSlice';
+import {
+	updateBasementField,
+	updateBasementService,
+} from '@/store/slices/basementSlice';
+import {
+	updateGarageField,
+	updateGarageService,
+} from '@/store/slices/garageSlice';
+import {
+	addRepair,
+	updateRepair,
+	removeRepair,
+	updateRepairField,
+} from '@/store/slices/repairSlice';
+import { updateInstallationField } from '@/store/slices/installationSlice';
 
 // Components
 import { EstimatorStep1 } from '@/components/common/estimator/EstimatorStep1';
@@ -116,6 +131,10 @@ const EstimatorPage = () => {
 	const step = useAppSelector((state) => state.ui.estimator.currentStep);
 	const contact = useAppSelector((state) => state.project.contact);
 	const paintingData = useAppSelector((state) => state.painting);
+	const basementData = useAppSelector((state) => state.basement);
+	const garageData = useAppSelector((state) => state.garage);
+	const repairData = useAppSelector((state) => state.repair);
+	const installationData = useAppSelector((state) => state.installation);
 
 	const isLoading = status === 'loading';
 
@@ -140,6 +159,10 @@ const EstimatorPage = () => {
 		const mergedFormData = {
 			...formData,
 			painting: paintingData,
+			basement: basementData,
+			garage: garageData,
+			patching: repairData,
+			installation: installationData,
 			contact: contact,
 		};
 
@@ -179,10 +202,14 @@ const EstimatorPage = () => {
 					{step === 2 && (
 						<>
 							<EstimatorStep2
-								formData={{ ...formData, painting: paintingData }}
-								onNestedChange={(path, field, value) =>
-									dispatch(updateNestedForm({ path, field, value }))
-								}
+								formData={{
+									...formData,
+									painting: paintingData,
+									basement: basementData,
+									garage: garageData,
+									patching: repairData,
+									installation: installationData,
+								}}
 								// Painting Handlers
 								onPaintingRoomTypeToggle={(type, isChecked) =>
 									dispatch(toggleRoomType({ type, isChecked }))
@@ -195,10 +222,33 @@ const EstimatorPage = () => {
 								onPaintingGlobalChange={(field, value) =>
 									dispatch(updatePaintingGlobal({ field, value }))
 								}
-								// Repair Handlers (NEW)
+								// Basement Handlers
+								onBasementFieldChange={(field, value) =>
+									dispatch(updateBasementField({ field: field as any, value }))
+								}
+								onBasementServiceChange={(field, value) =>
+									dispatch(updateBasementService({ field: field as any, value }))
+								}
+								// Garage Handlers
+								onGarageFieldChange={(field, value) =>
+									dispatch(updateGarageField({ field: field as any, value }))
+								}
+								onGarageServiceChange={(field, value) =>
+									dispatch(updateGarageService({ field: field as any, value }))
+								}
+								// Repair Handlers
 								onAddRepair={(repair) => dispatch(addRepair(repair))}
 								onUpdateRepair={(repair) => dispatch(updateRepair(repair))}
 								onRemoveRepair={(id) => dispatch(removeRepair(id))}
+								onRepairFieldChange={(field, value) =>
+									dispatch(updateRepairField({ field: field as any, value }))
+								}
+								// Installation Handlers
+								onInstallationFieldChange={(field, value) =>
+									dispatch(
+										updateInstallationField({ field: field as any, value })
+									)
+								}
 							/>
 							<div className={`${styles.estimatorActions} ${styles.spaceBetween}`}>
 								<Button

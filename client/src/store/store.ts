@@ -4,6 +4,10 @@ import uiReducer from './slices/uiSlice';
 import projectsReducer from './slices/projectsSlice';
 import projectReducer from './slices/projectSlice';
 import paintingReducer from './slices/paintingSlice';
+import basementReducer from './slices/basementSlice';
+import garageReducer from './slices/garageSlice';
+import repairReducer from './slices/repairSlice';
+import installationReducer from './slices/installationSlice';
 
 export const store = configureStore({
 	reducer: {
@@ -12,6 +16,10 @@ export const store = configureStore({
 		projects: projectsReducer,
 		project: projectReducer,
 		painting: paintingReducer,
+		basement: basementReducer,
+		garage: garageReducer,
+		repair: repairReducer,
+		installation: installationReducer,
 	},
 });
 

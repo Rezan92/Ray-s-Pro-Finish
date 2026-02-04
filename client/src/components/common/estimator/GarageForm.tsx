@@ -10,29 +10,18 @@ import styles from './styles/GarageForm.module.css';
 
 interface GarageFormProps {
 	formData: FormData;
-	onNestedChange: (path: 'garage', field: string, value: any) => void;
+	onFieldChange: (field: string, value: any) => void;
+	onServiceToggle: (field: string, value: any) => void;
 }
 
 export const GarageForm: React.FC<GarageFormProps> = ({
 	formData,
-	onNestedChange,
+	onFieldChange,
+	onServiceToggle,
 }) => {
 	const { garage } = formData;
 
 	const prevConditionRef = useRef(garage.condition);
-
-	useEffect(() => {
-		if (!garage.services) {
-			onNestedChange('garage', 'services', {
-				insulation: false,
-				drywall: false,
-				painting: false,
-			});
-		}
-		if (!garage.drywallLevel)
-			onNestedChange('garage', 'drywallLevel', 'Level 2');
-		if (!garage.paintLevel) onNestedChange('garage', 'paintLevel', 'Standard');
-	}, [garage.services, garage.drywallLevel, garage.paintLevel, onNestedChange]);
 
 	const safeServices = garage.services || {
 		insulation: false,
@@ -42,14 +31,14 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 
 	useEffect(() => {
 		if (prevConditionRef.current !== garage.condition) {
-			onNestedChange('garage', 'services', {
+			onFieldChange('services', {
 				insulation: false,
 				drywall: false,
 				painting: false,
 			});
 			prevConditionRef.current = garage.condition;
 		}
-	}, [garage.condition, onNestedChange]);
+	}, [garage.condition, onFieldChange]);
 
 	const handleChange = (
 		e: React.ChangeEvent<
@@ -59,21 +48,18 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 		const { name, value, type } = e.target;
 		const finalValue =
 			type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
-		onNestedChange('garage', name, finalValue);
+		onFieldChange(name, finalValue);
 	};
 
 	const handleServiceToggle = (key: 'insulation' | 'drywall' | 'painting') => {
-		onNestedChange('garage', 'services', {
-			...safeServices,
-			[key]: !safeServices[key],
-		});
+		onServiceToggle(key, !safeServices[key]);
 	};
 
 	const handleLevelChange = (
 		field: 'drywallLevel' | 'paintLevel',
 		value: DrywallLevel | PaintLevel
 	) => {
-		onNestedChange('garage', field, value);
+		onFieldChange(field, value);
 	};
 
 	// --- DYNAMIC LABELS ---
@@ -328,7 +314,7 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 					<div className={styles.garageDetailsHeader}>
 						<label>Additional Notes</label>
 						<span className={styles.garageCharCount}>
-							{((garage as any).additionalDetails || '').length}/600
+							{(garage.additionalDetails || '').length}/600
 						</span>
 					</div>
 					<div className={styles.garageHelperText}>
@@ -340,7 +326,7 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 					<textarea
 						className={styles.garageTextarea}
 						name='additionalDetails'
-						value={(garage as any).additionalDetails || ''}
+						value={garage.additionalDetails || ''}
 						onChange={handleChange}
 						rows={3}
 						maxLength={600}

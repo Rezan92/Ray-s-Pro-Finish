@@ -5,12 +5,12 @@ import styles from './styles/InstallationForm.module.css';
 
 interface InstallationFormProps {
 	formData: FormData;
-	onNestedChange: (path: 'installation', field: string, value: any) => void;
+	onFieldChange: (field: string, value: any) => void;
 }
 
 export const InstallationForm: React.FC<InstallationFormProps> = ({
 	formData,
-	onNestedChange,
+	onFieldChange,
 }) => {
 	const { installation } = formData;
 
@@ -23,7 +23,7 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 			e.target.type === 'checkbox'
 				? (e.target as HTMLInputElement).checked
 				: e.target.value;
-		onNestedChange('installation', e.target.name, value);
+		onFieldChange(e.target.name, value);
 	};
 
 	const isDemo = installation.projectType === 'Demo';

@@ -29,11 +29,11 @@
 **Goal**: Migrate remaining domains (Basement, Garage, Repair, Installation) to specific slices.
 **Independent Test**: Verify each form updates its respective slice and persists data.
 
-- [ ] T007 [P] [US1] Create `basementSlice.ts` and migrate logic/selectors in `client/src/store/slices/basementSlice.ts`
-- [ ] T008 [P] [US1] Create `garageSlice.ts` and migrate logic/selectors in `client/src/store/slices/garageSlice.ts`
-- [ ] T009 [P] [US1] Create `repairSlice.ts` and migrate logic/selectors in `client/src/store/slices/repairSlice.ts`
-- [ ] T010 [P] [US1] Create `installationSlice.ts` and migrate logic/selectors in `client/src/store/slices/installationSlice.ts`
-- [ ] T011 [US2] Update `BasementForm`, `GarageForm`, `RepairForm`, and `InstallationForm` components to use new slices in `client/src/components/common/estimator/`
+- [x] T007 [P] [US1] Create `basementSlice.ts` and migrate logic/selectors in `client/src/store/slices/basementSlice.ts`
+- [x] T008 [P] [US1] Create `garageSlice.ts` and migrate logic/selectors in `client/src/store/slices/garageSlice.ts`
+- [x] T009 [P] [US1] Create `repairSlice.ts` and migrate logic/selectors in `client/src/store/slices/repairSlice.ts`
+- [x] T010 [P] [US1] Create `installationSlice.ts` and migrate logic/selectors in `client/src/store/slices/installationSlice.ts`
+- [x] T011 [US2] Update `BasementForm`, `GarageForm`, `RepairForm`, and `InstallationForm` components to use new slices in `client/src/components/common/estimator/`
 
 ## Phase 5: Component Integration & Cleanup (User Story 1 & 3)
 **Goal**: Finalize store integration and remove legacy code.

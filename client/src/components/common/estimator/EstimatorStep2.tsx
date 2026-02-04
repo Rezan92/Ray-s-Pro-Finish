@@ -16,17 +16,22 @@ interface EstimatorStep2Props {
 	onPaintingRoomChange: (roomId: string, field: string, value: any) => void;
 	onPaintingGlobalChange: (field: string, value: string) => void;
 
-	// Repair Handlers (NEW)
+	// Basement Handlers
+	onBasementFieldChange: (field: string, value: any) => void;
+	onBasementServiceChange: (field: string, value: any) => void;
+
+	// Garage Handlers
+	onGarageFieldChange: (field: string, value: any) => void;
+	onGarageServiceChange: (field: string, value: any) => void;
+
+	// Repair Handlers
 	onAddRepair: (repair: RepairItem) => void;
 	onUpdateRepair: (repair: RepairItem) => void;
 	onRemoveRepair: (id: string) => void;
+	onRepairFieldChange: (field: string, value: any) => void;
 
-	// Generic Handler
-	onNestedChange: (
-		path: 'painting' | 'patching' | 'installation',
-		field: string,
-		value: any
-	) => void;
+	// Installation Handlers
+	onInstallationFieldChange: (field: string, value: any) => void;
 }
 
 export const EstimatorStep2: React.FC<EstimatorStep2Props> = (props) => {
@@ -54,7 +59,7 @@ export const EstimatorStep2: React.FC<EstimatorStep2Props> = (props) => {
 			{services.patching && (
 				<RepairForm
 					formData={formData}
-					onNestedChange={props.onNestedChange as any}
+					onFieldChange={props.onRepairFieldChange}
 					onAddRepair={props.onAddRepair}
 					onUpdateRepair={props.onUpdateRepair}
 					onRemoveRepair={props.onRemoveRepair}
@@ -64,21 +69,23 @@ export const EstimatorStep2: React.FC<EstimatorStep2Props> = (props) => {
 			{services.installation && (
 				<InstallationForm
 					formData={formData}
-					onNestedChange={props.onNestedChange as any}
+					onFieldChange={props.onInstallationFieldChange}
 				/>
 			)}
 
 			{services.garage && (
 				<GarageForm
 					formData={formData}
-					onNestedChange={props.onNestedChange as any}
+					onFieldChange={props.onGarageFieldChange}
+					onServiceToggle={props.onGarageServiceChange}
 				/>
 			)}
 
 			{services.basement && (
 				<BasementForm
 					formData={formData}
-					onNestedChange={props.onNestedChange as any}
+					onFieldChange={props.onBasementFieldChange}
+					onServiceChange={props.onBasementServiceChange}
 				/>
 			)}
 		</div>
