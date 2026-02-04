@@ -44,15 +44,15 @@
 **Goal**: Migrate page-level layout styles to modules.
 **Independent Test**: Navigate to About, Contact, Projects, and Services pages to verify layout spacing.
 
-- [ ] T018 [P] [US2] Migrate AboutPage styles to module in `client/src/pages/aboutPage/AboutPage.tsx` and `client/src/pages/aboutPage/AboutPage.module.css`
-- [ ] T019 [P] [US2] Migrate ContactPage styles to module in `client/src/pages/contact/ContactPage.tsx` and `client/src/pages/contact/ContactPage.module.css`
-- [ ] T020 [P] [US2] Migrate ProjectsPage and ServicesPage styles to modules in `client/src/pages/projects/ProjectsPage.tsx` and `client/src/pages/services/ServicesPage.tsx`
+- [x] T018 [P] [US2] Migrate AboutPage styles to module in `client/src/pages/aboutPage/AboutPage.tsx` and `client/src/pages/aboutPage/AboutPage.module.css`
+- [x] T019 [P] [US2] Migrate ContactPage styles to module in `client/src/pages/contact/ContactPage.tsx` and `client/src/pages/contact/ContactPage.module.css`
+- [x] T020 [P] [US2] Migrate ProjectsPage and ServicesPage styles to modules in `client/src/pages/projects/ProjectsPage.tsx` and `client/src/pages/services/ServicesPage.tsx`
 
 ## Phase 6: Polish & Cleanup (User Story 3)
 **Goal**: Remove all legacy CSS files and verify codebase.
 **Independent Test**: Build project and grep for `.css` files.
 
-- [ ] T021 [US3] Remove `EstimatorPage.css` and run final verification scan in `client/src`
+- [x] T021 [US3] Remove `EstimatorPage.css` and run final verification scan in `client/src`
 
 ## Dependencies
 

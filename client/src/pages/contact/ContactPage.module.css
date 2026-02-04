@@ -1,11 +1,11 @@
-.contact-page-wrapper > * {
+.contactPageWrapper > * {
   margin-bottom: var(--space-xxxl);
 }
-.contact-page-wrapper > *:last-child {
+.contactPageWrapper > *:last-child {
   margin-bottom: 0;
 }
 
-.contact-page-grid {
+.contactPageGrid {
   display: grid;
   grid-template-columns: 1fr 1.5fr; /* Left col smaller, right col larger */
   gap: var(--space-xxl);
@@ -15,7 +15,7 @@
 }
 
 @media (max-width: 1024px) {
-  .contact-page-grid {
+  .contactPageGrid {
     grid-template-columns: 1fr; /* Stack columns on tablet/mobile */
   }
 }

@@ -1,0 +1,15 @@
+.aboutPageWrapper > * {
+	margin-bottom: var(--space-xxxl);
+}
+
+.aboutPageWrapper :global(.feature-section) {
+	margin-top: 0;
+}
+
+.aboutPageWrapper {
+	padding-bottom: var(--space-xxxl);
+}
+
+.aboutPageWrapper > *:last-child {
+	margin-bottom: 0;
+}

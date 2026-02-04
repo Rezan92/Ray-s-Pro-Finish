@@ -1,4 +1,4 @@
-import './ServicesPage.css'; // <-- Import the new CSS file
+import styles from './ServicesPage.module.css';
 import { PageHeader } from '@/components/common/pageHeader/PageHeader';
 import { ServicesSection } from '@/components/common/servicesSection/ServicesSection';
 import { OurProcessSection } from '@/components/common/ourProcessSection/OurProcessSection';
@@ -8,7 +8,7 @@ import { RequestQuoteSection } from '@/components/common/requestQuoteSection/Req
 
 const ServicesPage = () => {
 	return (
-		<div className='services-page-wrapper'>
+		<div className={styles.servicesPageWrapper}>
 			{' '}
 			{/* <-- Add the wrapper class */}
 			{/* 1. Page Title */}

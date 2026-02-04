@@ -1,0 +1,7 @@
+.servicesPageWrapper > * {
+	margin-bottom: var(--space-xxxl);
+}
+
+.servicesPageWrapper > *:last-child {
+	margin-bottom: 0;
+}
