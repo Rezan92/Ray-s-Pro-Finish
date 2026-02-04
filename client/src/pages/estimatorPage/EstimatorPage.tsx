@@ -6,20 +6,22 @@ import styles from './EstimatorPage.module.css';
 // Redux Hooks
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
-	setStep,
 	toggleService,
-	toggleRoomType,
-	addRoom,
-	removeRoom,
-	updateRoomField,
-	updatePaintingGlobal,
 	updateNestedForm,
-	updateContact,
 	generateEstimate,
 	addRepair,
 	updateRepair,
 	removeRepair,
 } from '@/store/slices/estimatorSlice';
+import { setEstimatorStep } from '@/store/slices/uiSlice';
+import { updateContact } from '@/store/slices/projectSlice';
+import {
+	toggleRoomType,
+	addRoom,
+	removeRoom,
+	updateRoomField,
+	updatePaintingGlobal,
+} from '@/store/slices/paintingSlice';
 
 // Components
 import { EstimatorStep1 } from '@/components/common/estimator/EstimatorStep1';
@@ -108,17 +110,21 @@ const EstimatorStepContact: React.FC<{ contact: any }> = ({ contact }) => {
 
 const EstimatorPage = () => {
 	const dispatch = useAppDispatch();
-	const { step, formData, estimate, status, error } = useAppSelector(
+	const { formData, estimate, status, error } = useAppSelector(
 		(state) => state.estimator
 	);
+	const step = useAppSelector((state) => state.ui.estimator.currentStep);
+	const contact = useAppSelector((state) => state.project.contact);
+	const paintingData = useAppSelector((state) => state.painting);
+
 	const isLoading = status === 'loading';
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, [step]);
 
-	const handleNext = () => dispatch(setStep(step + 1));
-	const handleBack = () => dispatch(setStep(step - 1));
+	const handleNext = () => dispatch(setEstimatorStep(step + 1));
+	const handleBack = () => dispatch(setEstimatorStep(step - 1));
 
 	const handleServiceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const name = e.target.name as keyof typeof formData.services;
@@ -130,7 +136,14 @@ const EstimatorPage = () => {
 		const params = new URLSearchParams(window.location.search);
 		const adminKey = params.get('admin') || '';
 
-		dispatch(generateEstimate({ formData, adminKey }));
+		// Merge data for submission
+		const mergedFormData = {
+			...formData,
+			painting: paintingData,
+			contact: contact,
+		};
+
+		dispatch(generateEstimate({ formData: mergedFormData, adminKey }));
 	};
 
 	const isStep1Complete = Object.values(formData.services).some(Boolean);
@@ -166,7 +179,7 @@ const EstimatorPage = () => {
 					{step === 2 && (
 						<>
 							<EstimatorStep2
-								formData={formData}
+								formData={{ ...formData, painting: paintingData }}
 								onNestedChange={(path, field, value) =>
 									dispatch(updateNestedForm({ path, field, value }))
 								}
@@ -209,7 +222,7 @@ const EstimatorPage = () => {
 
 					{step === 3 && (
 						<>
-							<EstimatorStepContact contact={formData.contact} />
+							<EstimatorStepContact contact={contact} />
 							<div className={`${styles.estimatorActions} ${styles.spaceBetween}`}>
 								<Button
 									type='button'
@@ -235,7 +248,7 @@ const EstimatorPage = () => {
 							estimation={estimate}
 							isLoading={isLoading}
 							error={error}
-							onBack={() => dispatch(setStep(3))}
+							onBack={() => dispatch(setEstimatorStep(3))}
 						/>
 					)}
 				</form>

@@ -21,9 +21,9 @@
 **Goal**: Migrate Painting logic to its own slice and implement selectors.
 **Independent Test**: Verify Painting form updates state in `painting` slice and total price calculates correctly.
 
-- [ ] T004 [US1] Create `paintingSlice.ts` with state and actions migrated from estimatorSlice in `client/src/store/slices/paintingSlice.ts`
-- [ ] T005 [P] [US2] Create memoized selectors for Painting totals in `client/src/store/slices/paintingSlice.ts`
-- [ ] T006 [US2] Update `PaintingForm` and child components to use `paintingSlice` actions and selectors in `client/src/components/common/estimator/PaintingForm.tsx`
+- [x] T004 [US1] Create `paintingSlice.ts` with state and actions migrated from estimatorSlice in `client/src/store/slices/paintingSlice.ts`
+- [x] T005 [P] [US2] Create memoized selectors for Painting totals in `client/src/store/slices/paintingSlice.ts`
+- [x] T006 [US2] Update `PaintingForm` and child components to use `paintingSlice` actions and selectors in `client/src/components/common/estimator/PaintingForm.tsx`
 
 ## Phase 4: Feature Slices Migration (User Story 1 & 2)
 **Goal**: Migrate remaining domains (Basement, Garage, Repair, Installation) to specific slices.

@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { Project } from '@/components/common/projectCard/ProjectCard';
 import type { Service } from '@/components/common/serviceModal/ServiceModal';
+import { generateEstimate } from './estimatorSlice';
 
 interface UiState {
 	isMobileMenuOpen: boolean;
@@ -71,6 +72,11 @@ export const uiSlice = createSlice({
 		clearEstimatorErrors: (state) => {
 			state.estimator.errors = {};
 		},
+	},
+	extraReducers: (builder) => {
+		builder.addCase(generateEstimate.fulfilled, (state) => {
+			state.estimator.currentStep = 4;
+		});
 	},
 });
 

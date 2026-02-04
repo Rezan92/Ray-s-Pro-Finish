@@ -3,6 +3,7 @@ import estimatorReducer from './slices/estimatorSlice';
 import uiReducer from './slices/uiSlice';
 import projectsReducer from './slices/projectsSlice';
 import projectReducer from './slices/projectSlice';
+import paintingReducer from './slices/paintingSlice';
 
 export const store = configureStore({
 	reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
 		ui: uiReducer,
 		projects: projectsReducer,
 		project: projectReducer,
+		painting: paintingReducer,
 	},
 });
 
