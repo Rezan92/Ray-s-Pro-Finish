@@ -1,5 +1,5 @@
-/* src/components/common/hero/Hero.css */
-.hero-container-wrapper {
+/* src/components/common/hero/Hero.module.css */
+.heroContainerWrapper {
   min-height: 750px;
 }
 
@@ -20,14 +20,14 @@
   color: var(--color-text-inverted);
 }
 
-.hero .container {
+.hero :global(.container) {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
 /* Dark overlay for text readability */
-.hero-overlay {
+.heroOverlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -39,7 +39,7 @@
 }
 
 /* We reuse .container but need to position content above the overlay */
-.hero-container {
+.heroContainer {
   position: relative;
   z-index: 2;
   top: 50px;
@@ -48,7 +48,7 @@
   padding: 0 var(--space-sm);
 }
 
-.hero-title {
+.heroTitle {
   font-family: var(--font-family-heading);
   font-size: 3.5rem;
   /* 56px */
@@ -59,7 +59,7 @@
   margin-bottom: var(--space-lg);
 }
 
-.hero-subtitle {
+.heroSubtitle {
   font-family: var(--font-family-body);
   font-size: 1.125rem;
   /* 18px */
@@ -68,7 +68,7 @@
   margin-bottom: var(--space-xl);
 }
 
-.hero-actions {
+.heroActions {
   display: flex;
   gap: 10px;
   /* Space between buttons */
@@ -76,7 +76,7 @@
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
-  .hero-container-wrapper {
+  .heroContainerWrapper {
     min-height: 420px;
   }
 
@@ -89,16 +89,16 @@
     /* Center content horizontally */
   }
 
-  .hero-container {
+  .heroContainer {
     top: inherit;
   }
 
-  .hero-title {
+  .heroTitle {
     font-size: 2.5rem;
     /* 40px */
   }
 
-  .hero-subtitle {
+  .heroSubtitle {
     font-size: 1rem;
     /* 16px */
     margin-left: auto;

@@ -1,5 +1,5 @@
 import React from 'react';
-import './ContactDetails.css';
+import styles from './ContactDetails.module.css';
 import ContactInfoBlock from '../contactInfoBlock/ContactInfoBlock';
 import { Button } from '../button/Button';
 import { Phone, MapPin, Mail, Clock } from 'lucide-react';
@@ -11,15 +11,15 @@ export const ContactDetails: React.FC = () => {
 	const whatsappLink = `https://wa.me/${phoneNumber}`;
 
 	return (
-		<div className='contact-details-wrapper'>
-			<h2 className='contact-details-title'>Get in Touch</h2>
-			<p className='contact-details-intro'>
+		<div className={styles.contactDetailsWrapper}>
+			<h2 className={styles.contactDetailsTitle}>Get in Touch</h2>
+			<p className={styles.contactDetailsIntro}>
 				We're here to help transform your space. Contact us today for a free,
 				no-obligation estimate. We respond to all inquiries within 24 business
 				hours.
 			</p>
 
-			<div className='contact-details-blocks'>
+			<div className={styles.contactDetailsBlocks}>
 				<ContactInfoBlock
 					icon={Phone}
 					bold='Call or Text: '
@@ -50,7 +50,7 @@ export const ContactDetails: React.FC = () => {
 				href={whatsappLink}
 				target='_blank'
 				variant='dark'
-				className='whatsapp-btn'
+				className={styles.whatsappBtn}
 			>
 				{/* You can add a WhatsApp icon here later if you import one */}
 				Contact Us via WhatsApp

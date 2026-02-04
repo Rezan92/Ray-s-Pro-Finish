@@ -1,12 +1,12 @@
-import './RequestQuoteSection.css';
+import styles from './RequestQuoteSection.module.css';
 import { Button } from '@/components/common/button/Button';
 
 export const RequestQuoteSection = () => {
 	return (
-		<section className='request-quote-section'>
-			<div className='request-quote-content'>
-				<h2 className='request-quote-title'>Ready to Transform Your Space?</h2>
-				<p className='request-quote-description'>
+		<section className={styles.requestQuoteSection}>
+			<div className={styles.requestQuoteContent}>
+				<h2 className={styles.requestQuoteTitle}>Ready to Transform Your Space?</h2>
+				<p className={styles.requestQuoteDescription}>
 					Let's talk about your project. Whether it's a single wall patch or a
 					full interior paint job, we provide fast, free, and no-obligation
 					estimates.

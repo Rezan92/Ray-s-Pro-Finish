@@ -1,7 +1,7 @@
 import React from 'react';
 import { TestimonialSlider } from '../testimonialSlider/TestimonialSlider';
 import type { Testimonial } from '../testimonialSlider/TestimonialSlider';
-import './TestimonialSection.css';
+import styles from './TestimonialSection.module.css';
 
 const testimonialsData: Testimonial[] = [
 	{
@@ -56,19 +56,19 @@ const testimonialsData: Testimonial[] = [
 
 export const TestimonialSection: React.FC = () => {
 	return (
-		<section className='testimonial-section'>
-			<div className='testimonial-section_flex'>
-				<div className='testimonial-section__left'>
-					<div className='testimonial-section__left-container'>
-						<h3 className='testimonial-section__subtitle'>
+		<section className={styles.testimonialSection}>
+			<div className={styles.testimonialSectionFlex}>
+				<div className={styles.testimonialSectionLeft}>
+					<div className={styles.testimonialSectionLeftContainer}>
+						<h3 className={styles.testimonialSectionSubtitle}>
 							WHAT OUR CLIENTS SAY
 						</h3>
-						<h2 className='testimonial-section__title'>
+						<h2 className={styles.testimonialSectionTitle}>
 							Words From Homeowners We've Helped
 						</h2>
 					</div>
 				</div>
-				<div className='testimonial-section__right'>
+				<div className={styles.testimonialSectionRight}>
 					<TestimonialSlider testimonials={testimonialsData} />
 				</div>
 			</div>

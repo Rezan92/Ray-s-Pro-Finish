@@ -1,16 +1,16 @@
-.project-gallery-section {
+.projectGallerySection {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--space-xl);
 }
 
-.project-gallery-header {
+.projectGalleryHeader {
   text-align: center;
   margin-bottom: var(--space-xxl);
 }
 
-.project-gallery-subtitle {
+.projectGallerySubtitle {
   font-size: 0.875rem;
   font-weight: var(--font-weight-medium);
   color: var(--color-primary);
@@ -18,7 +18,7 @@
   letter-spacing: 1px;
 }
 
-.project-gallery-title {
+.projectGalleryTitle {
   font-family: var(--font-family-heading);
   font-size: 2.5rem;
   /* 40px */
@@ -28,7 +28,7 @@
 }
 
 /* === New Dropdown Filter Styles === */
-.project-filter-dropdown-wrapper {
+.projectFilterDropdownWrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,19 +36,19 @@
   margin-bottom: var(--space-xxl);
 }
 
-.project-filter-label {
+.projectFilterLabel {
   font-family: var(--font-family-heading);
   font-size: 1rem;
   font-weight: var(--font-weight-bold);
   color: var(--color-brand-dark);
 }
 
-.project-filter-select-container {
+.projectFilterSelectContainer {
   position: relative;
   display: inline-block;
 }
 
-.project-filter-select {
+.projectFilterSelect {
   /* This removes default browser styling */
   appearance: none;
   -webkit-appearance: none;
@@ -70,11 +70,11 @@
   transition: all 0.3s ease;
 }
 
-.project-filter-select:hover {
+.projectFilterSelect:hover {
   border-color: var(--color-brand-dark);
 }
 
-.project-filter-icon {
+.projectFilterIcon {
   position: absolute;
   right: var(--space-md);
   top: 50%;
@@ -85,7 +85,7 @@
 }
 
 /* --- Project Grid --- */
-.project-gallery-grid {
+.projectGalleryGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-xl);
@@ -97,7 +97,7 @@
 @media (max-width: 900px) {
 
   /* Tablet */
-  .project-gallery-grid {
+  .projectGalleryGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -105,21 +105,21 @@
 @media (max-width: 640px) {
 
   /* Mobile */
-  .project-gallery-section {
+  .projectGallerySection {
     padding: 0 var(--space-md);
   }
 
-  .project-gallery-grid {
+  .projectGalleryGrid {
     grid-template-columns: 1fr;
     /* Stacks to a single column */
   }
 
-  .project-gallery-title {
+  .projectGalleryTitle {
     font-size: 2rem;
   }
 
   /* Stack the label on top of the dropdown */
-  .project-filter-dropdown-wrapper {
+  .projectFilterDropdownWrapper {
     flex-direction: column;
     gap: var(--space-sm);
   }

@@ -1,18 +1,18 @@
-/* src/components/common/ourProcessSection/OurProcessSection.css */
+/* src/components/common/ourProcessSection/OurProcessSection.module.css */
 
-.our-process-section {
+.ourProcessSection {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--space-xl);
 }
 
-.our-process-header {
+.ourProcessHeader {
   text-align: center;
   margin-bottom: var(--space-xxl);
 }
 
-.our-process-subtitle {
+.ourProcessSubtitle {
   font-size: 0.875rem;
   font-weight: var(--font-weight-medium);
   color: var(--color-primary);
@@ -20,7 +20,7 @@
   letter-spacing: 1px;
 }
 
-.our-process-title {
+.ourProcessTitle {
   font-family: var(--font-family-heading);
   font-size: 2.5rem;
   /* 40px */
@@ -29,13 +29,13 @@
   margin: var(--space-sm) 0 0 0;
 }
 
-.our-process-grid {
+.ourProcessGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-xl);
 }
 
-.process-step {
+.processStep {
   text-align: left;
   background-color: var(--color-bg-primary);
   border: 1px solid var(--color-border);
@@ -44,12 +44,12 @@
   transition: all 0.3s ease;
 }
 
-.process-step:hover {
+.processStep:hover {
   transform: translateY(-10px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
 }
 
-.process-step-icon-wrapper {
+.processStepIconWrapper {
   width: 70px;
   height: 70px;
   display: flex;
@@ -61,7 +61,7 @@
   margin-bottom: var(--space-lg);
 }
 
-.process-step-number {
+.processStepNumber {
   font-family: var(--font-family-heading);
   font-size: 0.875rem;
   font-weight: var(--font-weight-bold);
@@ -69,7 +69,7 @@
   text-transform: uppercase;
 }
 
-.process-step-title {
+.processStepTitle {
   font-family: var(--font-family-heading);
   font-size: 1.25rem;
   font-weight: var(--font-weight-bold);
@@ -77,7 +77,7 @@
   margin: var(--space-xs) 0 var(--space-sm) 0;
 }
 
-.process-step-description {
+.processStepDescription {
   font-size: 0.9rem;
   color: var(--color-text-secondary);
   line-height: 1.6;
@@ -86,17 +86,17 @@
 
 /* --- Mobile Responsiveness --- */
 @media (max-width: 1024px) {
-  .our-process-grid {
+  .ourProcessGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 640px) {
-  .our-process-grid {
+  .ourProcessGrid {
     grid-template-columns: 1fr;
   }
 
-  .our-process-title {
+  .ourProcessTitle {
     font-size: 2rem;
   }
 }

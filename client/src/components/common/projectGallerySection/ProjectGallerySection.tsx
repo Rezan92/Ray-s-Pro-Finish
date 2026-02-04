@@ -1,4 +1,4 @@
-import './ProjectGallerySection.css';
+import styles from './ProjectGallerySection.module.css';
 import { ProjectCard } from '../projectCard/ProjectCard';
 import type { Project } from '../projectCard/ProjectCard';
 import { ChevronDown } from 'lucide-react';
@@ -32,24 +32,24 @@ export const ProjectGallerySection = () => {
 	};
 
 	return (
-		<section className='project-gallery-section'>
-			<div className='project-gallery-header'>
-				<span className='project-gallery-subtitle'>OUR WORK</span>
-				<h2 className='project-gallery-title'>A Showcase of Quality</h2>
+		<section className={styles.projectGallerySection}>
+			<div className={styles.projectGalleryHeader}>
+				<span className={styles.projectGallerySubtitle}>OUR WORK</span>
+				<h2 className={styles.projectGalleryTitle}>A Showcase of Quality</h2>
 			</div>
 
 			{/* Filter Dropdown */}
-			<div className='project-filter-dropdown-wrapper'>
+			<div className={styles.projectFilterDropdownWrapper}>
 				<label
 					htmlFor='project-filter'
-					className='project-filter-label'
+					className={styles.projectFilterLabel}
 				>
 					Filter by service:
 				</label>
-				<div className='project-filter-select-container'>
+				<div className={styles.projectFilterSelectContainer}>
 					<select
 						id='project-filter'
-						className='project-filter-select'
+						className={styles.projectFilterSelect}
 						value={activeFilter} // Controlled by Redux
 						onChange={handleFilterChange}
 					>
@@ -64,13 +64,13 @@ export const ProjectGallerySection = () => {
 					</select>
 					<ChevronDown
 						size={20}
-						className='project-filter-icon'
+						className={styles.projectFilterIcon}
 					/>
 				</div>
 			</div>
 
 			{/* Project Grid */}
-			<div className='project-gallery-grid'>
+			<div className={styles.projectGalleryGrid}>
 				{filteredProjects.map((project) => (
 					<ProjectCard
 						key={project.id}

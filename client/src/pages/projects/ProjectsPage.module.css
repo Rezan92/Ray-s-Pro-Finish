@@ -1,11 +1,11 @@
-.projects-page-wrapper>* {
+.projectsPageWrapper > * {
   margin-bottom: var(--space-xxxl);
 }
 
-.projects-page-wrapper{
+.projectsPageWrapper {
   padding-bottom: var(--space-xxxl);
 }
 
-.projects-page-wrapper>*:last-child {
+.projectsPageWrapper > *:last-child {
   margin-bottom: 0;
 }

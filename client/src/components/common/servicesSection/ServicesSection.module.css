@@ -1,15 +1,14 @@
-/* src/components/home/ServicesSection.css */
+/* src/components/home/ServicesSection.module.css */
 
-.services-section {
+.servicesSection {
   width: 100%;
   padding: var(--space-xxxl) var(--space-xl);
   /* 64px 32px */
   background-color: transparent;
   position: relative;
-  
 }
 
-.services-section::after {
+.servicesSection::after {
   position: absolute;
   bottom: -10px;
   left: 0;
@@ -21,13 +20,13 @@
   z-index: -1;
 }
 
-.services-section-header {
+.servicesSectionHeader {
   text-align: center;
   margin-bottom: var(--space-xxl);
   /* 48px */
 }
 
-.services-section-subtitle {
+.servicesSectionSubtitle {
   font-family: var(--font-family-heading);
   font-size: 0.875rem;
   /* 14px */
@@ -39,7 +38,7 @@
   display: block;
 }
 
-.services-section-title {
+.servicesSectionTitle {
   font-family: var(--font-family-heading);
   font-size: 2.5rem;
   /* 40px */
@@ -48,7 +47,7 @@
   margin: 0;
 }
 
-.services-section-grid {
+.servicesSectionGrid {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
@@ -63,23 +62,23 @@
 @media (max-width: 1024px) {
 
   /* Switch to 2 columns for tablets */
-  .services-section-grid {
+  .servicesSectionGrid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 768px) {
-  .services-section {
+  .servicesSection {
     padding: 100px var(--space-md);
     /* 48px 16px */
   }
 
   /* Switch to 1 column for mobile */
-  .services-section-grid {
+  .servicesSectionGrid {
     grid-template-columns: 1fr;
   }
 
-  .services-section-title {
+  .servicesSectionTitle {
     font-size: 2rem;
     /* 32px */
   }

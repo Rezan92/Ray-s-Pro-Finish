@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './LatestProjectsSection.css';
+import styles from './LatestProjectsSection.module.css';
 import { ProjectCard } from '../projectCard/ProjectCard';
 import type { Project } from '../projectCard/ProjectCard';
 import { ProjectModal } from '../projectModal/ProjectModal';
@@ -20,15 +20,15 @@ export const LatestProjectsSection = () => {
 	};
 
 	return (
-		<section className='latest-projects-section'>
-			<div className='latest-projects-header'>
-				<span className='latest-projects-subtitle'>
+		<section className={styles.latestProjectsSection}>
+			<div className={styles.latestProjectsHeader}>
+				<span className={styles.latestProjectsSubtitle}>
 					OUR GLOBAL WORK INDUSTRIES
 				</span>
-				<h2 className='latest-projects-title'>Latest Projects</h2>
+				<h2 className={styles.latestProjectsTitle}>Latest Projects</h2>
 			</div>
 
-			<div className='latest-projects-grid'>
+			<div className={styles.latestProjectsGrid}>
 
 				{projectsData.slice(0, 6).map((project) => (
 					<ProjectCard

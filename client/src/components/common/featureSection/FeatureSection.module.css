@@ -1,14 +1,17 @@
-/* src/components/home/FeatureSection.css */
+/* src/components/home/FeatureSection.module.css */
 
-.feature-section {
-  /* This moves the section up to overlap the hero */
-  margin-top: -80px; 
+.featureSection {
   position: relative;
   z-index: 10; /* Make sure it's above the hero */
   padding: 0 var(--space-xl);
 }
 
-.feature-grid {
+/* Layout variant for the Home page where it overlaps the Hero */
+.floating {
+  margin-top: -80px; 
+}
+
+.featureGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
   max-width: 1200px; /* Max width for the section */
@@ -18,20 +21,22 @@
 
 /* --- Responsive --- */
 @media (max-width: 1024px) {
-  .feature-grid {
+  .featureGrid {
     /* 1 column, stack them */
     grid-template-columns: 1fr;
   }
   
-  .feature-section {
+  .featureSection {
     padding: 0 var(--space-md);
+  }
+
+  .floating {
     margin-top: -60px;
   }
 }
 
 @media (max-width: 768px) {
-  .feature-section {
+  .floating {
     margin-top: 300px;
   }
 }
-

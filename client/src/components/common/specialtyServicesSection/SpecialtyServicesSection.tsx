@@ -1,13 +1,13 @@
 import React from 'react';
 import { Check } from 'lucide-react';
-import './SpecialtyServicesSection.css';
+import styles from './SpecialtyServicesSection.module.css';
 
 // A sub-component for each item
 const SpecialtyItem: React.FC<{ title: string }> = ({ title }) => {
 	return (
-		<div className='specialty-item'>
-			<Check size={20} className='specialty-item-icon' />
-			<span className='specialty-item-title'>{title}</span>
+		<div className={styles.specialtyItem}>
+			<Check size={20} className={styles.specialtyItemIcon} />
+			<span className={styles.specialtyItemTitle}>{title}</span>
 		</div>
 	);
 };
@@ -22,14 +22,14 @@ export const SpecialtyServicesSection: React.FC = () => {
 	];
 
 	return (
-		<section className='specialty-services-section'>
-			<div className='specialty-services-header'>
-				<span className='specialty-services-subtitle'>BEYOND THE BASICS</span>
-				<h2 className='specialty-services-title'>
+		<section className={styles.specialtyServicesSection}>
+			<div className={styles.specialtyServicesHeader}>
+				<span className={styles.specialtyServicesSubtitle}>BEYOND THE BASICS</span>
+				<h2 className={styles.specialtyServicesTitle}>
 					Comprehensive Finishing Services
 				</h2>
 			</div>
-			<div className='specialty-services-grid'>
+			<div className={styles.specialtyServicesGrid}>
 				{services.map((service) => (
 					<SpecialtyItem key={service} title={service} />
 				))}
