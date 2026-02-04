@@ -2,7 +2,11 @@ import styles from './FeatureSection.module.css';
 import { PaintRoller, Smile, Wand2 } from 'lucide-react'; // Icons from screenshot
 import { FeatureCard } from '../featureCard/FeatureCard';
 
-export const FeatureSection = () => {
+interface FeatureSectionProps {
+	isFloating?: boolean;
+}
+
+export const FeatureSection: React.FC<FeatureSectionProps> = ({ isFloating = false }) => {
 	const cardData = [
 		{
 			icon: Wand2,
@@ -31,7 +35,7 @@ export const FeatureSection = () => {
 	];
 
 	return (
-		<section className={styles.featureSection}>
+		<section className={`${styles.featureSection} ${isFloating ? styles.floating : ''}`}>
 			<div className={styles.featureGrid}>
 				{cardData.map((card, index) => (
 					<FeatureCard

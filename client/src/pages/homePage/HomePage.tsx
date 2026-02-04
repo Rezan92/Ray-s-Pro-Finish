@@ -11,7 +11,7 @@ function HomePage() {
 	return (
 		<div>
 			<Hero />
-			<FeatureSection />
+			<FeatureSection isFloating={true} />
 			<AboutSection />
 			<RequestQuoteSection />
 			<ServicesSection />
