@@ -7,37 +7,18 @@ import styles from './styles/BasementForm.module.css';
 
 interface BasementFormProps {
 	formData: FormData;
-	onNestedChange: (path: 'basement', field: string, value: any) => void;
+	onFieldChange: (field: string, value: any) => void;
+	onServiceChange: (field: string, value: any) => void;
 }
 
 export const BasementForm: React.FC<BasementFormProps> = ({
 	formData,
-	onNestedChange,
+	onFieldChange,
+	onServiceChange,
 }) => {
 	const { basement } = formData;
 
 	const [showScopeWarning, setShowScopeWarning] = useState(true);
-
-	// Defaults Initialization
-	useEffect(() => {
-		if (!basement.services) {
-			onNestedChange('basement', 'services', {
-				framing: true,
-				drywall: true,
-				painting: true,
-				ceilingFinish: 'Drywall',
-			});
-		}
-		if (!basement.rooms) {
-			onNestedChange('basement', 'rooms', []);
-		}
-		if (!basement.condition) {
-			onNestedChange('basement', 'condition', 'Bare Concrete');
-		}
-		if (!basement.ceilingGrid) {
-			onNestedChange('basement', 'ceilingGrid', '2x4');
-		}
-	}, []);
 
 	// --- HANDLERS ---
 	const handleChange = (
@@ -47,18 +28,15 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 	) => {
 		const { name, value, type } = e.target;
 		const finalValue = type === 'number' ? Number(value) : value;
-		onNestedChange('basement', name, finalValue);
+		onFieldChange(name, finalValue);
 	};
 
 	const handleServiceChange = (field: string, value: any) => {
-		onNestedChange('basement', 'services', {
-			...basement.services,
-			[field]: value,
-		});
+		onServiceChange(field, value);
 	};
 
 	const handleGridChange = (size: '2x2' | '2x4') => {
-		onNestedChange('basement', 'ceilingGrid', size);
+		onFieldChange('ceilingGrid', size);
 	};
 
 	// --- ROOM MANAGER LOGIC ---
@@ -76,19 +54,19 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 			bathType: type === 'Bathroom' ? 'Full Bath' : undefined,
 		};
 		const updatedRooms = [...(basement.rooms || []), newRoom];
-		onNestedChange('basement', 'rooms', updatedRooms);
+		onFieldChange('rooms', updatedRooms);
 	};
 
 	const removeRoom = (id: string) => {
 		const updatedRooms = (basement.rooms || []).filter((r) => r.id !== id);
-		onNestedChange('basement', 'rooms', updatedRooms);
+		onFieldChange('rooms', updatedRooms);
 	};
 
 	const updateRoom = (id: string, field: keyof RoomDetail, value: any) => {
 		const updatedRooms = (basement.rooms || []).map((r) =>
 			r.id === id ? { ...r, [field]: value } : r
 		);
-		onNestedChange('basement', 'rooms', updatedRooms);
+		onFieldChange('rooms', updatedRooms);
 	};
 
 	return (
@@ -281,11 +259,7 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 									name='hasWetBar'
 									value={basement.hasWetBar ? 'Yes' : 'No'}
 									onChange={(e) =>
-										onNestedChange(
-											'basement',
-											'hasWetBar',
-											e.target.value === 'Yes'
-										)
+										onFieldChange('hasWetBar', e.target.value === 'Yes')
 									}
 								>
 									<option value='No'>None</option>

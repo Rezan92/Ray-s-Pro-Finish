@@ -4,7 +4,7 @@
 **Strategy**: Sequential execution of 3 Pillars.
 
 ## Phase 1: CSS Migration (Pillar 1)
-**Status**: In Progress
+**Status**: Completed
 **Artifacts**: `specs/000-refactor-epic/01-css-migration/`
 
 - [x] **Priority 1**: Core Components (`specs/001-migrate-css-modules` - *Completed*)
@@ -14,14 +14,14 @@
 - [x] **Priority 5**: Content Sections (Marketing blocks & Cleanup)
 
 ## Phase 2: Redux Split (Pillar 2)
-**Status**: Pending
+**Status**: Completed
 **Artifacts**: `specs/000-refactor-epic/02-redux-split/`
 
-- [ ] Audit current `estimatorSlice.ts`
-- [ ] Design new store schema
-- [ ] Refactor `painting` logic
-- [ ] Refactor `basement` logic
-- [ ] Refactor `garage` logic
+- [x] Audit current `estimatorSlice.ts`
+- [x] Design new store schema
+- [x] Refactor `painting` logic
+- [x] Refactor `basement` logic
+- [x] Refactor `garage` logic
 
 ## Phase 3: Pricing Centralization (Pillar 3)
 **Status**: Pending

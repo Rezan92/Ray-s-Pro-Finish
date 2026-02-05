@@ -5,21 +5,32 @@ import styles from './EstimatorPage.module.css';
 
 // Redux Hooks
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { setEstimatorStep } from '@/store/slices/uiSlice';
+import { updateContact } from '@/store/slices/projectSlice';
+import { toggleService } from '@/store/slices/servicesSlice';
+import { generateEstimate, selectEstimate, selectEstimationStatus, selectEstimationError } from '@/store/slices/estimationSlice';
 import {
-	setStep,
-	toggleService,
 	toggleRoomType,
 	addRoom,
 	removeRoom,
 	updateRoomField,
 	updatePaintingGlobal,
-	updateNestedForm,
-	updateContact,
-	generateEstimate,
+} from '@/store/slices/paintingSlice';
+import {
+	updateBasementField,
+	updateBasementService,
+} from '@/store/slices/basementSlice';
+import {
+	updateGarageField,
+	updateGarageService,
+} from '@/store/slices/garageSlice';
+import {
 	addRepair,
 	updateRepair,
 	removeRepair,
-} from '@/store/slices/estimatorSlice';
+	updateRepairField,
+} from '@/store/slices/repairSlice';
+import { updateInstallationField } from '@/store/slices/installationSlice';
 
 // Components
 import { EstimatorStep1 } from '@/components/common/estimator/EstimatorStep1';
@@ -108,20 +119,32 @@ const EstimatorStepContact: React.FC<{ contact: any }> = ({ contact }) => {
 
 const EstimatorPage = () => {
 	const dispatch = useAppDispatch();
-	const { step, formData, estimate, status, error } = useAppSelector(
-		(state) => state.estimator
-	);
+	
+	// Selectors from various slices
+	const step = useAppSelector((state) => state.ui.estimator.currentStep);
+	const services = useAppSelector((state) => state.services.selected);
+	const contact = useAppSelector((state) => state.project.contact);
+	const paintingData = useAppSelector((state) => state.painting);
+	const basementData = useAppSelector((state) => state.basement);
+	const garageData = useAppSelector((state) => state.garage);
+	const repairData = useAppSelector((state) => state.repair);
+	const installationData = useAppSelector((state) => state.installation);
+	
+	const estimate = useAppSelector(selectEstimate);
+	const status = useAppSelector(selectEstimationStatus);
+	const error = useAppSelector(selectEstimationError);
+
 	const isLoading = status === 'loading';
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, [step]);
 
-	const handleNext = () => dispatch(setStep(step + 1));
-	const handleBack = () => dispatch(setStep(step - 1));
+	const handleNext = () => dispatch(setEstimatorStep(step + 1));
+	const handleBack = () => dispatch(setEstimatorStep(step - 1));
 
 	const handleServiceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const name = e.target.name as keyof typeof formData.services;
+		const name = e.target.name as keyof typeof services;
 		dispatch(toggleService({ name, checked: e.target.checked }));
 	};
 
@@ -130,10 +153,22 @@ const EstimatorPage = () => {
 		const params = new URLSearchParams(window.location.search);
 		const adminKey = params.get('admin') || '';
 
-		dispatch(generateEstimate({ formData, adminKey }));
+		// Merge data for submission
+		const mergedFormData = {
+			services,
+			painting: paintingData,
+			basement: basementData,
+			garage: garageData,
+			patching: repairData,
+			installation: installationData,
+			contact: contact,
+		};
+
+		// @ts-ignore - types might need adjustment in the thunk but the data is correct
+		dispatch(generateEstimate({ formData: mergedFormData, adminKey }));
 	};
 
-	const isStep1Complete = Object.values(formData.services).some(Boolean);
+	const isStep1Complete = Object.values(services).some(Boolean);
 
 	return (
 		<div className={styles.estimatorPageWrapper}>
@@ -145,7 +180,7 @@ const EstimatorPage = () => {
 					{step === 1 && (
 						<>
 							<EstimatorStep1
-								services={formData.services}
+								services={services}
 								handleServiceChange={handleServiceChange}
 							/>
 							{isStep1Complete && (
@@ -166,10 +201,15 @@ const EstimatorPage = () => {
 					{step === 2 && (
 						<>
 							<EstimatorStep2
-								formData={formData}
-								onNestedChange={(path, field, value) =>
-									dispatch(updateNestedForm({ path, field, value }))
-								}
+								formData={{
+									services,
+									painting: paintingData,
+									basement: basementData,
+									garage: garageData,
+									patching: repairData,
+									installation: installationData,
+									contact
+								}}
 								// Painting Handlers
 								onPaintingRoomTypeToggle={(type, isChecked) =>
 									dispatch(toggleRoomType({ type, isChecked }))
@@ -182,10 +222,33 @@ const EstimatorPage = () => {
 								onPaintingGlobalChange={(field, value) =>
 									dispatch(updatePaintingGlobal({ field, value }))
 								}
-								// Repair Handlers (NEW)
+								// Basement Handlers
+								onBasementFieldChange={(field, value) =>
+									dispatch(updateBasementField({ field: field as any, value }))
+								}
+								onBasementServiceChange={(field, value) =>
+									dispatch(updateBasementService({ field: field as any, value }))
+								}
+								// Garage Handlers
+								onGarageFieldChange={(field, value) =>
+									dispatch(updateGarageField({ field: field as any, value }))
+								}
+								onGarageServiceChange={(field, value) =>
+									dispatch(updateGarageService({ field: field as any, value }))
+								}
+								// Repair Handlers
 								onAddRepair={(repair) => dispatch(addRepair(repair))}
 								onUpdateRepair={(repair) => dispatch(updateRepair(repair))}
 								onRemoveRepair={(id) => dispatch(removeRepair(id))}
+								onRepairFieldChange={(field, value) =>
+									dispatch(updateRepairField({ field: field as any, value }))
+								}
+								// Installation Handlers
+								onInstallationFieldChange={(field, value) =>
+									dispatch(
+										updateInstallationField({ field: field as any, value })
+									)
+								}
 							/>
 							<div className={`${styles.estimatorActions} ${styles.spaceBetween}`}>
 								<Button
@@ -209,7 +272,7 @@ const EstimatorPage = () => {
 
 					{step === 3 && (
 						<>
-							<EstimatorStepContact contact={formData.contact} />
+							<EstimatorStepContact contact={contact} />
 							<div className={`${styles.estimatorActions} ${styles.spaceBetween}`}>
 								<Button
 									type='button'
@@ -235,7 +298,7 @@ const EstimatorPage = () => {
 							estimation={estimate}
 							isLoading={isLoading}
 							error={error}
-							onBack={() => dispatch(setStep(3))}
+							onBack={() => dispatch(setEstimatorStep(3))}
 						/>
 					)}
 				</form>

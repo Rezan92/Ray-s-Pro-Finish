@@ -7,7 +7,7 @@ import styles from './styles/RepairForm.module.css';
 
 interface RepairFormProps {
 	formData: FormData;
-	onNestedChange: (path: 'patching', field: string, value: any) => void;
+	onFieldChange: (field: string, value: any) => void;
 	onAddRepair: (repair: RepairItem) => void;
 	onUpdateRepair: (repair: RepairItem) => void;
 	onRemoveRepair: (id: string) => void;
@@ -30,12 +30,12 @@ const INITIAL_REPAIR: RepairItem = {
 
 export const RepairForm: React.FC<RepairFormProps> = ({
 	formData,
-	onNestedChange,
+	onFieldChange,
 	onAddRepair,
 	onUpdateRepair,
 	onRemoveRepair,
 }) => {
-	const { patching } = formData;
+	const repairData = (formData as any).patching; // Use the migrated key
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [editingId, setEditingId] = useState<string | null>(null); // Track if we are editing an existing item
 	const [newRepair, setNewRepair] = useState<RepairItem>(INITIAL_REPAIR);
@@ -165,7 +165,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 						className={styles.roomDetailsTitle}
 						style={{ margin: 0 }}
 					>
-						Your Repair List ({patching.repairs.length})
+						Your Repair List ({(repairData.repairs || []).length})
 					</h4>
 					<Button
 						type='button'
@@ -177,10 +177,10 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 					</Button>
 				</div>
 
-				{patching.repairs.length === 0 ? (
+				{(repairData.repairs || []).length === 0 ? (
 					<div className={styles.rfEmptyList}>No major repairs added yet.</div>
 				) : (
-					patching.repairs.map((item, index) => (
+					repairData.repairs.map((item: any, index: number) => (
 						<div
 							key={item.id}
 							className={styles.rfAddedRepairItem}
@@ -497,13 +497,9 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 					</div>
 					<textarea
 						name='smallRepairsDescription'
-						value={patching.smallRepairsDescription || ''}
+						value={repairData.smallRepairsDescription || ''}
 						onChange={(e) =>
-							onNestedChange(
-								'patching',
-								'smallRepairsDescription',
-								e.target.value
-							)
+							onFieldChange('smallRepairsDescription', e.target.value)
 						}
 						maxLength={600}
 						rows={3}
