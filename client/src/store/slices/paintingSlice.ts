@@ -100,20 +100,21 @@ export const paintingSlice = createSlice({
 		},
 		updateRoomField: (
 			state,
-			action: PayloadAction<{ roomId: string; field: string; value: any }>
+			action: PayloadAction<{ roomId: string; field: string; value: unknown }>
 		) => {
 			const room = state.rooms.find((r) => r.id === action.payload.roomId);
 			if (room) {
-				// @ts-ignore
+				// @ts-expect-error - Generic assignment to room object
 				room[action.payload.field] = action.payload.value;
 			}
 		},
 		updatePaintingGlobal: (
 			state,
-			action: PayloadAction<{ field: string; value: string }>
+			action: PayloadAction<{ field: keyof PaintingState; value: unknown }>
 		) => {
-			// @ts-ignore
-			state[action.payload.field] = action.payload.value;
+			const { field, value } = action.payload;
+			// @ts-expect-error - Generic assignment to state object
+			state[field] = value as never;
 		},
 		resetPainting: () => initialState,
 	},

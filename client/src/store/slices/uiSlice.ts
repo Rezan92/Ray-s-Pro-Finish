@@ -1,7 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { Project } from '@/components/common/projectCard/ProjectCard';
 import type { Service } from '@/components/common/serviceModal/ServiceModal';
-import { generateEstimate } from './estimationSlice';
 
 interface UiState {
 	isMobileMenuOpen: boolean;
@@ -9,11 +8,6 @@ interface UiState {
 		isOpen: boolean;
 		type: 'project' | 'service' | null;
 		data: Project | Service | null;
-	};
-	estimator: {
-		currentStep: number;
-		isLoading: boolean;
-		errors: Record<string, string>;
 	};
 }
 
@@ -23,11 +17,6 @@ const initialState: UiState = {
 		isOpen: false,
 		type: null,
 		data: null,
-	},
-	estimator: {
-		currentStep: 1,
-		isLoading: false,
-		errors: {},
 	},
 };
 
@@ -56,27 +45,6 @@ export const uiSlice = createSlice({
 		closeMobileMenu: (state) => {
 			state.isMobileMenuOpen = false;
 		},
-		// Estimator UI Reducers
-		setEstimatorStep: (state, action: PayloadAction<number>) => {
-			state.estimator.currentStep = action.payload;
-		},
-		setEstimatorLoading: (state, action: PayloadAction<boolean>) => {
-			state.estimator.isLoading = action.payload;
-		},
-		setEstimatorError: (
-			state,
-			action: PayloadAction<{ field: string; message: string }>
-		) => {
-			state.estimator.errors[action.payload.field] = action.payload.message;
-		},
-		clearEstimatorErrors: (state) => {
-			state.estimator.errors = {};
-		},
-	},
-	extraReducers: (builder) => {
-		builder.addCase(generateEstimate.fulfilled, (state) => {
-			state.estimator.currentStep = 4;
-		});
 	},
 });
 
@@ -86,10 +54,6 @@ export const {
 	openServiceModal,
 	closeModal,
 	closeMobileMenu,
-	setEstimatorStep,
-	setEstimatorLoading,
-	setEstimatorError,
-	clearEstimatorErrors,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

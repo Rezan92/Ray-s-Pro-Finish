@@ -7,7 +7,7 @@ import basementReducer from './slices/basementSlice';
 import garageReducer from './slices/garageSlice';
 import repairReducer from './slices/repairSlice';
 import installationReducer from './slices/installationSlice';
-import estimationReducer from './slices/estimationSlice';
+import estimatorReducer from './slices/estimatorSlice';
 import servicesReducer from './slices/servicesSlice';
 
 export const store = configureStore({
@@ -20,7 +20,7 @@ export const store = configureStore({
 		garage: garageReducer,
 		repair: repairReducer,
 		installation: installationReducer,
-		estimation: estimationReducer,
+		estimator: estimatorReducer,
 		services: servicesReducer,
 	},
 });

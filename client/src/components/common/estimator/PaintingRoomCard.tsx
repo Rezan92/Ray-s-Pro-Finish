@@ -6,7 +6,7 @@ import styles from './styles/PaintingRoomCard.module.css';
 
 interface PaintingRoomCardProps {
 	room: PaintingRoom;
-	onRoomChange: (roomId: string, field: string, value: any) => void;
+	onRoomChange: (roomId: string, field: string, value: unknown) => void;
 	onRoomRemove?: (roomId: string) => void;
 	onRoomAdd?: (type: string) => void;
 }

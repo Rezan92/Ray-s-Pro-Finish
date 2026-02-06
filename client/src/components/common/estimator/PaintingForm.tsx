@@ -7,7 +7,7 @@ import styles from './styles/PaintingForm.module.css';
 interface PaintingFormProps {
 	formData: FormData;
 	onRoomTypeToggle: (type: string, isChecked: boolean) => void;
-	onRoomChange: (roomId: string, field: string, value: any) => void;
+	onRoomChange: (roomId: string, field: string, value: unknown) => void;
 	onRoomAdd: (type: string) => void;
 	onRoomRemove: (roomId: string) => void;
 	onGlobalChange: (field: string, value: string) => void;

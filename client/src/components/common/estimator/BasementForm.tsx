@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import type { FormData, RoomDetail } from './EstimatorTypes';
+import React, { useState } from 'react';
+import type { FormData, RoomDetail, BasementData } from './EstimatorTypes';
 import { Ruler, Layout, Hammer, Plus, Trash2 } from 'lucide-react';
 import { InfoTooltip } from '@/components/common/infoTooltip/InfoTooltip';
 import { FloatingAlert } from '@/components/common/floatingAlert/FloatingAlert';
@@ -7,8 +7,8 @@ import styles from './styles/BasementForm.module.css';
 
 interface BasementFormProps {
 	formData: FormData;
-	onFieldChange: (field: string, value: any) => void;
-	onServiceChange: (field: string, value: any) => void;
+	onFieldChange: (field: keyof BasementData, value: unknown) => void;
+	onServiceChange: (field: keyof BasementData['services'], value: unknown) => void;
 }
 
 export const BasementForm: React.FC<BasementFormProps> = ({
@@ -31,7 +31,7 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 		onFieldChange(name, finalValue);
 	};
 
-	const handleServiceChange = (field: string, value: any) => {
+	const handleServiceChange = (field: keyof BasementData['services'], value: unknown) => {
 		onServiceChange(field, value);
 	};
 
@@ -62,7 +62,7 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 		onFieldChange('rooms', updatedRooms);
 	};
 
-	const updateRoom = (id: string, field: keyof RoomDetail, value: any) => {
+	const updateRoom = (id: string, field: keyof RoomDetail, value: unknown) => {
 		const updatedRooms = (basement.rooms || []).map((r) =>
 			r.id === id ? { ...r, [field]: value } : r
 		);

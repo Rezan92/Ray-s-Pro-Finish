@@ -7,7 +7,7 @@ import styles from './styles/RepairForm.module.css';
 
 interface RepairFormProps {
 	formData: FormData;
-	onFieldChange: (field: string, value: any) => void;
+	onFieldChange: (field: string, value: unknown) => void;
 	onAddRepair: (repair: RepairItem) => void;
 	onUpdateRepair: (repair: RepairItem) => void;
 	onRemoveRepair: (id: string) => void;
@@ -35,7 +35,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 	onUpdateRepair,
 	onRemoveRepair,
 }) => {
-	const repairData = (formData as any).patching; // Use the migrated key
+	const repairData = (formData as { patching: unknown }).patching as { repairs: RepairItem[], smallRepairsDescription: string }; // Typed cast
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [editingId, setEditingId] = useState<string | null>(null); // Track if we are editing an existing item
 	const [newRepair, setNewRepair] = useState<RepairItem>(INITIAL_REPAIR);
@@ -45,13 +45,13 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 	) => {
 		const { name, value } = e.target;
 
-		let finalValue: any = value;
+		let finalValue: unknown = value;
 		if (name === 'quantity') {
 			const parsed = parseInt(value) || 1;
 			finalValue = Math.max(1, Math.min(parsed, 5));
 		}
 
-		let updatedRepair = {
+		const updatedRepair = {
 			...newRepair,
 			[name]: finalValue,
 		};
@@ -180,7 +180,7 @@ export const RepairForm: React.FC<RepairFormProps> = ({
 				{(repairData.repairs || []).length === 0 ? (
 					<div className={styles.rfEmptyList}>No major repairs added yet.</div>
 				) : (
-					repairData.repairs.map((item: any, index: number) => (
+					repairData.repairs.map((item: RepairItem, index: number) => (
 						<div
 							key={item.id}
 							className={styles.rfAddedRepairItem}
