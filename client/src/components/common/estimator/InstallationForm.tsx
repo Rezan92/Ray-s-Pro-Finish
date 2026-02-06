@@ -5,7 +5,7 @@ import styles from './styles/InstallationForm.module.css';
 
 interface InstallationFormProps {
 	formData: FormData;
-	onFieldChange: (field: string, value: any) => void;
+	onFieldChange: (field: keyof InstallationData, value: unknown) => void;
 }
 
 export const InstallationForm: React.FC<InstallationFormProps> = ({

@@ -23,6 +23,14 @@
 - [x] Refactor `basement` logic
 - [x] Refactor `garage` logic
 
+## Phase 4: Post-Refactor Refinement
+**Status**: Completed
+**Artifacts**: `specs/000-refactor-epic/007-refactor-refinements/`
+
+- [x] Centralize Estimator process state
+- [x] Audit and cleanup `EstimatorTypes.ts`
+- [x] 100% Constitution Compliance check (Zero Lint errors)
+
 ## Phase 3: Pricing Centralization (Pillar 3)
 **Status**: Pending
 **Artifacts**: `specs/000-refactor-epic/03-pricing-centralization/`

@@ -10,8 +10,8 @@ import styles from './styles/GarageForm.module.css';
 
 interface GarageFormProps {
 	formData: FormData;
-	onFieldChange: (field: string, value: any) => void;
-	onServiceToggle: (field: string, value: any) => void;
+	onFieldChange: (field: keyof GarageData, value: unknown) => void;
+	onServiceToggle: (field: keyof GarageData['services'], value: unknown) => void;
 }
 
 export const GarageForm: React.FC<GarageFormProps> = ({
@@ -161,9 +161,10 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 									target: {
 										name: 'includeCeiling',
 										type: 'checkbox',
+										// @ts-expect-error - Mocking event structure
 										checked: !garage.includeCeiling,
 									},
-								} as any)
+								})
 							}
 						>
 							<div className={styles.serviceRowHeader}>

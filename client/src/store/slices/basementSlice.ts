@@ -6,18 +6,17 @@ const initialState: BasementData = {
 	sqft: '',
 	ceilingHeight: 'Standard (8ft)',
 	condition: 'Bare Concrete',
-	numBedrooms: 0,
+	perimeterInsulation: 'Standard (Vapor Barrier)',
+	soffitWork: 'Average',
 	rooms: [],
-	hasWetBar: false,
-	ceilingGrid: '2x4',
 	services: {
 		framing: true,
 		drywall: true,
 		painting: true,
 		ceilingFinish: 'Drywall',
 	},
-	perimeterInsulation: 'Standard (Vapor Barrier)',
-	soffitWork: 'Average',
+	hasWetBar: false,
+	ceilingGrid: '2x4',
 	additionalDetails: '',
 };
 
@@ -27,17 +26,22 @@ export const basementSlice = createSlice({
 	reducers: {
 		updateBasementField: (
 			state,
-			action: PayloadAction<{ field: keyof BasementData; value: any }>
+			action: PayloadAction<{ field: keyof BasementData; value: unknown }>
 		) => {
-			// @ts-ignore
-			state[action.payload.field] = action.payload.value;
+			const { field, value } = action.payload;
+			// @ts-expect-error - Generic assignment to state object
+			state[field] = value;
 		},
 		updateBasementService: (
 			state,
-			action: PayloadAction<{ field: keyof BasementData['services']; value: any }>
+			action: PayloadAction<{
+				field: keyof BasementData['services'];
+				value: unknown;
+			}>
 		) => {
-			// @ts-ignore
-			state.services[action.payload.field] = action.payload.value;
+			const { field, value } = action.payload;
+			// @ts-expect-error - Generic assignment to state object
+			state.services[field] = value;
 		},
 		resetBasement: () => initialState,
 	},

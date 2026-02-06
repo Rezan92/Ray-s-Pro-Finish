@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../store';
 import type { RepairItem } from '@/components/common/estimator/EstimatorTypes';
 
-interface RepairState {
+export interface RepairState {
 	repairs: RepairItem[];
 	smallRepairsDescription: string;
 }
@@ -30,10 +30,11 @@ export const repairSlice = createSlice({
 		},
 		updateRepairField: (
 			state,
-			action: PayloadAction<{ field: keyof RepairState; value: any }>
+			action: PayloadAction<{ field: keyof RepairState; value: unknown }>
 		) => {
-			// @ts-ignore
-			state[action.payload.field] = action.payload.value;
+			const { field, value } = action.payload;
+			// @ts-expect-error - Generic assignment to state object
+			state[field] = value as never;
 		},
 		resetRepair: () => initialState,
 	},

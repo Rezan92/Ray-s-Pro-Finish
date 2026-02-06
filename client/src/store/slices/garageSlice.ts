@@ -24,16 +24,22 @@ export const garageSlice = createSlice({
 	reducers: {
 		updateGarageField: (
 			state,
-			action: PayloadAction<{ field: keyof GarageData; value: any }>
+			action: PayloadAction<{ field: keyof GarageData; value: unknown }>
 		) => {
-			// @ts-ignore
-			state[action.payload.field] = action.payload.value;
+			const { field, value } = action.payload;
+			// @ts-expect-error - Generic assignment to state object
+			state[field] = value;
 		},
 		updateGarageService: (
 			state,
-			action: PayloadAction<{ field: keyof GarageData['services']; value: any }>
+			action: PayloadAction<{
+				field: keyof GarageData['services'];
+				value: unknown;
+			}>
 		) => {
-			state.services[action.payload.field] = action.payload.value;
+			const { field, value } = action.payload;
+			// @ts-expect-error - Generic assignment to state object
+			state.services[field] = value;
 		},
 		resetGarage: () => initialState,
 	},

@@ -162,14 +162,6 @@ export interface FormData {
 	};
 }
 
-export interface EstimatorState {
-	step: number;
-	formData: FormData;
-	estimate: Estimate | null;
-	status: 'idle' | 'loading' | 'succeeded' | 'failed';
-	error: string | null;
-}
-
 export interface BreakdownItem {
 	name: string;
 	cost: number;

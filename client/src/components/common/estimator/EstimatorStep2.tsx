@@ -1,5 +1,5 @@
 import React from 'react';
-import type { FormData, RepairItem } from './EstimatorTypes';
+import type { FormData, RepairItem, BasementData, GarageData, RepairState, InstallationData } from './EstimatorTypes';
 import { PaintingForm } from './PaintingForm';
 import { RepairForm } from './RepairForm';
 import { InstallationForm } from './InstallationForm';
@@ -13,25 +13,25 @@ interface EstimatorStep2Props {
 	onPaintingRoomTypeToggle: (type: string, isChecked: boolean) => void;
 	onPaintingRoomAdd: (type: string) => void;
 	onPaintingRoomRemove: (roomId: string) => void;
-	onPaintingRoomChange: (roomId: string, field: string, value: any) => void;
+	onPaintingRoomChange: (roomId: string, field: string, value: unknown) => void;
 	onPaintingGlobalChange: (field: string, value: string) => void;
 
 	// Basement Handlers
-	onBasementFieldChange: (field: string, value: any) => void;
-	onBasementServiceChange: (field: string, value: any) => void;
+	onBasementFieldChange: (field: keyof BasementData, value: unknown) => void;
+	onBasementServiceChange: (field: keyof BasementData['services'], value: unknown) => void;
 
 	// Garage Handlers
-	onGarageFieldChange: (field: string, value: any) => void;
-	onGarageServiceChange: (field: string, value: any) => void;
+	onGarageFieldChange: (field: keyof GarageData, value: unknown) => void;
+	onGarageServiceChange: (field: keyof GarageData['services'], value: unknown) => void;
 
 	// Repair Handlers
 	onAddRepair: (repair: RepairItem) => void;
 	onUpdateRepair: (repair: RepairItem) => void;
 	onRemoveRepair: (id: string) => void;
-	onRepairFieldChange: (field: string, value: any) => void;
+	onRepairFieldChange: (field: keyof RepairState, value: unknown) => void;
 
 	// Installation Handlers
-	onInstallationFieldChange: (field: string, value: any) => void;
+	onInstallationFieldChange: (field: keyof InstallationData, value: unknown) => void;
 }
 
 export const EstimatorStep2: React.FC<EstimatorStep2Props> = (props) => {
