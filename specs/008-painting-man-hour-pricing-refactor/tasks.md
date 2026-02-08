@@ -34,30 +34,34 @@
 
 ## Phase 5: Global Config & Inheritance (Refinement)
 
-- [ ] T018 [US-Refinement] Update `PaintingForm.tsx` to merge "Furniture" and "Occupancy" into a single global question with user-friendly labels (F-017).
-- [ ] T019 [US-Refinement] Update `PaintingForm.tsx` to move "What needs painting?", "Surface Condition", and "Color Change" to the Global level (F-018).
-- [ ] T020 [US-Refinement] Update `PaintingRoomCard.tsx` to add "Customize this area" checkbox. Logic: Unchecked = inherit global; Checked = show local overrides (F-019).
-- [ ] T021 [US-Refinement] Ensure `EstimatorTypes.ts` supports global scope fields (`globalWalls`, `globalCeiling`, etc.).
+- [ ] T018 [US-Refinement] Update `PaintingForm.tsx` to merge "Furniture" and "Occupancy" into a single global question (Unified Occupancy Logic F-016).
+- [ ] T019 [US-Refinement] Update `PaintingForm.tsx` to move Scope questions (Walls, Ceiling, Condition, Color Change) to Global level (F-014).
+- [ ] T020 [US-Refinement] Update `PaintingRoomCard.tsx` to add "Customize this area" checkbox for inheritance/override logic (F-014).
+- [ ] T021 [US-Refinement] **Redux State**: Update `paintingSlice.ts` to manage `globalDefaults` and the `isCustomized` flag for each room.
+- [ ] T022 [US-Refinement] Ensure `EstimatorTypes.ts` supports global scope and the inheritance flags.
 
 ## Phase 6: UI Polish & Components (Refinement)
 
-- [ ] T022 [US-Refinement] Update `PaintingRoomCard.tsx`: Replace "Stained to Painted" checkbox with a Dropdown (Standard vs Stained-to-Painted) (F-020).
-- [ ] T023 [US-Refinement] Update `PaintingRoomCard.tsx`: Refine Color Change dropdown options (Refresh, Change, Dark-to-Light) (F-021).
-- [ ] T024 [US-Refinement] Update `PaintingRoomCard.tsx`: Add "Closet Included?" checkbox logic for Bedrooms (F-022).
-- [ ] T025 [US-Refinement] Update `PaintingRoomCard.tsx`: Move "Enter Exact Dimensions" into the Size Dropdown and convert Ceiling Height to Number Input (F-023).
+- [ ] T023 [US-Refinement] Update `PaintingRoomCard.tsx`: Replace "Stained to Painted" with a dropdown (Standard vs Stained-to-Painted) (F-020).
+- [ ] T024 [US-Refinement] Update `PaintingRoomCard.tsx`: Refine Color Change dropdown options (Refresh, Change, Dark-to-Light) (F-021).
+- [ ] T025 [US-Refinement] Update `PaintingRoomCard.tsx`: Add "Closet Included?" checkbox logic for Bedrooms (F-022).
+- [ ] T026 [US-Refinement] Update `PaintingRoomCard.tsx`: Integrate "Enter Exact Dimensions" into standard Size dropdown and convert height to Number Input (F-011).
 
-## Phase 7: Stairwell Specifics (Refinement)
+## Phase 7: Stairwell Specifics & Backend Refinement (Refinement)
 
-- [ ] T026 [US-Refinement] Update `PaintingRoomCard.tsx`: Implement specialized Stairwell inputs (Wall Length, Max Height, remove irrelevant surfaces) (F-024).
-- [ ] T027 [Backend] Update `paintingService.ts`: Apply 1.5x Trim Multiplier for Stairwells and trigger Equipment Fee if Max Height > 12ft (F-026).
+- [ ] T027 [US-Refinement] Update `PaintingRoomCard.tsx`: Implement specialized Stairwell inputs (Wall Length, Max Wall Height, Remove irrelevant surfaces) (F-012).
+- [ ] T028 [Backend] Refine `paintingService.ts`: Implement Workday logic (45m per 8hincrement) (F-010).
+- [ ] T029 [Backend] Refine `paintingService.ts`: Apply 1.5x Trim Multiplier for Stairwells and auto-trigger Equipment Fee if Max Height > 12ft (F-012).
 
 ## Dependencies
 
 1.  **Phase 5 (Global)** must be done before **Phase 6 (UI Polish)** to ensure inheritance logic works with new UI fields.
-2.  **T027 (Backend)** depends on **T026 (Frontend)** sending the new Stairwell dimensions.
+2.  **T021 (Redux)** is a prerequisite for all refinement UI work to ensure state consistency.
+3.  **T028/T029 (Backend)** depends on the new data being sent from the refined frontend.
 
 ## Implementation Strategy
 
-1.  **Step 1**: Implement Global Config & Inheritance (Phase 5).
-2.  **Step 2**: Polish Component UI (Phase 6).
-3.  **Step 3**: Refine Stairwell Logic (Phase 7).
+1.  **Step 1**: Update Redux State and Types (Foundation for refinements).
+2.  **Step 2**: Implement Global Config & Inheritance UI.
+3.  **Step 3**: Polish Component UI and integrate dimensions.
+4.  **Step 4**: Finalize Stairwell specifics and Backend workday refinement.

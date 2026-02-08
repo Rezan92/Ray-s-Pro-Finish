@@ -8,15 +8,15 @@
 
 Refactor the Painting Estimator from a square-foot price model to a granular "Man-Hour Driven" engine.
 **Key changes:**
-1.  **Backend**: Centralize all constants in `masterRates.ts` (Labor $75/hr). Refactor `paintingService.ts` to calculate time first (Time * Rate = Price). Add logic for Days calculation, Daily Trip charges, and Occupancy multipliers.
-2.  **Frontend**: Update `PaintingRoomCard` to accept Exact Dimensions (overriding presets). Update `Stairwell` inputs for spindle types.
-3.  **Admin**: Enforce detailed breakdown (Math explanation) and Surface Gallon counts.
-4.  **Refinements (New)**: Global Project Configuration (Occupancy/Scope), Inheritance Logic, Stairwell specialized inputs, and UI polish for dimensions/closets.
+1.  **Backend**: Centralize all constants in `masterRates.ts` (Labor $75/hr). Refactor `paintingService.ts` to calculate time first (Time * Rate = Price). Refine workday logic (45m per 8h labor).
+2.  **Frontend**: Update `PaintingRoomCard` to integrate Exact Dimensions into the Size dropdown. Specialize the Stairwell card with unique dimensions and multipliers.
+3.  **Redux Refinement**: Update `paintingSlice.ts` to handle global defaults and room-level inheritance (`isCustomized` flag).
+4.  **Admin**: Enforce detailed breakdown (Math explanation) and Surface Gallon counts.
 
 ## Technical Context
 
 **Language/Version**: TypeScript 5.x
-**Primary Dependencies**: React 18, Node.js (Express)
+**Primary Dependencies**: React 18, Node.js (Express), Redux Toolkit
 **Storage**: N/A (Stateless calculation, standard JSON payloads)
 **Testing**: Vitest (Unit tests for Service logic)
 **Target Platform**: Web (Admin & Customer views)
@@ -32,7 +32,7 @@ Refactor the Painting Estimator from a square-foot price model to a granular "Ma
 - [x] **I. Styling**: (N/A for backend, Frontend will use existing CSS Modules)
 - [x] **II. State & Data Logic**:
     - [x] "Immutable Pricing": Pricing logic moved to `masterRates.ts` (Source of Truth).
-    - [x] "Modular Redux": Will update `paintingSlice` (or `estimatorSlice`) with new fields, keeping it modular.
+    - [x] "Modular Redux": Updating `paintingSlice` to handle inheritance and global defaults.
 - [x] **III. TypeScript**:
     - [x] "Strict Mode": All new calculations will have explicit types.
     - [x] "No any": Interface `PaintingRoom` will be strictly typed.
@@ -69,11 +69,14 @@ backend/
 
 client/
 ├── src/
+│   ├── store/
+│   │   └── slices/
+│   │       └── paintingSlice.ts         # UPDATED: Global defaults & inheritance
 │   ├── components/
 │   │   └── common/
 │   │       └── estimator/
 │   │           ├── PaintingForm.tsx     # UPDATED: Global Config & Inheritance
-│   │           ├── PaintingRoomCard.tsx # UPDATED: Exact Dimensions, Closets, Stairwells
+│   │           ├── PaintingRoomCard.tsx # UPDATED: Exact Dimensions UI Integration
 │   │           └── EstimatorTypes.ts    # UPDATED: Frontend Contract matching Backend
 ```
 
