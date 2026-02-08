@@ -116,3 +116,19 @@
 	margin-top: var(--space-xl);
 	border-top: 2px solid var(--color-primary);
 }
+
+.formGroupGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+.checkboxGroupHorizontal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  align-items: center;
+  background-color: var(--color-bg-light);
+  padding: var(--space-sm);
+  border-radius: var(--border-radius-sm);
+}

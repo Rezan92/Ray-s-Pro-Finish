@@ -3,6 +3,7 @@ import type { PaintingRoom } from './EstimatorTypes';
 import { ChevronDown, Plus, Trash2, Ruler } from 'lucide-react';
 import { ROOM_SIZE_OPTIONS } from './roomSizeData';
 import styles from './styles/PaintingRoomCard.module.css';
+import { InfoTooltip } from '@/components/common/infoTooltip/InfoTooltip';
 
 interface PaintingRoomCardProps {
 	room: PaintingRoom;
@@ -120,12 +121,10 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 								onChange={(e) => onRoomChange(room.id, 'toggleRoomCustomization', e.target.checked)}
 							/>
 							Customize this area
+							{!room.isCustomized && (
+								<InfoTooltip message="This room is using the Global Project Defaults for surfaces, condition, and colors. Check the box to override these settings specific to this room." />
+							)}
 						</label>
-						{!room.isCustomized && (
-							<p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.5rem', marginLeft: '1.8rem' }}>
-								Using Project Defaults (Surfaces, Condition, Color). Check the box to override for this room.
-							</p>
-						)}
 					</div>
 
 					{/* 1. Description (Only for Other) */}
@@ -170,8 +169,6 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 										onChange={(e) => {
 											if (e.target.value === 'Custom') {
 												setShowExact(true);
-												// Initialize exact fields if empty to prevent UI glitch? 
-												// Optional, but good UX. For now just reveal.
 											} else {
 												handleFieldChange(e);
 											}
@@ -333,7 +330,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						</div>
 					)}
 
-					{/* 4. Surfaces Selection (Conditional on Customization) */}
+					{/* 5. Surfaces Selection (Conditional on Customization) */}
 					{room.isCustomized && (
 						<div className={styles.formGroupBox}>
 							<div className={styles.formGroup}>
@@ -398,7 +395,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						</div>
 					)}
 
-					{/* 5. Surface Details (Conditional on Customization AND Selection) */}
+					{/* 6. Surface Details (Conditional on Customization AND Selection) */}
 					{room.isCustomized && showDetails && (
 						<div className={styles.formGroupBox}>
 							<div className={styles.conditionalFieldsContainer}>
@@ -498,7 +495,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						</div>
 					)}
 
-					{/* 6. General Condition & Color (Conditional on Customization) */}
+					{/* 7. General Condition & Color (Conditional on Customization) */}
 					{room.isCustomized && (
 						<div className={styles.formGroupBox}>
 							<div className={styles.formGroupGrid}>

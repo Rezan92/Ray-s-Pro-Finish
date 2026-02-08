@@ -10,7 +10,7 @@ interface PaintingFormProps {
 	onRoomChange: (roomId: string, field: string, value: unknown) => void;
 	onRoomAdd: (type: string) => void;
 	onRoomRemove: (roomId: string) => void;
-	onGlobalChange: (field: string, value: string) => void;
+	onGlobalChange: (field: string, value: any) => void;
 }
 
 // Define our room types and labels
@@ -59,10 +59,10 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 		<div className={styles.serviceFormBox}>
 			<h3 className={styles.serviceFormTitle}>Interior Painting</h3>
 
-			{/* --- A. The Room Builder --- */}
+			{/* --- A. The Room Builder (Moved to Top) --- */}
 			<div className={styles.formGroupBox}>
 				<div className={styles.formGroup}>
-					<label>Please add the spaces you'd like us to paint.</label>
+					<label>Add Rooms & Spaces</label>
 					<div className={styles.checkboxGroupTwoColumn}>
 						{ROOM_TYPES.map((type) => {
 							const isChecked = checkedTypes.get(type.key) || false;
@@ -86,32 +86,9 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 				</div>
 			</div>
 
-			{/* --- B. The Generated Room Cards --- */}
-			{painting.rooms.map((room) => {
-				const multi = isMultiRoom(room.type);
-				// Logic to hide add button if at limit (e.g. 8)
-				const isAtLimit = getRoomCount(room.type) >= 8;
-				return (
-					<PaintingRoomCard
-						key={room.id}
-						room={room}
-						onRoomChange={onRoomChange}
-						// Update this line: Only pass onRoomAdd if multi-room AND not at limit
-						onRoomAdd={
-							multi && room.id.endsWith('_0') && !isAtLimit
-								? onRoomAdd
-								: undefined
-						}
-						// Only show "Remove" if it's NOT the first of its type
-						onRoomRemove={
-							multi && !room.id.endsWith('_0') ? onRoomRemove : undefined
-						}
-					/>
-				);
-			})}
-
 			{/* --- C. Global Painting Questions --- */}
 			<div className={`${styles.formGroupBox} ${styles.globalQuestions}`}>
+				<h4 style={{ marginBottom: '1rem', color: 'var(--color-primary)' }}>Project Configuration</h4>
 				<div className={styles.formGroupGrid}>
 					<div className={styles.formGroup}>
 						<label>Who will provide the paint?</label>
@@ -123,10 +100,10 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 							<option value=''>Please select...</option>
 							<option value='Customer'>I will provide all paint</option>
 							<option value='Standard'>
-								Please include standard quality paint
+								Ray's Pro (Standard Quality)
 							</option>
 							<option value='Premium'>
-								Please include premium quality paint
+								Ray's Pro (Premium Quality)
 							</option>
 						</select>
 					</div>
@@ -151,7 +128,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 
 				<div className={styles.formGroup}>
 					<label>What needs painting (Default)?</label>
-					<div className={styles.checkboxGroupHorizontal}>
+					<div className={styles.checkboxGroupHorizontal} style={{ flexWrap: 'wrap', gap: '1rem' }}>
 						<label className={styles.checkboxLabel}>
 							<input
 								type='checkbox'
@@ -180,10 +157,24 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 								onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'surfaces', value: { ...painting.globalDefaults.surfaces, doors: e.target.checked } })}
 							/> Doors
 						</label>
+						<label className={styles.checkboxLabel}>
+							<input
+								type='checkbox'
+								checked={painting.globalDefaults?.surfaces.crownMolding ?? false}
+								onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'surfaces', value: { ...painting.globalDefaults.surfaces, crownMolding: e.target.checked } })}
+							/> Crown Molding
+						</label>
+						<label className={styles.checkboxLabel}>
+							<input
+								type='checkbox'
+								checked={painting.globalDefaults?.surfaces.windows ?? false}
+								onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'surfaces', value: { ...painting.globalDefaults.surfaces, windows: e.target.checked } })}
+							/> Windows
+						</label>
 					</div>
 				</div>
 
-				<div className={styles.formGroupGrid}>
+				<div className={styles.formGroupGrid} style={{ marginTop: '1rem' }}>
 					<div className={styles.formGroup}>
 						<label>Surface Condition (Default)</label>
 						<select
@@ -242,6 +233,30 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 					</div>
 				</div>
 			</div>
+
+			{/* --- B. The Generated Room Cards --- */}
+			{painting.rooms.map((room) => {
+				const multi = isMultiRoom(room.type);
+				// Logic to hide add button if at limit (e.g. 8)
+				const isAtLimit = getRoomCount(room.type) >= 8;
+				return (
+					<PaintingRoomCard
+						key={room.id}
+						room={room}
+						onRoomChange={onRoomChange}
+						// Update this line: Only pass onRoomAdd if multi-room AND not at limit
+						onRoomAdd={
+							multi && room.id.endsWith('_0') && !isAtLimit
+								? onRoomAdd
+								: undefined
+						}
+						// Only show "Remove" if it's NOT the first of its type
+						onRoomRemove={
+							multi && !room.id.endsWith('_0') ? onRoomRemove : undefined
+						}
+					/>
+				);
+			})}
 		</div>
 	);
 };
