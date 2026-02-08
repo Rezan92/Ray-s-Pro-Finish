@@ -34,11 +34,11 @@
 
 ## Phase 5: Global Config & Inheritance (Refinement)
 
-- [ ] T018 [US-Refinement] Update `PaintingForm.tsx` to merge "Furniture" and "Occupancy" into a single global question (Unified Occupancy Logic F-016).
-- [ ] T019 [US-Refinement] Update `PaintingForm.tsx` to move Scope questions (Walls, Ceiling, Condition, Color Change) to Global level (F-014).
-- [ ] T020 [US-Refinement] Update `PaintingRoomCard.tsx` to add "Customize this area" checkbox for inheritance/override logic (F-014).
-- [ ] T021 [US-Refinement] **Redux State**: Update `paintingSlice.ts` to manage `globalDefaults` and the `isCustomized` flag for each room.
-- [ ] T022 [US-Refinement] Ensure `EstimatorTypes.ts` supports global scope and the inheritance flags.
+- [x] T018 [US-Refinement] Update `PaintingForm.tsx` to merge "Furniture" and "Occupancy" into a single global question (Unified Occupancy Logic F-016).
+- [x] T019 [US-Refinement] Update `PaintingForm.tsx` to move Scope questions (Walls, Ceiling, Condition, Color Change) to Global level (F-014).
+- [x] T020 [US-Refinement] Update `PaintingRoomCard.tsx` to add "Customize this area" checkbox for inheritance/override logic (F-014).
+- [x] T021 [US-Refinement] **Redux State**: Update `paintingSlice.ts` to manage `globalDefaults` and the `isCustomized` flag for each room.
+- [x] T022 [US-Refinement] Ensure `EstimatorTypes.ts` supports global scope and the inheritance flags.
 
 ## Phase 6: UI Polish & Components (Refinement)
 

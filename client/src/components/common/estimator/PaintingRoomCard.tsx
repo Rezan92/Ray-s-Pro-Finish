@@ -111,6 +111,23 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 			{/* --- Collapsible Card Body --- */}
 			{isOpen && (
 				<div className={styles.accordionContent}>
+					{/* 0. Customization Toggle (New) */}
+					<div className={styles.formGroupBox} style={{ borderColor: 'var(--color-primary)', backgroundColor: room.isCustomized ? '#fff' : '#f9f9f9' }}>
+						<label className={styles.checkboxLabel} style={{ fontWeight: 'bold', color: 'var(--color-primary)' }}>
+							<input
+								type='checkbox'
+								checked={room.isCustomized || false}
+								onChange={(e) => onRoomChange(room.id, 'toggleRoomCustomization', e.target.checked)}
+							/>
+							Customize this area
+						</label>
+						{!room.isCustomized && (
+							<p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.5rem', marginLeft: '1.8rem' }}>
+								Using Project Defaults (Surfaces, Condition, Color). Check the box to override for this room.
+							</p>
+						)}
+					</div>
+
 					{/* 1. Description (Only for Other) */}
 					{room.type === 'other' && (
 						<div className={styles.formGroupBox}>
@@ -323,71 +340,73 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						</div>
 					)}
 
-					{/* 5. Surfaces Selection */}
-					<div className={styles.formGroupBox}>
-						<div className={styles.formGroup}>
-							<label>What needs painting?</label>
-							<div className={styles.checkboxGroupHorizontal}>
-								<label className={styles.checkboxLabel}>
-									<input
-										type='checkbox'
-										name='walls'
-										checked={room.surfaces.walls}
-										onChange={handleSurfaceChange}
-									/>{' '}
-									Walls
-								</label>
-								<label className={styles.checkboxLabel}>
-									<input
-										type='checkbox'
-										name='ceiling'
-										checked={room.surfaces.ceiling}
-										onChange={handleSurfaceChange}
-									/>{' '}
-									Ceiling
-								</label>
-								<label className={styles.checkboxLabel}>
-									<input
-										type='checkbox'
-										name='trim'
-										checked={room.surfaces.trim}
-										onChange={handleSurfaceChange}
-									/>{' '}
-									Trim
-								</label>
-								<label className={styles.checkboxLabel}>
-									<input
-										type='checkbox'
-										name='doors'
-										checked={room.surfaces.doors}
-										onChange={handleSurfaceChange}
-									/>{' '}
-									Doors
-								</label>
-								<label className={styles.checkboxLabel}>
-									<input
-										type='checkbox'
-										name='crownMolding'
-										checked={room.surfaces.crownMolding || false}
-										onChange={handleSurfaceChange}
-									/>{' '}
-									Crown Molding
-								</label>
-								<label className={styles.checkboxLabel}>
-									<input
-										type='checkbox'
-										name='windows'
-										checked={room.surfaces.windows || false}
-										onChange={handleSurfaceChange}
-									/>{' '}
-									Windows
-								</label>
+					{/* 4. Surfaces Selection (Conditional on Customization) */}
+					{room.isCustomized && (
+						<div className={styles.formGroupBox}>
+							<div className={styles.formGroup}>
+								<label>What needs painting?</label>
+								<div className={styles.checkboxGroupHorizontal}>
+									<label className={styles.checkboxLabel}>
+										<input
+											type='checkbox'
+											name='walls'
+											checked={room.surfaces.walls}
+											onChange={handleSurfaceChange}
+										/>{' '}
+										Walls
+									</label>
+									<label className={styles.checkboxLabel}>
+										<input
+											type='checkbox'
+											name='ceiling'
+											checked={room.surfaces.ceiling}
+											onChange={handleSurfaceChange}
+										/>{' '}
+										Ceiling
+									</label>
+									<label className={styles.checkboxLabel}>
+										<input
+											type='checkbox'
+											name='trim'
+											checked={room.surfaces.trim}
+											onChange={handleSurfaceChange}
+										/>{' '}
+										Trim
+									</label>
+									<label className={styles.checkboxLabel}>
+										<input
+											type='checkbox'
+											name='doors'
+											checked={room.surfaces.doors}
+											onChange={handleSurfaceChange}
+										/>{' '}
+										Doors
+									</label>
+									<label className={styles.checkboxLabel}>
+										<input
+											type='checkbox'
+											name='crownMolding'
+											checked={room.surfaces.crownMolding || false}
+											onChange={handleSurfaceChange}
+										/>{' '}
+										Crown Molding
+									</label>
+									<label className={styles.checkboxLabel}>
+										<input
+											type='checkbox'
+											name='windows'
+											checked={room.surfaces.windows || false}
+											onChange={handleSurfaceChange}
+										/>{' '}
+										Windows
+									</label>
+								</div>
 							</div>
 						</div>
-					</div>
+					)}
 
-					{/* 6. Surface Details (Conditional) */}
-					{showDetails && (
+					{/* 5. Surface Details (Conditional on Customization AND Selection) */}
+					{room.isCustomized && showDetails && (
 						<div className={styles.formGroupBox}>
 							<div className={styles.conditionalFieldsContainer}>
 								{room.surfaces.ceiling && (
@@ -486,34 +505,37 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						</div>
 					)}
 
-					{/* 7. General Condition & Color */}
-					<div className={styles.formGroupBox}>
-						<div className={styles.formGroupGrid}>
-							<div className={styles.formGroup}>
-								<label>Surface Condition</label>
-								<select
-									name='wallCondition'
-									value={room.wallCondition}
-									onChange={handleFieldChange}
-								>
-									<option value='Good'>Good (Few nail holes)</option>
-									<option value='Fair'>Fair (Dings, scuffs)</option>
-									<option value='Poor'>Poor (Cracks, stains)</option>
-								</select>
-							</div>
-							<div className={styles.formGroup}>
-								<label>Color Change</label>
-								<select
-									name='colorChange'
-									value={room.colorChange}
-									onChange={handleFieldChange}
-								>
-									<option value='Similar'>Similar Color</option>
-									<option value='Dark-to-Light'>Dark-to-Light</option>
-								</select>
+					{/* 6. General Condition & Color (Conditional on Customization) */}
+					{room.isCustomized && (
+						<div className={styles.formGroupBox}>
+							<div className={styles.formGroupGrid}>
+								<div className={styles.formGroup}>
+									<label>Surface Condition</label>
+									<select
+										name='wallCondition'
+										value={room.wallCondition}
+										onChange={handleFieldChange}
+									>
+										<option value='Good'>Good (Few nail holes)</option>
+										<option value='Fair'>Fair (Dings, scuffs)</option>
+										<option value='Poor'>Poor (Cracks, stains)</option>
+									</select>
+								</div>
+								<div className={styles.formGroup}>
+									<label>Color Change</label>
+									<select
+										name='colorChange'
+										value={room.colorChange}
+										onChange={handleFieldChange}
+									>
+										<option value='Similar'>Similar Color</option>
+										<option value='Change'>Color Change (2 Coats)</option>
+										<option value='Dark-to-Light'>Dark-to-Light</option>
+									</select>
+								</div>
 							</div>
 						</div>
-					</div>
+					)}
 
 					{/* Add Another Button */}
 					{onRoomAdd && (

@@ -9,6 +9,7 @@ export interface PaintingRoom {
 	ceilingHeight: string; // '8ft', '9ft', '10ft', '10ft+'
 	windowCount: number;
 	closetSize: 'None' | 'Standard' | 'Medium' | 'Large';
+	isCustomized?: boolean; // Inheritance flag
 	surfaces: {
 		walls: boolean;
 		ceiling: boolean;

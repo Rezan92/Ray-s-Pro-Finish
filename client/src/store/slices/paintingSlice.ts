@@ -5,30 +5,27 @@ import type { PaintingRoom } from '@/components/common/estimator/EstimatorTypes'
 interface PaintingState {
 	rooms: PaintingRoom[];
 	paintProvider: string;
-	furniture: string;
+	occupancy: string; // Replaces 'furniture'
+	globalDefaults: {
+		surfaces: {
+			walls: boolean;
+			ceiling: boolean;
+			trim: boolean;
+			doors: boolean;
+			crownMolding: boolean;
+			windows: boolean;
+		};
+		wallCondition: string;
+		colorChange: string;
+	};
 	additionalDetails?: string;
 }
 
 const initialState: PaintingState = {
 	rooms: [],
 	paintProvider: 'Standard',
-	furniture: 'None',
-};
-
-const createNewRoom = (
-	type: string,
-	id: string,
-	label: string
-): PaintingRoom => {
-	const isStairwell = type === 'stairwell';
-	return {
-		id,
-		type,
-		label,
-		size: 'Medium',
-		ceilingHeight: isStairwell ? '11ft+' : '8ft',
-		windowCount: 1,
-		closetSize: 'None',
+	occupancy: 'Empty',
+	globalDefaults: {
 		surfaces: {
 			walls: true,
 			ceiling: false,
@@ -39,6 +36,28 @@ const createNewRoom = (
 		},
 		wallCondition: 'Good',
 		colorChange: 'Similar',
+	},
+};
+
+const createNewRoom = (
+	type: string,
+	id: string,
+	label: string
+): PaintingRoom => {
+	const isStairwell = type === 'stairwell';
+	// Initialize with defaults, but isCustomized is false so UI will show inheritance
+	return {
+		id,
+		type,
+		label,
+		size: 'Medium',
+		ceilingHeight: isStairwell ? '11ft+' : '8ft',
+		windowCount: 1,
+		closetSize: 'None',
+		isCustomized: false, // NEW: Inheritance flag
+		surfaces: { ...initialState.globalDefaults.surfaces }, // Start with global
+		wallCondition: initialState.globalDefaults.wallCondition,
+		colorChange: initialState.globalDefaults.colorChange,
 		ceilingTexture: 'Flat',
 		trimCondition: 'Good',
 		trimStyle: 'Simple',
@@ -82,7 +101,12 @@ export const paintingSlice = createSlice({
 					const newLabel = isMulti
 						? `${ROOM_LABELS[type]} 1`
 						: ROOM_LABELS[type];
-					state.rooms.push(createNewRoom(type, newId, newLabel));
+					// Apply current globals to new room
+					const newRoom = createNewRoom(type, newId, newLabel);
+					newRoom.surfaces = { ...state.globalDefaults.surfaces };
+					newRoom.wallCondition = state.globalDefaults.wallCondition;
+					newRoom.colorChange = state.globalDefaults.colorChange;
+					state.rooms.push(newRoom);
 				}
 			} else {
 				state.rooms = state.rooms.filter((r) => r.type !== type);
@@ -93,7 +117,12 @@ export const paintingSlice = createSlice({
 			const count = state.rooms.filter((r) => r.type === type).length;
 			const newId = `${type}_${count}`;
 			const newLabel = `${ROOM_LABELS[type]} ${count + 1}`;
-			state.rooms.push(createNewRoom(type, newId, newLabel));
+			// Apply current globals to new room
+			const newRoom = createNewRoom(type, newId, newLabel);
+			newRoom.surfaces = { ...state.globalDefaults.surfaces };
+			newRoom.wallCondition = state.globalDefaults.wallCondition;
+			newRoom.colorChange = state.globalDefaults.colorChange;
+			state.rooms.push(newRoom);
 		},
 		removeRoom: (state, action: PayloadAction<string>) => {
 			state.rooms = state.rooms.filter((r) => r.id !== action.payload);
@@ -106,6 +135,25 @@ export const paintingSlice = createSlice({
 			if (room) {
 				// @ts-expect-error - Generic assignment to room object
 				room[action.payload.field] = action.payload.value;
+				
+				// Auto-enable customization if a relevant field is changed manually? 
+				// Or assume the UI handles setting isCustomized to true before calling this.
+				// For now, let UI handle the flag toggling explicitly.
+			}
+		},
+		toggleRoomCustomization: (
+			state,
+			action: PayloadAction<{ roomId: string; isCustomized: boolean }>
+		) => {
+			const room = state.rooms.find((r) => r.id === action.payload.roomId);
+			if (room) {
+				room.isCustomized = action.payload.isCustomized;
+				// If turning OFF customization, revert to globals
+				if (!action.payload.isCustomized) {
+					room.surfaces = { ...state.globalDefaults.surfaces };
+					room.wallCondition = state.globalDefaults.wallCondition;
+					room.colorChange = state.globalDefaults.colorChange;
+				}
 			}
 		},
 		updatePaintingGlobal: (
@@ -116,6 +164,29 @@ export const paintingSlice = createSlice({
 			// @ts-expect-error - Generic assignment to state object
 			state[field] = value as never;
 		},
+		updateGlobalDefaults: (
+			state,
+			action: PayloadAction<{ field: string; value: unknown }>
+		) => {
+			const { field, value } = action.payload;
+			// Update the global default store
+			if (field === 'surfaces') {
+				state.globalDefaults.surfaces = value as any;
+			} else if (field === 'wallCondition') {
+				state.globalDefaults.wallCondition = value as string;
+			} else if (field === 'colorChange') {
+				state.globalDefaults.colorChange = value as string;
+			}
+
+			// Propagate to all NON-customized rooms
+			state.rooms.forEach(room => {
+				if (!room.isCustomized) {
+					if (field === 'surfaces') room.surfaces = value as any;
+					if (field === 'wallCondition') room.wallCondition = value as string;
+					if (field === 'colorChange') room.colorChange = value as string;
+				}
+			});
+		},
 		resetPainting: () => initialState,
 	},
 });
@@ -123,6 +194,7 @@ export const paintingSlice = createSlice({
 // Selectors
 export const selectPaintingState = (state: RootState) => state.painting;
 export const selectPaintingRooms = (state: RootState) => state.painting.rooms;
+export const selectPaintingGlobalDefaults = (state: RootState) => state.painting.globalDefaults;
 
 export const selectPaintingTotalRooms = createSelector(
 	[selectPaintingRooms],
@@ -139,7 +211,9 @@ export const {
 	addRoom,
 	removeRoom,
 	updateRoomField,
+	toggleRoomCustomization,
 	updatePaintingGlobal,
+	updateGlobalDefaults,
 	resetPainting,
 } = paintingSlice.actions;
 
