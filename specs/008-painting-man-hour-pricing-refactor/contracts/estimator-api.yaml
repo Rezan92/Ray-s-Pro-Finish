@@ -1,0 +1,100 @@
+openapi: 3.0.0
+info:
+  title: Painting Estimator API
+  version: 1.0.0
+  description: Calculates painting estimates based on Man-Hour pricing model.
+
+paths:
+  /api/estimate/calculate-painting:
+    post:
+      summary: Calculate Painting Estimate
+      operationId: calculatePaintingEstimate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rooms:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/PaintingRoom'
+                paintProvider:
+                  type: string
+                  enum: [Customer, Standard, Premium]
+                occupancy:
+                  type: string
+                  enum: [Empty, Light Furniture, Heavy Furniture]
+                zipCode:
+                  type: string
+
+      responses:
+        '200':
+          description: Successful Calculation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  low:
+                    type: number
+                    description: Estimated low range cost
+                  high:
+                    type: number
+                    description: Estimated high range cost
+                  totalHours:
+                    type: number
+                    description: Total calculated man-hours
+                  breakdownItems:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BreakdownItem'
+                  gallons:
+                    type: object
+                    properties:
+                      walls: { type: number }
+                      ceiling: { type: number }
+                      trim: { type: number }
+                      primer: { type: number }
+
+components:
+  schemas:
+    PaintingRoom:
+      type: object
+      properties:
+        id: { type: string }
+        type: { type: string }
+        size: { type: string }
+        exactLength: { type: number }
+        exactWidth: { type: number }
+        exactHeight: { type: number }
+        ceilingHeight: { type: string }
+        surfaces:
+          type: object
+          properties:
+            walls: { type: boolean }
+            ceiling: { type: boolean }
+            trim: { type: boolean }
+            doors: { type: boolean }
+            windows: { type: boolean }
+            crownMolding: { type: boolean }
+        wallCondition: { type: string }
+        colorChange: { type: string }
+        ceilingTexture: { type: string }
+        trimCondition: { type: string }
+        trimConversion: { type: boolean }
+        crownMoldingStyle: { type: string }
+        stairSteps: { type: number }
+        stairSpindles: { type: number }
+        stairSpindleType: { type: string }
+        stairHandrail: { type: number }
+        closetSize: { type: string }
+
+    BreakdownItem:
+      type: object
+      properties:
+        name: { type: string }
+        hours: { type: number }
+        cost: { type: number }
+        details: { type: string }

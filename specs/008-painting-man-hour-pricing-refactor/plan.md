@@ -1,39 +1,43 @@
-# Implementation Plan: Painting Man-Hour Pricing Refactor
+# Implementation Plan: Painting Estimator Refactor (Man-Hour Driven)
 
-**Branch**: `008-painting-man-hour-pricing-refactor` | **Date**: 2026-02-06 | **Spec**: [spec.md](spec.md)
-**Input**: Feature specification from `specs/008-painting-man-hour-pricing-refactor/spec.md`
+**Branch**: `008-painting-man-hour-pricing-refactor` | **Date**: 2026-02-08 | **Spec**: [specs/008-painting-man-hour-pricing-refactor/spec.md](spec.md)
+
+**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/commands/plan.md` for the execution workflow.
 
 ## Summary
 
-Replace the existing flat-rate painting estimator with a robust, backend-driven man-hour calculation engine based on PCA standards. This includes a major refactor of `masterRates.ts` to centralize all labor and production rates, updating the `paintingService` to use these granular rates, and enhancing the `aiHelper` to generate high-conversion summaries from structured data. The frontend will be updated to support "Global Defaults" and "Exact Dimensions" for a smoother UX.
+Refactor the Painting Estimator from a square-foot price model to a granular "Man-Hour Driven" engine.
+**Key changes:**
+1.  **Backend**: Centralize all constants in `masterRates.ts` (Labor $75/hr). Refactor `paintingService.ts` to calculate time first (Time * Rate = Price). Add logic for Days calculation, Daily Trip charges, and Occupancy multipliers.
+2.  **Frontend**: Update `PaintingRoomCard` to accept Exact Dimensions (overriding presets). Update `Stairwell` inputs for spindle types.
+3.  **Admin**: Enforce detailed breakdown (Math explanation) and Surface Gallon counts.
 
 ## Technical Context
 
-**Language/Version**: TypeScript 5.x / React 18 / Node.js
-**Primary Dependencies**: Redux Toolkit, Reselect, Gemini API (existing)
-**Storage**: N/A (State management / Runtime calculation)
-**Testing**: Manual regression testing of pricing logic and UI flows.
-**Target Platform**: Web (React Client + Node.js API)
-**Project Type**: Full-stack Web Application
-**Performance Goals**: Instant calculation on the backend; <200ms response time for estimate generation.
-**Constraints**:
-- **Zero Pricing Opacity**: Admin must see every minute charged.
-- **Strict Typing**: All new rate structures and summary objects must be fully typed.
-- **No Client-Side Pricing**: All math must happen on the server to prevent manipulation and ensure consistency.
+**Language/Version**: TypeScript 5.x
+**Primary Dependencies**: React 18, Node.js (Express)
+**Storage**: N/A (Stateless calculation, standard JSON payloads)
+**Testing**: Vitest (Unit tests for Service logic)
+**Target Platform**: Web (Admin & Customer views)
+**Project Type**: Web application (Frontend + Backend)
+**Performance Goals**: Instant calculation (<200ms)
+**Constraints**: strictly use `masterRates.ts` constants. No Database Schema changes.
+**Scale/Scope**: Single Service Refactor (Painting only)
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- **I. Styling & Visual System**: Updates to Estimator UI must use existing CSS Modules and variables. ✅
-- **II. State & Data Logic**:
-  - **Immutable Pricing**: Plan explicitly moves all logic to backend `masterRates.ts`. ✅
-  - **Modular Redux**: New UI state (Global/Override) will live in `paintingSlice`. ✅
-- **III. TypeScript & Standards**: Zero Tolerance policy enforced. ✅
-- **IV. Backend Integrity**:
-  - **Service Layer**: Calculation logic is isolated in `paintingService`. ✅
-  - **Contract-First**: New `AdminSummary` contract will be defined. ✅
-- **V. File Organization**: Plan targets `server/src/modules/estimator/` and `client/src/store/slices/`. ✅
+- [x] **I. Styling**: (N/A for backend, Frontend will use existing CSS Modules)
+- [x] **II. State & Data Logic**:
+    - [x] "Immutable Pricing": Pricing logic moved to `masterRates.ts` (Source of Truth).
+    - [x] "Modular Redux": Will update `paintingSlice` (or `estimatorSlice`) with new fields, keeping it modular.
+- [x] **III. TypeScript**:
+    - [x] "Strict Mode": All new calculations will have explicit types.
+    - [x] "No any": Interface `PaintingRoom` will be strictly typed.
+- [x] **IV. Backend Integrity**:
+    - [x] "Service Layer": Logic resides in `paintingService.ts`, not controller.
+    - [x] "Contract-First": Plan includes updating `EstimatorTypes.ts` contract first.
 
 ## Project Structure
 
@@ -52,31 +56,32 @@ specs/008-painting-man-hour-pricing-refactor/
 ### Source Code (repository root)
 
 ```text
-server/
-└── src/
-    └── modules/
-        └── estimator/
-            ├── constants/
-            │   └── masterRates.ts         <-- HEAVILY MODIFIED (Centralized Rates)
-            ├── services/
-            │   ├── paintingService.ts     <-- REWRITTEN (Man-Hour Logic)
-            │   └── aiHelper.ts            <-- UPDATED (Structured Input)
-            └── types.ts                   <-- UPDATED (New Interfaces)
+backend/
+├── src/
+│   ├── modules/
+│   │   └── estimator/
+│   │       ├── constants/
+│   │       │   └── masterRates.ts       # UPDATED: Single Source of Truth
+│   │       ├── services/
+│   │       │   └── paintingService.ts   # REFACTORED: Man-Hour Engine
+│   │       └── types.ts                 # UPDATED: Shared Types
 
 client/
-└── src/
-    ├── components/
-    │   └── common/
-    │       └── estimator/
-    │           ├── PaintingForm.tsx       <-- UPDATED (Global/Override UI)
-    │           └── PaintingRoomCard.tsx   <-- UPDATED (Exact Dims)
-    └── store/
-        └── slices/
-            └── paintingSlice.ts           <-- UPDATED (State shape)
+├── src/
+│   ├── components/
+│   │   └── common/
+│   │       └── estimator/
+│   │           ├── PaintingForm.tsx     # UPDATED: Project Defaults
+│   │           ├── PaintingRoomCard.tsx # UPDATED: Exact Dimensions UI
+│   │           └── EstimatorTypes.ts    # UPDATED: Frontend Contract matching Backend
 ```
 
-**Structure Decision**: In-place refactor of existing modules to enforce the "Single Source of Truth" principle.
+**Structure Decision**: Standard "Frontend + Backend" Web Application structure.
 
 ## Complexity Tracking
 
-No violations found. The refactor reduces long-term complexity by centralizing pricing.
+> **Fill ONLY if Constitution Check has violations that must be justified**
+
+| Violation | Why Needed | Simpler Alternative Rejected Because |
+|-----------|------------|-------------------------------------|
+| N/A | | |

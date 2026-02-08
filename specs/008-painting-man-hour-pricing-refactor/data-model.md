@@ -1,63 +1,59 @@
-# Data Model: Man-Hour Pricing Source of Truth
+# Data Model: Painting Estimator Refactor
 
-This document contains the exact production rates and constants to be used in the refactor.
+**Branch**: `008-painting-man-hour-pricing-refactor`
 
-## I. Global Project Variables & Multipliers
+## 1. Entities
 
-| Variable | Option | Value |
-|----------|--------|-------|
-| Hourly Labor Rate | Base | **$75.00** |
-| Daily Trip Constant | Setup/Cleanup | 45 Minutes per day |
-| Equipment Rental | Scaffolding/Lift | $200.00 flat daily fee (for 15ft+ or Vaulted) |
-| Occupancy Factor | Empty / New Const. | 1.00x |
-| Occupancy Factor | Light Furniture | 1.20x |
-| Occupancy Factor | Full Furniture | 1.35x |
-| Ceiling Height Factor | 8ft - 9ft (Standard) | 1.00x |
-| Ceiling Height Factor | 10ft | 1.10x |
-| Ceiling Height Factor | 12ft - 14ft | 1.25x |
-| Ceiling Height Factor | Vaulted (18ft+) | 1.45x |
+### 1.1 PaintingRoom (Updated)
+*Shared interface for Frontend Input and Backend Processing.*
 
-## II. Room Defaults (Automatic Calculations)
+| Field | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | string | Yes | Unique ID (e.g., `bedroom_1`) |
+| `type` | string | Yes | `bedroom`, `kitchen`, `stairwell`, etc. |
+| `size` | string | Yes | Preset: `Small`, `Medium`, `Large` |
+| **`exactLength`** | number | No | **NEW**: User-defined length (ft). Overrides preset. |
+| **`exactWidth`** | number | No | **NEW**: User-defined width (ft). Overrides preset. |
+| **`exactHeight`** | number | No | **NEW**: User-defined height (ft). Overrides preset. |
+| `ceilingHeight`| string | Yes | Preset bucket: `8ft`, `9-10ft`, `11ft+` (Fallback) |
+| `surfaces` | Object | Yes | Selection flags: `{ walls, ceiling, trim, doors, windows, crownMolding }` |
+| `wallCondition`| string | Yes | `Good`, `Fair`, `Poor` |
+| `colorChange` | string | Yes | `Similar`, `Dark-to-Light` |
+| `ceilingTexture`| string | No | `Flat`, `Textured`, `Popcorn` |
+| `trimCondition` | string | No | `Good`, `Poor` |
+| **`trimConversion`**| boolean | No | **NEW**: `true` if Stained -> Painted (3x multiplier). |
+| **`crownMoldingStyle`**| string | No | **NEW**: `Simple` vs `Detailed`. |
+| `doorCount` | number | No | Integer count. |
+| `doorStyle` | string | No | `Slab` vs `Paneled`. |
+| `windowCount` | number | No | Integer count. |
+| **`stairSteps`** | number | No | **NEW**: Count of steps (Risers + Stringers). |
+| **`stairSpindles`**| number | No | **NEW**: Count of spindles. |
+| **`stairSpindleType`**| string | No | **NEW**: `Square` vs `Intricate`. |
+| **`stairHandrail`**| number | No | **NEW**: Linear feet of handrail. |
+| `closetSize` | string | No | `None`, `Standard`, `Medium`, `Large`. |
 
-- **Standard Masking**: 5 Minutes per Window, 5 Minutes per Ceiling Fixture.
-- **Electrical**: 3 Minutes per Plate (Assume 4 plates per room).
-- **Floor Protection**: 15 Minutes per 100 SF of floor area.
+### 1.2 Global Settings (Context)
 
-### Dimension Defaults (Reference for Presets)
-- **Small (10x10)**: 320 SF Walls / 100 SF Ceiling / 40 LF Perimeter.
-- **Medium (12x14)**: 416 SF Walls / 168 SF Ceiling / 52 LF Perimeter.
-- **Large (15x16)**: 496 SF Walls / 240 SF Ceiling / 62 LF Perimeter.
+| Field | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `paintProvider` | string | `Standard` | `Customer`, `Standard`, `Premium`. |
+| `occupancy` | string | `Empty` | `Empty`, `Light Furniture` (1.2x), `Heavy Furniture` (1.35x). |
+| `laborRate` | number | 75 | **Backend Constant**: Not user editable. |
 
-## III. Component Mapping & Production Rates
+### 1.3 Estimate Output (BreakdownItem)
 
-### 1. Walls (Rolling & Cutting)
-- **Rolling (1st Coat)**: 400 SFPH
-- **Rolling (2nd Coat)**: 550 SFPH
-- **Perimeter Cutting (Standard)**: 120 LFPH
-- **Perimeter Cutting (High Contrast)**: 75 LFPH
-- **Color Change logic**: 
-  - Refresh (1 Coat): Use 1st Coat rates.
-  - Full Change (2 Coats): 1st Coat Time + 2nd Coat Time.
-  - Dark-to-Light: Add 0.50 Man-Hours per 100 SF.
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `name` | string | Task name (e.g., "Bedroom 1 - Walls") |
+| `hours` | number | **NEW**: Calculated man-hours. |
+| `cost` | number | derived: `hours * 75`. |
+| `details` | string | Explanation of math. |
 
-### 2. Surface Condition (Preparation)
-- **Good**: 0.15 Man-Hours per 100 SF
-- **Fair**: 0.40 Man-Hours per 100 SF
-- **Poor**: 1.25 Man-Hours per 100 SF
+---
 
-### 3. Ceilings & Trim
-- **Smooth Ceiling**: 350 SFPH (1st) / 500 SFPH (2nd)
-- **Popcorn Ceiling**: 150 SFPH (1st) / 250 SFPH (2nd)
-- **Standard Trim (Baseboards)**: 60 LFPH (Painted) / 35 LFPH (Stained Conversion)
-- **Stained-to-Painted Multiplier**: 3.0x multiplier to all Trim/Door labor.
+## 2. Validation Rules
 
-### 4. Closets (Total Man-Hours)
-- **Standard (2x4)**: 1.5 hrs
-- **Medium (5x5)**: 2.5 hrs
-- **Large (6x10)**: 4.0 hrs
-
-### 5. Stairwells
-- **Square Spindle**: 12 Minutes each.
-- **Intricate Spindle**: 30 Minutes each.
-- **Handrail**: 6 Linear Feet per Hour.
-- **Risers/Stringers**: 20 Minutes per step.
+1.  **Exact Dimensions**: If provided, must be > 0. If `exactHeight` >= 12, force `High Ceiling` logic.
+2.  **Stairwells**: If `type === 'stairwell'`, `stairSteps` OR `stairHandrail` OR `stairSpindles` must be > 0 (can't be empty).
+3.  **Closets**: Only valid if `type === 'bedroom'`.
+4.  **Color Change**: `Dark-to-Light` triggers the "3 Coat" logic automatically.
