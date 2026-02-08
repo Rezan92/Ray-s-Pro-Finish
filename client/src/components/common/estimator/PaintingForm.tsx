@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { PaintingRoomCard } from './PaintingRoomCard';
 import type { FormData } from './EstimatorTypes';
 import styles from './styles/PaintingForm.module.css';
 import { InfoTooltip } from '@/components/common/infoTooltip/InfoTooltip';
+import { ChevronDown } from 'lucide-react';
 
 // Define the props it will receive from EstimatorPage
 interface PaintingFormProps {
@@ -43,6 +44,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 	onGlobalChange,
 }) => {
 	const { painting } = formData;
+	const [isConfigOpen, setIsConfigOpen] = useState(true);
 
 	// Helper to hide "Add Another" button if limit reached
 	const getRoomCount = (type: string) =>
@@ -60,7 +62,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 		<div className={styles.serviceFormBox}>
 			<h3 className={styles.serviceFormTitle}>Interior Painting</h3>
 
-			{/* --- A. The Room Builder (Moved to Top) --- */}
+			{/* --- A. The Room Builder (Top) --- */}
 			<div className={styles.formGroupBox}>
 				<div className={styles.formGroup}>
 					<label>Add Rooms & Spaces</label>
@@ -87,178 +89,258 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 				</div>
 			</div>
 
-			{/* --- C. Global Painting Questions --- */}
-			<div className={styles.globalQuestions}>
-				<h4 style={{ marginBottom: '1rem', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-					Project Configuration
-				</h4>
+			{/* --- C. Global Painting Questions (Card Style) --- */}
+			<div className={styles.configCard}>
+				<button
+					type="button"
+					className={styles.configHeader}
+					onClick={() => setIsConfigOpen(!isConfigOpen)}
+				>
+					<span className={styles.configTitle}>
+						Project Configuration & Defaults
+					</span>
+					<ChevronDown size={20} style={{ transform: isConfigOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }} />
+				</button>
 				
-				<div className={styles.formGroupBox}>
-					<div className={styles.formGroupGrid}>
-						<div className={styles.formGroup}>
-							<label>Who will provide the paint?</label>
-							<select
-								name='paintProvider'
-								value={painting.paintProvider}
-								onChange={(e) => onGlobalChange('paintProvider', e.target.value)}
-							>
-								<option value=''>Please select...</option>
-								<option value='Customer'>I will provide all paint</option>
-								<option value='Standard'>
-									Ray's Pro (Standard Quality)
-								</option>
-								<option value='Premium'>
-									Ray's Pro (Premium Quality)
-								</option>
-							</select>
+				{isConfigOpen && (
+					<div className={styles.configContent}>
+						<div className={styles.formGroupBox}>
+							<div className={styles.formGroupGrid}>
+								<div className={styles.formGroup}>
+									<label>Who will provide the paint?</label>
+									<select
+										name='paintProvider'
+										value={painting.paintProvider}
+										onChange={(e) => onGlobalChange('paintProvider', e.target.value)}
+									>
+										<option value=''>Please select...</option>
+										<option value='Customer'>I will provide all paint</option>
+										<option value='Standard'>
+											Ray's Pro (Standard Quality)
+										</option>
+										<option value='Premium'>
+											Ray's Pro (Premium Quality)
+										</option>
+									</select>
+								</div>
+								<div className={styles.formGroup}>
+									<label>Occupancy & Furniture</label>
+									<select
+										name='occupancy'
+										value={formData.painting.occupancy || 'Empty'}
+										onChange={(e) => onGlobalChange('occupancy', e.target.value)}
+									>
+										<option value='Empty'>Empty / New Construction</option>
+										<option value='Light Furniture'>Occupied - Light Furniture (Owner moves small items)</option>
+										<option value='Heavy Furniture'>Occupied - Full Furniture (Painter moves/covers all)</option>
+									</select>
+								</div>
+							</div>
 						</div>
-						<div className={styles.formGroup}>
-							<label>Occupancy & Furniture</label>
-							<select
-								name='occupancy'
-								value={formData.painting.occupancy || 'Empty'}
-								onChange={(e) => onGlobalChange('occupancy', e.target.value)}
-							>
-								<option value='Empty'>Empty / New Construction</option>
-								<option value='Light Furniture'>Occupied - Light Furniture (Owner moves small items)</option>
-								<option value='Heavy Furniture'>Occupied - Full Furniture (Painter moves/covers all)</option>
-							</select>
+
+						<h4 style={{ color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', marginTop: '0.5rem' }}>
+							Global Room Defaults
+							<InfoTooltip message="These settings apply to all rooms unless you check 'Customize this area' on a specific card." />
+						</h4>
+
+						<div className={styles.formGroupBox}>
+							<div className={styles.formGroup}>
+								<label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+									What needs painting (Default)?
+									<InfoTooltip message="Select the surfaces to paint by default in every room. To add specific quantities (like number of doors or windows), use the 'Customize' option on the individual room cards." />
+								</label>
+								<div className={styles.checkboxGroupHorizontal} style={{ flexWrap: 'wrap', gap: '1rem', backgroundColor: 'transparent', padding: 0 }}>
+									<label className={styles.checkboxLabel}>
+										<input
+											type='checkbox'
+											checked={painting.globalDefaults?.surfaces.walls ?? true}
+											onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'surfaces', value: { ...painting.globalDefaults.surfaces, walls: e.target.checked } })}
+										/> Walls
+									</label>
+									<label className={styles.checkboxLabel}>
+										<input
+											type='checkbox'
+											checked={painting.globalDefaults?.surfaces.ceiling ?? false}
+											onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'surfaces', value: { ...painting.globalDefaults.surfaces, ceiling: e.target.checked } })}
+										/> Ceiling
+									</label>
+									<label className={styles.checkboxLabel}>
+										<input
+											type='checkbox'
+											checked={painting.globalDefaults?.surfaces.trim ?? false}
+											onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'surfaces', value: { ...painting.globalDefaults.surfaces, trim: e.target.checked } })}
+										/> Trim
+									</label>
+									<label className={styles.checkboxLabel}>
+										<input
+											type='checkbox'
+											checked={painting.globalDefaults?.surfaces.doors ?? false}
+											onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'surfaces', value: { ...painting.globalDefaults.surfaces, doors: e.target.checked } })}
+										/> Doors
+									</label>
+									<label className={styles.checkboxLabel}>
+										<input
+											type='checkbox'
+											checked={painting.globalDefaults?.surfaces.crownMolding ?? false}
+											onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'surfaces', value: { ...painting.globalDefaults.surfaces, crownMolding: e.target.checked } })}
+										/> Crown Molding
+									</label>
+									<label className={styles.checkboxLabel}>
+										<input
+											type='checkbox'
+											checked={painting.globalDefaults?.surfaces.windows ?? false}
+											onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'surfaces', value: { ...painting.globalDefaults.surfaces, windows: e.target.checked } })}
+										/> Windows
+									</label>
+								</div>
+							</div>
+						</div>
+
+						{/* Conditional Global Fields based on Surfaces */}
+						{(painting.globalDefaults?.surfaces.ceiling || painting.globalDefaults?.surfaces.trim || painting.globalDefaults?.surfaces.crownMolding || painting.globalDefaults?.surfaces.doors) && (
+							<div className={styles.formGroupBox}>
+								<div className={styles.formGroupGrid}>
+									{painting.globalDefaults?.surfaces.ceiling && (
+										<div className={styles.formGroup}>
+											<label>Ceiling Texture (Default)</label>
+											<select
+												value={painting.globalDefaults?.ceilingTexture || 'Flat'}
+												onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'ceilingTexture', value: e.target.value })}
+											>
+												<option value='Flat'>Flat/Smooth</option>
+												<option value='Textured'>Textured</option>
+												<option value='Popcorn'>Popcorn</option>
+											</select>
+										</div>
+									)}
+									{painting.globalDefaults?.surfaces.trim && (
+										<>
+											<div className={styles.formGroup}>
+												<label>Trim Condition (Default)</label>
+												<select
+													value={painting.globalDefaults?.trimCondition || 'Good'}
+													onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'trimCondition', value: e.target.value })}
+												>
+													<option value='Good'>Good (Just needs paint)</option>
+													<option value='Poor'>Poor (Needs re-caulking)</option>
+												</select>
+											</div>
+											<div className={styles.formGroup}>
+												<label>Trim Painting Style (Default)</label>
+												<select
+													value={painting.globalDefaults?.trimConversion ? 'Stained' : 'Standard'}
+													onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'trimConversion', value: e.target.value === 'Stained' })}
+												>
+													<option value='Standard'>Standard Painting</option>
+													<option value='Stained'>Stained to Painted</option>
+												</select>
+											</div>
+										</>
+									)}
+									{painting.globalDefaults?.surfaces.crownMolding && (
+										<div className={styles.formGroup}>
+											<label>Crown Molding Style (Default)</label>
+											<select
+												value={painting.globalDefaults?.crownMoldingStyle || 'Simple'}
+												onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'crownMoldingStyle', value: e.target.value })}
+											>
+												<option value='Simple'>Simple / Smooth</option>
+												<option value='Detailed'>Detailed / Ornate</option>
+											</select>
+										</div>
+									)}
+									{painting.globalDefaults?.surfaces.doors && (
+										<div className={styles.formGroup}>
+											<label>Door Style (Default)</label>
+											<select
+												value={painting.globalDefaults?.doorStyle || 'Slab'}
+												onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'doorStyle', value: e.target.value })}
+											>
+												<option value='Slab'>Flat / Slab</option>
+												<option value='Paneled'>Paneled</option>
+											</select>
+										</div>
+									)}
+								</div>
+							</div>
+						)}
+
+						<div className={styles.formGroupBox}>
+							<div className={styles.formGroupGrid}>
+								<div className={styles.formGroup}>
+									<label>Surface Condition (Default)</label>
+									<select
+										value={painting.globalDefaults?.wallCondition || 'Good'}
+										onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'wallCondition', value: e.target.value })}
+									>
+										<option value='Good'>Good (Few nail holes)</option>
+										<option value='Fair'>Fair (Dings, scuffs)</option>
+										<option value='Poor'>Poor (Cracks, stains)</option>
+									</select>
+								</div>
+								<div className={styles.formGroup}>
+									<label>Color Change (Default)</label>
+									<select
+										value={painting.globalDefaults?.colorChange || 'Similar'}
+										onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'colorChange', value: e.target.value })}
+									>
+										<option value='Similar'>Refresh (Same Color)</option>
+										<option value='Change'>Color Change (Light to Light or Dark)</option>
+										<option value='Dark-to-Light'>Color Change (Dark to Light)</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div className={styles.formGroupBox}>
+							<div className={styles.formGroup}>
+								<label>
+									Additional Details{' '}
+									<span
+										style={{
+											fontWeight: 'normal',
+											fontSize: '0.85rem',
+											color: '#666',
+										}}
+									>
+										(Optional - Max 600 characters)
+									</span>
+								</label>
+								<textarea
+									name='additionalDetails'
+									value={painting.additionalDetails || ''}
+									onChange={(e) =>
+										onGlobalChange('additionalDetails', e.target.value)
+									}
+									maxLength={600} // Enforce the limit natively
+									rows={4}
+									placeholder='Tell us about specific damage, color changes (e.g. dark red to white), or high ceilings...'
+								/>
+								<div
+									style={{ textAlign: 'right', fontSize: '0.8rem', color: '#999' }}
+								>
+									{(painting.additionalDetails || '').length} / 600
+								</div>
+							</div>
 						</div>
 					</div>
-				</div>
-
-				<h4 style={{ marginTop: '1.5rem', marginBottom: '1rem', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-					Global Room Defaults
-					<InfoTooltip message="These settings apply to all rooms unless you check 'Customize this area' on a specific card." />
-				</h4>
-
-				<div className={styles.formGroupBox}>
-					<div className={styles.formGroup}>
-						<label>What needs painting (Default)?</label>
-						<div className={styles.checkboxGroupHorizontal} style={{ flexWrap: 'wrap', gap: '1rem', backgroundColor: 'transparent', padding: 0 }}>
-							<label className={styles.checkboxLabel}>
-								<input
-									type='checkbox'
-									checked={painting.globalDefaults?.surfaces.walls ?? true}
-									onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'surfaces', value: { ...painting.globalDefaults.surfaces, walls: e.target.checked } })}
-								/> Walls
-							</label>
-							<label className={styles.checkboxLabel}>
-								<input
-									type='checkbox'
-									checked={painting.globalDefaults?.surfaces.ceiling ?? false}
-									onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'surfaces', value: { ...painting.globalDefaults.surfaces, ceiling: e.target.checked } })}
-								/> Ceiling
-							</label>
-							<label className={styles.checkboxLabel}>
-								<input
-									type='checkbox'
-									checked={painting.globalDefaults?.surfaces.trim ?? false}
-									onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'surfaces', value: { ...painting.globalDefaults.surfaces, trim: e.target.checked } })}
-								/> Trim
-							</label>
-							<label className={styles.checkboxLabel}>
-								<input
-									type='checkbox'
-									checked={painting.globalDefaults?.surfaces.doors ?? false}
-									onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'surfaces', value: { ...painting.globalDefaults.surfaces, doors: e.target.checked } })}
-								/> Doors
-							</label>
-							<label className={styles.checkboxLabel}>
-								<input
-									type='checkbox'
-									checked={painting.globalDefaults?.surfaces.crownMolding ?? false}
-									onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'surfaces', value: { ...painting.globalDefaults.surfaces, crownMolding: e.target.checked } })}
-								/> Crown Molding
-							</label>
-							<label className={styles.checkboxLabel}>
-								<input
-									type='checkbox'
-									checked={painting.globalDefaults?.surfaces.windows ?? false}
-									onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'surfaces', value: { ...painting.globalDefaults.surfaces, windows: e.target.checked } })}
-								/> Windows
-							</label>
-						</div>
-					</div>
-				</div>
-
-				<div className={styles.formGroupBox}>
-					<div className={styles.formGroupGrid}>
-						<div className={styles.formGroup}>
-							<label>Surface Condition (Default)</label>
-							<select
-								value={painting.globalDefaults?.wallCondition || 'Good'}
-								onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'wallCondition', value: e.target.value })}
-							>
-								<option value='Good'>Good (Few nail holes)</option>
-								<option value='Fair'>Fair (Dings, scuffs)</option>
-								<option value='Poor'>Poor (Cracks, stains)</option>
-							</select>
-						</div>
-						<div className={styles.formGroup}>
-							<label>Color Change (Default)</label>
-							<select
-								value={painting.globalDefaults?.colorChange || 'Similar'}
-								onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'colorChange', value: e.target.value })}
-							>
-								<option value='Similar'>Refresh (Same Color)</option>
-								<option value='Change'>Color Change (2 Coats)</option>
-								<option value='Dark-to-Light'>Dark-to-Light (Primer + 2 Coats)</option>
-							</select>
-						</div>
-					</div>
-				</div>
-
-				<div className={styles.formGroupBox}>
-					<div className={styles.formGroup}>
-						<label>
-							Additional Details{' '}
-							<span
-								style={{
-									fontWeight: 'normal',
-									fontSize: '0.85rem',
-									color: '#666',
-								}}
-							>
-								(Optional - Max 600 characters)
-							</span>
-						</label>
-						<textarea
-							name='additionalDetails'
-							value={painting.additionalDetails || ''}
-							onChange={(e) =>
-								onGlobalChange('additionalDetails', e.target.value)
-							}
-							maxLength={600} // Enforce the limit natively
-							rows={4}
-							placeholder='Tell us about specific damage, color changes (e.g. dark red to white), or high ceilings...'
-						/>
-						<div
-							style={{ textAlign: 'right', fontSize: '0.8rem', color: '#999' }}
-						>
-							{(painting.additionalDetails || '').length} / 600
-						</div>
-					</div>
-				</div>
+				)}
 			</div>
 
 			{/* --- B. The Generated Room Cards --- */}
 			{painting.rooms.map((room) => {
 				const multi = isMultiRoom(room.type);
-				// Logic to hide add button if at limit (e.g. 8)
 				const isAtLimit = getRoomCount(room.type) >= 8;
 				return (
 					<PaintingRoomCard
 						key={room.id}
 						room={room}
 						onRoomChange={onRoomChange}
-						// Update this line: Only pass onRoomAdd if multi-room AND not at limit
 						onRoomAdd={
 							multi && room.id.endsWith('_0') && !isAtLimit
 								? onRoomAdd
 								: undefined
 						}
-						// Only show "Remove" if it's NOT the first of its type
 						onRoomRemove={
 							multi && !room.id.endsWith('_0') ? onRoomRemove : undefined
 						}

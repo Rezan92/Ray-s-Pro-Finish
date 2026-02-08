@@ -315,17 +315,29 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 					{room.type === 'bedroom' && (
 						<div className={styles.formGroupBox}>
 							<div className={styles.formGroup}>
-								<label>Does this bedroom have a closet to paint?</label>
-								<select
-									name='closetSize'
-									value={room.closetSize || 'None'}
-									onChange={handleFieldChange}
-								>
-									<option value='None'>No Closet</option>
-									<option value='Standard'>Standard (2' x 4')</option>
-									<option value='Medium'>Medium Walk-in (5' x 5')</option>
-									<option value='Large'>Large Walk-in (6' x 10')</option>
-								</select>
+								<label className={styles.checkboxLabel}>
+									<input
+										type='checkbox'
+										name='closetIncluded'
+										checked={room.closetSize !== 'None'}
+										onChange={(e) => onRoomChange(room.id, 'closetSize', e.target.checked ? 'Standard' : 'None')}
+									/>
+									Closet Included?
+								</label>
+								{room.closetSize !== 'None' && (
+									<div style={{ marginTop: '1rem' }}>
+										<label>Closet Size</label>
+										<select
+											name='closetSize'
+											value={room.closetSize || 'Standard'}
+											onChange={handleFieldChange}
+										>
+											<option value='Standard'>Standard (2' x 4')</option>
+											<option value='Medium'>Medium Walk-in (5' x 5')</option>
+											<option value='Large'>Large Walk-in (6' x 10')</option>
+										</select>
+									</div>
+								)}
 							</div>
 						</div>
 					)}
@@ -427,15 +439,15 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 											</select>
 										</div>
 										<div className={styles.formGroup}>
-											<label className={styles.checkboxLabel} style={{ marginTop: '1.8rem' }}>
-												<input
-													type='checkbox'
-													name='trimConversion'
-													checked={room.trimConversion || false}
-													onChange={(e) => onRoomChange(room.id, 'trimConversion', e.target.checked)}
-												/>{' '}
-												Stained to Painted
-											</label>
+											<label>Trim Painting Style</label>
+											<select
+												name='trimStyleDropdown'
+												value={room.trimConversion ? 'Stained' : 'Standard'}
+												onChange={(e) => onRoomChange(room.id, 'trimConversion', e.target.value === 'Stained')}
+											>
+												<option value='Standard'>Standard Painting</option>
+												<option value='Stained'>Stained to Painted</option>
+											</select>
 										</div>
 									</>
 								)}
@@ -518,9 +530,9 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 										value={room.colorChange}
 										onChange={handleFieldChange}
 									>
-										<option value='Similar'>Similar Color</option>
-										<option value='Change'>Color Change (2 Coats)</option>
-										<option value='Dark-to-Light'>Dark-to-Light</option>
+										<option value='Similar'>Refresh (Same Color)</option>
+										<option value='Change'>Color Change (Light to Light or Dark)</option>
+										<option value='Dark-to-Light'>Color Change (Dark to Light)</option>
 									</select>
 								</div>
 							</div>

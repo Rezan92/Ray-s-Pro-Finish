@@ -17,6 +17,11 @@ interface PaintingState {
 		};
 		wallCondition: string;
 		colorChange: string;
+		ceilingTexture: string;
+		trimCondition: string;
+		trimConversion: boolean;
+		crownMoldingStyle: string;
+		doorStyle: string;
 	};
 	additionalDetails?: string;
 }
@@ -36,6 +41,11 @@ const initialState: PaintingState = {
 		},
 		wallCondition: 'Good',
 		colorChange: 'Similar',
+		ceilingTexture: 'Flat',
+		trimCondition: 'Good',
+		trimConversion: false,
+		crownMoldingStyle: 'Simple',
+		doorStyle: 'Slab',
 	},
 };
 
@@ -58,12 +68,13 @@ const createNewRoom = (
 		surfaces: { ...initialState.globalDefaults.surfaces }, // Start with global
 		wallCondition: initialState.globalDefaults.wallCondition,
 		colorChange: initialState.globalDefaults.colorChange,
-		ceilingTexture: 'Flat',
-		trimCondition: 'Good',
-		trimStyle: 'Simple',
+		ceilingTexture: initialState.globalDefaults.ceilingTexture,
+		trimCondition: initialState.globalDefaults.trimCondition,
+		trimStyle: 'Simple', // Default
+		trimConversion: initialState.globalDefaults.trimConversion,
 		doorCount: '1',
-		doorStyle: 'Slab',
-		crownMoldingStyle: 'Simple',
+		doorStyle: initialState.globalDefaults.doorStyle,
+		crownMoldingStyle: initialState.globalDefaults.crownMoldingStyle,
 		roomDescription: '',
 	};
 };
@@ -176,6 +187,16 @@ export const paintingSlice = createSlice({
 				state.globalDefaults.wallCondition = value as string;
 			} else if (field === 'colorChange') {
 				state.globalDefaults.colorChange = value as string;
+			} else if (field === 'ceilingTexture') {
+				state.globalDefaults.ceilingTexture = value as string;
+			} else if (field === 'trimCondition') {
+				state.globalDefaults.trimCondition = value as string;
+			} else if (field === 'trimConversion') {
+				state.globalDefaults.trimConversion = value as boolean;
+			} else if (field === 'crownMoldingStyle') {
+				state.globalDefaults.crownMoldingStyle = value as string;
+			} else if (field === 'doorStyle') {
+				state.globalDefaults.doorStyle = value as string;
 			}
 
 			// Propagate to all NON-customized rooms
@@ -184,6 +205,11 @@ export const paintingSlice = createSlice({
 					if (field === 'surfaces') room.surfaces = value as any;
 					if (field === 'wallCondition') room.wallCondition = value as string;
 					if (field === 'colorChange') room.colorChange = value as string;
+					if (field === 'ceilingTexture') room.ceilingTexture = value as string;
+					if (field === 'trimCondition') room.trimCondition = value as string;
+					if (field === 'trimConversion') room.trimConversion = value as boolean;
+					if (field === 'crownMoldingStyle') room.crownMoldingStyle = value as string;
+					if (field === 'doorStyle') room.doorStyle = value as string;
 				}
 			});
 		},
