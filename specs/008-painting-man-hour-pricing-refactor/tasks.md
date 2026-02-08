@@ -42,10 +42,10 @@
 
 ## Phase 6: UI Polish & Components (Refinement)
 
-- [ ] T023 [US-Refinement] Update `PaintingRoomCard.tsx`: Replace "Stained to Painted" with a dropdown (Standard vs Stained-to-Painted) (F-020).
-- [ ] T024 [US-Refinement] Update `PaintingRoomCard.tsx`: Refine Color Change dropdown options (Refresh, Change, Dark-to-Light) (F-021).
-- [ ] T025 [US-Refinement] Update `PaintingRoomCard.tsx`: Add "Closet Included?" checkbox logic for Bedrooms (F-022).
-- [ ] T026 [US-Refinement] Update `PaintingRoomCard.tsx`: Integrate "Enter Exact Dimensions" into standard Size dropdown and convert height to Number Input (F-011).
+- [x] T023 [US-Refinement] Update `PaintingRoomCard.tsx`: Replace "Stained to Painted" with a dropdown (Standard vs Stained-to-Painted) (F-020).
+- [x] T024 [US-Refinement] Update `PaintingRoomCard.tsx`: Refine Color Change dropdown options (Refresh, Change, Dark-to-Light) (F-021).
+- [x] T025 [US-Refinement] Update `PaintingRoomCard.tsx`: Add "Closet Included?" checkbox logic for Bedrooms (F-022).
+- [x] T026 [US-Refinement] Update `PaintingRoomCard.tsx`: Integrate "Enter Exact Dimensions" into standard Size dropdown and convert height to Number Input (F-011).
 
 ## Phase 7: Stairwell Specifics & Backend Refinement (Refinement)
 

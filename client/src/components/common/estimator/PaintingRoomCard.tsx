@@ -160,37 +160,6 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 
 					{/* 2. Dimensions */}
 					<div className={styles.formGroupBox}>
-						<div
-							style={{
-								display: 'flex',
-								justifyContent: 'space-between',
-								alignItems: 'center',
-								marginBottom: '1rem',
-							}}
-						>
-							<label style={{ margin: 0 }}>Room Dimensions</label>
-							<button
-								type='button'
-								onClick={toggleExact}
-								style={{
-									fontSize: '0.85rem',
-									color: 'var(--color-primary)',
-									background: 'none',
-									border: 'none',
-									cursor: 'pointer',
-									display: 'flex',
-									alignItems: 'center',
-									gap: '4px',
-									padding: '4px 8px',
-									borderRadius: '4px',
-									border: '1px solid var(--color-primary)',
-								}}
-							>
-								<Ruler size={14} />
-								{showExact ? 'Use Presets' : 'Enter Exact Dimensions'}
-							</button>
-						</div>
-
 						{!showExact ? (
 							<div className={styles.formGroupGrid}>
 								<div className={styles.formGroup}>
@@ -198,7 +167,15 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									<select
 										name='size'
 										value={room.size}
-										onChange={handleFieldChange}
+										onChange={(e) => {
+											if (e.target.value === 'Custom') {
+												setShowExact(true);
+												// Initialize exact fields if empty to prevent UI glitch? 
+												// Optional, but good UX. For now just reveal.
+											} else {
+												handleFieldChange(e);
+											}
+										}}
 									>
 										{sizeOptions.map((option) => (
 											<option
@@ -227,7 +204,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						) : (
 							<div
 								className={styles.formGroupGrid}
-								style={{ gridTemplateColumns: '1fr 1fr 1fr' }}
+								style={{ gridTemplateColumns: '1fr 1fr 1fr auto' }}
 							>
 								<div className={styles.formGroup}>
 									<label>Length (ft)</label>
@@ -261,6 +238,22 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 										value={room.exactHeight || ''}
 										onChange={handleFieldChange}
 									/>
+								</div>
+								<div className={styles.formGroup} style={{ display: 'flex', alignItems: 'flex-end' }}>
+									<button 
+										type='button' 
+										onClick={toggleExact}
+										style={{ 
+											padding: '0.6rem', 
+											border: '1px solid #ccc', 
+											borderRadius: '4px', 
+											background: '#f0f0f0', 
+											cursor: 'pointer' 
+										}}
+										title="Back to Presets"
+									>
+										Back
+									</button>
 								</div>
 							</div>
 						)}
