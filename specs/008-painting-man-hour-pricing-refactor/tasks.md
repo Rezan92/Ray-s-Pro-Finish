@@ -1,7 +1,7 @@
 # Tasks: Painting Estimator Refactor (Man-Hour Driven)
 
 **Feature**: `008-painting-man-hour-pricing-refactor`
-**Status**: Pending
+**Status**: In Progress
 
 ## Phase 1: Setup & Contracts (Shared)
 
@@ -32,20 +32,32 @@
 - [x] T016 [US1] Verify Material Breakdown (Admin Only) correctly sums gallons per surface type.
 - [x] T017 [US1] Create unit test in `server/src/modules/estimator/services/paintingService.test.ts` verifying "Standard Room" calculation (SC-001).
 
+## Phase 5: Global Config & Inheritance (Refinement)
+
+- [ ] T018 [US-Refinement] Update `PaintingForm.tsx` to merge "Furniture" and "Occupancy" into a single global question with user-friendly labels (F-017).
+- [ ] T019 [US-Refinement] Update `PaintingForm.tsx` to move "What needs painting?", "Surface Condition", and "Color Change" to the Global level (F-018).
+- [ ] T020 [US-Refinement] Update `PaintingRoomCard.tsx` to add "Customize this area" checkbox. Logic: Unchecked = inherit global; Checked = show local overrides (F-019).
+- [ ] T021 [US-Refinement] Ensure `EstimatorTypes.ts` supports global scope fields (`globalWalls`, `globalCeiling`, etc.).
+
+## Phase 6: UI Polish & Components (Refinement)
+
+- [ ] T022 [US-Refinement] Update `PaintingRoomCard.tsx`: Replace "Stained to Painted" checkbox with a Dropdown (Standard vs Stained-to-Painted) (F-020).
+- [ ] T023 [US-Refinement] Update `PaintingRoomCard.tsx`: Refine Color Change dropdown options (Refresh, Change, Dark-to-Light) (F-021).
+- [ ] T024 [US-Refinement] Update `PaintingRoomCard.tsx`: Add "Closet Included?" checkbox logic for Bedrooms (F-022).
+- [ ] T025 [US-Refinement] Update `PaintingRoomCard.tsx`: Move "Enter Exact Dimensions" into the Size Dropdown and convert Ceiling Height to Number Input (F-023).
+
+## Phase 7: Stairwell Specifics (Refinement)
+
+- [ ] T026 [US-Refinement] Update `PaintingRoomCard.tsx`: Implement specialized Stairwell inputs (Wall Length, Max Height, remove irrelevant surfaces) (F-024).
+- [ ] T027 [Backend] Update `paintingService.ts`: Apply 1.5x Trim Multiplier for Stairwells and trigger Equipment Fee if Max Height > 12ft (F-026).
+
 ## Dependencies
 
-1.  **T001, T002, T003 (Setup)** MUST be completed before **Phase 2 (Backend)**.
-2.  **Phase 2 (Backend)** MUST be completed before **Phase 4 (Integration)**.
-3.  **Phase 3 (Frontend)** can be done in parallel with **Phase 2**, but **T011** requires **T001** (Types).
-
-## Parallel Execution Opportunities
-
-*   **T005, T006, T007, T008**: All backend calculation helpers can be implemented simultaneously by different developers.
-*   **T011, T012, T013**: Frontend component updates can happen while backend logic is being written, provided Types (T001) are settled.
+1.  **Phase 5 (Global)** must be done before **Phase 6 (UI Polish)** to ensure inheritance logic works with new UI fields.
+2.  **T027 (Backend)** depends on **T026 (Frontend)** sending the new Stairwell dimensions.
 
 ## Implementation Strategy
 
-1.  **Step 1**: Lock down the Types and Constants (Phase 1).
-2.  **Step 2**: Build the Backend Logic (Phase 2) to ensure the math is correct.
-3.  **Step 3**: Update the Frontend UI (Phase 3) to send the new data fields.
-4.  **Step 4**: Verify the end-to-end flow (Phase 4).
+1.  **Step 1**: Implement Global Config & Inheritance (Phase 5).
+2.  **Step 2**: Polish Component UI (Phase 6).
+3.  **Step 3**: Refine Stairwell Logic (Phase 7).

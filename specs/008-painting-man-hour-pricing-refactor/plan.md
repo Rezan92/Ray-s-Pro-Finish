@@ -11,6 +11,7 @@ Refactor the Painting Estimator from a square-foot price model to a granular "Ma
 1.  **Backend**: Centralize all constants in `masterRates.ts` (Labor $75/hr). Refactor `paintingService.ts` to calculate time first (Time * Rate = Price). Add logic for Days calculation, Daily Trip charges, and Occupancy multipliers.
 2.  **Frontend**: Update `PaintingRoomCard` to accept Exact Dimensions (overriding presets). Update `Stairwell` inputs for spindle types.
 3.  **Admin**: Enforce detailed breakdown (Math explanation) and Surface Gallon counts.
+4.  **Refinements (New)**: Global Project Configuration (Occupancy/Scope), Inheritance Logic, Stairwell specialized inputs, and UI polish for dimensions/closets.
 
 ## Technical Context
 
@@ -71,8 +72,8 @@ client/
 │   ├── components/
 │   │   └── common/
 │   │       └── estimator/
-│   │           ├── PaintingForm.tsx     # UPDATED: Project Defaults
-│   │           ├── PaintingRoomCard.tsx # UPDATED: Exact Dimensions UI
+│   │           ├── PaintingForm.tsx     # UPDATED: Global Config & Inheritance
+│   │           ├── PaintingRoomCard.tsx # UPDATED: Exact Dimensions, Closets, Stairwells
 │   │           └── EstimatorTypes.ts    # UPDATED: Frontend Contract matching Backend
 ```
 
