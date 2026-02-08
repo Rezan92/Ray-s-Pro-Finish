@@ -28,9 +28,9 @@
 
 ## Phase 4: Integration & Verification
 
-- [ ] T015 [US1] Verify Admin Breakdown output includes detailed math explanations (e.g., "400 sqft @ 150sqft/hr").
-- [ ] T016 [US1] Verify Material Breakdown (Admin Only) correctly sums gallons per surface type.
-- [ ] T017 [US1] Create unit test in `server/src/modules/estimator/services/paintingService.test.ts` verifying "Standard Room" calculation (SC-001).
+- [x] T015 [US1] Verify Admin Breakdown output includes detailed math explanations (e.g., "400 sqft @ 150sqft/hr").
+- [x] T016 [US1] Verify Material Breakdown (Admin Only) correctly sums gallons per surface type.
+- [x] T017 [US1] Create unit test in `server/src/modules/estimator/services/paintingService.test.ts` verifying "Standard Room" calculation (SC-001).
 
 ## Dependencies
 
