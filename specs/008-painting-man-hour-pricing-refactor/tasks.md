@@ -49,9 +49,9 @@
 
 ## Phase 7: Stairwell Specifics & Backend Refinement (Refinement)
 
-- [ ] T027 [US-Refinement] Update `PaintingRoomCard.tsx`: Implement specialized Stairwell inputs (Wall Length, Max Wall Height, Remove irrelevant surfaces) (F-012).
-- [ ] T028 [Backend] Refine `paintingService.ts`: Implement Workday logic (45m per 8hincrement) (F-010).
-- [ ] T029 [Backend] Refine `paintingService.ts`: Apply 1.5x Trim Multiplier for Stairwells and auto-trigger Equipment Fee if Max Height > 12ft (F-012).
+- [x] T027 [US-Refinement] Update `PaintingRoomCard.tsx`: Implement specialized Stairwell inputs (Wall Length, Max Wall Height, Remove irrelevant surfaces) (F-012).
+- [x] T028 [Backend] Refine `paintingService.ts`: Implement Workday logic (45m per 8hincrement) (F-010).
+- [x] T029 [Backend] Refine `paintingService.ts`: Apply 1.5x Trim Multiplier for Stairwells and auto-trigger Equipment Fee if Max Height > 12ft (F-012).
 
 ## Dependencies
 

@@ -123,6 +123,12 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	// 1. Baseboards
 	if (room.surfaces.trim) {
 		let trimHours = perimeter / P.PRODUCTION_RATES.TRIM.BASEBOARD;
+		
+		// F-026: Stairwell 1.5x Difficulty Multiplier for Trim
+		if (room.type === 'stairwell') {
+			trimHours *= 1.5;
+		}
+
 		if (room.trimCondition === 'Poor') {
 			const caulkingHours = perimeter * P.PRODUCTION_RATES.TRIM.CAULKING_POOR;
 			addLineItem(ctx, `${room.label} - Trim Caulking (Poor)`, caulkingHours, `${Math.round(perimeter)} lf @ 0.025 hrs/lf`);
@@ -131,7 +137,11 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 			trimHours *= P.MULTIPLIERS.STAIN_TO_PAINT;
 			addLineItem(ctx, `${room.label} - Trim (Stained-to-Painted)`, trimHours, `${Math.round(perimeter)} lf @ 60lf/hr x 3.0x multiplier`);
 		} else {
-			addLineItem(ctx, `${room.label} - Trim`, trimHours, `${Math.round(perimeter)} lf @ 60lf/hr`);
+			// Add detail about stairwell multiplier if applicable
+			const details = room.type === 'stairwell' 
+				? `${Math.round(perimeter)} lf @ 60lf/hr x 1.5x (Stairwell)` 
+				: `${Math.round(perimeter)} lf @ 60lf/hr`;
+			addLineItem(ctx, `${room.label} - Trim`, trimHours, details);
 		}
 		ctx.trimGallons += perimeter / P.MATERIAL_COVERAGE.TRIM_LF_PER_GALLON;
 	}
