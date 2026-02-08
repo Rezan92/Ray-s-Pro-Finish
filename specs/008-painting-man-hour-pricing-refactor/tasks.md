@@ -5,9 +5,9 @@
 
 ## Phase 1: Setup & Contracts (Shared)
 
-- [ ] T001 Update `EstimatorTypes.ts` (Client) with new fields (exact dimensions, stairwell logic, trim conversion).
-- [ ] T002 [P] Update `types.ts` (Server) to match the new `PaintingRoom` interface exactly.
-- [ ] T003 Migrate all painting rates, multipliers, and production constants from `rates-reference.md` to `server/src/modules/estimator/constants/masterRates.ts`.
+- [x] T001 Update `EstimatorTypes.ts` (Client) with new fields (exact dimensions, stairwell logic, trim conversion).
+- [x] T002 [P] Update `types.ts` (Server) to match the new `PaintingRoom` interface exactly.
+- [x] T003 Migrate all painting rates, multipliers, and production constants from `rates-reference.md` to `server/src/modules/estimator/constants/masterRates.ts`.
 
 ## Phase 2: Foundational (Backend Engine)
 

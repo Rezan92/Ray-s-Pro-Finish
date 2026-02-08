@@ -3,6 +3,9 @@ export interface PaintingRoom {
 	type: string; // "livingRoom", "kitchen", "bedroom", etc.
 	label: string; // "Living Room", "Bedroom 1", etc.
 	size: string; // 'Small', 'Medium', 'Large', 'X-Large'
+	exactLength?: number;
+	exactWidth?: number;
+	exactHeight?: number;
 	ceilingHeight: string; // '8ft', '9ft', '10ft', '10ft+'
 	windowCount: number;
 	closetSize: 'None' | 'Standard' | 'Medium' | 'Large';
@@ -18,10 +21,15 @@ export interface PaintingRoom {
 	colorChange: string; // 'Similar', 'Dark-to-Light'
 	ceilingTexture: string; // 'Flat', 'Textured', 'Popcorn'
 	trimCondition: string; // 'Good', 'Poor'
-	trimStyle: 'Simple' | 'Detailed'; // NEW
+	trimStyle: 'Simple' | 'Detailed';
+	trimConversion?: boolean;
 	doorCount: string;
 	doorStyle: string; // 'Slab', 'Paneled'
 	crownMoldingStyle: string; // 'Simple', 'Detailed'
+	stairSteps?: number;
+	stairSpindles?: number;
+	stairSpindleType?: 'Square' | 'Intricate';
+	stairHandrail?: number;
 	roomDescription?: string;
 }
 

@@ -123,23 +123,76 @@ export const MASTER_RATES = {
 		},
 	},
 
-	// --- SECTION 5: PAINTING ---
+	// --- SECTION 5: PAINTING (Man-Hour Driven) ---
 	PAINTING: {
-		PRIMER: {
-			WALL: { labor: 0.3, material: 0.1, hoursPerSqft: 0.0036 },
-			CEILING: { labor: 0.5, material: 0.1, hoursPerSqft: 0.0036 },
+		LABOR_RATE: 75,
+		DAILY_TRIP_HOURS: 0.75,
+		EQUIPMENT_RENTAL_DAILY: 200,
+
+		MULTIPLIERS: {
+			OCCUPANCY: {
+				EMPTY: 1.0,
+				LIGHT: 1.2,
+				HEAVY: 1.35,
+			},
+			CEILING_HEIGHT: {
+				STANDARD: 1.0, // 8-9'
+				MID: 1.1, // 10'
+				HIGH: 1.25, // 12-14'
+				VAULTED: 1.45, // 18'+
+			},
+			STAIN_TO_PAINT: 3.0,
 		},
-		ONE_COAT: {
-			WALL: { labor: 0.6, material: 0.15, hoursPerSqft: 0.0057 },
-			CEILING: { labor: 0.7, material: 0.15, hoursPerSqft: 0.0057 },
+
+		PRODUCTION_RATES: {
+			WALLS: {
+				ROLL_1ST_COAT: 400, // sqft/hr
+				ROLL_2ND_COAT: 550, // sqft/hr
+				CUT_STANDARD: 120, // lf/hr
+				CUT_HIGH_CONTRAST: 75, // lf/hr
+				PREP_GOOD: 0.0015, // hrs/sqft (0.15/100)
+				PREP_FAIR: 0.004, // hrs/sqft (0.40/100)
+				PREP_POOR: 0.0125, // hrs/sqft (1.25/100)
+				DARK_TO_LIGHT_SURCHARGE: 0.005, // hrs/sqft (0.50/100)
+			},
+			CEILINGS: {
+				SMOOTH_1ST_COAT: 350,
+				SMOOTH_2ND_COAT: 500,
+				POPCORN_1ST_COAT: 150,
+				POPCORN_2ND_COAT: 250,
+			},
+			TRIM: {
+				BASEBOARD: 60, // lf/hr
+				CROWN_SIMPLE: 40, // lf/hr
+				CROWN_DETAILED: 25, // lf/hr
+				CAULKING_POOR: 0.025, // hrs/lf
+			},
+			STAIRS: {
+				SPINDLE_SQUARE: 0.2, // hrs (12m)
+				SPINDLE_INTRICATE: 0.5, // hrs (30m)
+				HANDRAIL: 6, // lf/hr
+				STEP: 0.333, // hrs (20m)
+			},
 		},
-		STANDARD: {
-			WALL: { labor: 1.2, material: 0.3, hoursPerSqft: 0.0114 },
-			CEILING: { labor: 1.4, material: 0.3, hoursPerSqft: 0.0114 },
+
+		FIXED_ITEMS: {
+			CLOSET_STANDARD: 1.5,
+			CLOSET_MEDIUM: 2.5,
+			CLOSET_LARGE: 4.0,
 		},
-		FULL: {
-			WALL: { labor: 1.5, material: 0.4, hoursPerSqft: 0.0166 },
-			CEILING: { labor: 1.9, material: 0.4, hoursPerSqft: 0.0166 },
+
+		DEFAULTS: {
+			MASKING_WINDOW: 0.083, // hrs (5m)
+			MASKING_FIXTURE: 0.083, // hrs (5m)
+			ELECTRICAL_PLATE: 0.05, // hrs (3m)
+			FLOOR_PROTECTION: 0.15, // hrs per 100sqft (0.15/100 = 15m/100)
+		},
+
+		MATERIAL_COVERAGE: {
+			WALL_SQFT_PER_GALLON: 350, // 1 coat
+			CEILING_SQFT_PER_GALLON: 350, // 1 coat
+			TRIM_LF_PER_GALLON: 300, // 1 coat (assuming 150 for 2 coats)
+			PRIMER_SQFT_PER_GALLON: 300,
 		},
 	},
 };

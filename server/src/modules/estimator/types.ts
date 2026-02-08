@@ -1,3 +1,46 @@
+export interface PaintingRoom {
+	id: string;
+	type: string;
+	label: string;
+	size: string;
+	exactLength?: number;
+	exactWidth?: number;
+	exactHeight?: number;
+	ceilingHeight: string;
+	windowCount: number;
+	closetSize: 'None' | 'Standard' | 'Medium' | 'Large';
+	surfaces: {
+		walls: boolean;
+		ceiling: boolean;
+		trim: boolean;
+		doors: boolean;
+		crownMolding: boolean;
+		windows: boolean;
+	};
+	wallCondition: string;
+	colorChange: string;
+	ceilingTexture: string;
+	trimCondition: string;
+	trimStyle: 'Simple' | 'Detailed';
+	trimConversion?: boolean;
+	doorCount: string;
+	doorStyle: string;
+	crownMoldingStyle: string;
+	stairSteps?: number;
+	stairSpindles?: number;
+	stairSpindleType?: 'Square' | 'Intricate';
+	stairHandrail?: number;
+	roomDescription?: string;
+}
+
+export interface PaintingRequest {
+	rooms: PaintingRoom[];
+	paintProvider: string;
+	furniture: string;
+	occupancy?: string;
+	additionalDetails?: string;
+}
+
 export interface RepairItem {
 	id: string;
 	damageType: string;
