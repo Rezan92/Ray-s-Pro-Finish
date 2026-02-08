@@ -11,13 +11,13 @@
 
 ## Phase 2: Foundational (Backend Engine)
 
-- [ ] T004 Create `CalculationContext` helper in `paintingService.ts` to accumulate hours/cost line-by-line.
-- [ ] T005 [P] Implement `calculateWallHours` logic (Rolling, Cutting, Prep, Color Change) in `paintingService.ts`.
-- [ ] T006 [P] Implement `calculateCeilingHours` logic (Texture, Height Multiplier) in `paintingService.ts`.
-- [ ] T007 [P] Implement `calculateTrimHours` logic (Baseboards, Crown, Conversion, Doors, Windows) in `paintingService.ts`.
-- [ ] T008 [P] Implement `calculateStairwellHours` logic (Spindles, Handrails, Steps) in `paintingService.ts`.
-- [ ] T009 Implement "Global Add-ons" logic (Workday calc, Daily Trip, Equipment Rental) in `paintingService.ts`.
-- [ ] T010 Refactor main `calculatePaintingEstimate` function to use new helpers and return detailed breakdown (F-015).
+- [x] T004 Create `CalculationContext` helper in `paintingService.ts` to accumulate hours/cost line-by-line.
+- [x] T005 [P] Implement `calculateWallHours` logic (Rolling, Cutting, Prep, Color Change) in `paintingService.ts`.
+- [x] T006 [P] Implement `calculateCeilingHours` logic (Texture, Height Multiplier) in `paintingService.ts`.
+- [x] T007 [P] Implement `calculateTrimHours` logic (Baseboards, Crown, Conversion, Doors, Windows) in `paintingService.ts`.
+- [x] T008 [P] Implement `calculateStairwellHours` logic (Spindles, Handrails, Steps) in `paintingService.ts`.
+- [x] T009 Implement "Global Add-ons" logic (Workday calc, Daily Trip, Equipment Rental) in `paintingService.ts`.
+- [x] T010 Refactor main `calculatePaintingEstimate` function to use new helpers and return detailed breakdown (F-015).
 
 ## Phase 3: Frontend UI Implementation
 
