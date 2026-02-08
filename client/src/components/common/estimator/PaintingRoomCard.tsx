@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { PaintingRoom } from './EstimatorTypes';
-import { ChevronDown, Plus, Trash2 } from 'lucide-react';
+import { ChevronDown, Plus, Trash2, Ruler } from 'lucide-react';
 import { ROOM_SIZE_OPTIONS } from './roomSizeData';
 import styles from './styles/PaintingRoomCard.module.css';
 
@@ -18,16 +18,20 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 	onRoomAdd,
 }) => {
 	const [isOpen, setIsOpen] = useState(true);
+	const [showExact, setShowExact] = useState(
+		!!(room.exactLength || room.exactWidth || room.exactHeight)
+	);
 
 	const handleFieldChange = (
 		e: React.ChangeEvent<
 			HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement
 		>
 	) => {
+		const { name, value, type } = e.target;
 		onRoomChange(
 			room.id,
-			e.target.name,
-			e.target.type === 'number' ? parseInt(e.target.value) : e.target.value
+			name,
+			type === 'number' ? (value === '' ? undefined : parseInt(value)) : value
 		);
 	};
 
@@ -37,31 +41,43 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 		// Professional fix: Clear associated sub-data when unselecting a surface
 		if (!checked) {
 			if (name === 'ceiling') onRoomChange(room.id, 'ceilingTexture', 'Flat');
-			if (name === 'trim') onRoomChange(room.id, 'trimCondition', 'Good');
+			if (name === 'trim') {
+				onRoomChange(room.id, 'trimCondition', 'Good');
+				onRoomChange(room.id, 'trimConversion', false);
+			}
 			if (name === 'doors') {
 				onRoomChange(room.id, 'doorCount', '1');
 				onRoomChange(room.id, 'doorStyle', 'Slab');
 			}
 			if (name === 'crownMolding')
 				onRoomChange(room.id, 'crownMoldingStyle', 'Simple');
-			if (name === 'windows') onRoomChange(room.id, 'windowCount', 1);
+			if (name === 'windows') onRoomChange(room.id, 'windowCount', 0);
 		}
 
 		const newSurfaces = { ...room.surfaces, [name]: checked };
 		onRoomChange(room.id, 'surfaces', newSurfaces);
 	};
 
+	const toggleExact = () => {
+		const newState = !showExact;
+		setShowExact(newState);
+		if (!newState) {
+			// Clear exact dimensions when switching back to presets
+			onRoomChange(room.id, 'exactLength', undefined);
+			onRoomChange(room.id, 'exactWidth', undefined);
+			onRoomChange(room.id, 'exactHeight', undefined);
+		}
+	};
+
 	const isStairwell = room.type === 'stairwell';
-	const ceilingHeightValue = isStairwell ? '11ft+' : room.ceilingHeight;
 	const sizeOptions = ROOM_SIZE_OPTIONS[room.type] || [];
 
-	// Updated showDetails to include windows
 	const showDetails =
 		room.surfaces.ceiling ||
 		room.surfaces.trim ||
 		room.surfaces.crownMolding ||
 		room.surfaces.doors ||
-		room.surfaces.windows; // Added windows check
+		room.surfaces.windows;
 
 	return (
 		<div className={styles.roomCard}>
@@ -127,41 +143,168 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 
 					{/* 2. Dimensions */}
 					<div className={styles.formGroupBox}>
-						<div className={styles.formGroupGrid}>
-							<div className={styles.formGroup}>
-								<label>Approximate Size</label>
-								<select
-									name='size'
-									value={room.size}
-									onChange={handleFieldChange}
-								>
-									{sizeOptions.map((option) => (
-										<option
-											key={option.value}
-											value={option.value}
-										>
-											{option.label}
-										</option>
-									))}
-								</select>
-							</div>
-							<div className={styles.formGroup}>
-								<label>Ceiling Height</label>
-								<select
-									name='ceilingHeight'
-									value={ceilingHeightValue}
-									onChange={handleFieldChange}
-									disabled={isStairwell}
-								>
-									<option value='8ft'>8 ft (Standard)</option>
-									<option value='9-10ft'>9-10 ft</option>
-									<option value='11ft+'>11 ft+ / Vaulted</option>
-								</select>
-							</div>
+						<div
+							style={{
+								display: 'flex',
+								justifyContent: 'space-between',
+								alignItems: 'center',
+								marginBottom: '1rem',
+							}}
+						>
+							<label style={{ margin: 0 }}>Room Dimensions</label>
+							<button
+								type='button'
+								onClick={toggleExact}
+								style={{
+									fontSize: '0.85rem',
+									color: 'var(--color-primary)',
+									background: 'none',
+									border: 'none',
+									cursor: 'pointer',
+									display: 'flex',
+									alignItems: 'center',
+									gap: '4px',
+									padding: '4px 8px',
+									borderRadius: '4px',
+									border: '1px solid var(--color-primary)',
+								}}
+							>
+								<Ruler size={14} />
+								{showExact ? 'Use Presets' : 'Enter Exact Dimensions'}
+							</button>
 						</div>
+
+						{!showExact ? (
+							<div className={styles.formGroupGrid}>
+								<div className={styles.formGroup}>
+									<label>Approximate Size</label>
+									<select
+										name='size'
+										value={room.size}
+										onChange={handleFieldChange}
+									>
+										{sizeOptions.map((option) => (
+											<option
+												key={option.value}
+												value={option.value}
+											>
+												{option.label}
+											</option>
+										))}
+									</select>
+								</div>
+								<div className={styles.formGroup}>
+									<label>Ceiling Height</label>
+									<select
+										name='ceilingHeight'
+										value={room.ceilingHeight || '8ft'}
+										onChange={handleFieldChange}
+										disabled={isStairwell}
+									>
+										<option value='8ft'>8 ft (Standard)</option>
+										<option value='9-10ft'>9-10 ft</option>
+										<option value='11ft+'>11 ft+ / Vaulted</option>
+									</select>
+								</div>
+							</div>
+						) : (
+							<div
+								className={styles.formGroupGrid}
+								style={{ gridTemplateColumns: '1fr 1fr 1fr' }}
+							>
+								<div className={styles.formGroup}>
+									<label>Length (ft)</label>
+									<input
+										type='number'
+										name='exactLength'
+										placeholder='L'
+										min='1'
+										value={room.exactLength || ''}
+										onChange={handleFieldChange}
+									/>
+								</div>
+								<div className={styles.formGroup}>
+									<label>Width (ft)</label>
+									<input
+										type='number'
+										name='exactWidth'
+										placeholder='W'
+										min='1'
+										value={room.exactWidth || ''}
+										onChange={handleFieldChange}
+									/>
+								</div>
+								<div className={styles.formGroup}>
+									<label>Height (ft)</label>
+									<input
+										type='number'
+										name='exactHeight'
+										placeholder='H'
+										min='1'
+										value={room.exactHeight || ''}
+										onChange={handleFieldChange}
+									/>
+								</div>
+							</div>
+						)}
 					</div>
 
-					{/* 3. NEW: Closet Size (Only for Bedroom) */}
+					{/* 3. Stairwell Details (T012) */}
+					{isStairwell && (
+						<div className={styles.formGroupBox}>
+							<label style={{ marginBottom: '1rem', display: 'block' }}>
+								Stairwell Components
+							</label>
+							<div className={styles.conditionalFieldsContainer}>
+								<div className={styles.formGroup}>
+									<label>Spindle Count</label>
+									<input
+										type='number'
+										name='stairSpindles'
+										className={styles.smallInput}
+										min='0'
+										value={room.stairSpindles || 0}
+										onChange={handleFieldChange}
+									/>
+								</div>
+								<div className={styles.formGroup}>
+									<label>Spindle Type</label>
+									<select
+										name='stairSpindleType'
+										value={room.stairSpindleType || 'Square'}
+										onChange={handleFieldChange}
+									>
+										<option value='Square'>Square (Simple)</option>
+										<option value='Intricate'>Intricate (Ornate)</option>
+									</select>
+								</div>
+								<div className={styles.formGroup}>
+									<label>Handrail (lf)</label>
+									<input
+										type='number'
+										name='stairHandrail'
+										className={styles.smallInput}
+										min='0'
+										value={room.stairHandrail || 0}
+										onChange={handleFieldChange}
+									/>
+								</div>
+								<div className={styles.formGroup}>
+									<label>Number of Steps</label>
+									<input
+										type='number'
+										name='stairSteps'
+										className={styles.smallInput}
+										min='0'
+										value={room.stairSteps || 0}
+										onChange={handleFieldChange}
+									/>
+								</div>
+							</div>
+						</div>
+					)}
+
+					{/* 4. NEW: Closet Size (Only for Bedroom) */}
 					{room.type === 'bedroom' && (
 						<div className={styles.formGroupBox}>
 							<div className={styles.formGroup}>
@@ -180,7 +323,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						</div>
 					)}
 
-					{/* 4. Surfaces Selection (Added Windows checkbox) */}
+					{/* 5. Surfaces Selection */}
 					<div className={styles.formGroupBox}>
 						<div className={styles.formGroup}>
 							<label>What needs painting?</label>
@@ -243,7 +386,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						</div>
 					</div>
 
-					{/* 5. Surface Details (Conditional - Added Windows Count) */}
+					{/* 6. Surface Details (Conditional) */}
 					{showDetails && (
 						<div className={styles.formGroupBox}>
 							<div className={styles.conditionalFieldsContainer}>
@@ -262,17 +405,30 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									</div>
 								)}
 								{room.surfaces.trim && (
-									<div className={styles.formGroup}>
-										<label>Trim Condition</label>
-										<select
-											name='trimCondition'
-											value={room.trimCondition || 'Good'}
-											onChange={handleFieldChange}
-										>
-											<option value='Good'>Good (Just needs paint)</option>
-											<option value='Poor'>Poor (Needs re-caulking)</option>
-										</select>
-									</div>
+									<>
+										<div className={styles.formGroup}>
+											<label>Trim Condition</label>
+											<select
+												name='trimCondition'
+												value={room.trimCondition || 'Good'}
+												onChange={handleFieldChange}
+											>
+												<option value='Good'>Good (Just needs paint)</option>
+												<option value='Poor'>Poor (Needs re-caulking)</option>
+											</select>
+										</div>
+										<div className={styles.formGroup}>
+											<label className={styles.checkboxLabel} style={{ marginTop: '1.8rem' }}>
+												<input
+													type='checkbox'
+													name='trimConversion'
+													checked={room.trimConversion || false}
+													onChange={(e) => onRoomChange(room.id, 'trimConversion', e.target.checked)}
+												/>{' '}
+												Stained to Painted
+											</label>
+										</div>
+									</>
 								)}
 								{room.surfaces.crownMolding && (
 									<div className={styles.formGroup}>
@@ -330,7 +486,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						</div>
 					)}
 
-					{/* 6. General Condition & Color */}
+					{/* 7. General Condition & Color */}
 					<div className={styles.formGroupBox}>
 						<div className={styles.formGroupGrid}>
 							<div className={styles.formGroup}>

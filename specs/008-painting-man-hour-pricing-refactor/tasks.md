@@ -21,10 +21,10 @@
 
 ## Phase 3: Frontend UI Implementation
 
-- [ ] T011 [P] [US1] Update `PaintingRoomCard.tsx` to add "Exact Dimensions" (L/W/H) inputs and override logic.
-- [ ] T012 [P] [US1] Update `PaintingRoomCard.tsx` with specific Stairwell inputs (Spindle Type, Count, Handrail).
-- [ ] T013 [P] [US1] Update `PaintingRoomCard.tsx` with new Trim/Crown options (Stained-to-Painted, Crown Style).
-- [ ] T014 [US3] Update `PaintingForm.tsx` to include Global Occupancy & Furniture dropdowns (Project Defaults).
+- [x] T011 [P] [US1] Update `PaintingRoomCard.tsx` to add "Exact Dimensions" (L/W/H) inputs and override logic.
+- [x] T012 [P] [US1] Update `PaintingRoomCard.tsx` with specific Stairwell inputs (Spindle Type, Count, Handrail).
+- [x] T013 [P] [US1] Update `PaintingRoomCard.tsx` with new Trim/Crown options (Stained-to-Painted, Crown Style).
+- [x] T014 [US3] Update `PaintingForm.tsx` to include Global Occupancy & Furniture dropdowns (Project Defaults).
 
 ## Phase 4: Integration & Verification
 

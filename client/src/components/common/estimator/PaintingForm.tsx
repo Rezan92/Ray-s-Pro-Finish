@@ -146,6 +146,18 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 						</option>
 					</select>
 				</div>
+				<div className={styles.formGroup}>
+					<label>Home Occupancy</label>
+					<select
+						name='occupancy'
+						value={formData.painting.occupancy || 'Empty'}
+						onChange={(e) => onGlobalChange('occupancy', e.target.value)}
+					>
+						<option value='Empty'>Empty / New Construction (1.0x)</option>
+						<option value='Light Furniture'>Light Furniture / Lived in (1.2x)</option>
+						<option value='Heavy Furniture'>Heavy Furniture / Full House (1.35x)</option>
+					</select>
+				</div>
 
 				{/* NEW Additional Details Section */}
 				<div
