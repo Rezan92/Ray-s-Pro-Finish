@@ -143,12 +143,13 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 									<label>Room Status & Furniture</label>
 									<select
 										name='occupancy'
-										value={formData.painting.occupancy || 'Empty'}
+										value={formData.painting.occupancy || 'EMPTY'}
 										onChange={(e) => onGlobalChange('occupancy', e.target.value)}
 									>
-										<option value='Empty'>Empty / New Construction</option>
-										<option value='Heavy Furniture'>Lived-in (We move major furniture)</option>
-										<option value='Light Furniture'>Lived-in (Owner clears room)</option>
+										<option value='EMPTY'>Empty / New Construction</option>
+										<option value='OWNER_CLEARS'>Owner Clears Room (Owner moves & covers everything)</option>
+										<option value='PAINTER_COVERS'>Lived-In (Painter covers furniture)</option>
+										<option value='PAINTER_MOVES'>Lived-In (Painter moves & covers heavy furniture)</option>
 									</select>
 								</div>
 							</div>

@@ -132,8 +132,9 @@ export const MASTER_RATES = {
 		MULTIPLIERS: {
 			OCCUPANCY: {
 				EMPTY: 1.0,
-				LIGHT: 1.2,
-				HEAVY: 1.35,
+				OWNER_CLEARS: 1.0,
+				PAINTER_COVERS: 1.2,
+				PAINTER_MOVES: 1.35,
 			},
 			CEILING_HEIGHT: {
 				STANDARD: 1.0, // 8-9'

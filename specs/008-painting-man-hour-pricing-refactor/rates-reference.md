@@ -9,8 +9,9 @@
 | **Hourly Labor Rate** | **$75.00** | /hour | Base rate for all calculations. |
 | **Daily Trip Constant** | **0.75** | hours | (45 mins) Setup/cleanup per day. Added to final total. |
 | **Occupancy: Empty/New** | **1.00x** | multiplier | No furniture. |
-| **Occupancy: Light Furn.** | **1.20x** | multiplier | Customer moves small items, painter covers. |
-| **Occupancy: Full Furn.** | **1.35x** | multiplier | Heavy furniture present. |
+| **Occupancy: Owner Clears** | **1.00x** | multiplier | Owner moves and covers everything. |
+| **Occupancy: Painter Covers** | **1.20x** | multiplier | Lived-in. Painter covers furniture. |
+| **Occupancy: Painter Moves** | **1.35x** | multiplier | Lived-in. Painter moves & covers heavy furniture. |
 | **Ceiling Height: 8-9'** | **1.00x** | multiplier | Standard. |
 | **Ceiling Height: 10'** | **1.10x** | multiplier | Moderate height. |
 | **Ceiling Height: 12-14'** | **1.25x** | multiplier | High. |

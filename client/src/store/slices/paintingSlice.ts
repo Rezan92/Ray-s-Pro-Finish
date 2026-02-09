@@ -29,7 +29,7 @@ interface PaintingState {
 const initialState: PaintingState = {
 	rooms: [],
 	paintProvider: 'Standard',
-	occupancy: 'Empty',
+	occupancy: 'EMPTY',
 	globalDefaults: {
 		surfaces: {
 			walls: true,
