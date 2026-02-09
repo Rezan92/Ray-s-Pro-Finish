@@ -199,10 +199,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 								</div>
 							</div>
 						) : (
-							<div
-								className={styles.formGroupGrid}
-								style={{ gridTemplateColumns: '1fr 1fr 1fr auto' }}
-							>
+							<div className={styles.dimensionsGrid}>
 								<div className={styles.formGroup}>
 									<label>Length (ft)</label>
 									<input

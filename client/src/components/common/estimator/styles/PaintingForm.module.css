@@ -123,6 +123,13 @@
   gap: var(--space-lg);
 }
 
+@media (max-width: 768px) {
+  .formGroupGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+}
+
 .checkboxGroupHorizontal {
   display: flex;
   flex-wrap: wrap;
