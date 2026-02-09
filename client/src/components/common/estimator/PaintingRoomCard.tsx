@@ -20,19 +20,19 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 }) => {
 	const [isOpen, setIsOpen] = useState(true);
 	const [showExact, setShowExact] = useState(
-		!!(room.exactLength || room.exactWidth || room.exactHeight)
+		!!(room.exactLength || room.exactWidth || room.exactHeight),
 	);
 
 	const handleFieldChange = (
 		e: React.ChangeEvent<
 			HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement
-		>
+		>,
 	) => {
 		const { name, value, type } = e.target;
 		onRoomChange(
 			room.id,
 			name,
-			type === 'number' ? (value === '' ? undefined : parseInt(value)) : value
+			type === 'number' ? (value === '' ? undefined : parseInt(value)) : value,
 		);
 	};
 
@@ -76,7 +76,10 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 	const showDetails =
 		room.surfaces.ceiling ||
 		room.surfaces.trim ||
-		(!isStairwell && (room.surfaces.crownMolding || room.surfaces.doors || room.surfaces.windows));
+		(!isStairwell &&
+			(room.surfaces.crownMolding ||
+				room.surfaces.doors ||
+				room.surfaces.windows));
 
 	return (
 		<div className={styles.roomCard}>
@@ -111,16 +114,31 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 			{isOpen && (
 				<div className={styles.accordionContent}>
 					{/* 0. Customization Toggle (New) */}
-					<div className={styles.formGroupBox} style={{ borderColor: 'var(--color-primary)', backgroundColor: room.isCustomized ? '#fff' : '#f9f9f9' }}>
-						<label className={styles.checkboxLabel} style={{ fontWeight: 'bold', color: 'var(--color-primary)' }}>
+					<div
+						className={styles.formGroupBox}
+						style={{
+							borderColor: 'var(--color-primary)',
+							backgroundColor: room.isCustomized ? '#fff' : '#f9f9f9',
+						}}
+					>
+						<label
+							className={styles.checkboxLabel}
+							style={{ fontWeight: 'bold', color: 'var(--color-primary)' }}
+						>
 							<input
 								type='checkbox'
 								checked={room.isCustomized || false}
-								onChange={(e) => onRoomChange(room.id, 'toggleRoomCustomization', e.target.checked)}
+								onChange={(e) =>
+									onRoomChange(
+										room.id,
+										'toggleRoomCustomization',
+										e.target.checked,
+									)
+								}
 							/>
 							Customize this area
 							{!room.isCustomized && (
-								<InfoTooltip message="This room is using the Global Project Defaults for surfaces, condition, and colors. Check the box to override these settings specific to this room." />
+								<InfoTooltip message='This room is using the Global Project Defaults for surfaces, condition, and colors. Check the box to override these settings specific to this room.' />
 							)}
 						</label>
 					</div>
@@ -200,7 +218,9 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						) : (
 							<div className={styles.dimensionsGrid}>
 								<div className={styles.formGroup}>
-									<label>{isStairwell ? 'Wall Length (lf)' : 'Length (ft)'}</label>
+									<label>
+										{isStairwell ? 'Wall Length (lf)' : 'Length (ft)'}
+									</label>
 									<input
 										type='number'
 										name='exactLength'
@@ -222,7 +242,9 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									/>
 								</div>
 								<div className={styles.formGroup}>
-									<label>{isStairwell ? 'Max Wall Height (ft)' : 'Height (ft)'}</label>
+									<label>
+										{isStairwell ? 'Max Wall Height (ft)' : 'Height (ft)'}
+									</label>
 									<input
 										type='number'
 										name='exactHeight'
@@ -232,18 +254,21 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 										onChange={handleFieldChange}
 									/>
 								</div>
-								<div className={styles.formGroup} style={{ display: 'flex', alignItems: 'flex-end' }}>
-									<button 
-										type='button' 
+								<div
+									className={styles.formGroup}
+									style={{ display: 'flex', alignItems: 'flex-end' }}
+								>
+									<button
+										type='button'
 										onClick={toggleExact}
-										style={{ 
-											padding: '0.6rem', 
-											border: '1px solid #ccc', 
-											borderRadius: '4px', 
-											background: '#f0f0f0', 
-											cursor: 'pointer' 
+										style={{
+											padding: '0.6rem',
+											border: '1px solid #ccc',
+											borderRadius: '4px',
+											background: '#f0f0f0',
+											cursor: 'pointer',
 										}}
-										title="Back to Presets"
+										title='Back to Presets'
 									>
 										Back
 									</button>
@@ -316,7 +341,13 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 										type='checkbox'
 										name='closetIncluded'
 										checked={room.closetSize !== 'None'}
-										onChange={(e) => onRoomChange(room.id, 'closetSize', e.target.checked ? 'Standard' : 'None')}
+										onChange={(e) =>
+											onRoomChange(
+												room.id,
+												'closetSize',
+												e.target.checked ? 'Standard' : 'None',
+											)
+										}
 									/>
 									Closet Included?
 								</label>
@@ -439,30 +470,24 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 											</select>
 										</div>
 										<div className={styles.formGroup}>
-											<div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-												<label style={{ margin: 0 }}>Is your trim currently wood-stained?</label>
+											<div>
+												<label style={{ margin: 0 }}>
+													Is your trim currently wood-stained?
+												</label>
 												{room.trimConversion && (
-													<span style={{ 
-														backgroundColor: '#fff3cd', 
-														color: '#856404', 
-														padding: '2px 8px', 
-														borderRadius: '4px', 
-														fontSize: '0.75rem',
-														fontWeight: 'bold',
-														display: 'flex',
-														alignItems: 'center',
-														gap: '4px',
-														border: '1px solid #ffeeba'
-													}}>
-														<AlertTriangle size={12} />
-														Heavy Prep Required
-													</span>
+													<InfoTooltip message='Painting over wood-stain requires extensive preparation, including deep sanding, stain blocking, and multiple primer/finish coats to ensure a professional bond.' />
 												)}
 											</div>
 											<select
 												name='trimStyleDropdown'
 												value={room.trimConversion ? 'Stained' : 'Standard'}
-												onChange={(e) => onRoomChange(room.id, 'trimConversion', e.target.value === 'Stained')}
+												onChange={(e) =>
+													onRoomChange(
+														room.id,
+														'trimConversion',
+														e.target.value === 'Stained',
+													)
+												}
 											>
 												<option value='Standard'>Standard Painting</option>
 												<option value='Stained'>Stained to Painted</option>
@@ -531,16 +556,22 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						<div className={styles.formGroupBox}>
 							<div className={styles.formGroupGrid}>
 								<div className={styles.formGroup}>
-									<label>{isStairwell ? 'Wall/Trim Condition' : 'Surface Condition'}</label>
+									<label>
+										{isStairwell ? 'Wall/Trim Condition' : 'Surface Condition'}
+									</label>
 									<select
 										name='wallCondition'
 										value={room.wallCondition}
 										onChange={handleFieldChange}
 									>
-										<option value='None'>None (New or perfect surfaces)</option>
+										<option value='None'>None (No extra preparation)</option>
 										<option value='Good'>Good (Few nail holes)</option>
-										<option value='Fair'>Basic Prep (Dings, scuffs)</option>
-										<option value='Poor'>Major Prep (Peeling paint, cracks, or large holes)</option>
+										<option value='Fair'>
+											Basic Prep (Nail holes, minor scuffs)
+										</option>
+										<option value='Poor'>
+											Major Prep (Peeling paint, cracks, or large holes)
+										</option>
 									</select>
 								</div>
 								<div className={styles.formGroup}>
@@ -551,8 +582,12 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 										onChange={handleFieldChange}
 									>
 										<option value='Similar'>Refresh (Same Color)</option>
-										<option value='Change'>Color Change (Light to Light or Dark)</option>
-										<option value='Dark-to-Light'>Color Change (Dark to Light)</option>
+										<option value='Change'>
+											Color Change (Light to Light or Dark)
+										</option>
+										<option value='Dark-to-Light'>
+											Color Change (Dark to Light)
+										</option>
 									</select>
 								</div>
 							</div>

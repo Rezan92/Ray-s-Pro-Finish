@@ -62,11 +62,15 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	addLineItem(ctx, `${room.label} - Wall Cutting`, cuttingHours, `${Math.round(perimeter)} lf @ ${cuttingRate} lf/hr`);
 
 	// 3. Prep
-	let prepRate = P.PRODUCTION_RATES.WALLS.PREP_GOOD;
+	let prepRate = 0;
+	if (room.wallCondition === 'Good') prepRate = P.PRODUCTION_RATES.WALLS.PREP_GOOD;
 	if (room.wallCondition === 'Fair') prepRate = P.PRODUCTION_RATES.WALLS.PREP_FAIR;
 	if (room.wallCondition === 'Poor') prepRate = P.PRODUCTION_RATES.WALLS.PREP_POOR;
-	const prepHours = area * prepRate;
-	addLineItem(ctx, `${room.label} - Wall Prep (${room.wallCondition})`, prepHours, `${Math.round(area)} sqft @ ${prepRate * 100} hrs/100sqft`);
+	
+	if (prepRate > 0) {
+		const prepHours = area * prepRate;
+		addLineItem(ctx, `${room.label} - Wall Prep (${room.wallCondition})`, prepHours, `${Math.round(area)} sqft @ ${prepRate * 100} hrs/100sqft`);
+	}
 
 	// 4. Color Change Surcharge
 	if (isDarkToLight) {
