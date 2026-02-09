@@ -113,9 +113,10 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 					/>
 				</button>
 				
-				{isConfigOpen && (
-					<div className={styles.configContent}>
-						{/* Basic Project Configuration */}
+				<div className={`${styles.collapseWrapper} ${isConfigOpen ? styles.open : ''}`}>
+					<div className={styles.collapseInner}>
+						<div className={styles.configContent}>
+							{/* Basic Project Configuration */}
 						<div className={styles.formGroupBox}>
 							<div className={styles.formGroupGrid}>
 								<div className={styles.formGroup}>
@@ -361,7 +362,8 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 							</div>
 						</div>
 					</div>
-				)}
+				</div>
+				</div>
 			</div>
 
 			{/* --- B. The Generated Room Cards --- */}

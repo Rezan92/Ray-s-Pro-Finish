@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import type { PaintingRoom } from './EstimatorTypes';
 import { ChevronDown, Plus, Trash2, Ruler, AlertTriangle } from 'lucide-react';
 import { ROOM_SIZE_OPTIONS } from './roomSizeData';
@@ -23,6 +23,15 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 	const [showExact, setShowExact] = useState(
 		!!(room.exactLength || room.exactWidth || room.exactHeight),
 	);
+	const lengthInputRef = useRef<HTMLInputElement>(null);
+	const contentRef = useRef<HTMLDivElement>(null);
+
+	// Auto-focus the Length input when switching to Custom size
+	useEffect(() => {
+		if (showExact && lengthInputRef.current) {
+			lengthInputRef.current.focus();
+		}
+	}, [showExact]);
 
 	const handleFieldChange = (
 		e: React.ChangeEvent<
@@ -83,7 +92,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 				room.surfaces.windows));
 
 	return (
-		<div className={styles.roomCard}>
+		<div className={`${styles.roomCard} ${room.isCustomized ? styles.customized : ''}`}>
 			{/* --- Card Header --- */}
 			<button
 				type='button'
@@ -112,7 +121,14 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 			</button>
 
 			{/* --- Collapsible Card Body --- */}
-			{isOpen && (
+			<div 
+				ref={contentRef}
+				className={styles.collapsibleWrapper}
+				style={{ 
+					maxHeight: isOpen ? `${contentRef.current?.scrollHeight}px` : '0px',
+					opacity: isOpen ? 1 : 0
+				}}
+			>
 				<div className={styles.accordionContent}>
 					{/* 0. Customization Toggle (New) */}
 					<div
@@ -225,6 +241,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									<input
 										type='number'
 										name='exactLength'
+										ref={lengthInputRef}
 										placeholder='L'
 										min='1'
 										value={room.exactLength || ''}
@@ -371,78 +388,87 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 					)}
 
 					{/* 5. Surfaces Selection (Conditional on Customization) */}
-					{room.isCustomized && (
-						<div className={styles.formGroupBox}>
-							<div className={styles.formGroup}>
-								<label>What needs painting?</label>
-								<div className={styles.checkboxGroupHorizontal}>
-									<label className={styles.checkboxLabel}>
-										<input
-											type='checkbox'
-											name='walls'
-											checked={room.surfaces.walls}
-											onChange={handleSurfaceChange}
-										/>{' '}
-										Walls
-									</label>
-									<label className={styles.checkboxLabel}>
-										<input
-											type='checkbox'
-											name='ceiling'
-											checked={room.surfaces.ceiling}
-											onChange={handleSurfaceChange}
-										/>{' '}
-										Ceiling
-									</label>
-									<label className={styles.checkboxLabel}>
-										<input
-											type='checkbox'
-											name='trim'
-											checked={room.surfaces.trim}
-											onChange={handleSurfaceChange}
-										/>{' '}
-										Trim
-									</label>
-									{!isStairwell && (
-										<>
-											<label className={styles.checkboxLabel}>
-												<input
-													type='checkbox'
-													name='doors'
-													checked={room.surfaces.doors}
-													onChange={handleSurfaceChange}
-												/>{' '}
-												Doors
-											</label>
-											<label className={styles.checkboxLabel}>
-												<input
-													type='checkbox'
-													name='crownMolding'
-													checked={room.surfaces.crownMolding || false}
-													onChange={handleSurfaceChange}
-												/>{' '}
-												Crown Molding
-											</label>
-											<label className={styles.checkboxLabel}>
-												<input
-													type='checkbox'
-													name='windows'
-													checked={room.surfaces.windows || false}
-													onChange={handleSurfaceChange}
-												/>{' '}
-												Windows
-											</label>
-										</>
-									)}
-								</div>
+					<div className={styles.formGroupBox}>
+						<div className={styles.formGroup}>
+							<label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+								What needs painting?
+								{!room.isCustomized && (
+									<span className={styles.inheritanceLabel}>Following Project Defaults</span>
+								)}
+							</label>
+							<div className={`${styles.checkboxGroupHorizontal} ${!room.isCustomized ? styles.ghosted : ''}`}>
+								<label className={styles.checkboxLabel}>
+									<input
+										type='checkbox'
+										name='walls'
+										checked={room.surfaces.walls}
+										onChange={handleSurfaceChange}
+										disabled={!room.isCustomized}
+									/>{' '}
+									Walls
+								</label>
+								<label className={styles.checkboxLabel}>
+									<input
+										type='checkbox'
+										name='ceiling'
+										checked={room.surfaces.ceiling}
+										onChange={handleSurfaceChange}
+										disabled={!room.isCustomized}
+									/>{' '}
+									Ceiling
+								</label>
+								<label className={styles.checkboxLabel}>
+									<input
+										type='checkbox'
+										name='trim'
+										checked={room.surfaces.trim}
+										onChange={handleSurfaceChange}
+										disabled={!room.isCustomized}
+									/>{' '}
+									Trim
+								</label>
+								{!isStairwell && (
+									<>
+										<label className={styles.checkboxLabel}>
+											<input
+												type='checkbox'
+												name='doors'
+												checked={room.surfaces.doors}
+												onChange={handleSurfaceChange}
+												disabled={!room.isCustomized}
+											/>{' '}
+											Doors
+										</label>
+										<label className={styles.checkboxLabel}>
+											<input
+												type='checkbox'
+												name='crownMolding'
+												checked={room.surfaces.crownMolding || false}
+												onChange={handleSurfaceChange}
+												disabled={!room.isCustomized}
+											/>{' '}
+											Crown Molding
+										</label>
+										<label className={styles.checkboxLabel}>
+											<input
+												type='checkbox'
+												name='windows'
+												checked={room.surfaces.windows || false}
+												onChange={handleSurfaceChange}
+												disabled={!room.isCustomized}
+											/>{' '}
+											Windows
+										</label>
+									</>
+								)}
 							</div>
 						</div>
-					)}
+					</div>
 
-					{/* 6. Surface Details (Conditional on Customization AND Selection) */}
-					{room.isCustomized && showDetails && (
+					{/* 6. Surface Details (Conditional on Selection) */}
+					{showDetails && (
 						<div className={styles.formGroupBox}>
-							<div className={styles.conditionalFieldsContainer}>
+							<div className={`${styles.conditionalFieldsContainer} ${!room.isCustomized ? styles.ghosted : ''}`}>
 								{room.surfaces.ceiling && (
 									<div className={styles.formGroup}>
 										<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -455,6 +481,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 											name='ceilingTexture'
 											value={room.ceilingTexture || 'Flat'}
 											onChange={handleFieldChange}
+											disabled={!room.isCustomized}
 										>
 											<option value='Flat'>Flat/Smooth</option>
 											<option value='Textured'>Textured</option>
@@ -470,6 +497,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 												name='trimCondition'
 												value={room.trimCondition || 'Good'}
 												onChange={handleFieldChange}
+												disabled={!room.isCustomized}
 											>
 												<option value='Good'>Good (Just needs paint)</option>
 												<option value='Poor'>Poor (Needs re-caulking)</option>
@@ -494,6 +522,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 														e.target.value === 'Stained',
 													)
 												}
+												disabled={!room.isCustomized}
 											>
 												<option value='Standard'>Standard Painting</option>
 												<option value='Stained'>Stained to Painted</option>
@@ -508,6 +537,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 											name='crownMoldingStyle'
 											value={room.crownMoldingStyle || 'Simple'}
 											onChange={handleFieldChange}
+											disabled={!room.isCustomized}
 										>
 											<option value='Simple'>Simple / Smooth</option>
 											<option value='Detailed'>Detailed / Ornate</option>
@@ -525,6 +555,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 												min='0'
 												value={room.doorCount || '1'}
 												onChange={handleFieldChange}
+												disabled={!room.isCustomized}
 											/>
 										</div>
 										<div className={styles.formGroup}>
@@ -538,6 +569,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 												name='doorStyle'
 												value={room.doorStyle || 'Slab'}
 												onChange={handleFieldChange}
+												disabled={!room.isCustomized}
 											>
 												<option value='Slab'>Flat / Slab</option>
 												<option value='Paneled'>Paneled</option>
@@ -555,6 +587,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 											min='0'
 											value={room.windowCount || 0}
 											onChange={handleFieldChange}
+											disabled={!room.isCustomized}
 										/>
 									</div>
 								)}
@@ -562,53 +595,59 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						</div>
 					)}
 
-					{/* 7. General Condition & Color (Conditional on Customization) */}
-					{room.isCustomized && (
-						<div className={styles.formGroupBox}>
-							<div className={styles.formGroupGrid}>
-								<div className={styles.formGroup}>
-									<label>
-										{isStairwell ? 'Wall/Trim Condition' : 'Surface Condition'}
-									</label>
-									<select
-										name='wallCondition'
-										value={room.wallCondition}
-										onChange={handleFieldChange}
-									>
-										<option value='None'>None (No extra preparation)</option>
-										<option value='Good'>Good (Few nail holes)</option>
-										<option value='Fair'>
-											Basic Prep (Nail holes, minor scuffs)
-										</option>
-										<option value='Poor'>
-											Major Prep (Peeling paint, cracks, or large holes)
-										</option>
-									</select>
+					{/* 7. General Condition & Color (Conditional) */}
+					<div className={styles.formGroupBox}>
+						<div className={`${styles.formGroupGrid} ${!room.isCustomized ? styles.ghosted : ''}`}>
+							<div className={styles.formGroup}>
+								<label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+									{isStairwell ? 'Wall/Trim Condition' : 'Surface Condition'}
+									{!room.isCustomized && (
+										<span className={styles.inheritanceLabel}>Following Project Defaults</span>
+									)}
+								</label>
+								<select
+									name='wallCondition'
+									value={room.wallCondition}
+									onChange={handleFieldChange}
+									disabled={!room.isCustomized}
+								>
+									<option value='None'>None (No extra preparation)</option>
+									<option value='Good'>Good (Few nail holes)</option>
+									<option value='Fair'>
+										Basic Prep (Nail holes, minor scuffs)
+									</option>
+									<option value='Poor'>
+										Major Prep (Peeling paint, cracks, or large holes)
+									</option>
+								</select>
+							</div>
+							<div className={styles.formGroup}>
+								<div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'space-between' }}>
+									<label style={{ margin: 0 }}>Color Change</label>
+									{room.colorChange === 'Dark-to-Light' && (
+										<InfoTooltip message={PAINTING_TOOLTIPS.COLOR_CHANGE_DARK_TO_LIGHT} />
+									)}
+									{!room.isCustomized && (
+										<span className={styles.inheritanceLabel}>Following Project Defaults</span>
+									)}
 								</div>
-								<div className={styles.formGroup}>
-									<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-										<label style={{ margin: 0 }}>Color Change</label>
-										{room.colorChange === 'Dark-to-Light' && (
-											<InfoTooltip message={PAINTING_TOOLTIPS.COLOR_CHANGE_DARK_TO_LIGHT} />
-										)}
-									</div>
-									<select
-										name='colorChange'
-										value={room.colorChange}
-										onChange={handleFieldChange}
-									>
-										<option value='Similar'>Refresh (Same Color)</option>
-										<option value='Change'>
-											Color Change (Light to Light or Dark)
-										</option>
-										<option value='Dark-to-Light'>
-											Color Change (Dark to Light)
-										</option>
-									</select>
-								</div>
+								<select
+									name='colorChange'
+									value={room.colorChange}
+									onChange={handleFieldChange}
+									disabled={!room.isCustomized}
+								>
+									<option value='Similar'>Refresh (Same Color)</option>
+									<option value='Change'>
+										Color Change (Light to Light or Dark)
+									</option>
+									<option value='Dark-to-Light'>
+										Color Change (Dark to Light)
+									</option>
+								</select>
 							</div>
 						</div>
-					)}
+					</div>
 
 					{/* Add Another Button */}
 					{onRoomAdd && (
@@ -621,7 +660,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						</button>
 					)}
 				</div>
-			)}
+			</div>
 		</div>
 	);
 };

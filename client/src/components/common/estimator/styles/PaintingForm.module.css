@@ -143,7 +143,7 @@
 /* --- Card Mimicry for Global Section --- */
 .configCard {
   border-top: 1px solid var(--color-primary);
-  background-color: #fdfdfd;
+  background-color: #f0f4f8; /* Subtle light blue-grey */
   margin-bottom: 1rem;
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -167,12 +167,30 @@
   color: var(--color-primary);
 }
 
+/* --- Animation & Collapsing --- */
+.collapseWrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease-out;
+}
+
+.collapseWrapper.open {
+  grid-template-rows: 1fr;
+}
+
+.collapseInner {
+  overflow: hidden;
+}
+
 .configContent {
   padding: 1.5rem;
-  border-top: 1px solid var(--color-border);
+  /* border-top handled by conditional class or wrapper */
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
+}
+.collapseWrapper.open .configContent {
+  border-top: 1px solid var(--color-border);
 }
 
 .conditionalFieldsContainer {

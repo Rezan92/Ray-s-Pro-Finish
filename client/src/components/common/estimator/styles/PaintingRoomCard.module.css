@@ -8,6 +8,49 @@
   margin-bottom: 1rem;
   border: 1px solid var(--color-border);
   border-radius: 8px;
+  transition: border-color 0.3s ease;
+}
+
+.roomCard.customized {
+  border-color: var(--color-primary);
+  border-width: 2px;
+}
+
+/* --- Animation & Collapsing --- */
+.collapseWrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease-out;
+}
+
+.collapseWrapper.open {
+  grid-template-rows: 1fr;
+}
+
+.collapseInner {
+  overflow: hidden;
+}
+
+.accordionContent {
+  padding: 1.5rem;
+  /* Removed border-top here to prevent double border during animation */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* Separator line needs to be handled carefully with animation. 
+   We'll add it to the inner content top but it might look weird fading out. 
+   Better: Keep it simple for now. */
+.collapseWrapper.open .accordionContent {
+  border-top: 1px solid var(--color-border);
+}
+
+/* --- Disabled / Inherited State --- */
+.ghosted {
+  opacity: 0.6;
+  pointer-events: none; /* Disables mouse interaction */
+  user-select: none;
 }
 
 .accordionHeader {
@@ -44,7 +87,7 @@
   align-items: center;
   gap: var(--space-xs);
   cursor: pointer;
-  padding: var(--space-xs);
+  padding: var(--space-md);
 }
 
 .accordionIcon {
@@ -62,6 +105,11 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
+}
+
+.collapsibleWrapper {
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
 }
 
 .formGroupBox {
@@ -91,7 +139,7 @@
 .formGroup input[type='number'] {
   font-family: var(--font-family-body);
   font-size: 1rem;
-  padding: var(--space-md);
+  padding: 1rem;
   border: 1px solid var(--color-border);
   border-radius: var(--border-radius-sm);
   background-color: #fff;
@@ -126,6 +174,15 @@
   background-color: var(--color-bg-light);
   padding: var(--space-sm);
   border-radius: var(--border-radius-sm);
+}
+
+.inheritanceLabel {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  margin-bottom: 0.5rem;
+  font-weight: normal !important;
 }
 
 .checkboxLabel {
@@ -167,7 +224,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-sm);
-  padding: var(--space-md);
+  padding: 1rem;
   border-radius: var(--border-radius-sm);
   cursor: pointer;
   margin-top: var(--space-md);
