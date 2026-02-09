@@ -19,6 +19,7 @@ interface PaintingState {
 		colorChange: string;
 		ceilingTexture: string;
 		trimCondition: string;
+		trimStyle: 'Simple' | 'Detailed';
 		trimConversion: boolean;
 		crownMoldingStyle: string;
 		doorStyle: string;
@@ -43,6 +44,7 @@ const initialState: PaintingState = {
 		colorChange: 'Similar',
 		ceilingTexture: 'Flat',
 		trimCondition: 'Good',
+		trimStyle: 'Simple',
 		trimConversion: false,
 		crownMoldingStyle: 'Simple',
 		doorStyle: 'Slab',
@@ -52,29 +54,29 @@ const initialState: PaintingState = {
 const createNewRoom = (
 	type: string,
 	id: string,
-	label: string
+	label: string,
+	defaults: PaintingState['globalDefaults']
 ): PaintingRoom => {
 	const isStairwell = type === 'stairwell';
-	// Initialize with defaults, but isCustomized is false so UI will show inheritance
 	return {
 		id,
 		type,
 		label,
 		size: 'Medium',
 		ceilingHeight: isStairwell ? '11ft+' : '8ft',
-		windowCount: 1,
+		windowCount: defaults.surfaces.windows ? 1 : 0,
 		closetSize: 'None',
-		isCustomized: false, // NEW: Inheritance flag
-		surfaces: { ...initialState.globalDefaults.surfaces }, // Start with global
-		wallCondition: initialState.globalDefaults.wallCondition,
-		colorChange: initialState.globalDefaults.colorChange,
-		ceilingTexture: initialState.globalDefaults.ceilingTexture,
-		trimCondition: initialState.globalDefaults.trimCondition,
-		trimStyle: 'Simple', // Default
-		trimConversion: initialState.globalDefaults.trimConversion,
-		doorCount: '1',
-		doorStyle: initialState.globalDefaults.doorStyle,
-		crownMoldingStyle: initialState.globalDefaults.crownMoldingStyle,
+		isCustomized: false,
+		surfaces: { ...defaults.surfaces },
+		wallCondition: defaults.wallCondition,
+		colorChange: defaults.colorChange,
+		ceilingTexture: defaults.ceilingTexture,
+		trimCondition: defaults.trimCondition,
+		trimStyle: defaults.trimStyle,
+		trimConversion: defaults.trimConversion,
+		crownMoldingStyle: defaults.crownMoldingStyle,
+		doorCount: defaults.surfaces.doors ? 1 : 0,
+		doorStyle: defaults.doorStyle,
 		roomDescription: '',
 	};
 };
@@ -112,12 +114,7 @@ export const paintingSlice = createSlice({
 					const newLabel = isMulti
 						? `${ROOM_LABELS[type]} 1`
 						: ROOM_LABELS[type];
-					// Apply current globals to new room
-					const newRoom = createNewRoom(type, newId, newLabel);
-					newRoom.surfaces = { ...state.globalDefaults.surfaces };
-					newRoom.wallCondition = state.globalDefaults.wallCondition;
-					newRoom.colorChange = state.globalDefaults.colorChange;
-					state.rooms.push(newRoom);
+					state.rooms.push(createNewRoom(type, newId, newLabel, state.globalDefaults));
 				}
 			} else {
 				state.rooms = state.rooms.filter((r) => r.type !== type);
@@ -128,12 +125,7 @@ export const paintingSlice = createSlice({
 			const count = state.rooms.filter((r) => r.type === type).length;
 			const newId = `${type}_${count}`;
 			const newLabel = `${ROOM_LABELS[type]} ${count + 1}`;
-			// Apply current globals to new room
-			const newRoom = createNewRoom(type, newId, newLabel);
-			newRoom.surfaces = { ...state.globalDefaults.surfaces };
-			newRoom.wallCondition = state.globalDefaults.wallCondition;
-			newRoom.colorChange = state.globalDefaults.colorChange;
-			state.rooms.push(newRoom);
+			state.rooms.push(createNewRoom(type, newId, newLabel, state.globalDefaults));
 		},
 		removeRoom: (state, action: PayloadAction<string>) => {
 			state.rooms = state.rooms.filter((r) => r.id !== action.payload);
@@ -144,12 +136,8 @@ export const paintingSlice = createSlice({
 		) => {
 			const room = state.rooms.find((r) => r.id === action.payload.roomId);
 			if (room) {
-				// @ts-expect-error - Generic assignment to room object
+				// @ts-expect-error - Generic assignment
 				room[action.payload.field] = action.payload.value;
-				
-				// Auto-enable customization if a relevant field is changed manually? 
-				// Or assume the UI handles setting isCustomized to true before calling this.
-				// For now, let UI handle the flag toggling explicitly.
 			}
 		},
 		toggleRoomCustomization: (
@@ -159,11 +147,17 @@ export const paintingSlice = createSlice({
 			const room = state.rooms.find((r) => r.id === action.payload.roomId);
 			if (room) {
 				room.isCustomized = action.payload.isCustomized;
-				// If turning OFF customization, revert to globals
 				if (!action.payload.isCustomized) {
+					// Revert to all current global defaults
 					room.surfaces = { ...state.globalDefaults.surfaces };
 					room.wallCondition = state.globalDefaults.wallCondition;
 					room.colorChange = state.globalDefaults.colorChange;
+					room.ceilingTexture = state.globalDefaults.ceilingTexture;
+					room.trimCondition = state.globalDefaults.trimCondition;
+					room.trimStyle = state.globalDefaults.trimStyle;
+					room.trimConversion = state.globalDefaults.trimConversion;
+					room.crownMoldingStyle = state.globalDefaults.crownMoldingStyle;
+					room.doorStyle = state.globalDefaults.doorStyle;
 				}
 			}
 		},
@@ -172,7 +166,7 @@ export const paintingSlice = createSlice({
 			action: PayloadAction<{ field: keyof PaintingState; value: unknown }>
 		) => {
 			const { field, value } = action.payload;
-			// @ts-expect-error - Generic assignment to state object
+			// @ts-expect-error - Generic assignment
 			state[field] = value as never;
 		},
 		updateGlobalDefaults: (
@@ -180,36 +174,25 @@ export const paintingSlice = createSlice({
 			action: PayloadAction<{ field: string; value: unknown }>
 		) => {
 			const { field, value } = action.payload;
-			// Update the global default store
+			
+			// 1. Update global state
+			// @ts-expect-error - Generic assignment
 			if (field === 'surfaces') {
-				state.globalDefaults.surfaces = value as any;
-			} else if (field === 'wallCondition') {
-				state.globalDefaults.wallCondition = value as string;
-			} else if (field === 'colorChange') {
-				state.globalDefaults.colorChange = value as string;
-			} else if (field === 'ceilingTexture') {
-				state.globalDefaults.ceilingTexture = value as string;
-			} else if (field === 'trimCondition') {
-				state.globalDefaults.trimCondition = value as string;
-			} else if (field === 'trimConversion') {
-				state.globalDefaults.trimConversion = value as boolean;
-			} else if (field === 'crownMoldingStyle') {
-				state.globalDefaults.crownMoldingStyle = value as string;
-			} else if (field === 'doorStyle') {
-				state.globalDefaults.doorStyle = value as string;
+				state.globalDefaults.surfaces = { ...(value as any) };
+			} else {
+				// @ts-expect-error - Generic assignment
+				state.globalDefaults[field] = value;
 			}
 
-			// Propagate to all NON-customized rooms
+			// 2. Propagate to non-customized rooms
 			state.rooms.forEach(room => {
 				if (!room.isCustomized) {
-					if (field === 'surfaces') room.surfaces = value as any;
-					if (field === 'wallCondition') room.wallCondition = value as string;
-					if (field === 'colorChange') room.colorChange = value as string;
-					if (field === 'ceilingTexture') room.ceilingTexture = value as string;
-					if (field === 'trimCondition') room.trimCondition = value as string;
-					if (field === 'trimConversion') room.trimConversion = value as boolean;
-					if (field === 'crownMoldingStyle') room.crownMoldingStyle = value as string;
-					if (field === 'doorStyle') room.doorStyle = value as string;
+					if (field === 'surfaces') {
+						room.surfaces = { ...(value as any) };
+					} else {
+						// @ts-expect-error - Generic assignment
+						room[field] = value;
+					}
 				}
 			});
 		},

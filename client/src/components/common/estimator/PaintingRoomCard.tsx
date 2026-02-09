@@ -45,6 +45,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 			if (name === 'trim') {
 				onRoomChange(room.id, 'trimCondition', 'Good');
 				onRoomChange(room.id, 'trimConversion', false);
+				onRoomChange(room.id, 'trimStyle', 'Simple');
 			}
 			if (name === 'doors') {
 				onRoomChange(room.id, 'doorCount', '1');
@@ -444,6 +445,17 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 											>
 												<option value='Standard'>Standard Painting</option>
 												<option value='Stained'>Stained to Painted</option>
+											</select>
+										</div>
+										<div className={styles.formGroup}>
+											<label>Trim Profile</label>
+											<select
+												name='trimStyle'
+												value={room.trimStyle || 'Simple'}
+												onChange={handleFieldChange}
+											>
+												<option value='Simple'>Simple / Smooth</option>
+												<option value='Detailed'>Detailed / Ornate</option>
 											</select>
 										</div>
 									</>

@@ -62,7 +62,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 		<div className={styles.serviceFormBox}>
 			<h3 className={styles.serviceFormTitle}>Interior Painting</h3>
 
-			{/* --- A. The Room Builder (Top) --- */}
+			{/* --- A. The Room Builder (Moved to Top) --- */}
 			<div className={styles.formGroupBox}>
 				<div className={styles.formGroup}>
 					<label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -92,7 +92,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 				</div>
 			</div>
 
-			{/* --- C. Global Painting Questions (Card Style) --- */}
+			{/* --- C. Global Painting Questions (Card Style & Collapsible) --- */}
 			<div className={styles.configCard}>
 				<button
 					type="button"
@@ -102,11 +102,19 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 					<span className={styles.configTitle}>
 						Project Configuration & Defaults
 					</span>
-					<ChevronDown size={20} style={{ transform: isConfigOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }} />
+					<ChevronDown 
+						size={20} 
+						style={{ 
+							transform: isConfigOpen ? 'rotate(180deg)' : 'rotate(0deg)', 
+							transition: 'transform 0.3s',
+							color: 'var(--color-primary)'
+						}} 
+					/>
 				</button>
 				
 				{isConfigOpen && (
 					<div className={styles.configContent}>
+						{/* Basic Project Configuration */}
 						<div className={styles.formGroupBox}>
 							<div className={styles.formGroupGrid}>
 								<div className={styles.formGroup}>
@@ -141,6 +149,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 							</div>
 						</div>
 
+						{/* Global Scope Defaults */}
 						<h4 style={{ color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', marginTop: '0.5rem' }}>
 							Global Room Defaults
 							<InfoTooltip message="These settings apply to all rooms unless you check 'Customize this area' on a specific card." />
@@ -199,7 +208,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 							</div>
 						</div>
 
-						{/* Conditional Global Fields based on Surfaces */}
+						{/* Sub-questions for Global Surfaces */}
 						{(painting.globalDefaults?.surfaces.ceiling || painting.globalDefaults?.surfaces.trim || painting.globalDefaults?.surfaces.crownMolding || painting.globalDefaults?.surfaces.doors) && (
 							<div className={styles.formGroupBox}>
 								<div className={styles.conditionalFieldsContainer}>
@@ -238,6 +247,16 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 													<option value='Stained'>Stained to Painted</option>
 												</select>
 											</div>
+											<div className={styles.formGroup}>
+												<label>Trim Profile (Default)</label>
+												<select
+													value={painting.globalDefaults?.trimStyle || 'Simple'}
+													onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'trimStyle', value: e.target.value })}
+												>
+													<option value='Simple'>Simple / Smooth</option>
+													<option value='Detailed'>Detailed / Ornate</option>
+												</select>
+											</div>
 										</>
 									)}
 									{painting.globalDefaults?.surfaces.crownMolding && (
@@ -268,6 +287,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 							</div>
 						)}
 
+						{/* Global Prep and Color Change */}
 						<div className={styles.formGroupBox}>
 							<div className={styles.formGroupGrid}>
 								<div className={styles.formGroup}>
@@ -295,6 +315,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 							</div>
 						</div>
 
+						{/* Global Additional Details */}
 						<div className={styles.formGroupBox}>
 							<div className={styles.formGroup}>
 								<label>
@@ -315,7 +336,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 									onChange={(e) =>
 										onGlobalChange('additionalDetails', e.target.value)
 									}
-									maxLength={600} // Enforce the limit natively
+									maxLength={600}
 									rows={4}
 									placeholder='Tell us about specific damage, color changes (e.g. dark red to white), or high ceilings...'
 								/>
