@@ -45,6 +45,7 @@
 | :--- | :--- | :--- | :--- |
 | **Smooth** | **350** | **500** | sqft/hr |
 | **Popcorn** | **150** | **250** | sqft/hr |
+| **Orange Peel / Knockdown** | **300** | **450** | sqft/hr |
 
 ### Trim & Moldings
 | Item | Rate | Unit | Notes |
@@ -54,6 +55,13 @@
 | **Crown (Detailed)** | **25** | lin.ft/hr | Ornate/Dentil profile. |
 | **Conversion (Stain->Paint)** | **3.0x** | multiplier | Requires sanding, oil prime, 2 coats. |
 | **Caulking (Poor Cond.)** | **0.025** | hrs/lin.ft | Add-on for gap filling. |
+
+**Windows**
+| Item | 1st Coat | 2nd Coat | Total |
+| :--- | :--- | :--- | :--- |
+| **Standard Window Casing** | **30 mins** | **20 mins** | **50 mins** |
+
+*Note: Divided Lites (Panes) require significant additional masking time (TBD).*
 
 ---
 
@@ -65,6 +73,16 @@
 | **Standard** | **1.5** | 2' x 4' |
 | **Medium** | **2.5** | 5' x 5' (Walk-in) |
 | **Large** | **4.0** | 6' x 10' (Master) |
+
+### Doors (Per Side)
+*Note: All door rates are PER SIDE. Double values for both sides.*
+
+| Style | 1st Coat | 2nd Coat | Total |
+| :--- | :--- | :--- | :--- |
+| **Standard 6-Panel** | **25 mins** | **15 mins** | **40 mins** |
+| **Smooth / Slab** | **20 mins** | **15 mins** | **35 mins** |
+
+*Stained-to-Painted Multiplier (3.0x) applies: Approx. 75 mins per side for the first coat cycle (includes sanding/priming).*
 
 ### Stairwells
 | Item | Time | Unit |
