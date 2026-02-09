@@ -16,43 +16,6 @@
   border-width: 2px;
 }
 
-/* --- Animation & Collapsing --- */
-.collapseWrapper {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.3s ease-out;
-}
-
-.collapseWrapper.open {
-  grid-template-rows: 1fr;
-}
-
-.collapseInner {
-  overflow: hidden;
-}
-
-.accordionContent {
-  padding: 1.5rem;
-  /* Removed border-top here to prevent double border during animation */
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-}
-
-/* Separator line needs to be handled carefully with animation. 
-   We'll add it to the inner content top but it might look weird fading out. 
-   Better: Keep it simple for now. */
-.collapseWrapper.open .accordionContent {
-  border-top: 1px solid var(--color-border);
-}
-
-/* --- Disabled / Inherited State --- */
-.ghosted {
-  opacity: 0.6;
-  pointer-events: none; /* Disables mouse interaction */
-  user-select: none;
-}
-
 .accordionHeader {
   display: flex;
   justify-content: space-between;
@@ -99,30 +62,35 @@
   transform: rotate(180deg);
 }
 
-.accordionContent {
-  padding: 1.5rem;
-  border-top: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-}
-
-.collapsibleWrapper {
+/* --- Animation & Collapsing --- */
+.collapseWrapper {
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
   opacity: 0;
 }
 
-.collapsibleWrapper.open {
+.collapseWrapper.open {
   grid-template-rows: 1fr;
   opacity: 1;
 }
 
-.collapsibleInner {
+.collapseInner {
   overflow: hidden;
 }
 
+.accordionContent {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.collapseWrapper.open .accordionContent {
+  border-top: 1px solid var(--color-border);
+}
+
+/* --- Content Sections --- */
 .formGroupBox {
   background-color: var(--color-bg-light);
   border: 1px solid var(--color-border);
@@ -204,6 +172,14 @@
   font-size: 1rem;
   color: var(--color-text-primary);
   cursor: pointer;
+}
+
+/* --- Disabled / Inherited State --- */
+.ghosted {
+  opacity: 0.6;
+  pointer-events: none;
+  filter: grayscale(0.5);
+  user-select: none;
 }
 
 .conditionalFieldsContainer {

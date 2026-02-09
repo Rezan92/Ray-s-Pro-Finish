@@ -24,7 +24,6 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 		!!(room.exactLength || room.exactWidth || room.exactHeight),
 	);
 	const lengthInputRef = useRef<HTMLInputElement>(null);
-	const contentRef = useRef<HTMLDivElement>(null);
 
 	// Auto-focus the Length input when switching to Custom size
 	useEffect(() => {
