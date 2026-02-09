@@ -65,7 +65,10 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 			{/* --- A. The Room Builder (Top) --- */}
 			<div className={styles.formGroupBox}>
 				<div className={styles.formGroup}>
-					<label>Add Rooms & Spaces</label>
+					<label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+						Add Rooms & Spaces
+						<InfoTooltip message="Select the spaces you'd like us to paint. Each selected room will appear as a separate card below the 'Project Configuration' section. Tip: You can collapse these cards to keep your view organized as you build your estimate." />
+					</label>
 					<div className={styles.checkboxGroupTwoColumn}>
 						{ROOM_TYPES.map((type) => {
 							const isChecked = checkedTypes.get(type.key) || false;
@@ -199,7 +202,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 						{/* Conditional Global Fields based on Surfaces */}
 						{(painting.globalDefaults?.surfaces.ceiling || painting.globalDefaults?.surfaces.trim || painting.globalDefaults?.surfaces.crownMolding || painting.globalDefaults?.surfaces.doors) && (
 							<div className={styles.formGroupBox}>
-								<div className={styles.formGroupGrid}>
+								<div className={styles.conditionalFieldsContainer}>
 									{painting.globalDefaults?.surfaces.ceiling && (
 										<div className={styles.formGroup}>
 											<label>Ceiling Texture (Default)</label>
