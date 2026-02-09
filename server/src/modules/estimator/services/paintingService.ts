@@ -97,9 +97,18 @@ const calculateCeilingHours = (room: PaintingRoom, ctx: CalculationContext, L: n
 	if (!room.surfaces.ceiling) return;
 
 	const area = L * W;
-	const isPopcorn = room.ceilingTexture === 'Popcorn';
-	const rate1 = isPopcorn ? P.PRODUCTION_RATES.CEILINGS.POPCORN_1ST_COAT : P.PRODUCTION_RATES.CEILINGS.SMOOTH_1ST_COAT;
-	const rate2 = isPopcorn ? P.PRODUCTION_RATES.CEILINGS.POPCORN_2ND_COAT : P.PRODUCTION_RATES.CEILINGS.SMOOTH_2ND_COAT;
+	let rate1, rate2;
+
+	if (room.ceilingTexture === 'Popcorn') {
+		rate1 = P.PRODUCTION_RATES.CEILINGS.POPCORN_1ST_COAT;
+		rate2 = P.PRODUCTION_RATES.CEILINGS.POPCORN_2ND_COAT;
+	} else if (room.ceilingTexture === 'Textured') {
+		rate1 = P.PRODUCTION_RATES.CEILINGS.ORANGE_PEEL_KNOCKDOWN_1ST_COAT;
+		rate2 = P.PRODUCTION_RATES.CEILINGS.ORANGE_PEEL_KNOCKDOWN_2ND_COAT;
+	} else { // Flat/Smooth
+		rate1 = P.PRODUCTION_RATES.CEILINGS.SMOOTH_1ST_COAT;
+		rate2 = P.PRODUCTION_RATES.CEILINGS.SMOOTH_2ND_COAT;
+	}
 
 	let hHours = (area / rate1) + (area / rate2);
 	
@@ -161,23 +170,26 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	// 3. Doors
 	if (room.surfaces.doors) {
 		const count = parseInt(room.doorCount) || 0;
-		const rate = room.doorStyle === 'Paneled' ? P.PRODUCTION_RATES.STAIRS.SPINDLE_SQUARE : 0.75; // Using 0.75 for slab as fallback or defined elsewhere
-		// Wait, spec F-007 says "Fixed time per Slab/Paneled door". Let's look at rates-reference.md or masterRates.ts
-		// T003 migration should have handled this. Let's check masterRates.ts again for door rates.
-		// Actually, let's use the values from the previous version of paintingService or constants if missing.
-		// Previous code used 0.75 for Slab and 1.25 for Paneled.
-		const doorRate = room.doorStyle === 'Paneled' ? 1.25 : 0.75; 
-		const doorHours = count * doorRate;
-		addLineItem(ctx, `${room.label} - Doors`, doorHours, `${count} ${room.doorStyle} doors @ ${doorRate} hrs/ea`);
+		let doorHoursPerSide = 0;
+		if (room.doorStyle === 'Paneled') {
+			doorHoursPerSide = P.FIXED_ITEMS.DOOR_6_PANEL_SIDE;
+		} else { // Slab
+			doorHoursPerSide = P.FIXED_ITEMS.DOOR_SLAB_SIDE;
+		}
+		
+		// Apply 2x multiplier for both sides
+		const totalDoorHours = count * doorHoursPerSide * 2;
+		const detailHours = doorHoursPerSide * 2; // For displaying in details
+
+		addLineItem(ctx, `${room.label} - Doors`, totalDoorHours, `${count} ${room.doorStyle} doors @ ${detailHours.toFixed(2)} hrs/ea (both sides)`);
 		ctx.trimGallons += count * 0.15; // Typical door gallons
 	}
 
 	// 4. Windows
 	if (room.surfaces.windows) {
 		const count = room.windowCount || 0;
-		const windowRate = 0.5; // From previous code/multipliers
-		const windowHours = count * windowRate;
-		addLineItem(ctx, `${room.label} - Window Frames`, windowHours, `${count} windows @ ${windowRate} hrs/ea`);
+		const windowHours = count * P.FIXED_ITEMS.WINDOW_STANDARD_CASING;
+		addLineItem(ctx, `${room.label} - Window Frames`, windowHours, `${count} windows @ ${P.FIXED_ITEMS.WINDOW_STANDARD_CASING.toFixed(2)} hrs/ea`);
 		ctx.trimGallons += count * 0.1; // Typical window gallons
 	}
 };

@@ -161,6 +161,8 @@ export const MASTER_RATES = {
 				SMOOTH_2ND_COAT: 500,
 				POPCORN_1ST_COAT: 150,
 				POPCORN_2ND_COAT: 250,
+				ORANGE_PEEL_KNOCKDOWN_1ST_COAT: 300,
+				ORANGE_PEEL_KNOCKDOWN_2ND_COAT: 450,
 			},
 			TRIM: {
 				BASEBOARD: 60, // lf/hr
@@ -180,6 +182,9 @@ export const MASTER_RATES = {
 			CLOSET_STANDARD: 1.5,
 			CLOSET_MEDIUM: 2.5,
 			CLOSET_LARGE: 4.0,
+			WINDOW_STANDARD_CASING: 0.833, // 50 mins total per window
+			DOOR_6_PANEL_SIDE: 0.666, // 40 mins per side
+			DOOR_SLAB_SIDE: 0.583, // 35 mins per side
 		},
 
 		DEFAULTS: {
@@ -197,10 +202,3 @@ export const MASTER_RATES = {
 		},
 	},
 };
-
-/**
- * OBSERVATION (2026-02-09):
- * The following labor rates are currently hardcoded in paintingService.ts and should be centralized here:
- * - Doors: Slab (0.75 hrs) vs. Paneled (1.25 hrs)
- * - Windows: 0.5 hrs per frame
- */
