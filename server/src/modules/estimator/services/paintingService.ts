@@ -230,7 +230,10 @@ export const calculatePaintingEstimate = async (data: any) => {
 		} else {
 			[L, W] = ROOM_DIMENSIONS[room.type]?.[room.size] || [12, 14];
 			const rawHeight = room.ceilingHeight;
-			H = rawHeight === '11ft+' ? 12 : parseInt(rawHeight) || 8;
+			// Refined height tiers
+			if (rawHeight === 'High (11-14ft)') H = 12;
+			else if (rawHeight === 'Great Room / Foyer (15ft+)' || rawHeight === '11ft+') H = 18;
+			else H = parseInt(rawHeight) || 8;
 		}
 
 		// Surface calculations

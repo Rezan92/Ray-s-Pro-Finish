@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { PaintingRoom } from './EstimatorTypes';
-import { ChevronDown, Plus, Trash2, Ruler } from 'lucide-react';
+import { ChevronDown, Plus, Trash2, Ruler, AlertTriangle } from 'lucide-react';
 import { ROOM_SIZE_OPTIONS } from './roomSizeData';
 import styles from './styles/PaintingRoomCard.module.css';
 import { InfoTooltip } from '@/components/common/infoTooltip/InfoTooltip';
@@ -195,7 +195,8 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									>
 										<option value='8ft'>8 ft (Standard)</option>
 										<option value='9-10ft'>9-10 ft</option>
-										<option value='11ft+'>11 ft+ / Vaulted</option>
+										<option value='11-14ft'>High (11-14ft)</option>
+										<option value='15ft+'>Great Room / Foyer (15ft+)</option>
 									</select>
 								</div>
 							</div>
@@ -426,18 +427,38 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 								{room.surfaces.trim && (
 									<>
 										<div className={styles.formGroup}>
-											<label>Trim Condition</label>
+											<label>Surface Condition</label>
 											<select
 												name='trimCondition'
 												value={room.trimCondition || 'Good'}
 												onChange={handleFieldChange}
 											>
-												<option value='Good'>Good (Just needs paint)</option>
-												<option value='Poor'>Poor (Needs re-caulking)</option>
+												<option value='Good'>None (New or perfect surfaces)</option>
+												<option value='Fair'>Basic Prep (Nail holes, minor scuffs)</option>
+												<option value='Poor'>Major Prep (Peeling paint, cracks, or large holes)</option>
 											</select>
 										</div>
 										<div className={styles.formGroup}>
-											<label>Trim Painting Style</label>
+											<div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+												<label style={{ margin: 0 }}>Is your trim currently wood-stained?</label>
+												{room.trimConversion && (
+													<span style={{ 
+														backgroundColor: '#fff3cd', 
+														color: '#856404', 
+														padding: '2px 8px', 
+														borderRadius: '4px', 
+														fontSize: '0.75rem',
+														fontWeight: 'bold',
+														display: 'flex',
+														alignItems: 'center',
+														gap: '4px',
+														border: '1px solid #ffeeba'
+													}}>
+														<AlertTriangle size={12} />
+														Heavy Prep Required
+													</span>
+												)}
+											</div>
 											<select
 												name='trimStyleDropdown'
 												value={room.trimConversion ? 'Stained' : 'Standard'}
@@ -527,9 +548,9 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 										value={room.wallCondition}
 										onChange={handleFieldChange}
 									>
-										<option value='Good'>Good (Few nail holes)</option>
-										<option value='Fair'>Fair (Dings, scuffs)</option>
-										<option value='Poor'>Poor (Cracks, stains)</option>
+										<option value='Good'>None (New or perfect surfaces)</option>
+										<option value='Fair'>Basic Prep (Nail holes, minor scuffs)</option>
+										<option value='Poor'>Major Prep (Peeling paint, cracks, or large holes)</option>
 									</select>
 								</div>
 								<div className={styles.formGroup}>

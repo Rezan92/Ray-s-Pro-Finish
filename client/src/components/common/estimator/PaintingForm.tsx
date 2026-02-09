@@ -92,7 +92,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 				</div>
 			</div>
 
-			{/* --- C. Global Painting Questions (Card Style & Collapsible) --- */}
+			{/* --- C. Global Painting Questions (Collapsible) --- */}
 			<div className={styles.configCard}>
 				<button
 					type="button"
@@ -135,15 +135,15 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 									</select>
 								</div>
 								<div className={styles.formGroup}>
-									<label>Occupancy & Furniture</label>
+									<label>Room Status & Furniture</label>
 									<select
 										name='occupancy'
 										value={formData.painting.occupancy || 'Empty'}
 										onChange={(e) => onGlobalChange('occupancy', e.target.value)}
 									>
 										<option value='Empty'>Empty / New Construction</option>
-										<option value='Light Furniture'>Occupied - Light Furniture (Owner moves small items)</option>
-										<option value='Heavy Furniture'>Occupied - Full Furniture (Painter moves/covers all)</option>
+										<option value='Heavy Furniture'>Lived-in (We move major furniture)</option>
+										<option value='Light Furniture'>Lived-in (Owner clears room)</option>
 									</select>
 								</div>
 							</div>
@@ -233,12 +233,13 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 													value={painting.globalDefaults?.trimCondition || 'Good'}
 													onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'trimCondition', value: e.target.value })}
 												>
-													<option value='Good'>Good (Just needs paint)</option>
-													<option value='Poor'>Poor (Needs re-caulking)</option>
+													<option value='Good'>None (New or perfect surfaces)</option>
+													<option value='Fair'>Basic Prep (Nail holes, minor scuffs)</option>
+													<option value='Poor'>Major Prep (Peeling paint, cracks, or large holes)</option>
 												</select>
 											</div>
 											<div className={styles.formGroup}>
-												<label>Trim Painting Style (Default)</label>
+												<label>Is your trim currently wood-stained?</label>
 												<select
 													value={painting.globalDefaults?.trimConversion ? 'Stained' : 'Standard'}
 													onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'trimConversion', value: e.target.value === 'Stained' })}
@@ -287,7 +288,6 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 							</div>
 						)}
 
-						{/* Global Prep and Color Change */}
 						<div className={styles.formGroupBox}>
 							<div className={styles.formGroupGrid}>
 								<div className={styles.formGroup}>
@@ -296,9 +296,9 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 										value={painting.globalDefaults?.wallCondition || 'Good'}
 										onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'wallCondition', value: e.target.value })}
 									>
-										<option value='Good'>Good (Few nail holes)</option>
-										<option value='Fair'>Fair (Dings, scuffs)</option>
-										<option value='Poor'>Poor (Cracks, stains)</option>
+										<option value='Good'>None (New or perfect surfaces)</option>
+										<option value='Fair'>Basic Prep (Nail holes, minor scuffs)</option>
+										<option value='Poor'>Major Prep (Peeling paint, cracks, or large holes)</option>
 									</select>
 								</div>
 								<div className={styles.formGroup}>
@@ -315,7 +315,6 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 							</div>
 						</div>
 
-						{/* Global Additional Details */}
 						<div className={styles.formGroupBox}>
 							<div className={styles.formGroup}>
 								<label>
@@ -336,7 +335,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 									onChange={(e) =>
 										onGlobalChange('additionalDetails', e.target.value)
 									}
-									maxLength={600}
+									maxLength={600} // Enforce the limit natively
 									rows={4}
 									placeholder='Tell us about specific damage, color changes (e.g. dark red to white), or high ceilings...'
 								/>
