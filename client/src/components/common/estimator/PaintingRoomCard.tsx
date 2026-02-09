@@ -121,16 +121,10 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 			</button>
 
 			{/* --- Collapsible Card Body --- */}
-			<div 
-				ref={contentRef}
-				className={styles.collapsibleWrapper}
-				style={{ 
-					maxHeight: isOpen ? `${contentRef.current?.scrollHeight}px` : '0px',
-					opacity: isOpen ? 1 : 0
-				}}
-			>
-				<div className={styles.accordionContent}>
-					{/* 0. Customization Toggle (New) */}
+			<div className={`${styles.collapsibleWrapper} ${isOpen ? styles.open : ''}`}>
+				<div className={styles.collapsibleInner}>
+					<div className={styles.accordionContent}>
+						{/* 0. Customization Toggle (New) */}
 					<div
 						className={styles.formGroupBox}
 						style={{
