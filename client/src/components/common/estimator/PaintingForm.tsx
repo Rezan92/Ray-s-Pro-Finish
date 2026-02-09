@@ -233,9 +233,8 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 													value={painting.globalDefaults?.trimCondition || 'Good'}
 													onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'trimCondition', value: e.target.value })}
 												>
-													<option value='Good'>None (New or perfect surfaces)</option>
-													<option value='Fair'>Basic Prep (Nail holes, minor scuffs)</option>
-													<option value='Poor'>Major Prep (Peeling paint, cracks, or large holes)</option>
+													<option value='Good'>Good (Just needs paint)</option>
+													<option value='Poor'>Poor (Needs re-caulking)</option>
 												</select>
 											</div>
 											<div className={styles.formGroup}>
@@ -246,16 +245,6 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 												>
 													<option value='Standard'>Standard Painting</option>
 													<option value='Stained'>Stained to Painted</option>
-												</select>
-											</div>
-											<div className={styles.formGroup}>
-												<label>Trim Profile (Default)</label>
-												<select
-													value={painting.globalDefaults?.trimStyle || 'Simple'}
-													onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'trimStyle', value: e.target.value })}
-												>
-													<option value='Simple'>Simple / Smooth</option>
-													<option value='Detailed'>Detailed / Ornate</option>
 												</select>
 											</div>
 										</>
@@ -296,8 +285,9 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 										value={painting.globalDefaults?.wallCondition || 'Good'}
 										onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'wallCondition', value: e.target.value })}
 									>
-										<option value='Good'>None (New or perfect surfaces)</option>
-										<option value='Fair'>Basic Prep (Nail holes, minor scuffs)</option>
+										<option value='None'>None (New or perfect surfaces)</option>
+										<option value='Good'>Good (Few nail holes)</option>
+										<option value='Fair'>Basic Prep (Dings, scuffs)</option>
 										<option value='Poor'>Major Prep (Peeling paint, cracks, or large holes)</option>
 									</select>
 								</div>

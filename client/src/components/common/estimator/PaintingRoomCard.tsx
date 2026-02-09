@@ -45,7 +45,6 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 			if (name === 'trim') {
 				onRoomChange(room.id, 'trimCondition', 'Good');
 				onRoomChange(room.id, 'trimConversion', false);
-				onRoomChange(room.id, 'trimStyle', 'Simple');
 			}
 			if (name === 'doors') {
 				onRoomChange(room.id, 'doorCount', '1');
@@ -77,9 +76,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 	const showDetails =
 		room.surfaces.ceiling ||
 		room.surfaces.trim ||
-		room.surfaces.crownMolding ||
-		room.surfaces.doors ||
-		room.surfaces.windows;
+		(!isStairwell && (room.surfaces.crownMolding || room.surfaces.doors || room.surfaces.windows));
 
 	return (
 		<div className={styles.roomCard}>
@@ -203,7 +200,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						) : (
 							<div className={styles.dimensionsGrid}>
 								<div className={styles.formGroup}>
-									<label>Length (ft)</label>
+									<label>{isStairwell ? 'Wall Length (lf)' : 'Length (ft)'}</label>
 									<input
 										type='number'
 										name='exactLength'
@@ -225,7 +222,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									/>
 								</div>
 								<div className={styles.formGroup}>
-									<label>Height (ft)</label>
+									<label>{isStairwell ? 'Max Wall Height (ft)' : 'Height (ft)'}</label>
 									<input
 										type='number'
 										name='exactHeight'
@@ -311,7 +308,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 					)}
 
 					{/* 4. NEW: Closet Size (Only for Bedroom) */}
-					{room.type === 'bedroom' && (
+					{!isStairwell && room.type === 'bedroom' && (
 						<div className={styles.formGroupBox}>
 							<div className={styles.formGroup}>
 								<label className={styles.checkboxLabel}>
@@ -374,33 +371,37 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 										/>{' '}
 										Trim
 									</label>
-									<label className={styles.checkboxLabel}>
-										<input
-											type='checkbox'
-											name='doors'
-											checked={room.surfaces.doors}
-											onChange={handleSurfaceChange}
-										/>{' '}
-										Doors
-									</label>
-									<label className={styles.checkboxLabel}>
-										<input
-											type='checkbox'
-											name='crownMolding'
-											checked={room.surfaces.crownMolding || false}
-											onChange={handleSurfaceChange}
-										/>{' '}
-										Crown Molding
-									</label>
-									<label className={styles.checkboxLabel}>
-										<input
-											type='checkbox'
-											name='windows'
-											checked={room.surfaces.windows || false}
-											onChange={handleSurfaceChange}
-										/>{' '}
-										Windows
-									</label>
+									{!isStairwell && (
+										<>
+											<label className={styles.checkboxLabel}>
+												<input
+													type='checkbox'
+													name='doors'
+													checked={room.surfaces.doors}
+													onChange={handleSurfaceChange}
+												/>{' '}
+												Doors
+											</label>
+											<label className={styles.checkboxLabel}>
+												<input
+													type='checkbox'
+													name='crownMolding'
+													checked={room.surfaces.crownMolding || false}
+													onChange={handleSurfaceChange}
+												/>{' '}
+												Crown Molding
+											</label>
+											<label className={styles.checkboxLabel}>
+												<input
+													type='checkbox'
+													name='windows'
+													checked={room.surfaces.windows || false}
+													onChange={handleSurfaceChange}
+												/>{' '}
+												Windows
+											</label>
+										</>
+									)}
 								</div>
 							</div>
 						</div>
@@ -427,15 +428,14 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 								{room.surfaces.trim && (
 									<>
 										<div className={styles.formGroup}>
-											<label>Surface Condition</label>
+											<label>Trim Condition</label>
 											<select
 												name='trimCondition'
 												value={room.trimCondition || 'Good'}
 												onChange={handleFieldChange}
 											>
-												<option value='Good'>None (New or perfect surfaces)</option>
-												<option value='Fair'>Basic Prep (Nail holes, minor scuffs)</option>
-												<option value='Poor'>Major Prep (Peeling paint, cracks, or large holes)</option>
+												<option value='Good'>Good (Just needs paint)</option>
+												<option value='Poor'>Poor (Needs re-caulking)</option>
 											</select>
 										</div>
 										<div className={styles.formGroup}>
@@ -468,20 +468,9 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 												<option value='Stained'>Stained to Painted</option>
 											</select>
 										</div>
-										<div className={styles.formGroup}>
-											<label>Trim Profile</label>
-											<select
-												name='trimStyle'
-												value={room.trimStyle || 'Simple'}
-												onChange={handleFieldChange}
-											>
-												<option value='Simple'>Simple / Smooth</option>
-												<option value='Detailed'>Detailed / Ornate</option>
-											</select>
-										</div>
 									</>
 								)}
-								{room.surfaces.crownMolding && (
+								{!isStairwell && room.surfaces.crownMolding && (
 									<div className={styles.formGroup}>
 										<label>Crown Molding Style</label>
 										<select
@@ -494,7 +483,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 										</select>
 									</div>
 								)}
-								{room.surfaces.doors && (
+								{!isStairwell && room.surfaces.doors && (
 									<>
 										<div className={styles.formGroup}>
 											<label>How many doors?</label>
@@ -520,7 +509,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 										</div>
 									</>
 								)}
-								{room.surfaces.windows && (
+								{!isStairwell && room.surfaces.windows && (
 									<div className={styles.formGroup}>
 										<label>How many windows?</label>
 										<input
@@ -542,14 +531,15 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						<div className={styles.formGroupBox}>
 							<div className={styles.formGroupGrid}>
 								<div className={styles.formGroup}>
-									<label>Surface Condition</label>
+									<label>{isStairwell ? 'Wall/Trim Condition' : 'Surface Condition'}</label>
 									<select
 										name='wallCondition'
 										value={room.wallCondition}
 										onChange={handleFieldChange}
 									>
-										<option value='Good'>None (New or perfect surfaces)</option>
-										<option value='Fair'>Basic Prep (Nail holes, minor scuffs)</option>
+										<option value='None'>None (New or perfect surfaces)</option>
+										<option value='Good'>Good (Few nail holes)</option>
+										<option value='Fair'>Basic Prep (Dings, scuffs)</option>
 										<option value='Poor'>Major Prep (Peeling paint, cracks, or large holes)</option>
 									</select>
 								</div>
