@@ -4,6 +4,7 @@ import type { FormData } from './EstimatorTypes';
 import styles from './styles/PaintingForm.module.css';
 import { InfoTooltip } from '@/components/common/infoTooltip/InfoTooltip';
 import { ChevronDown } from 'lucide-react';
+import { PAINTING_TOOLTIPS } from './tooltipDictionary';
 
 // Define the props it will receive from EstimatorPage
 interface PaintingFormProps {
@@ -67,7 +68,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 				<div className={styles.formGroup}>
 					<label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
 						Add Rooms & Spaces
-						<InfoTooltip message="Select the spaces you'd like us to paint. Each selected room will appear as a separate card below the 'Project Configuration' section. Tip: You can collapse these cards to keep your view organized as you build your estimate." />
+						<InfoTooltip message={PAINTING_TOOLTIPS.ROOM_BUILDER} />
 					</label>
 					<div className={styles.checkboxGroupTwoColumn}>
 						{ROOM_TYPES.map((type) => {
@@ -118,7 +119,10 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 						<div className={styles.formGroupBox}>
 							<div className={styles.formGroupGrid}>
 								<div className={styles.formGroup}>
-									<label>Who will provide the paint?</label>
+									<label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+										Who will provide the paint?
+										<InfoTooltip message={PAINTING_TOOLTIPS.PAINT_PROVIDER} />
+									</label>
 									<select
 										name='paintProvider'
 										value={painting.paintProvider}
@@ -152,14 +156,14 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 						{/* Global Scope Defaults */}
 						<h4 style={{ color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1rem', marginTop: '0.5rem' }}>
 							Global Room Defaults
-							<InfoTooltip message="These settings apply to all rooms unless you check 'Customize this area' on a specific card." />
+							<InfoTooltip message={PAINTING_TOOLTIPS.GLOBAL_DEFAULTS_GENERAL} />
 						</h4>
 
 						<div className={styles.formGroupBox}>
 							<div className={styles.formGroup}>
 								<label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
 									What needs painting (Default)?
-									<InfoTooltip message="Select the surfaces to paint by default in every room. To add specific quantities (like number of doors or windows), use the 'Customize' option on the individual room cards." />
+									<InfoTooltip message={PAINTING_TOOLTIPS.GLOBAL_SURFACES} />
 								</label>
 								<div className={styles.checkboxGroupHorizontal} style={{ flexWrap: 'wrap', gap: '1rem', backgroundColor: 'transparent', padding: 0 }}>
 									<label className={styles.checkboxLabel}>
@@ -214,7 +218,12 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 								<div className={styles.conditionalFieldsContainer}>
 									{painting.globalDefaults?.surfaces.ceiling && (
 										<div className={styles.formGroup}>
-											<label>Ceiling Texture (Default)</label>
+											<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+												<label style={{ margin: 0 }}>Ceiling Texture (Default)</label>
+												{painting.globalDefaults?.ceilingTexture === 'Popcorn' && (
+													<InfoTooltip message={PAINTING_TOOLTIPS.CEILING_POPCORN} />
+												)}
+											</div>
 											<select
 												value={painting.globalDefaults?.ceilingTexture || 'Flat'}
 												onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'ceilingTexture', value: e.target.value })}
@@ -238,7 +247,12 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 												</select>
 											</div>
 											<div className={styles.formGroup}>
-												<label>Is your trim currently wood-stained?</label>
+												<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+													<label style={{ margin: 0 }}>Is your trim currently wood-stained?</label>
+													{painting.globalDefaults?.trimConversion && (
+														<InfoTooltip message={PAINTING_TOOLTIPS.TRIM_CONVERSION} />
+													)}
+												</div>
 												<select
 													value={painting.globalDefaults?.trimConversion ? 'Stained' : 'Standard'}
 													onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'trimConversion', value: e.target.value === 'Stained' })}
@@ -263,7 +277,12 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 									)}
 									{painting.globalDefaults?.surfaces.doors && (
 										<div className={styles.formGroup}>
-											<label>Door Style (Default)</label>
+											<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+												<label style={{ margin: 0 }}>Door Style (Default)</label>
+												{painting.globalDefaults?.doorStyle === 'Paneled' && (
+													<InfoTooltip message={PAINTING_TOOLTIPS.DOOR_PANELED} />
+												)}
+											</div>
 											<select
 												value={painting.globalDefaults?.doorStyle || 'Slab'}
 												onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'doorStyle', value: e.target.value })}
@@ -292,7 +311,12 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 									</select>
 								</div>
 								<div className={styles.formGroup}>
-									<label>Color Change (Default)</label>
+									<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+										<label style={{ margin: 0 }}>Color Change (Default)</label>
+										{painting.globalDefaults?.colorChange === 'Dark-to-Light' && (
+											<InfoTooltip message={PAINTING_TOOLTIPS.COLOR_CHANGE_DARK_TO_LIGHT} />
+										)}
+									</div>
 									<select
 										value={painting.globalDefaults?.colorChange || 'Similar'}
 										onChange={(e) => onGlobalChange('updateGlobalDefaults', { field: 'colorChange', value: e.target.value })}

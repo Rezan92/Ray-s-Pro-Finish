@@ -4,6 +4,7 @@ import { ChevronDown, Plus, Trash2, Ruler, AlertTriangle } from 'lucide-react';
 import { ROOM_SIZE_OPTIONS } from './roomSizeData';
 import styles from './styles/PaintingRoomCard.module.css';
 import { InfoTooltip } from '@/components/common/infoTooltip/InfoTooltip';
+import { PAINTING_TOOLTIPS } from './tooltipDictionary';
 
 interface PaintingRoomCardProps {
 	room: PaintingRoom;
@@ -138,7 +139,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 							/>
 							Customize this area
 							{!room.isCustomized && (
-								<InfoTooltip message='This room is using the Global Project Defaults for surfaces, condition, and colors. Check the box to override these settings specific to this room.' />
+								<InfoTooltip message={PAINTING_TOOLTIPS.CUSTOMIZE_ROOM} />
 							)}
 						</label>
 					</div>
@@ -444,7 +445,12 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 							<div className={styles.conditionalFieldsContainer}>
 								{room.surfaces.ceiling && (
 									<div className={styles.formGroup}>
-										<label>Ceiling Texture</label>
+										<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+											<label style={{ margin: 0 }}>Ceiling Texture</label>
+											{room.ceilingTexture === 'Popcorn' && (
+												<InfoTooltip message={PAINTING_TOOLTIPS.CEILING_POPCORN} />
+											)}
+										</div>
 										<select
 											name='ceilingTexture'
 											value={room.ceilingTexture || 'Flat'}
@@ -470,12 +476,12 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 											</select>
 										</div>
 										<div className={styles.formGroup}>
-											<div>
+											<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
 												<label style={{ margin: 0 }}>
 													Is your trim currently wood-stained?
 												</label>
 												{room.trimConversion && (
-													<InfoTooltip message='Painting over wood-stain requires extensive preparation, including deep sanding, stain blocking, and multiple primer/finish coats to ensure a professional bond.' />
+													<InfoTooltip message={PAINTING_TOOLTIPS.TRIM_CONVERSION} />
 												)}
 											</div>
 											<select
@@ -522,7 +528,12 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 											/>
 										</div>
 										<div className={styles.formGroup}>
-											<label>Door Style</label>
+											<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+												<label style={{ margin: 0 }}>Door Style</label>
+												{room.doorStyle === 'Paneled' && (
+													<InfoTooltip message={PAINTING_TOOLTIPS.DOOR_PANELED} />
+												)}
+											</div>
 											<select
 												name='doorStyle'
 												value={room.doorStyle || 'Slab'}
@@ -575,7 +586,12 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 									</select>
 								</div>
 								<div className={styles.formGroup}>
-									<label>Color Change</label>
+									<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+										<label style={{ margin: 0 }}>Color Change</label>
+										{room.colorChange === 'Dark-to-Light' && (
+											<InfoTooltip message={PAINTING_TOOLTIPS.COLOR_CHANGE_DARK_TO_LIGHT} />
+										)}
+									</div>
 									<select
 										name='colorChange'
 										value={room.colorChange}

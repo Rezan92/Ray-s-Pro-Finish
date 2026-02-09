@@ -196,3 +196,10 @@ export const MASTER_RATES = {
 		},
 	},
 };
+
+/**
+ * OBSERVATION (2026-02-09):
+ * The following labor rates are currently hardcoded in paintingService.ts and should be centralized here:
+ * - Doors: Slab (0.75 hrs) vs. Paneled (1.25 hrs)
+ * - Windows: 0.5 hrs per frame
+ */
