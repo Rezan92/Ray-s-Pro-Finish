@@ -519,13 +519,7 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 												</select>
 											</div>
 											<div className={styles.formGroup}>
-												<div
-													style={{
-														display: 'flex',
-														alignItems: 'center',
-														gap: '8px',
-													}}
-												>
+												<div>
 													<label style={{ margin: 0 }}>
 														Is your trim currently wood-stained?
 													</label>
