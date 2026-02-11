@@ -88,14 +88,17 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 		cutRate2 = P.PRODUCTION_RATES.WALLS.CUT_STANDARD_2ND;
 	}
 
-	const cut1Hours = perimeter / cutRate1;
+	const verticalCornersLF = H * 4;
+	const totalCuttingLF = perimeter + verticalCornersLF;
+
+	const cut1Hours = totalCuttingLF / cutRate1;
 	let totalCuttingHours = cut1Hours;
-	let cutDetails = `${Math.round(perimeter)} lf @ ${cutRate1} lf/hr`;
+	let cutDetails = `${Math.round(totalCuttingLF)} lf (incl. corners) @ ${cutRate1} lf/hr`;
 
 	if (finishCoats >= 2) {
-		const cut2Hours = perimeter / cutRate2;
+		const cut2Hours = totalCuttingLF / cutRate2;
 		totalCuttingHours += cut2Hours;
-		cutDetails = `${Math.round(perimeter)} lf @ ${cutRate1}/${cutRate2} lf/hr (2 coats)`;
+		cutDetails = `${Math.round(totalCuttingLF)} lf (incl. corners) @ ${cutRate1}/${cutRate2} lf/hr (2 coats)`;
 	}
 
 	addLineItem(ctx, `${room.label} - Wall Cutting`, totalCuttingHours, cutDetails);
