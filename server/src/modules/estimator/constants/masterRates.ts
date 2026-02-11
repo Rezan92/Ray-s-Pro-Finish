@@ -210,6 +210,7 @@ export const MASTER_RATES = {
 			WALL_CEILING_SQFT_PER_GALLON: 350, // Single-coat baseline
 			PRIMER_SQFT_PER_GALLON: 250, // Single-coat baseline
 			TRIM_LF_PER_GALLON: 700, // Single-coat baseline
+			TRIM_PRIMER_LF_PER_GALLON: 500, // Derived: (250/350) * 700
 			DOORS_PER_GALLON: 8, // Both sides, single-coat baseline
 			WINDOWS_PER_GALLON: 12, // Single-coat baseline
 			WASTE_BUFFER: 1.15,
