@@ -439,7 +439,7 @@ export const calculatePaintingEstimate = async (data: any) => {
 	// T009: Equipment Rental
 	const hasHighCeilings = data.rooms.some((r: any) => {
 		const h = r.exactHeight || (r.ceilingHeight === '15ft+' ? 18 : parseInt(r.ceilingHeight) || 8);
-		return h >= 15;
+		return h >= 12;
 	});
 	if (hasHighCeilings) {
 		const rentalCost = totalDays * P.EQUIPMENT_RENTAL_DAILY;

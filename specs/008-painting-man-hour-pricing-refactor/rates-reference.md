@@ -19,7 +19,7 @@
 | **Ceiling Height: 15'+** | **1.45x** | multiplier | Vaulted. |
 
 ### Equipment Rental
-*   **Trigger:** Automatically applied for 15ft+ ceilings.
+*   **Trigger:** Automatically applied for 12ft+ ceilings.
 *   **Cost:** **$200.00** flat fee per day (Lift/Scaffolding).
 
 ---
