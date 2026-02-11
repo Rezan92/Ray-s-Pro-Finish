@@ -36,8 +36,7 @@ export interface PaintingRoom {
 export interface PaintingRequest {
 	rooms: PaintingRoom[];
 	paintProvider: string;
-	furniture: string;
-	occupancy?: string;
+	occupancy: string;
 	additionalDetails?: string;
 }
 

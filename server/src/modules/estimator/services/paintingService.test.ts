@@ -36,8 +36,7 @@ describe('PaintingService Man-Hour Engine', () => {
 				},
 			],
 			paintProvider: 'Customer',
-			furniture: 'Empty',
-			occupancy: 'Empty',
+			occupancy: 'EMPTY',
 		};
 
 		const result = await calculatePaintingEstimate(request);
@@ -98,8 +97,7 @@ describe('PaintingService Man-Hour Engine', () => {
 				},
 			],
 			paintProvider: 'Customer',
-			furniture: 'Empty',
-			occupancy: 'Empty',
+			occupancy: 'EMPTY',
 		};
 
 		const result = await calculatePaintingEstimate(request);
@@ -154,8 +152,7 @@ describe('PaintingService Man-Hour Engine', () => {
 				},
 			],
 			paintProvider: 'Customer',
-			furniture: 'Empty',
-			occupancy: 'Empty',
+			occupancy: 'EMPTY',
 		};
 
 		const result = await calculatePaintingEstimate(request);
