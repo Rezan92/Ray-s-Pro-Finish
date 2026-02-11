@@ -89,16 +89,19 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	}
 
 	const verticalCornersLF = H * 4;
-	const totalCuttingLF = perimeter + verticalCornersLF;
+	const openingCuttingLF = 33; // 18' Door + 15' Window (Phase 5 default load)
+	const primaryCuttingLF = perimeter + verticalCornersLF;
 
-	const cut1Hours = totalCuttingLF / cutRate1;
+	// 1st Coat Labor
+	const cut1Hours = (primaryCuttingLF / cutRate1) + (openingCuttingLF / P.PRODUCTION_RATES.WALLS.CUT_STANDARD_1ST);
 	let totalCuttingHours = cut1Hours;
-	let cutDetails = `${Math.round(totalCuttingLF)} lf (incl. corners) @ ${cutRate1} lf/hr`;
+	let cutDetails = `${Math.round(primaryCuttingLF + openingCuttingLF)} lf (incl. corners/openings) @ mixed rates`;
 
 	if (finishCoats >= 2) {
-		const cut2Hours = totalCuttingLF / cutRate2;
+		// 2nd Coat Labor
+		const cut2Hours = (primaryCuttingLF / cutRate2) + (openingCuttingLF / P.PRODUCTION_RATES.WALLS.CUT_STANDARD_2ND);
 		totalCuttingHours += cut2Hours;
-		cutDetails = `${Math.round(totalCuttingLF)} lf (incl. corners) @ ${cutRate1}/${cutRate2} lf/hr (2 coats)`;
+		cutDetails = `${Math.round(primaryCuttingLF + openingCuttingLF)} lf (incl. corners/openings) @ mixed rates (2 coats)`;
 	}
 
 	addLineItem(ctx, `${room.label} - Wall Cutting`, totalCuttingHours, cutDetails);
