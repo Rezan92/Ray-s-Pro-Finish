@@ -88,38 +88,35 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 		cutRate2 = P.PRODUCTION_RATES.WALLS.CUT_STANDARD_2ND;
 	}
 
+	// Phase 1 Fix: Detailed Cutting Load
+	const horizontalPerimeterLF = perimeter; // One full trip around the room
 	const verticalCornersLF = H * 4;
-	const openingCuttingLF = 33; // 18' Door + 15' Window (Phase 5 default load)
-	const primaryCuttingLF = perimeter + verticalCornersLF;
+	const openingCuttingLF = 33; // 18' Door + 15' Window (Standard Opening Load)
 
-	// Phase 6: Dual-Surface High-Contrast Passes
-	let dualSurfaceLF = 0;
-	if (room.surfaces.walls && room.surfaces.ceiling) dualSurfaceLF += perimeter;
-	if (room.surfaces.walls && room.surfaces.trim) dualSurfaceLF += perimeter;
-
-	// 1st Coat Labor
-	let cut1Hours = (primaryCuttingLF / cutRate1) + 
-					(openingCuttingLF / P.PRODUCTION_RATES.WALLS.CUT_STANDARD_1ST);
+	/**
+	 * CALCULATION STRATEGY:
+	 * - Top/Bottom Edges: 2x Perimeter @ Hi-Contrast Rates (Sharp lines required for ceiling/baseboard)
+	 * - Vertical Corners: 4x Height @ Standard Rates (Standard corners)
+	 * - Openings: 33 LF @ Standard Rates
+	 */
 	
-	if (dualSurfaceLF > 0) {
-		cut1Hours += (dualSurfaceLF / P.PRODUCTION_RATES.WALLS.CUT_HIGH_CONTRAST_1ST);
-	}
+	// 1st Coat Labor
+	let cut1Hours = (verticalCornersLF / P.PRODUCTION_RATES.WALLS.CUT_STANDARD_1ST) + 
+					(openingCuttingLF / P.PRODUCTION_RATES.WALLS.CUT_STANDARD_1ST) +
+					((horizontalPerimeterLF * 2) / P.PRODUCTION_RATES.WALLS.CUT_HIGH_CONTRAST_1ST);
 
 	let totalCuttingHours = cut1Hours;
-	const totalLF = primaryCuttingLF + openingCuttingLF + dualSurfaceLF;
-	let cutDetails = `${Math.round(totalLF)} lf (incl. dual-surface) @ mixed rates`;
+	const totalLF = (horizontalPerimeterLF * 2) + verticalCornersLF + openingCuttingLF;
+	let cutDetails = `${Math.round(totalLF)} lf (incl. 2x perim + corners/openings) @ mixed rates`;
 
 	if (finishCoats >= 2) {
 		// 2nd Coat Labor
-		let cut2Hours = (primaryCuttingLF / cutRate2) + 
-						(openingCuttingLF / P.PRODUCTION_RATES.WALLS.CUT_STANDARD_2ND);
-		
-		if (dualSurfaceLF > 0) {
-			cut2Hours += (dualSurfaceLF / P.PRODUCTION_RATES.WALLS.CUT_HIGH_CONTRAST_2ND);
-		}
+		let cut2Hours = (verticalCornersLF / P.PRODUCTION_RATES.WALLS.CUT_STANDARD_2ND) + 
+						(openingCuttingLF / P.PRODUCTION_RATES.WALLS.CUT_STANDARD_2ND) +
+						((horizontalPerimeterLF * 2) / P.PRODUCTION_RATES.WALLS.CUT_HIGH_CONTRAST_2ND);
 		
 		totalCuttingHours += cut2Hours;
-		cutDetails = `${Math.round(totalLF)} lf (incl. dual-surface) @ mixed rates (2 coats)`;
+		cutDetails = `${Math.round(totalLF)} lf (incl. 2x perim + corners/openings) @ mixed rates (2 coats)`;
 	}
 
 	addLineItem(ctx, `${room.label} - Wall Cutting`, totalCuttingHours, cutDetails);
