@@ -207,11 +207,11 @@ export const MASTER_RATES = {
 		},
 
 		MATERIAL_COVERAGE: {
-			WALL_CEILING_SQFT_PER_GALLON: 350, // per coat
-			PRIMER_SQFT_PER_GALLON: 250,
-			TRIM_LF_PER_GALLON: 700, // per coat
-			DOORS_PER_GALLON: 8, // both sides, per coat
-			WINDOWS_PER_GALLON: 12, // per coat (1 qt = 3 windows)
+			WALL_CEILING_SQFT_PER_GALLON: 350, // Single-coat baseline
+			PRIMER_SQFT_PER_GALLON: 250, // Single-coat baseline
+			TRIM_LF_PER_GALLON: 700, // Single-coat baseline
+			DOORS_PER_GALLON: 8, // Both sides, single-coat baseline
+			WINDOWS_PER_GALLON: 12, // Single-coat baseline
 			WASTE_BUFFER: 1.15,
 		},
 	},
