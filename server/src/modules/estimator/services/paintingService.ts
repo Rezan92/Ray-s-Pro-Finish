@@ -45,16 +45,40 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	const perimeter = 2 * (L + W);
 	const area = perimeter * H;
 	
-	// 1. Rolling (1st & 2nd coat)
-	// Dark-to-light implies 3 coats total (1 Primer + 2 Finish)
-	const isDarkToLight = room.colorChange === 'Dark-to-Light';
-	const roll1Hours = area / P.PRODUCTION_RATES.WALLS.ROLL_1ST_COAT;
-	const roll2Hours = area / P.PRODUCTION_RATES.WALLS.ROLL_2ND_COAT;
-	
-	addLineItem(ctx, `${room.label} - Wall Rolling (1st Coat)`, roll1Hours, `${Math.round(area)} sqft @ ${P.PRODUCTION_RATES.WALLS.ROLL_1ST_COAT} sqft/hr`);
-	addLineItem(ctx, `${room.label} - Wall Rolling (2nd Coat)`, roll2Hours, `${Math.round(area)} sqft @ ${P.PRODUCTION_RATES.WALLS.ROLL_2ND_COAT} sqft/hr`);
+	// Determine Coat Counts based on Phase 3 Logic
+	let finishCoats = 2;
+	let primerCoats = 0;
 
-	// 2. Cutting (1st and 2nd coats)
+	if (room.colorChange === 'Similar') {
+		finishCoats = 1;
+	} else if (room.colorChange === 'Dark-to-Light') {
+		finishCoats = 2;
+		primerCoats = 1;
+	} else { // 'Change'
+		finishCoats = 2;
+	}
+
+	// 1. Priming (Labor & Materials)
+	if (primerCoats > 0) {
+		const primingHours = area / P.PRODUCTION_RATES.WALLS.ROLL_PRIME;
+		addLineItem(ctx, `${room.label} - Wall Priming`, primingHours, `${Math.round(area)} sqft @ ${P.PRODUCTION_RATES.WALLS.ROLL_PRIME} sqft/hr`);
+		
+		const surchargeHours = area * P.PRODUCTION_RATES.WALLS.DARK_TO_LIGHT_SURCHARGE;
+		addLineItem(ctx, `${room.label} - Dark-to-Light Surcharge`, surchargeHours, `Extra care @ ${P.PRODUCTION_RATES.WALLS.DARK_TO_LIGHT_SURCHARGE * 100} hrs/100sqft`);
+		
+		ctx.primerGallons += (area / P.MATERIAL_COVERAGE.PRIMER_SQFT_PER_GALLON) * P.MATERIAL_COVERAGE.WASTE_BUFFER;
+	}
+
+	// 2. Rolling (Dynamic Coats)
+	const roll1Hours = area / P.PRODUCTION_RATES.WALLS.ROLL_1ST_COAT;
+	addLineItem(ctx, `${room.label} - Wall Rolling (1st Coat)`, roll1Hours, `${Math.round(area)} sqft @ ${P.PRODUCTION_RATES.WALLS.ROLL_1ST_COAT} sqft/hr`);
+
+	if (finishCoats >= 2) {
+		const roll2Hours = area / P.PRODUCTION_RATES.WALLS.ROLL_2ND_COAT;
+		addLineItem(ctx, `${room.label} - Wall Rolling (2nd Coat)`, roll2Hours, `${Math.round(area)} sqft @ ${P.PRODUCTION_RATES.WALLS.ROLL_2ND_COAT} sqft/hr`);
+	}
+
+	// 3. Cutting (Dynamic Coats)
 	let cutRate1, cutRate2;
 	if (room.colorChange === 'Dark-to-Light') {
 		cutRate1 = P.PRODUCTION_RATES.WALLS.CUT_HIGH_CONTRAST_1ST;
@@ -63,10 +87,20 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 		cutRate1 = P.PRODUCTION_RATES.WALLS.CUT_STANDARD_1ST;
 		cutRate2 = P.PRODUCTION_RATES.WALLS.CUT_STANDARD_2ND;
 	}
-	const cuttingHours = (perimeter / cutRate1) + (perimeter / cutRate2);
-	addLineItem(ctx, `${room.label} - Wall Cutting (2 Coats)`, cuttingHours, `${Math.round(perimeter)} lf @ ${cutRate1}/${cutRate2} lf/hr`);
 
-	// 3. Prep
+	const cut1Hours = perimeter / cutRate1;
+	let totalCuttingHours = cut1Hours;
+	let cutDetails = `${Math.round(perimeter)} lf @ ${cutRate1} lf/hr`;
+
+	if (finishCoats >= 2) {
+		const cut2Hours = perimeter / cutRate2;
+		totalCuttingHours += cut2Hours;
+		cutDetails = `${Math.round(perimeter)} lf @ ${cutRate1}/${cutRate2} lf/hr (2 coats)`;
+	}
+
+	addLineItem(ctx, `${room.label} - Wall Cutting`, totalCuttingHours, cutDetails);
+
+	// 4. Prep
 	let prepRate = 0;
 	if (room.wallCondition === 'Good') prepRate = P.PRODUCTION_RATES.WALLS.PREP_GOOD;
 	if (room.wallCondition === 'Fair') prepRate = P.PRODUCTION_RATES.WALLS.PREP_FAIR;
@@ -77,19 +111,8 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 		addLineItem(ctx, `${room.label} - Wall Prep (${room.wallCondition})`, prepHours, `${Math.round(area)} sqft @ ${prepRate * 100} hrs/100sqft`);
 	}
 
-	// 4. Color Change Surcharge / Priming
-	if (isDarkToLight) {
-		const primingHours = area / P.PRODUCTION_RATES.WALLS.ROLL_PRIME;
-		addLineItem(ctx, `${room.label} - Wall Priming`, primingHours, `${Math.round(area)} sqft @ ${P.PRODUCTION_RATES.WALLS.ROLL_PRIME} sqft/hr`);
-		
-		const surchargeHours = area * P.PRODUCTION_RATES.WALLS.DARK_TO_LIGHT_SURCHARGE;
-		addLineItem(ctx, `${room.label} - Dark-to-Light Surcharge`, surchargeHours, `Extra care @ ${P.PRODUCTION_RATES.WALLS.DARK_TO_LIGHT_SURCHARGE * 100} hrs/100sqft`);
-		
-		ctx.primerGallons += (area / P.MATERIAL_COVERAGE.PRIMER_SQFT_PER_GALLON) * P.MATERIAL_COVERAGE.WASTE_BUFFER;
-	}
-
-	// 5. Materials (2 coats finish)
-	const finishGallons = (area / P.MATERIAL_COVERAGE.WALL_CEILING_SQFT_PER_GALLON) * 2;
+	// 5. Materials (Finish Coats)
+	const finishGallons = (area / P.MATERIAL_COVERAGE.WALL_CEILING_SQFT_PER_GALLON) * finishCoats;
 	ctx.wallGallons += finishGallons * P.MATERIAL_COVERAGE.WASTE_BUFFER;
 	
 	// 6. Defaults (Masking, Electrical)
@@ -121,7 +144,19 @@ const calculateCeilingHours = (room: PaintingRoom, ctx: CalculationContext, L: n
 		rate2 = P.PRODUCTION_RATES.CEILINGS.SMOOTH_2ND_COAT;
 	}
 
-	let hHours = (area / rate1) + (area / rate2);
+	// Coat Logic (Phase 3)
+	let finishCoats = 2;
+	if (room.colorChange === 'Similar') {
+		finishCoats = 1;
+	}
+
+	let hHours = area / rate1;
+	let ceilingDetails = `${Math.round(area)} sqft (${room.ceilingTexture}) 1st Coat`;
+
+	if (finishCoats >= 2) {
+		hHours += (area / rate2);
+		ceilingDetails = `${Math.round(area)} sqft (${room.ceilingTexture}) 2 Coats`;
+	}
 	
 	// Height Multiplier
 	let multiplier = P.MULTIPLIERS.CEILING_HEIGHT.STANDARD;
@@ -130,12 +165,12 @@ const calculateCeilingHours = (room: PaintingRoom, ctx: CalculationContext, L: n
 	else if (H >= 18) multiplier = P.MULTIPLIERS.CEILING_HEIGHT.VAULTED;
 
 	const totalCeilingHours = hHours * multiplier;
-	addLineItem(ctx, `${room.label} - Ceiling Painting`, totalCeilingHours, `${Math.round(area)} sqft (${room.ceilingTexture}) x ${multiplier} height factor`);
+	addLineItem(ctx, `${room.label} - Ceiling Painting`, totalCeilingHours, `${ceilingDetails} x ${multiplier} height factor`);
 
 	// Fixture Masking
 	addLineItem(ctx, `${room.label} - Ceiling Fixture Masking`, P.DEFAULTS.MASKING_FIXTURE, `1 fixture @ 5m`);
 
-	const ceilingFinishGallons = (area / P.MATERIAL_COVERAGE.WALL_CEILING_SQFT_PER_GALLON) * 2;
+	const ceilingFinishGallons = (area / P.MATERIAL_COVERAGE.WALL_CEILING_SQFT_PER_GALLON) * finishCoats;
 	ctx.ceilingGallons += ceilingFinishGallons * P.MATERIAL_COVERAGE.WASTE_BUFFER;
 };
 
