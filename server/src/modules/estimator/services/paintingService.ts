@@ -189,8 +189,8 @@ const calculateCeilingHours = (room: PaintingRoom, ctx: CalculationContext, L: n
 	// Height Multiplier
 	let multiplier = P.MULTIPLIERS.CEILING_HEIGHT.STANDARD;
 	if (H >= 10 && H < 12) multiplier = P.MULTIPLIERS.CEILING_HEIGHT.MID;
-	else if (H >= 12 && H < 18) multiplier = P.MULTIPLIERS.CEILING_HEIGHT.HIGH;
-	else if (H >= 18) multiplier = P.MULTIPLIERS.CEILING_HEIGHT.VAULTED;
+	else if (H >= 12 && H < 15) multiplier = P.MULTIPLIERS.CEILING_HEIGHT.HIGH;
+	else if (H >= 15) multiplier = P.MULTIPLIERS.CEILING_HEIGHT.VAULTED;
 
 	const totalCeilingHours = hHours * multiplier;
 	addLineItem(ctx, `${room.label} - Ceiling Painting`, totalCeilingHours, `${ceilingDetails} x ${multiplier} height factor`);
@@ -384,8 +384,8 @@ export const calculatePaintingEstimate = async (data: any) => {
 			[L, W] = ROOM_DIMENSIONS[room.type]?.[room.size] || [12, 14];
 			const rawHeight = room.ceilingHeight;
 			// Refined height tiers
-			if (rawHeight === '11-14ft') H = 12;
-			else if (rawHeight === '15ft+' || rawHeight === '11ft+') H = 18;
+			if (rawHeight === '11-14ft' || rawHeight === 'High (11-14ft)') H = 12;
+			else if (rawHeight === '15ft+' || rawHeight === 'Great Room / Foyer (15ft+)' || rawHeight === '11ft+') H = 18;
 			else H = parseInt(rawHeight) || 8;
 		}
 
@@ -438,8 +438,8 @@ export const calculatePaintingEstimate = async (data: any) => {
 
 	// T009: Equipment Rental
 	const hasHighCeilings = data.rooms.some((r: any) => {
-		const h = r.exactHeight || (r.ceilingHeight === '11ft+' ? 12 : parseInt(r.ceilingHeight) || 8);
-		return h >= 12;
+		const h = r.exactHeight || (r.ceilingHeight === '15ft+' ? 18 : parseInt(r.ceilingHeight) || 8);
+		return h >= 15;
 	});
 	if (hasHighCeilings) {
 		const rentalCost = totalDays * P.EQUIPMENT_RENTAL_DAILY;

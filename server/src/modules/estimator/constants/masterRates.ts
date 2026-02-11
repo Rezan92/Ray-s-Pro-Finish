@@ -141,7 +141,7 @@ export const MASTER_RATES = {
 				STANDARD: 1.0, // 8-9'
 				MID: 1.1, // 10'
 				HIGH: 1.25, // 12-14'
-				VAULTED: 1.45, // 18'+
+				VAULTED: 1.45, // 15'+
 			},
 			STAIN_TO_PAINT: 3.0,
 		},

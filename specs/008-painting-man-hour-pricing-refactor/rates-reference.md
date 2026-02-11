@@ -16,10 +16,10 @@
 | **Ceiling Height: 8-9'** | **1.00x** | multiplier | Standard. |
 | **Ceiling Height: 10'** | **1.10x** | multiplier | Moderate height. |
 | **Ceiling Height: 12-14'** | **1.25x** | multiplier | High. |
-| **Ceiling Height: 18'+** | **1.45x** | multiplier | Vaulted. |
+| **Ceiling Height: 15'+** | **1.45x** | multiplier | Vaulted. |
 
 ### Equipment Rental
-*   **Trigger:** Automatically applied for 12ft+ or Vaulted ceilings.
+*   **Trigger:** Automatically applied for 15ft+ ceilings.
 *   **Cost:** **$200.00** flat fee per day (Lift/Scaffolding).
 
 ---
