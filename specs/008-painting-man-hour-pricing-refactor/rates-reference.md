@@ -7,7 +7,8 @@
 | Item | Value | Unit | Notes |
 | :--- | :--- | :--- | :--- |
 | **Hourly Labor Rate** | **$75.00** | /hour | Base rate for all calculations. |
-| **Daily Trip Constant** | **0.75** | hours | (45 mins) Setup/cleanup per day. Added to final total. |
+| **Daily Trip Constant** | **0.75** | hours | (45 mins) Setup/cleanup per day. |
+| **Misc. Material Fee** | **$10.00** | /room | Spackle, tape, sandpaper, etc. per room. |
 | **Occupancy: Empty/New** | **1.00x** | multiplier | No furniture. |
 | **Occupancy: Owner Clears** | **1.00x** | multiplier | Owner moves and covers everything. |
 | **Occupancy: Painter Covers** | **1.20x** | multiplier | Lived-in. Painter covers furniture. |
@@ -28,10 +29,13 @@
 ### Walls (Rolling & Cutting)
 | Action | Rate | Unit | Notes |
 | :--- | :--- | :--- | :--- |
+| **Wall Priming (Roll)** | **320** | sqft/hr | For Dark-to-Light or New Drywall. |
 | **Roll 1st Coat** | **400** | sqft/hr | |
 | **Roll 2nd Coat** | **550** | sqft/hr | |
-| **Cut (Standard)** | **120** | lin.ft/hr | Standard base/ceiling/corners. |
-| **Cut (High Contrast)** | **75** | lin.ft/hr | Required for sharp lines (e.g., dark wall, white trim). |
+| **Cut (Standard) 1st** | **120** | lin.ft/hr | Initial cut-in. |
+| **Cut (Standard) 2nd** | **200** | lin.ft/hr | Faster secondary pass. |
+| **Cut (Hi-Contrast) 1st**| **75** | lin.ft/hr | Sharp lines (e.g., dark wall/white trim). |
+| **Cut (Hi-Contrast) 2nd**| **125** | lin.ft/hr | Secondary pass on sharp lines. |
 | **Prep: Good** | **0.15** | hrs/100sqft | Minor nail holes. |
 | **Prep: Fair** | **0.40** | hrs/100sqft | Scuffs, dings. |
 | **Prep: Poor** | **1.25** | hrs/100sqft | Cracks, stains, extensive patching. |
@@ -39,7 +43,7 @@
 **Color Change Logic:**
 *   **Refresh (Same Color):** 1 Coat Rate.
 *   **Full Change:** 1st Coat Rate + 2nd Coat Rate.
-*   **Dark-to-Light Surcharge:** Add **0.50 hours** per 100 sqft (extra priming/coverage).
+* **Dark-to-Light Surcharge**: Add priming coat + 1st and 2nd Coat Rate
 
 ### Ceilings
 | Surface Type | 1st Coat Rate | 2nd Coat Rate | Unit |
@@ -103,7 +107,29 @@
 
 ---
 
-## 4. Reference Dimensions (Presets)
+## 4. Paint & Material Pricing
+| Tier | Price/Gal | Notes |
+| :--- | :--- | :--- |
+| **Pro-Base** | **$40.00** | Essential finish. |
+| **Standard** | **$55.00** | Home signature. |
+| **Premium** | **$85.00** | Elite performance. |
+| **Ultra Premium** | **$128.00** | Masterpiece finish. |
+| **Universal Primer** | **$45.00** | |
+
+## 5. Material Yields (Per Coat)
+*Apply 15% waste buffer to all final volumes.*
+
+| Item | Yield | Unit |
+| :--- | :--- | :--- |
+| **Wall/Ceiling Paint**| **350** | sqft/gal |
+| **Primer** | **250** | sqft/gal |
+| **Trim Paint** | **700** | lin.ft/gal |
+| **Doors (Both Sides)**| **8** | doors/gal |
+| **Windows** | **12** | windows/gal | (1 quart per 3 windows) |
+
+---
+
+## 6. Reference Dimensions (Presets)
 *Used only if exact dimensions are not provided.*
 
 | Size | Walls (sqft) | Ceiling (sqft) | Perim (lf) | Approx Dim |

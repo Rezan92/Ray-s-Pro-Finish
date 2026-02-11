@@ -128,6 +128,7 @@ export const MASTER_RATES = {
 		LABOR_RATE: 75,
 		DAILY_TRIP_HOURS: 0.75,
 		EQUIPMENT_RENTAL_DAILY: 200,
+		MISC_MATERIAL_FEE_PER_ROOM: 10,
 
 		MULTIPLIERS: {
 			OCCUPANCY: {
@@ -147,10 +148,13 @@ export const MASTER_RATES = {
 
 		PRODUCTION_RATES: {
 			WALLS: {
+				ROLL_PRIME: 320,
 				ROLL_1ST_COAT: 400, // sqft/hr
 				ROLL_2ND_COAT: 550, // sqft/hr
-				CUT_STANDARD: 120, // lf/hr
-				CUT_HIGH_CONTRAST: 75, // lf/hr
+				CUT_STANDARD_1ST: 120, // lf/hr
+				CUT_STANDARD_2ND: 200, // lf/hr
+				CUT_HIGH_CONTRAST_1ST: 75, // lf/hr
+				CUT_HIGH_CONTRAST_2ND: 125, // lf/hr
 				PREP_GOOD: 0.0015, // hrs/sqft (0.15/100)
 				PREP_FAIR: 0.004, // hrs/sqft (0.40/100)
 				PREP_POOR: 0.0125, // hrs/sqft (1.25/100)
@@ -194,11 +198,21 @@ export const MASTER_RATES = {
 			FLOOR_PROTECTION: 0.15, // hrs per 100sqft (0.15/100 = 15m/100)
 		},
 
+		MATERIAL_PRICES: {
+			PRO_BASE: 40,
+			STANDARD: 55,
+			PREMIUM: 85,
+			ULTRA_PREMIUM: 128,
+			UNIVERSAL_PRIMER: 45,
+		},
+
 		MATERIAL_COVERAGE: {
-			WALL_SQFT_PER_GALLON: 350, // 1 coat
-			CEILING_SQFT_PER_GALLON: 350, // 1 coat
-			TRIM_LF_PER_GALLON: 300, // 1 coat (assuming 150 for 2 coats)
-			PRIMER_SQFT_PER_GALLON: 300,
+			WALL_CEILING_SQFT_PER_GALLON: 350, // per coat
+			PRIMER_SQFT_PER_GALLON: 250,
+			TRIM_LF_PER_GALLON: 700, // per coat
+			DOORS_PER_GALLON: 8, // both sides, per coat
+			WINDOWS_PER_GALLON: 12, // per coat (1 qt = 3 windows)
+			WASTE_BUFFER: 1.15,
 		},
 	},
 };
