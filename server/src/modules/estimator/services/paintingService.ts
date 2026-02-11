@@ -139,6 +139,13 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	const finishGallons = (area / P.MATERIAL_COVERAGE.WALL_CEILING_SQFT_PER_GALLON) * finishCoats;
 	ctx.wallGallons += finishGallons;
 	
+	ctx.items.push({
+		name: `${room.label} - Wall Paint Requirement`,
+		hours: 0,
+		cost: 0,
+		details: `${finishGallons.toFixed(2)} gallons finish paint (${finishCoats} coats)`
+	});
+
 	// 6. Defaults (Masking, Electrical)
 	const windowMasking = (room.windowCount || 0) * P.DEFAULTS.MASKING_WINDOW;
 	if (windowMasking > 0) addLineItem(ctx, `${room.label} - Window Masking`, windowMasking, `${room.windowCount} windows @ 5m/ea`);
@@ -196,6 +203,13 @@ const calculateCeilingHours = (room: PaintingRoom, ctx: CalculationContext, L: n
 
 	const ceilingFinishGallons = (area / P.MATERIAL_COVERAGE.WALL_CEILING_SQFT_PER_GALLON) * finishCoats;
 	ctx.ceilingGallons += ceilingFinishGallons;
+
+	ctx.items.push({
+		name: `${room.label} - Ceiling Paint Requirement`,
+		hours: 0,
+		cost: 0,
+		details: `${ceilingFinishGallons.toFixed(2)} gallons ceiling paint (${finishCoats} coats)`
+	});
 };
 
 /**
@@ -228,7 +242,14 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 			addLineItem(ctx, `${room.label} - Trim (Stained-to-Painted)`, trimHours, `${Math.round(perimeter)} lf @ 60lf/hr x 3.0x multiplier`);
 			
 			// Primer for Stain-to-Paint (Phase 7)
-			ctx.primerGallons += (perimeter / P.MATERIAL_COVERAGE.TRIM_PRIMER_LF_PER_GALLON);
+			const primerReq = (perimeter / P.MATERIAL_COVERAGE.TRIM_PRIMER_LF_PER_GALLON);
+			ctx.primerGallons += primerReq;
+			ctx.items.push({
+				name: `${room.label} - Trim Conversion Primer`,
+				hours: 0,
+				cost: 0,
+				details: `${primerReq.toFixed(2)} gallons stain-blocking primer`
+			});
 		} else {
 			// Add detail about stairwell multiplier if applicable
 			const details = room.type === 'stairwell' 
@@ -239,6 +260,13 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 		
 		const trimFinishGallons = (perimeter / P.MATERIAL_COVERAGE.TRIM_LF_PER_GALLON) * finishCoats;
 		ctx.trimGallons += trimFinishGallons;
+
+		ctx.items.push({
+			name: `${room.label} - Trim Paint Requirement`,
+			hours: 0,
+			cost: 0,
+			details: `${trimFinishGallons.toFixed(2)} gallons trim paint (${finishCoats} coats)`
+		});
 	}
 
 	// 2. Crown Molding
@@ -249,6 +277,13 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 		
 		const crownFinishGallons = (perimeter / P.MATERIAL_COVERAGE.TRIM_LF_PER_GALLON) * finishCoats;
 		ctx.trimGallons += crownFinishGallons;
+
+		ctx.items.push({
+			name: `${room.label} - Crown Paint Requirement`,
+			hours: 0,
+			cost: 0,
+			details: `${crownFinishGallons.toFixed(2)} gallons trim paint (${finishCoats} coats)`
+		});
 	}
 
 	// 3. Doors
@@ -270,6 +305,13 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 		// 1 Gallon paints 8 Doors (both sides, 1 coat).
 		const doorFinishGallons = (count / P.MATERIAL_COVERAGE.DOORS_PER_GALLON) * finishCoats;
 		ctx.trimGallons += doorFinishGallons;
+
+		ctx.items.push({
+			name: `${room.label} - Door Paint Requirement`,
+			hours: 0,
+			cost: 0,
+			details: `${doorFinishGallons.toFixed(2)} gallons trim paint (${count} ${room.doorStyle} doors)`
+		});
 	}
 
 	// 4. Windows
@@ -281,6 +323,13 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 		// 1 Quart paints 3 Windows (1 coat). 1 Gallon = 12 Windows.
 		const windowFinishGallons = (count / P.MATERIAL_COVERAGE.WINDOWS_PER_GALLON) * finishCoats;
 		ctx.trimGallons += windowFinishGallons;
+
+		ctx.items.push({
+			name: `${room.label} - Window Paint Requirement`,
+			hours: 0,
+			cost: 0,
+			details: `${windowFinishGallons.toFixed(2)} gallons trim paint (${count} windows)`
+		});
 	}
 };
 };
