@@ -382,11 +382,16 @@ export const calculatePaintingEstimate = async (data: any) => {
 			H = room.exactHeight;
 		} else {
 			[L, W] = ROOM_DIMENSIONS[room.type]?.[room.size] || [12, 14];
-			const rawHeight = room.ceilingHeight;
-			// Refined height tiers
-			if (rawHeight === '11-14ft' || rawHeight === 'High (11-14ft)') H = 12;
-			else if (rawHeight === '15ft+' || rawHeight === 'Great Room / Foyer (15ft+)' || rawHeight === '11ft+') H = 18;
-			else H = parseInt(rawHeight) || 8;
+			
+			// Standardized Height Mapping (Phase 1 Fix)
+			const HEIGHT_MAP: Record<string, number> = {
+				'8ft': 8,
+				'9-10ft': 9,
+				'11-14ft': 12,
+				'15ft+': 18,
+			};
+			const rawHeight = room.ceilingHeight || '8ft';
+			H = HEIGHT_MAP[rawHeight] || parseInt(rawHeight) || 8;
 		}
 
 		// Surface calculations
@@ -437,8 +442,12 @@ export const calculatePaintingEstimate = async (data: any) => {
 	addLineItem(ctx, 'Daily Trip & Setup', tripHours, `${totalDays} days @ 45m/day`);
 
 	// T009: Equipment Rental
-	const hasHighCeilings = data.rooms.some((r: any) => {
-		const h = r.exactHeight || (r.ceilingHeight === '15ft+' ? 18 : parseInt(r.ceilingHeight) || 8);
+	// Scan the breakdown items or check room heights from the data
+	// Let's re-calculate H logic for the check or pass it through
+	const hasHighCeilings = data.rooms.some((room: any) => {
+		if (room.exactHeight && room.exactHeight >= 12) return true;
+		const hMap: Record<string, number> = { '11-14ft': 12, '15ft+': 18 };
+		const h = hMap[room.ceilingHeight] || parseInt(room.ceilingHeight) || 8;
 		return h >= 12;
 	});
 	if (hasHighCeilings) {
