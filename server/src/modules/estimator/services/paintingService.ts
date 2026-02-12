@@ -150,7 +150,6 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	const electricalMasking = 4 * P.DEFAULTS.ELECTRICAL_PLATE; // Assuming 4 plates per room as per spec
 	addLineItem(ctx, `${room.label} - Electrical Plates`, electricalMasking, `4 plates @ 3m/ea`);
 };
-};
 
 /**
  * T006: Ceiling Logic
@@ -328,7 +327,6 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 			details: `${windowFinishGallons.toFixed(2)} gallons trim paint (${count} windows)`
 		});
 	}
-};
 };
 
 /**

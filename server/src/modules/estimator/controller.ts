@@ -126,7 +126,7 @@ export const getEstimate = async (
 			totalHours: Number(totalHours.toFixed(1)),
 			isAdmin,
 			explanation: isAdmin ? combinedExplanation.trim() : null,
-			breakdownItems: isAdmin ? breakdownItems : null,
+			breakdownItems: breakdownItems, // Enabled for all users in Phase 8
 			customerSummary: !isAdmin ? customerSummary : null,
 		});
 	} catch (error) {
