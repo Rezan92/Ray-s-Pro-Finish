@@ -56,6 +56,7 @@
 | Item | Rate | Unit | Notes |
 | :--- | :--- | :--- | :--- |
 | **Baseboards (Paint)** | **60** | lin.ft/hr | Standard trim. |
+| **Stairwell Trim** | **1.5x** | multiplier | Difficulty surcharge for stairwell baseboards. |
 | **Crown (Simple)** | **40** | lin.ft/hr | Smooth/Basic profile. |
 | **Crown (Detailed)** | **25** | lin.ft/hr | Ornate/Dentil profile. |
 | **Conversion (Stain->Paint)** | **3.0x** | multiplier | Requires sanding, oil prime, 2 coats. |
@@ -73,11 +74,11 @@
 ## 3. Fixed Item Calculations
 
 ### Closets (Bedroom Only)
-| Size | Man-Hours | Dimensions (Ref) |
-| :--- | :--- | :--- |
-| **Standard** | **1.5** | 2' x 4' |
-| **Medium** | **2.5** | 5' x 5' (Walk-in) |
-| **Large** | **4.0** | 6' x 10' (Master) |
+| Size | Labor (hrs) | Material (gal) | Dimensions (Ref) |
+| :--- | :--- | :--- | :--- |
+| **Standard** | **1.5** | **0.32** | 2' x 4' |
+| **Medium** | **2.5** | **0.53** | 5' x 5' (Walk-in) |
+| **Large** | **4.0** | **0.84** | 6' x 10' (Master) |
 
 ### Doors (Per Side)
 *Note: All door rates are PER SIDE. Double values for both sides.*
@@ -98,11 +99,11 @@
 | **Risers & Stringers** | **20** | mins/step |
 
 ### Room Defaults (Auto-Calculated)
-| Item | Time | Qty Assumption |
+| Item | Time | Default Qty |
 | :--- | :--- | :--- |
 | **Masking (Windows)** | **5** mins | Per window. |
-| **Masking (Fixtures)** | **5** mins | Per ceiling fixture. |
-| **Electrical Plates** | **3** mins | Per plate (Assume 4/room). |
+| **Masking (Fixtures)**| **5** mins | **1** per ceiling. |
+| **Electrical Plates** | **3** mins | **4** per room. |
 | **Floor Protection** | **15** mins | Per 100 sqft floor area. |
 
 ---

@@ -147,8 +147,8 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	const windowMasking = (room.windowCount || 0) * P.DEFAULTS.MASKING_WINDOW;
 	if (windowMasking > 0) addLineItem(ctx, `${room.label} - Window Masking`, windowMasking, `${room.windowCount} windows @ 5m/ea`);
 	
-	const electricalMasking = 4 * P.DEFAULTS.ELECTRICAL_PLATE; // Assuming 4 plates per room as per spec
-	addLineItem(ctx, `${room.label} - Electrical Plates`, electricalMasking, `4 plates @ 3m/ea`);
+	const electricalMasking = P.DEFAULTS.DEFAULT_PLATE_COUNT * P.DEFAULTS.ELECTRICAL_PLATE;
+	addLineItem(ctx, `${room.label} - Electrical Plates`, electricalMasking, `${P.DEFAULTS.DEFAULT_PLATE_COUNT} plates @ 3m/ea`);
 };
 
 /**
@@ -195,7 +195,8 @@ const calculateCeilingHours = (room: PaintingRoom, ctx: CalculationContext, L: n
 	addLineItem(ctx, `${room.label} - Ceiling Painting`, totalCeilingHours, `${ceilingDetails} x ${multiplier} height factor`);
 
 	// Fixture Masking
-	addLineItem(ctx, `${room.label} - Ceiling Fixture Masking`, P.DEFAULTS.MASKING_FIXTURE, `1 fixture @ 5m`);
+	const fixtureMasking = P.DEFAULTS.DEFAULT_FIXTURE_COUNT * P.DEFAULTS.MASKING_FIXTURE;
+	addLineItem(ctx, `${room.label} - Ceiling Fixture Masking`, fixtureMasking, `${P.DEFAULTS.DEFAULT_FIXTURE_COUNT} fixture @ 5m`);
 
 	const ceilingFinishGallons = (area / P.MATERIAL_COVERAGE.WALL_CEILING_SQFT_PER_GALLON) * finishCoats;
 	ctx.ceilingGallons += ceilingFinishGallons;
@@ -224,9 +225,9 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	if (room.surfaces.trim) {
 		let trimHours = perimeter / P.PRODUCTION_RATES.TRIM.BASEBOARD;
 		
-		// F-026: Stairwell 1.5x Difficulty Multiplier for Trim
+		// F-026: Stairwell Difficulty Multiplier for Trim
 		if (room.type === 'stairwell') {
-			trimHours *= 1.5;
+			trimHours *= P.MULTIPLIERS.TRIM_STAIRWELL;
 		}
 
 		if (room.trimCondition === 'Poor') {
@@ -400,9 +401,12 @@ export const calculatePaintingEstimate = async (data: any) => {
 
 		// Bedroom Closets
 		if (room.type === 'bedroom' && room.closetSize && room.closetSize !== 'None') {
-			const closetHours = P.FIXED_ITEMS[`CLOSET_${room.closetSize.toUpperCase()}` as keyof typeof P.FIXED_ITEMS] || 0;
+			const sizeKey = room.closetSize.toUpperCase() as keyof typeof P.FIXED_ITEMS.CLOSET_MATERIAL_GALLONS;
+			const closetHours = P.FIXED_ITEMS[`CLOSET_${sizeKey}` as keyof typeof P.FIXED_ITEMS] || 0;
+			const closetGallons = P.FIXED_ITEMS.CLOSET_MATERIAL_GALLONS[sizeKey] || 0;
+
 			addLineItem(ctx, `${room.label} - Closet (${room.closetSize})`, closetHours, `Fixed rate for ${room.closetSize} closet`);
-			ctx.wallGallons += room.closetSize === 'Standard' ? 0.5 : 1.0;
+			ctx.wallGallons += closetGallons;
 		}
 
 		// Floor Protection

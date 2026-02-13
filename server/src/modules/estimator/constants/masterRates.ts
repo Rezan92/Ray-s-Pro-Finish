@@ -144,6 +144,7 @@ export const MASTER_RATES = {
 				VAULTED: 1.45, // 15'+
 			},
 			STAIN_TO_PAINT: 3.0,
+			TRIM_STAIRWELL: 1.5,
 		},
 
 		PRODUCTION_RATES: {
@@ -186,6 +187,11 @@ export const MASTER_RATES = {
 			CLOSET_STANDARD: 1.5,
 			CLOSET_MEDIUM: 2.5,
 			CLOSET_LARGE: 4.0,
+			CLOSET_MATERIAL_GALLONS: {
+				STANDARD: 0.32,
+				MEDIUM: 0.53,
+				LARGE: 0.84,
+			},
 			WINDOW_STANDARD_CASING: 0.833, // 50 mins total per window
 			DOOR_6_PANEL_SIDE: 0.666, // 40 mins per side
 			DOOR_SLAB_SIDE: 0.583, // 35 mins per side
@@ -196,6 +202,8 @@ export const MASTER_RATES = {
 			MASKING_FIXTURE: 0.083, // hrs (5m)
 			ELECTRICAL_PLATE: 0.05, // hrs (3m)
 			FLOOR_PROTECTION: 0.15, // hrs per 100sqft (0.15/100 = 15m/100)
+			DEFAULT_FIXTURE_COUNT: 1,
+			DEFAULT_PLATE_COUNT: 4,
 		},
 
 		MATERIAL_PRICES: {
