@@ -39,16 +39,16 @@ export const EstimatorStep3: React.FC<EstimatorStep3Props> = ({
 						</div>
 					)}
 
-					{/* ADMIN VIEW: Show Technical Table */}
-
-					{estimation.isAdmin && estimation.breakdownItems && (
+					{/* Phase 8: Detailed Per-Section Breakdown for all users */}
+					{estimation.breakdownItems && (
 						<div className={styles.breakdownContainer}>
+							<h4 className={styles.breakdownHeader}>Estimate Breakdown</h4>
 							<table className={styles.breakdownTable}>
 								<thead>
 									<tr>
 										<th>Item / Surface</th>
-										<th>Price</th>
-										<th>Time</th>
+										{estimation.isAdmin && <th>Price</th>}
+										{estimation.isAdmin && <th>Time</th>}
 										<th>Details</th>
 									</tr>
 								</thead>
@@ -56,28 +56,32 @@ export const EstimatorStep3: React.FC<EstimatorStep3Props> = ({
 									{estimation.breakdownItems.map((item, index) => (
 										<tr key={index}>
 											<td className={styles.tableItemName}>{item.name}</td>
-											<td>
-												{item.cost > 0 ? `$${Math.round(item.cost)}` : '--'}
-											</td>
-											<td>
-												{/* FIX: Default to 0 if undefined to prevent crash */}
-												{(item.hours || 0).toFixed(1)} hrs
-											</td>
+											{estimation.isAdmin && (
+												<td>
+													{item.cost > 0 ? `$${Math.round(item.cost)}` : '--'}
+												</td>
+											)}
+											{estimation.isAdmin && (
+												<td>
+													{(item.hours || 0).toFixed(1)} hrs
+												</td>
+											)}
 											<td className={styles.tableItemDetails}>{item.details}</td>
 										</tr>
 									))}
 								</tbody>
-								<tfoot>
-									<tr className={styles.tableFooter}>
-										<td>Total Project</td>
-										<td>${Math.round(estimation.low)}*</td>
-										<td>
-											{/* FIX: Default to 0 if undefined to prevent crash */}
-											{(estimation.totalHours || 0).toFixed(1)} hrs
-										</td>
-										<td></td>
-									</tr>
-								</tfoot>
+								{estimation.isAdmin && (
+									<tfoot>
+										<tr className={styles.tableFooter}>
+											<td>Total Project</td>
+											<td>${Math.round(estimation.low)}*</td>
+											<td>
+												{(estimation.totalHours || 0).toFixed(1)} hrs
+											</td>
+											<td></td>
+										</tr>
+									</tfoot>
+								)}
 							</table>
 						</div>
 					)}

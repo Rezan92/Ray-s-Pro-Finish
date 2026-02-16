@@ -21,6 +21,8 @@ import {
 	removeRoom,
 	updateRoomField,
 	updatePaintingGlobal,
+	toggleRoomCustomization,
+	updateGlobalDefaults,
 } from '@/store/slices/paintingSlice';
 import {
 	updateBasementField,
@@ -222,12 +224,21 @@ const EstimatorPage = () => {
 								}
 								onPaintingRoomAdd={(type) => dispatch(addRoom(type))}
 								onPaintingRoomRemove={(id) => dispatch(removeRoom(id))}
-								onPaintingRoomChange={(roomId, field, value) =>
-									dispatch(updateRoomField({ roomId, field, value }))
-								}
-								onPaintingGlobalChange={(field, value) =>
-									dispatch(updatePaintingGlobal({ field, value }))
-								}
+								onPaintingRoomChange={(roomId, field, value) => {
+									if (field === 'toggleRoomCustomization') {
+										dispatch(toggleRoomCustomization({ roomId, isCustomized: value as boolean }));
+									} else {
+										dispatch(updateRoomField({ roomId, field, value }));
+									}
+								}}
+								onPaintingGlobalChange={(field, value) => {
+									if (field === 'updateGlobalDefaults') {
+										// value is expecting { field: string, value: unknown }
+										dispatch(updateGlobalDefaults(value as { field: string, value: unknown }));
+									} else {
+										dispatch(updatePaintingGlobal({ field: field as any, value }));
+									}
+								}}
 								// Basement Handlers
 								onBasementFieldChange={(field, value) =>
 									dispatch(updateBasementField({ field, value }))

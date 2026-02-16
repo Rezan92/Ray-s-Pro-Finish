@@ -14,7 +14,7 @@ interface EstimatorStep2Props {
 	onPaintingRoomAdd: (type: string) => void;
 	onPaintingRoomRemove: (roomId: string) => void;
 	onPaintingRoomChange: (roomId: string, field: string, value: unknown) => void;
-	onPaintingGlobalChange: (field: string, value: string) => void;
+	onPaintingGlobalChange: (field: string, value: any) => void;
 
 	// Basement Handlers
 	onBasementFieldChange: (field: keyof BasementData, value: unknown) => void;

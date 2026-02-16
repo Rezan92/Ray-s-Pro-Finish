@@ -123,23 +123,105 @@ export const MASTER_RATES = {
 		},
 	},
 
-	// --- SECTION 5: PAINTING ---
+	// --- SECTION 5: PAINTING (Man-Hour Driven) ---
 	PAINTING: {
-		PRIMER: {
-			WALL: { labor: 0.3, material: 0.1, hoursPerSqft: 0.0036 },
-			CEILING: { labor: 0.5, material: 0.1, hoursPerSqft: 0.0036 },
+		LABOR_RATE: 75,
+		DAILY_TRIP_HOURS: 0.75,
+		EQUIPMENT_RENTAL_DAILY: 200,
+		MISC_MATERIAL_FEE_PER_ROOM: 10,
+
+		MULTIPLIERS: {
+			OCCUPANCY: {
+				EMPTY: 1.0,
+				OWNER_CLEARS: 1.0,
+				PAINTER_COVERS: 1.2,
+				PAINTER_MOVES: 1.35,
+			},
+			CEILING_HEIGHT: {
+				STANDARD: 1.0, // 8-9'
+				MID: 1.1, // 10'
+				HIGH: 1.25, // 12-14'
+				VAULTED: 1.45, // 15'+
+			},
+			STAIN_TO_PAINT: 3.0,
+			TRIM_STAIRWELL: 1.5,
 		},
-		ONE_COAT: {
-			WALL: { labor: 0.6, material: 0.15, hoursPerSqft: 0.0057 },
-			CEILING: { labor: 0.7, material: 0.15, hoursPerSqft: 0.0057 },
+
+		PRODUCTION_RATES: {
+			WALLS: {
+				ROLL_PRIME: 320,
+				ROLL_1ST_COAT: 400, // sqft/hr
+				ROLL_2ND_COAT: 550, // sqft/hr
+				CUT_STANDARD_1ST: 120, // lf/hr
+				CUT_STANDARD_2ND: 200, // lf/hr
+				CUT_HIGH_CONTRAST_1ST: 75, // lf/hr
+				CUT_HIGH_CONTRAST_2ND: 125, // lf/hr
+				PREP_GOOD: 0.0015, // hrs/sqft (0.15/100)
+				PREP_FAIR: 0.004, // hrs/sqft (0.40/100)
+				PREP_POOR: 0.0125, // hrs/sqft (1.25/100)
+				DARK_TO_LIGHT_SURCHARGE: 0.005, // hrs/sqft (0.50/100)
+			},
+			CEILINGS: {
+				SMOOTH_1ST_COAT: 350,
+				SMOOTH_2ND_COAT: 500,
+				POPCORN_1ST_COAT: 150,
+				POPCORN_2ND_COAT: 250,
+				ORANGE_PEEL_KNOCKDOWN_1ST_COAT: 300,
+				ORANGE_PEEL_KNOCKDOWN_2ND_COAT: 450,
+			},
+			TRIM: {
+				BASEBOARD: 60, // lf/hr
+				CROWN_SIMPLE: 40, // lf/hr
+				CROWN_DETAILED: 25, // lf/hr
+				CAULKING_POOR: 0.025, // hrs/lf
+			},
+			STAIRS: {
+				SPINDLE_SQUARE: 0.2, // hrs (12m)
+				SPINDLE_INTRICATE: 0.5, // hrs (30m)
+				HANDRAIL: 6, // lf/hr
+				STEP: 0.333, // hrs (20m)
+			},
 		},
-		STANDARD: {
-			WALL: { labor: 1.2, material: 0.3, hoursPerSqft: 0.0114 },
-			CEILING: { labor: 1.4, material: 0.3, hoursPerSqft: 0.0114 },
+
+		FIXED_ITEMS: {
+			CLOSET_STANDARD: 1.5,
+			CLOSET_MEDIUM: 2.5,
+			CLOSET_LARGE: 4.0,
+			CLOSET_MATERIAL_GALLONS: {
+				STANDARD: 0.32,
+				MEDIUM: 0.53,
+				LARGE: 0.84,
+			},
+			WINDOW_STANDARD_CASING: 0.833, // 50 mins total per window
+			DOOR_6_PANEL_SIDE: 0.666, // 40 mins per side
+			DOOR_SLAB_SIDE: 0.583, // 35 mins per side
 		},
-		FULL: {
-			WALL: { labor: 1.5, material: 0.4, hoursPerSqft: 0.0166 },
-			CEILING: { labor: 1.9, material: 0.4, hoursPerSqft: 0.0166 },
+
+		DEFAULTS: {
+			MASKING_WINDOW: 0.083, // hrs (5m)
+			MASKING_FIXTURE: 0.083, // hrs (5m)
+			ELECTRICAL_PLATE: 0.05, // hrs (3m)
+			FLOOR_PROTECTION: 0.15, // hrs per 100sqft (0.15/100 = 15m/100)
+			DEFAULT_FIXTURE_COUNT: 1,
+			DEFAULT_PLATE_COUNT: 4,
+		},
+
+		MATERIAL_PRICES: {
+			PRO_BASE: 40,
+			STANDARD: 55,
+			PREMIUM: 85,
+			ULTRA_PREMIUM: 128,
+			UNIVERSAL_PRIMER: 45,
+		},
+
+		MATERIAL_COVERAGE: {
+			WALL_CEILING_SQFT_PER_GALLON: 350, // Single-coat baseline
+			PRIMER_SQFT_PER_GALLON: 250, // Single-coat baseline
+			TRIM_LF_PER_GALLON: 700, // Single-coat baseline
+			TRIM_PRIMER_LF_PER_GALLON: 500, // Derived: (250/350) * 700
+			DOORS_PER_GALLON: 8, // Both sides, single-coat baseline
+			WINDOWS_PER_GALLON: 12, // Single-coat baseline
+			WASTE_BUFFER: 1.15,
 		},
 	},
 };
