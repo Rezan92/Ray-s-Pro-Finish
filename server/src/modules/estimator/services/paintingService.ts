@@ -126,54 +126,69 @@ const calculateCeilingHours = (room: PaintingRoom, ctx: CalculationContext, L: n
 	if (!room.surfaces.ceiling) return;
 
 	const area = L * W;
-	let rate1, rate2;
-
-	if (room.ceilingTexture === 'Popcorn') {
-		rate1 = P.PRODUCTION_RATES.CEILINGS.POPCORN_1ST_COAT;
-		rate2 = P.PRODUCTION_RATES.CEILINGS.POPCORN_2ND_COAT;
-	} else if (room.ceilingTexture === 'Textured') {
-		rate1 = P.PRODUCTION_RATES.CEILINGS.ORANGE_PEEL_KNOCKDOWN_1ST_COAT;
-		rate2 = P.PRODUCTION_RATES.CEILINGS.ORANGE_PEEL_KNOCKDOWN_2ND_COAT;
-	} else { // Flat/Smooth
-		rate1 = P.PRODUCTION_RATES.CEILINGS.SMOOTH_1ST_COAT;
-		rate2 = P.PRODUCTION_RATES.CEILINGS.SMOOTH_2ND_COAT;
-	}
-
-	// Coat Logic (Phase 3)
-	let finishCoats = 2;
-	if (room.colorChange === 'Similar') {
-		finishCoats = 1;
-	}
-
-	let hHours = area / rate1;
-	let ceilingDetails = `${Math.round(area)} sqft (${room.ceilingTexture}) 1st Coat`;
-
-	if (finishCoats >= 2) {
-		hHours += (area / rate2);
-		ceilingDetails = `${Math.round(area)} sqft (${room.ceilingTexture}) 2 Coats`;
-	}
 	
-	// Height Multiplier
-	let multiplier = P.MULTIPLIERS.CEILING_HEIGHT.STANDARD;
-	if (H >= 10 && H < 12) multiplier = P.MULTIPLIERS.CEILING_HEIGHT.MID;
-	else if (H >= 12 && H < 15) multiplier = P.MULTIPLIERS.CEILING_HEIGHT.HIGH;
-	else if (H >= 15) multiplier = P.MULTIPLIERS.CEILING_HEIGHT.VAULTED;
+	// 1. Determine Base Unit Price (Smooth) & Coat Counts
+	let basePrice = P.UNIT_PRICES.CEILINGS.SMOOTH_2;
+	let finishCoats = 2;
+	let coatLabel = '2 Coats';
 
-	const totalCeilingHours = hHours * multiplier;
-	addLineItem(ctx, `${room.label} - Ceiling Painting`, totalCeilingHours, `${ceilingDetails} x ${multiplier} height factor`);
+	if (room.colorChange === 'Similar') {
+		basePrice = P.UNIT_PRICES.CEILINGS.SMOOTH_1;
+		finishCoats = 1;
+		coatLabel = 'Refresh (1 Coat)';
+	} else if (room.colorChange === 'Dark-to-Light') {
+		basePrice = P.UNIT_PRICES.CEILINGS.SMOOTH_3;
+		finishCoats = 2; // Priming built-in to the unit price
+		coatLabel = 'Dark-to-Light (3 Coats)';
+	}
 
-	// Fixture Masking
-	const fixtureMasking = P.DEFAULTS.DEFAULT_FIXTURE_COUNT * P.DEFAULTS.MASKING_FIXTURE;
-	addLineItem(ctx, `${room.label} - Ceiling Fixture Masking`, fixtureMasking, `${P.DEFAULTS.DEFAULT_FIXTURE_COUNT} fixture @ 5m`);
+	// 2. Apply Texture Surcharge
+	let textureSurchargePercent = 0;
+	if (room.ceilingTexture === 'Popcorn') {
+		textureSurchargePercent = P.UNIT_PRICES.CEILINGS.TEXTURE_SURCHARGE.POPCORN;
+	} else if (room.ceilingTexture === 'Textured') {
+		textureSurchargePercent = P.UNIT_PRICES.CEILINGS.TEXTURE_SURCHARGE.ORANGE_PEEL;
+	}
 
+	const unitPriceWithTexture = basePrice * (1 + textureSurchargePercent);
+	
+	// 3. Height Multiplier
+	let heightMultiplier = P.MULTIPLIERS.CEILING_HEIGHT.STANDARD;
+	if (H >= 10 && H < 12) heightMultiplier = P.MULTIPLIERS.CEILING_HEIGHT.MID;
+	else if (H >= 12 && H < 15) heightMultiplier = P.MULTIPLIERS.CEILING_HEIGHT.HIGH;
+	else if (H >= 15) heightMultiplier = P.MULTIPLIERS.CEILING_HEIGHT.VAULTED;
+
+	const finalUnitPrice = unitPriceWithTexture * heightMultiplier;
+
+	const { cost, hours } = calculateItemPrice(area, finalUnitPrice);
+	const textureLabel = room.ceilingTexture === 'Flat' ? 'Smooth' : room.ceilingTexture;
+	const details = `${Math.round(area)} sqft @ $${finalUnitPrice.toFixed(2)}/sqft (${textureLabel}, ${coatLabel} x ${heightMultiplier} height)`;
+	
+	addLineItem(ctx, `${room.label} - Ceiling`, hours, cost, details);
+
+	// US3: Track High Work Hours
+	if (H >= 12) {
+		ctx.highWorkLaborHours += hours;
+	}
+
+	// 4. Fixture Masking (Following $75/hr cost rule)
+	const fixtureHours = P.DEFAULTS.DEFAULT_FIXTURE_COUNT * P.DEFAULTS.MASKING_FIXTURE;
+	addLineItem(ctx, `${room.label} - Ceiling Fixture Masking`, fixtureHours, fixtureHours * P.LABOR_RATE, `${P.DEFAULTS.DEFAULT_FIXTURE_COUNT} fixture @ 5m`);
+	if (H >= 12) ctx.highWorkLaborHours += fixtureHours;
+
+	// 5. Materials
 	const ceilingFinishGallons = (area / P.MATERIAL_COVERAGE.WALL_CEILING_SQFT_PER_GALLON) * finishCoats;
 	ctx.ceilingGallons += ceilingFinishGallons;
+
+	if (room.colorChange === 'Dark-to-Light') {
+		ctx.primerGallons += (area / P.MATERIAL_COVERAGE.PRIMER_SQFT_PER_GALLON);
+	}
 
 	ctx.items.push({
 		name: `${room.label} - Ceiling Paint Requirement`,
 		hours: 0,
 		cost: 0,
-		details: `${ceilingFinishGallons.toFixed(2)} gallons ceiling paint (${finishCoats} coats)`
+		details: `${ceilingFinishGallons.toFixed(2)} gallons ceiling paint (${finishCoats} coats)${room.colorChange === 'Dark-to-Light' ? ` + 1 coat primer` : ''}`
 	});
 };
 

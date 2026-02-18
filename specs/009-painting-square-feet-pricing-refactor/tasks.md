@@ -42,9 +42,9 @@
 
 **Independent Test**: Select "Popcorn" texture and verify +40% surcharge on the base labor rate.
 
-- [ ] T009 [US2] Refactor `calculateCeilingHours` in `server/src/modules/estimator/services/paintingService.ts` to use `UNIT_PRICES.CEILINGS`.
-- [ ] T010 [US2] Apply texture surcharges: Orange Peel (+15%), Popcorn (+40%).
-- [ ] T011 [US2] Verify ceiling labor cost and hour derivation ($Cost / 75$).
+- [x] T009 [US2] Refactor `calculateCeilingHours` in `server/src/modules/estimator/services/paintingService.ts` to use `UNIT_PRICES.CEILINGS`.
+- [x] T010 [US2] Apply texture surcharges: Orange Peel (+15%), Popcorn (+40%).
+- [x] T011 [US2] Verify ceiling labor cost and hour derivation ($Cost / 75$).
 
 **Checkpoint**: Ceiling pricing with texture surcharges is functional.
 
