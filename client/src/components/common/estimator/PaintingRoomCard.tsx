@@ -48,15 +48,22 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 	const handleSurfaceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, checked } = e.target;
 
-		// Professional fix: Clear associated sub-data when unselecting a surface
-		if (!checked) {
+		// Professional fix: Sync associated sub-data when toggling a surface
+		if (checked) {
+			if (name === 'doors' && (room.doorCount === '0' || !room.doorCount)) {
+				onRoomChange(room.id, 'doorCount', '1');
+			}
+			if (name === 'windows' && (room.windowCount === 0 || !room.windowCount)) {
+				onRoomChange(room.id, 'windowCount', 1);
+			}
+		} else {
 			if (name === 'ceiling') onRoomChange(room.id, 'ceilingTexture', 'Flat');
 			if (name === 'trim') {
 				onRoomChange(room.id, 'trimCondition', 'Good');
 				onRoomChange(room.id, 'trimColorChange', 'Similar');
 			}
 			if (name === 'doors') {
-				onRoomChange(room.id, 'doorCount', '1');
+				onRoomChange(room.id, 'doorCount', '0');
 				onRoomChange(room.id, 'doorStyle', 'Slab');
 			}
 			if (name === 'crownMolding') {

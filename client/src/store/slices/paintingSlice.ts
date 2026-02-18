@@ -76,7 +76,7 @@ const createNewRoom = (
 		trimColorChange: defaults.trimColorChange,
 		crownMoldingStyle: defaults.crownMoldingStyle,
 		crownColorChange: defaults.crownColorChange,
-		doorCount: defaults.surfaces.doors ? 1 : 0,
+		doorCount: defaults.surfaces.doors ? '1' : '0',
 		doorStyle: defaults.doorStyle,
 		roomDescription: '',
 	};
@@ -189,7 +189,19 @@ export const paintingSlice = createSlice({
 			state.rooms.forEach(room => {
 				if (!room.isCustomized) {
 					if (field === 'surfaces') {
-						room.surfaces = { ...(value as any) };
+						const surfaces = value as PaintingRoom['surfaces'];
+						room.surfaces = { ...surfaces };
+						// Sync counts based on surface visibility
+						if (surfaces.doors && (room.doorCount === '0' || !room.doorCount)) {
+							room.doorCount = '1';
+						} else if (!surfaces.doors) {
+							room.doorCount = '0';
+						}
+						if (surfaces.windows && (room.windowCount === 0 || !room.windowCount)) {
+							room.windowCount = 1;
+						} else if (!surfaces.windows) {
+							room.windowCount = 0;
+						}
 					} else {
 						// @ts-expect-error - Generic assignment
 						room[field] = value;
