@@ -6,6 +6,7 @@ import { PaintingRoom, BreakdownItem } from '../types.js';
 interface CalculationContext {
 	totalHours: number;
 	totalCost: number;
+	highWorkLaborHours: number;
 	items: BreakdownItem[];
 	wallGallons: number;
 	ceilingGallons: number;
@@ -53,110 +54,69 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	const perimeter = 2 * (L + W);
 	const area = perimeter * H;
 	
-	// Determine Coat Counts based on Phase 3 Logic
+	// 1. Determine Unit Price & Coat Counts
+	let unitPrice = P.UNIT_PRICES.WALLS.CHANGE;
 	let finishCoats = 2;
-	let primerCoats = 0;
+	let label = 'Standard Color Change';
 
 	if (room.colorChange === 'Similar') {
+		unitPrice = P.UNIT_PRICES.WALLS.REFRESH;
 		finishCoats = 1;
+		label = 'Refresh (1 Coat)';
 	} else if (room.colorChange === 'Dark-to-Light') {
-		finishCoats = 2;
-		primerCoats = 1;
-	} else { // 'Change'
-		finishCoats = 2;
+		unitPrice = P.UNIT_PRICES.WALLS.DARK_TO_LIGHT;
+		finishCoats = 2; // Priming is built into the 3-coat unit price logically, but we use finishCoats for paint vol
+		label = 'Dark-to-Light (3 Coats)';
 	}
 
-	// 1. Priming (Labor & Materials)
-	if (primerCoats > 0) {
-		const primingHours = area / P.PRODUCTION_RATES.WALLS.ROLL_PRIME;
-		addLineItem(ctx, `${room.label} - Wall Priming`, primingHours, `${Math.round(area)} sqft @ ${P.PRODUCTION_RATES.WALLS.ROLL_PRIME} sqft/hr`);
-		
-		const surchargeHours = area * P.PRODUCTION_RATES.WALLS.DARK_TO_LIGHT_SURCHARGE;
-		addLineItem(ctx, `${room.label} - Dark-to-Light Surcharge`, surchargeHours, `Extra care @ ${P.PRODUCTION_RATES.WALLS.DARK_TO_LIGHT_SURCHARGE * 100} hrs/100sqft`);
-		
-		ctx.primerGallons += (area / P.MATERIAL_COVERAGE.PRIMER_SQFT_PER_GALLON);
-	}
-
-	// 2. Rolling (Dynamic Coats)
-	const roll1Hours = area / P.PRODUCTION_RATES.WALLS.ROLL_1ST_COAT;
-	addLineItem(ctx, `${room.label} - Wall Rolling (1st Coat)`, roll1Hours, `${Math.round(area)} sqft @ ${P.PRODUCTION_RATES.WALLS.ROLL_1ST_COAT} sqft/hr`);
-
-	if (finishCoats >= 2) {
-		const roll2Hours = area / P.PRODUCTION_RATES.WALLS.ROLL_2ND_COAT;
-		addLineItem(ctx, `${room.label} - Wall Rolling (2nd Coat)`, roll2Hours, `${Math.round(area)} sqft @ ${P.PRODUCTION_RATES.WALLS.ROLL_2ND_COAT} sqft/hr`);
-	}
-
-	// 3. Cutting (Dynamic Coats)
-	let cutRate1, cutRate2;
-	if (room.colorChange === 'Dark-to-Light') {
-		cutRate1 = P.PRODUCTION_RATES.WALLS.CUT_HIGH_CONTRAST_1ST;
-		cutRate2 = P.PRODUCTION_RATES.WALLS.CUT_HIGH_CONTRAST_2ND;
-	} else {
-		cutRate1 = P.PRODUCTION_RATES.WALLS.CUT_STANDARD_1ST;
-		cutRate2 = P.PRODUCTION_RATES.WALLS.CUT_STANDARD_2ND;
-	}
-
-	// Phase 1 Fix: Detailed Cutting Load
-	const horizontalPerimeterLF = perimeter; // One full trip around the room
-	const verticalCornersLF = H * 4;
-	const openingCuttingLF = 33; // 18' Door + 15' Window (Standard Opening Load)
-
-	/**
-	 * CALCULATION STRATEGY:
-	 * - Top/Bottom Edges: 2x Perimeter @ Hi-Contrast Rates (Sharp lines required for ceiling/baseboard)
-	 * - Vertical Corners: 4x Height @ Standard Rates (Standard corners)
-	 * - Openings: 33 LF @ Standard Rates
-	 */
+	const { cost, hours } = calculateItemPrice(area, unitPrice);
+	const details = `${Math.round(area)} sqft @ $${unitPrice.toFixed(2)}/sqft (${label})`;
 	
-	// 1st Coat Labor
-	let cut1Hours = (verticalCornersLF / P.PRODUCTION_RATES.WALLS.CUT_STANDARD_1ST) + 
-					(openingCuttingLF / P.PRODUCTION_RATES.WALLS.CUT_STANDARD_1ST) +
-					((horizontalPerimeterLF * 2) / P.PRODUCTION_RATES.WALLS.CUT_HIGH_CONTRAST_1ST);
+	addLineItem(ctx, `${room.label} - Walls`, hours, cost, details);
 
-	let totalCuttingHours = cut1Hours;
-	const totalLF = (horizontalPerimeterLF * 2) + verticalCornersLF + openingCuttingLF;
-	let cutDetails = `${Math.round(totalLF)} lf (incl. 2x perim + corners/openings) @ mixed rates`;
-
-	if (finishCoats >= 2) {
-		// 2nd Coat Labor
-		let cut2Hours = (verticalCornersLF / P.PRODUCTION_RATES.WALLS.CUT_STANDARD_2ND) + 
-						(openingCuttingLF / P.PRODUCTION_RATES.WALLS.CUT_STANDARD_2ND) +
-						((horizontalPerimeterLF * 2) / P.PRODUCTION_RATES.WALLS.CUT_HIGH_CONTRAST_2ND);
-		
-		totalCuttingHours += cut2Hours;
-		cutDetails = `${Math.round(totalLF)} lf (incl. 2x perim + corners/openings) @ mixed rates (2 coats)`;
+	// US3: Track High Work Hours
+	if (H >= 12) {
+		ctx.highWorkLaborHours += hours;
 	}
 
-	addLineItem(ctx, `${room.label} - Wall Cutting`, totalCuttingHours, cutDetails);
-
-	// 4. Prep
-	let prepRate = 0;
-	if (room.wallCondition === 'Good') prepRate = P.PRODUCTION_RATES.WALLS.PREP_GOOD;
-	if (room.wallCondition === 'Fair') prepRate = P.PRODUCTION_RATES.WALLS.PREP_FAIR;
-	if (room.wallCondition === 'Poor') prepRate = P.PRODUCTION_RATES.WALLS.PREP_POOR;
+	// 2. Prep (Unit-based additive price)
+	let prepPrice = 0;
+	if (room.wallCondition === 'Good') prepPrice = 0.11; // Hardcoded from reference if not in P
+	if (room.wallCondition === 'Fair') prepPrice = 0.30;
+	if (room.wallCondition === 'Poor') prepPrice = 0.75;
 	
-	if (prepRate > 0) {
-		const prepHours = area * prepRate;
-		addLineItem(ctx, `${room.label} - Wall Prep (${room.wallCondition})`, prepHours, `${Math.round(area)} sqft @ ${prepRate * 100} hrs/100sqft`);
+	if (prepPrice > 0) {
+		const { cost: pCost, hours: pHours } = calculateItemPrice(area, prepPrice);
+		addLineItem(ctx, `${room.label} - Wall Prep (${room.wallCondition})`, pHours, pCost, `${Math.round(area)} sqft @ $${prepPrice.toFixed(2)}/sqft`);
+		if (H >= 12) ctx.highWorkLaborHours += pHours;
 	}
 
-	// 5. Materials (Finish Coats)
+	// 3. Materials (Finish Coats)
 	const finishGallons = (area / P.MATERIAL_COVERAGE.WALL_CEILING_SQFT_PER_GALLON) * finishCoats;
 	ctx.wallGallons += finishGallons;
 	
+	if (room.colorChange === 'Dark-to-Light') {
+		ctx.primerGallons += (area / P.MATERIAL_COVERAGE.PRIMER_SQFT_PER_GALLON);
+	}
+
 	ctx.items.push({
 		name: `${room.label} - Wall Paint Requirement`,
 		hours: 0,
 		cost: 0,
-		details: `${finishGallons.toFixed(2)} gallons finish paint (${finishCoats} coats)`
+		details: `${finishGallons.toFixed(2)} gallons finish paint (${finishCoats} coats)${room.colorChange === 'Dark-to-Light' ? ` + 1 coat primer` : ''}`
 	});
 
-	// 6. Defaults (Masking, Electrical)
-	const windowMasking = (room.windowCount || 0) * P.DEFAULTS.MASKING_WINDOW;
-	if (windowMasking > 0) addLineItem(ctx, `${room.label} - Window Masking`, windowMasking, `${room.windowCount} windows @ 5m/ea`);
+	// 4. Defaults (Masking, Electrical) - Still man-hour based but following the $75/hr cost rule
+	const windowCount = room.windowCount || 0;
+	if (windowCount > 0) {
+		const wHours = windowCount * P.DEFAULTS.MASKING_WINDOW;
+		addLineItem(ctx, `${room.label} - Window Masking`, wHours, wHours * P.LABOR_RATE, `${windowCount} windows @ 5m/ea`);
+		if (H >= 12) ctx.highWorkLaborHours += wHours;
+	}
 	
-	const electricalMasking = P.DEFAULTS.DEFAULT_PLATE_COUNT * P.DEFAULTS.ELECTRICAL_PLATE;
-	addLineItem(ctx, `${room.label} - Electrical Plates`, electricalMasking, `${P.DEFAULTS.DEFAULT_PLATE_COUNT} plates @ 3m/ea`);
+	const electricalHours = P.DEFAULTS.DEFAULT_PLATE_COUNT * P.DEFAULTS.ELECTRICAL_PLATE;
+	addLineItem(ctx, `${room.label} - Electrical Plates`, electricalHours, electricalHours * P.LABOR_RATE, `${P.DEFAULTS.DEFAULT_PLATE_COUNT} plates @ 3m/ea`);
+	if (H >= 12) ctx.highWorkLaborHours += electricalHours;
 };
 
 /**
@@ -371,6 +331,7 @@ export const calculatePaintingEstimate = async (data: any) => {
 	const ctx: CalculationContext = {
 		totalHours: 0,
 		totalCost: 0,
+		highWorkLaborHours: 0,
 		items: [],
 		wallGallons: 0,
 		ceilingGallons: 0,

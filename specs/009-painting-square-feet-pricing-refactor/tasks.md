@@ -28,9 +28,9 @@
 
 **Independent Test**: Select "Refresh" for a room and verify labor cost is $0.58/sqft and hours are derived correctly.
 
-- [ ] T006 [US1] Refactor `calculateWallHours` in `server/src/modules/estimator/services/paintingService.ts` to use `UNIT_PRICES.WALLS`.
-- [ ] T007 [US1] Implement coat-count mapping for Walls: Refresh (1), Change (2), Dark-to-Light (3).
-- [ ] T008 [US1] Verify wall labor cost and hour derivation ($Cost / 75$).
+- [x] T006 [US1] Refactor `calculateWallHours` in `server/src/modules/estimator/services/paintingService.ts` to use `UNIT_PRICES.WALLS`.
+- [x] T007 [US1] Implement coat-count mapping for Walls: Refresh (1), Change (2), Dark-to-Light (3).
+- [x] T008 [US1] Verify wall labor cost and hour derivation ($Cost / 75$).
 
 **Checkpoint**: Wall pricing is functional and independently testable.
 
