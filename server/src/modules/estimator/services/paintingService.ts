@@ -41,14 +41,16 @@ const addLineItem = (
 };
 
 /**
- * T005: Helper to calculate price and derive hours (Reverse-Hour Formula)
+ * T005: Helper to calculate price and hours independently
  */
-const calculateItemPrice = (quantity: number, unitPrice: number) => {
+const calculateLineData = (quantity: number, unitPrice: number, speed?: number) => {
 	const safeQty = isNaN(quantity) ? 0 : quantity;
 	const safePrice = isNaN(unitPrice) ? 0 : unitPrice;
+	const safeSpeed = (isNaN(speed || 0) || !speed) ? 0 : speed;
 	
 	const cost = safeQty * safePrice;
-	const hours = cost / P.LABOR_RATE;
+	const hours = safeSpeed > 0 ? safeQty / safeSpeed : 0;
+	
 	return { cost, hours };
 };
 
@@ -61,22 +63,25 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	const perimeter = 2 * (L + W);
 	const area = perimeter * H;
 	
-	// 1. Determine Unit Price & Coat Counts
+	// 1. Determine Unit Price & Speeds
 	let unitPrice = P.UNIT_PRICES.WALLS.CHANGE;
+	let speed = P.PRODUCTION_SPEEDS.WALLS.CHANGE;
 	let finishCoats = 2;
 	let label = 'Standard Color Change';
 
 	if (room.colorChange === 'Similar') {
 		unitPrice = P.UNIT_PRICES.WALLS.REFRESH;
+		speed = P.PRODUCTION_SPEEDS.WALLS.REFRESH;
 		finishCoats = 1;
 		label = 'Refresh (1 Coat)';
 	} else if (room.colorChange === 'Dark-to-Light') {
 		unitPrice = P.UNIT_PRICES.WALLS.DARK_TO_LIGHT;
-		finishCoats = 2; // Priming is built into the 3-coat unit price logically
+		speed = P.PRODUCTION_SPEEDS.WALLS.DARK_TO_LIGHT;
+		finishCoats = 2; // Priming built-in
 		label = 'Dark-to-Light (3 Coats)';
 	}
 
-	const { cost, hours } = calculateItemPrice(area, unitPrice);
+	const { cost, hours } = calculateLineData(area, unitPrice, speed);
 	const details = `${Math.round(area)} sqft @ $${unitPrice.toFixed(2)}/sqft (${label})`;
 	
 	addLineItem(ctx, `${room.label} - Walls`, hours, cost, details);
@@ -88,12 +93,22 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 
 	// 2. Prep (Unit-based additive price)
 	let prepPrice = 0;
-	if (room.wallCondition === 'Good') prepPrice = P.UNIT_PRICES.WALLS.PREP_GOOD;
-	if (room.wallCondition === 'Fair') prepPrice = P.UNIT_PRICES.WALLS.PREP_FAIR;
-	if (room.wallCondition === 'Poor') prepPrice = P.UNIT_PRICES.WALLS.PREP_POOR;
+	let prepSpeed = 0;
+	if (room.wallCondition === 'Good') {
+		prepPrice = P.UNIT_PRICES.WALLS.PREP_GOOD;
+		prepSpeed = P.PRODUCTION_SPEEDS.WALLS.PREP_GOOD;
+	}
+	if (room.wallCondition === 'Fair') {
+		prepPrice = P.UNIT_PRICES.WALLS.PREP_FAIR;
+		prepSpeed = P.PRODUCTION_SPEEDS.WALLS.PREP_FAIR;
+	}
+	if (room.wallCondition === 'Poor') {
+		prepPrice = P.UNIT_PRICES.WALLS.PREP_POOR;
+		prepSpeed = P.PRODUCTION_SPEEDS.WALLS.PREP_POOR;
+	}
 	
 	if (prepPrice > 0) {
-		const { cost: pCost, hours: pHours } = calculateItemPrice(area, prepPrice);
+		const { cost: pCost, hours: pHours } = calculateLineData(area, prepPrice, prepSpeed);
 		addLineItem(ctx, `${room.label} - Wall Prep (${room.wallCondition})`, pHours, pCost, `${Math.round(area)} sqft @ $${prepPrice.toFixed(2)}/sqft`);
 		if (H >= 12) ctx.highWorkLaborHours += pHours;
 	}
@@ -115,22 +130,25 @@ const calculateCeilingHours = (room: PaintingRoom, ctx: CalculationContext, L: n
 
 	const area = L * W;
 	
-	// 1. Determine Base Unit Price (Smooth) & Coat Counts
+	// 1. Determine Base Unit Price (Smooth) & Speeds
 	let basePrice = P.UNIT_PRICES.CEILINGS.SMOOTH_2;
+	let speed = P.PRODUCTION_SPEEDS.CEILINGS.CHANGE;
 	let finishCoats = 2;
 	let coatLabel = '2 Coats';
 
 	if (room.colorChange === 'Similar') {
 		basePrice = P.UNIT_PRICES.CEILINGS.SMOOTH_1;
+		speed = P.PRODUCTION_SPEEDS.CEILINGS.REFRESH;
 		finishCoats = 1;
 		coatLabel = 'Refresh (1 Coat)';
 	} else if (room.colorChange === 'Dark-to-Light') {
 		basePrice = P.UNIT_PRICES.CEILINGS.SMOOTH_3;
-		finishCoats = 2; // Priming built-in to the unit price
+		speed = P.PRODUCTION_SPEEDS.CEILINGS.DARK_TO_LIGHT;
+		finishCoats = 2; // Priming built-in
 		coatLabel = 'Dark-to-Light (3 Coats)';
 	}
 
-	// 2. Apply Texture Surcharge
+	// 2. Apply Texture Surcharges
 	let textureSurchargePercent = 0;
 	if (room.ceilingTexture === 'Popcorn') {
 		textureSurchargePercent = P.UNIT_PRICES.CEILINGS.TEXTURE_SURCHARGE.POPCORN;
@@ -148,7 +166,7 @@ const calculateCeilingHours = (room: PaintingRoom, ctx: CalculationContext, L: n
 
 	const finalUnitPrice = unitPriceWithTexture * heightMultiplier;
 
-	const { cost, hours } = calculateItemPrice(area, finalUnitPrice);
+	const { cost, hours } = calculateLineData(area, finalUnitPrice, speed);
 	const textureLabel = room.ceilingTexture === 'Flat' ? 'Smooth' : room.ceilingTexture;
 	const details = `${Math.round(area)} sqft @ $${finalUnitPrice.toFixed(2)}/sqft (${textureLabel}, ${coatLabel} x ${heightMultiplier} height)`;
 	
@@ -184,32 +202,37 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	// 1. Baseboards / Trim
 	if (room.surfaces.trim) {
 		let unitPrice = P.UNIT_PRICES.TRIM.COAT_2;
+		let speed = P.PRODUCTION_SPEEDS.TRIM.COAT_2;
 		let finishCoats = 2;
 		let label = 'Standard Change (2 Coats)';
 
 		if (room.trimColorChange === 'Similar') {
 			unitPrice = P.UNIT_PRICES.TRIM.COAT_1;
+			speed = P.PRODUCTION_SPEEDS.TRIM.COAT_1;
 			finishCoats = 1;
 			label = 'Refresh (1 Coat)';
 		} else if (room.trimColorChange === 'Dark-to-Light') {
 			unitPrice = P.UNIT_PRICES.TRIM.COAT_3;
+			speed = P.PRODUCTION_SPEEDS.TRIM.COAT_3;
 			finishCoats = 2; // Priming built-in
 			label = 'Major Change (3 Coats)';
 		}
 
-		// Stairwell Multiplier
+		// Stairwell Multiplier (Affects Price, but Speed handles the Hours)
 		if (room.type === 'stairwell') {
 			unitPrice *= P.MULTIPLIERS.TRIM_STAIRWELL;
 		}
 
-		const { cost, hours } = calculateItemPrice(perimeter, unitPrice);
+		const { cost, hours } = calculateLineData(perimeter, unitPrice, speed);
 		addLineItem(ctx, `${room.label} - Trim`, hours, cost, `${Math.round(perimeter)} lf @ $${unitPrice.toFixed(2)}/lf (${label})`);
 
 		// US4: Standalone Trim Prep (Caulking)
 		if (room.trimCondition === 'Poor') {
 			const prepPrice = P.UNIT_PRICES.MISC.TRIM_PREP_POOR;
-			const { cost: pCost, hours: pHours } = calculateItemPrice(perimeter, prepPrice);
-			addLineItem(ctx, `${room.label} - Trim Prep (Caulking)`, pHours, pCost, `${Math.round(perimeter)} lf @ $${prepPrice.toFixed(2)}/lf (Poor Condition)`);
+			const { cost: pCost, hours: pHours } = calculateLineData(perimeter, prepPrice);
+			// Note: Prep is additive, so we manually set some hours for prep if not in speed table
+			const manualPrepHours = (perimeter * 0.025); // 0.025 hrs/lf from reference
+			addLineItem(ctx, `${room.label} - Trim Prep (Caulking)`, manualPrepHours, pCost, `${Math.round(perimeter)} lf @ $${prepPrice.toFixed(2)}/lf (Poor Condition)`);
 		}
 
 		// Materials
@@ -223,15 +246,18 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	// 2. Crown Molding
 	if (room.surfaces.crownMolding) {
 		let unitPrice = P.UNIT_PRICES.CROWN.COAT_2;
+		let speed = P.PRODUCTION_SPEEDS.CROWN.COAT_2;
 		let finishCoats = 2;
 		let label = 'Standard Change (2 Coats)';
 
 		if (room.crownColorChange === 'Similar') {
 			unitPrice = P.UNIT_PRICES.CROWN.COAT_1;
+			speed = P.PRODUCTION_SPEEDS.CROWN.COAT_1;
 			finishCoats = 1;
 			label = 'Refresh (1 Coat)';
 		} else if (room.crownColorChange === 'Dark-to-Light') {
 			unitPrice = P.UNIT_PRICES.CROWN.COAT_3;
+			speed = P.PRODUCTION_SPEEDS.CROWN.COAT_3;
 			finishCoats = 2; // Priming built-in
 			label = 'Major Change (3 Coats)';
 		}
@@ -241,7 +267,7 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 			unitPrice *= (1 + P.UNIT_PRICES.MISC.CROWN_DETAILED_SURCHARGE);
 		}
 
-		const { cost, hours } = calculateItemPrice(perimeter, unitPrice);
+		const { cost, hours } = calculateLineData(perimeter, unitPrice, speed);
 		addLineItem(ctx, `${room.label} - Crown Molding`, hours, cost, `${Math.round(perimeter)} lf @ $${unitPrice.toFixed(2)}/lf (${label}${room.crownMoldingStyle === 'Detailed' ? ', Detailed Style' : ''})`);
 
 		// Materials
@@ -255,35 +281,40 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	// 3. Doors
 	if (room.surfaces.doors) {
 		const count = parseInt(room.doorCount) || 0;
-		let doorHoursPerSide = 0;
-		if (room.doorStyle === 'Paneled') {
-			doorHoursPerSide = P.FIXED_ITEMS.DOOR_6_PANEL_SIDE;
-		} else { // Slab
-			doorHoursPerSide = P.FIXED_ITEMS.DOOR_SLAB_SIDE;
-		}
-		
-		// Apply 2x multiplier for both sides
-		const totalDoorHours = count * doorHoursPerSide * 2;
-		const totalCost = totalDoorHours * P.LABOR_RATE;
-		const detailHours = doorHoursPerSide * 2; // For displaying in details
+		if (count > 0) {
+			let doorHoursPerSide = 0;
+			let doorPricePerSide = 0;
+			if (room.doorStyle === 'Paneled') {
+				doorHoursPerSide = P.FIXED_ITEMS.DOOR_6_PANEL_SIDE;
+				doorPricePerSide = 112.50 / 2; // $112.50 ea from ref / 2 sides
+			} else { // Slab
+				doorHoursPerSide = P.FIXED_ITEMS.DOOR_SLAB_SIDE;
+				doorPricePerSide = 75.00 / 2; // $75.00 ea from ref / 2 sides
+			}
+			
+			// Both sides
+			const totalDoorHours = count * doorHoursPerSide * 2;
+			const totalDoorCost = count * doorPricePerSide * 2;
+			const detailHours = doorHoursPerSide * 2; 
 
-		addLineItem(ctx, `${room.label} - Doors`, totalDoorHours, totalCost, `${count} ${room.doorStyle} doors @ ${detailHours.toFixed(2)} hrs/ea (both sides)`);
-		
-		// 1 Gallon paints 8 Doors (both sides, 1 coat).
-		const doorFinishGallons = (count / P.MATERIAL_COVERAGE.DOORS_PER_GALLON) * 2; // Default to 2 coats for doors
-		ctx.trimGallons += doorFinishGallons;
+			addLineItem(ctx, `${room.label} - Doors`, totalDoorHours, totalDoorCost, `${count} ${room.doorStyle} doors @ ${detailHours.toFixed(2)} hrs/ea (both sides)`);
+			
+			const doorFinishGallons = (count / P.MATERIAL_COVERAGE.DOORS_PER_GALLON) * 2; 
+			ctx.trimGallons += doorFinishGallons;
+		}
 	}
 
 	// 4. Windows
 	if (room.surfaces.windows) {
 		const count = room.windowCount || 0;
-		const windowHours = count * P.FIXED_ITEMS.WINDOW_STANDARD_CASING;
-		const totalCost = windowHours * P.LABOR_RATE;
-		addLineItem(ctx, `${room.label} - Window Frames`, windowHours, totalCost, `${count} windows @ ${P.FIXED_ITEMS.WINDOW_STANDARD_CASING.toFixed(2)} hrs/ea`);
-		
-		// 1 Quart paints 3 Windows (1 coat). 1 Gallon = 12 Windows.
-		const windowFinishGallons = (count / P.MATERIAL_COVERAGE.WINDOWS_PER_GALLON) * 2; // Default to 2 coats
-		ctx.trimGallons += windowFinishGallons;
+		if (count > 0) {
+			const windowHours = count * P.FIXED_ITEMS.WINDOW_STANDARD_CASING;
+			const windowPrice = count * 37.50; // $37.50 ea from ref
+			addLineItem(ctx, `${room.label} - Window Frames`, windowHours, windowPrice, `${count} windows @ $37.50/ea`);
+			
+			const windowFinishGallons = (count / P.MATERIAL_COVERAGE.WINDOWS_PER_GALLON) * 2; 
+			ctx.trimGallons += windowFinishGallons;
+		}
 	}
 };
 

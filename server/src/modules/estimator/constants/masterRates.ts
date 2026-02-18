@@ -191,6 +191,32 @@ export const MASTER_RATES = {
 			},
 		},
 
+		PRODUCTION_SPEEDS: {
+			WALLS: {
+				REFRESH: 130, // sqft/hr
+				CHANGE: 80,
+				DARK_TO_LIGHT: 55,
+				PREP_GOOD: 666, // 0.15 hrs / 100 -> 100 / 0.15
+				PREP_FAIR: 250, // 0.40 hrs / 100 -> 100 / 0.40
+				PREP_POOR: 100, // 1.00 hr / 100
+			},
+			CEILINGS: {
+				REFRESH: 130,
+				CHANGE: 80,
+				DARK_TO_LIGHT: 55,
+			},
+			TRIM: {
+				COAT_1: 60, // lf/hr
+				COAT_2: 35,
+				COAT_3: 20,
+			},
+			CROWN: {
+				COAT_1: 40,
+				COAT_2: 25,
+				COAT_3: 15,
+			},
+		},
+
 		FIXED_ITEMS: {
 			CLOSET_STANDARD: 1.0,
 			CLOSET_MEDIUM: 1.5,
