@@ -31,9 +31,9 @@ export const getEstimate = async (
 		if (formData.services.painting && formData.painting.rooms.length > 0) {
 			promises.push(
 				calculatePaintingEstimate(formData.painting).then((est) => {
-					totalLow += est.low;
-					totalHigh += est.high;
-					totalHours += est.totalHours;
+					totalLow += isNaN(est.low) ? 0 : est.low;
+					totalHigh += isNaN(est.high) ? 0 : est.high;
+					totalHours += isNaN(est.totalHours) ? 0 : est.totalHours;
 					combinedExplanation += `PAINTING:\n${est.explanation}\n\n`;
 					if (est.breakdownItems) {
 						breakdownItems = [...breakdownItems, ...est.breakdownItems];
@@ -50,9 +50,9 @@ export const getEstimate = async (
 			if (hasRepairs || hasDesc) {
 				promises.push(
 					calculateRepairEstimate(formData.patching).then((est) => {
-						totalLow += est.low;
-						totalHigh += est.high;
-						totalHours += est.totalHours;
+						totalLow += isNaN(est.low) ? 0 : est.low;
+						totalHigh += isNaN(est.high) ? 0 : est.high;
+						totalHours += isNaN(est.totalHours) ? 0 : est.totalHours;
 						totalVisits = est.totalVisits || 0;
 						combinedExplanation += `DRYWALL REPAIR:\n${est.explanation}\n\n`;
 						if (est.breakdownItems) {
@@ -68,9 +68,9 @@ export const getEstimate = async (
 			promises.push(
 				Promise.resolve(calculateGarageEstimate(formData.garage, isAdmin)).then(
 					(est) => {
-						totalLow += est.low;
-						totalHigh += est.high;
-						totalHours += est.totalHours;
+						totalLow += isNaN(est.low) ? 0 : est.low;
+						totalHigh += isNaN(est.high) ? 0 : est.high;
+						totalHours += isNaN(est.totalHours) ? 0 : est.totalHours;
 						combinedExplanation += `GARAGE FINISH:\n${est.explanation}\n\n`;
 						if (isAdmin && est.breakdownItems) {
 							breakdownItems = [...breakdownItems, ...est.breakdownItems];
@@ -84,9 +84,9 @@ export const getEstimate = async (
 		if (formData.services.installation) {
 			promises.push(
 				calculateInstallEstimate(formData.installation).then((est) => {
-					totalLow += est.low;
-					totalHigh += est.high;
-					totalHours += est.totalHours;
+					totalLow += isNaN(est.low) ? 0 : est.low;
+					totalHigh += isNaN(est.high) ? 0 : est.high;
+					totalHours += isNaN(est.totalHours) ? 0 : est.totalHours;
 					combinedExplanation += `INSTALLATION:\n${est.explanation}\n\n`;
 				})
 			);
@@ -98,9 +98,9 @@ export const getEstimate = async (
 				Promise.resolve(
 					calculateBasementEstimate(formData.basement, isAdmin)
 				).then((est) => {
-					totalLow += est.low;
-					totalHigh += est.high;
-					totalHours += est.totalHours;
+					totalLow += isNaN(est.low) ? 0 : est.low;
+					totalHigh += isNaN(est.high) ? 0 : est.high;
+					totalHours += isNaN(est.totalHours) ? 0 : est.totalHours;
 					combinedExplanation += `BASEMENT FINISH:\n${est.explanation}\n\n`;
 					if (isAdmin && est.breakdownItems) {
 						breakdownItems = [...breakdownItems, ...est.breakdownItems];

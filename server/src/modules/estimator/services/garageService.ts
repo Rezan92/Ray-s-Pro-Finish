@@ -167,10 +167,11 @@ export const calculateGarageEstimate = (
 
 	// 3. Painting
 	if (services.painting) {
-		const key = PAINT_MAP[paintLvl] || 'STANDARD';
-		const wRate = MASTER_RATES.PAINTING[key].WALL;
-		const cRate = MASTER_RATES.PAINTING[key].CEILING;
-		addService(`Painting (${paintLvl})`, wRate, cRate, 'Paint & Supplies');
+		const key = paintLvl === 'Premium' ? 'DARK_TO_LIGHT' : paintLvl === '1-Coat' ? 'REFRESH' : 'CHANGE';
+		const pRate = MASTER_RATES.PAINTING.UNIT_PRICES.WALLS[key as keyof typeof MASTER_RATES.PAINTING.UNIT_PRICES.WALLS] || MASTER_RATES.PAINTING.UNIT_PRICES.WALLS.CHANGE;
+		const cRate = MASTER_RATES.PAINTING.UNIT_PRICES.CEILINGS.SMOOTH_2;
+		
+		addService(`Painting (${paintLvl})`, { labor: pRate, material: 0 }, { labor: cRate, material: 0 }, 'Paint & Supplies');
 	}
 
 	// Fees

@@ -152,6 +152,9 @@ export const MASTER_RATES = {
 				REFRESH: 0.58,
 				CHANGE: 0.94,
 				DARK_TO_LIGHT: 1.36,
+				PREP_GOOD: 0.11,
+				PREP_FAIR: 0.30,
+				PREP_POOR: 0.75,
 			},
 			CEILINGS: {
 				SMOOTH_1: 0.58,
@@ -175,6 +178,12 @@ export const MASTER_RATES = {
 			MISC: {
 				TRIM_PREP_POOR: 0.35,
 				CROWN_DETAILED_SURCHARGE: 0.20,
+			},
+			STAIRS: {
+				SPINDLE_SQUARE: 15.00,
+				SPINDLE_INTRICATE: 37.50,
+				HANDRAIL: 12.50,
+				STEP: 25.00,
 			},
 			EQUIPMENT: {
 				LADDER: 60.00,

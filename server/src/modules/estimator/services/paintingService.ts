@@ -26,12 +26,16 @@ const addLineItem = (
 	cost: number,
 	details: string
 ) => {
-	ctx.totalHours += hours;
-	ctx.totalCost += cost;
+	// Safety Check: Ensure we don't propagate NaN
+	const safeHours = isNaN(hours) ? 0 : hours;
+	const safeCost = isNaN(cost) ? 0 : cost;
+
+	ctx.totalHours += safeHours;
+	ctx.totalCost += safeCost;
 	ctx.items.push({
 		name,
-		hours: parseFloat(hours.toFixed(2)),
-		cost: Math.round(cost),
+		hours: parseFloat(safeHours.toFixed(2)),
+		cost: Math.round(safeCost),
 		details,
 	});
 };
@@ -40,7 +44,10 @@ const addLineItem = (
  * T005: Helper to calculate price and derive hours (Reverse-Hour Formula)
  */
 const calculateItemPrice = (quantity: number, unitPrice: number) => {
-	const cost = quantity * unitPrice;
+	const safeQty = isNaN(quantity) ? 0 : quantity;
+	const safePrice = isNaN(unitPrice) ? 0 : unitPrice;
+	
+	const cost = safeQty * safePrice;
 	const hours = cost / P.LABOR_RATE;
 	return { cost, hours };
 };
@@ -65,7 +72,7 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 		label = 'Refresh (1 Coat)';
 	} else if (room.colorChange === 'Dark-to-Light') {
 		unitPrice = P.UNIT_PRICES.WALLS.DARK_TO_LIGHT;
-		finishCoats = 2; // Priming is built into the 3-coat unit price logically, but we use finishCoats for paint vol
+		finishCoats = 2; // Priming is built into the 3-coat unit price logically
 		label = 'Dark-to-Light (3 Coats)';
 	}
 
@@ -81,9 +88,9 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 
 	// 2. Prep (Unit-based additive price)
 	let prepPrice = 0;
-	if (room.wallCondition === 'Good') prepPrice = 0.11; // Hardcoded from reference if not in P
-	if (room.wallCondition === 'Fair') prepPrice = 0.30;
-	if (room.wallCondition === 'Poor') prepPrice = 0.75;
+	if (room.wallCondition === 'Good') prepPrice = P.UNIT_PRICES.WALLS.PREP_GOOD;
+	if (room.wallCondition === 'Fair') prepPrice = P.UNIT_PRICES.WALLS.PREP_FAIR;
+	if (room.wallCondition === 'Poor') prepPrice = P.UNIT_PRICES.WALLS.PREP_POOR;
 	
 	if (prepPrice > 0) {
 		const { cost: pCost, hours: pHours } = calculateItemPrice(area, prepPrice);
@@ -98,25 +105,6 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	if (room.colorChange === 'Dark-to-Light') {
 		ctx.primerGallons += (area / P.MATERIAL_COVERAGE.PRIMER_SQFT_PER_GALLON);
 	}
-
-	ctx.items.push({
-		name: `${room.label} - Wall Paint Requirement`,
-		hours: 0,
-		cost: 0,
-		details: `${finishGallons.toFixed(2)} gallons finish paint (${finishCoats} coats)${room.colorChange === 'Dark-to-Light' ? ` + 1 coat primer` : ''}`
-	});
-
-	// 4. Defaults (Masking, Electrical) - Still man-hour based but following the $75/hr cost rule
-	const windowCount = room.windowCount || 0;
-	if (windowCount > 0) {
-		const wHours = windowCount * P.DEFAULTS.MASKING_WINDOW;
-		addLineItem(ctx, `${room.label} - Window Masking`, wHours, wHours * P.LABOR_RATE, `${windowCount} windows @ 5m/ea`);
-		if (H >= 12) ctx.highWorkLaborHours += wHours;
-	}
-	
-	const electricalHours = P.DEFAULTS.DEFAULT_PLATE_COUNT * P.DEFAULTS.ELECTRICAL_PLATE;
-	addLineItem(ctx, `${room.label} - Electrical Plates`, electricalHours, electricalHours * P.LABOR_RATE, `${P.DEFAULTS.DEFAULT_PLATE_COUNT} plates @ 3m/ea`);
-	if (H >= 12) ctx.highWorkLaborHours += electricalHours;
 };
 
 /**
@@ -171,11 +159,6 @@ const calculateCeilingHours = (room: PaintingRoom, ctx: CalculationContext, L: n
 		ctx.highWorkLaborHours += hours;
 	}
 
-	// 4. Fixture Masking (Following $75/hr cost rule)
-	const fixtureHours = P.DEFAULTS.DEFAULT_FIXTURE_COUNT * P.DEFAULTS.MASKING_FIXTURE;
-	addLineItem(ctx, `${room.label} - Ceiling Fixture Masking`, fixtureHours, fixtureHours * P.LABOR_RATE, `${P.DEFAULTS.DEFAULT_FIXTURE_COUNT} fixture @ 5m`);
-	if (H >= 12) ctx.highWorkLaborHours += fixtureHours;
-
 	// 5. Materials
 	const ceilingFinishGallons = (area / P.MATERIAL_COVERAGE.WALL_CEILING_SQFT_PER_GALLON) * finishCoats;
 	ctx.ceilingGallons += ceilingFinishGallons;
@@ -183,13 +166,6 @@ const calculateCeilingHours = (room: PaintingRoom, ctx: CalculationContext, L: n
 	if (room.colorChange === 'Dark-to-Light') {
 		ctx.primerGallons += (area / P.MATERIAL_COVERAGE.PRIMER_SQFT_PER_GALLON);
 	}
-
-	ctx.items.push({
-		name: `${room.label} - Ceiling Paint Requirement`,
-		hours: 0,
-		cost: 0,
-		details: `${ceilingFinishGallons.toFixed(2)} gallons ceiling paint (${finishCoats} coats)${room.colorChange === 'Dark-to-Light' ? ` + 1 coat primer` : ''}`
-	});
 };
 
 /**
@@ -235,13 +211,6 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 		if (room.trimColorChange === 'Dark-to-Light') {
 			ctx.primerGallons += (perimeter / P.MATERIAL_COVERAGE.TRIM_PRIMER_LF_PER_GALLON);
 		}
-
-		ctx.items.push({
-			name: `${room.label} - Trim Paint Requirement`,
-			hours: 0,
-			cost: 0,
-			details: `${trimFinishGallons.toFixed(2)} gallons trim paint (${finishCoats} coats)${room.trimColorChange === 'Dark-to-Light' ? ` + 1 coat primer` : ''}`
-		});
 	}
 
 	// 2. Crown Molding
@@ -274,13 +243,6 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 		if (room.crownColorChange === 'Dark-to-Light') {
 			ctx.primerGallons += (perimeter / P.MATERIAL_COVERAGE.TRIM_PRIMER_LF_PER_GALLON);
 		}
-
-		ctx.items.push({
-			name: `${room.label} - Crown Paint Requirement`,
-			hours: 0,
-			cost: 0,
-			details: `${crownFinishGallons.toFixed(2)} gallons trim paint (${finishCoats} coats)${room.crownColorChange === 'Dark-to-Light' ? ` + 1 coat primer` : ''}`
-		});
 	}
 
 	// 3. Doors
@@ -303,13 +265,6 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 		// 1 Gallon paints 8 Doors (both sides, 1 coat).
 		const doorFinishGallons = (count / P.MATERIAL_COVERAGE.DOORS_PER_GALLON) * 2; // Default to 2 coats for doors
 		ctx.trimGallons += doorFinishGallons;
-
-		ctx.items.push({
-			name: `${room.label} - Door Paint Requirement`,
-			hours: 0,
-			cost: 0,
-			details: `${doorFinishGallons.toFixed(2)} gallons trim paint (${count} ${room.doorStyle} doors)`
-		});
 	}
 
 	// 4. Windows
@@ -322,13 +277,6 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 		// 1 Quart paints 3 Windows (1 coat). 1 Gallon = 12 Windows.
 		const windowFinishGallons = (count / P.MATERIAL_COVERAGE.WINDOWS_PER_GALLON) * 2; // Default to 2 coats
 		ctx.trimGallons += windowFinishGallons;
-
-		ctx.items.push({
-			name: `${room.label} - Window Paint Requirement`,
-			hours: 0,
-			cost: 0,
-			details: `${windowFinishGallons.toFixed(2)} gallons trim paint (${count} windows)`
-		});
 	}
 };
 
@@ -340,21 +288,23 @@ const calculateStairwellHours = (room: PaintingRoom, ctx: CalculationContext) =>
 
 	// Spindles
 	if (room.stairSpindles && room.stairSpindles > 0) {
-		const rate = room.stairSpindleType === 'Intricate' ? P.PRODUCTION_RATES.STAIRS.SPINDLE_INTRICATE : P.PRODUCTION_RATES.STAIRS.SPINDLE_SQUARE;
-		const spindleHours = room.stairSpindles * rate;
-		addLineItem(ctx, `${room.label} - Spindles (${room.stairSpindleType})`, spindleHours, `${room.stairSpindles} @ ${rate} hrs/ea`);
+		const unitPrice = room.stairSpindleType === 'Intricate' ? P.UNIT_PRICES.STAIRS.SPINDLE_INTRICATE : P.UNIT_PRICES.STAIRS.SPINDLE_SQUARE;
+		const { cost, hours } = calculateItemPrice(room.stairSpindles, unitPrice);
+		addLineItem(ctx, `${room.label} - Spindles (${room.stairSpindleType})`, hours, cost, `${room.stairSpindles} @ $${unitPrice.toFixed(2)}/ea`);
 	}
 
 	// Handrails
 	if (room.stairHandrail && room.stairHandrail > 0) {
-		const handrailHours = room.stairHandrail / P.PRODUCTION_RATES.STAIRS.HANDRAIL;
-		addLineItem(ctx, `${room.label} - Handrails`, handrailHours, `${room.stairHandrail} lf @ ${P.PRODUCTION_RATES.STAIRS.HANDRAIL} lf/hr`);
+		const unitPrice = P.UNIT_PRICES.STAIRS.HANDRAIL;
+		const { cost, hours } = calculateItemPrice(room.stairHandrail, unitPrice);
+		addLineItem(ctx, `${room.label} - Handrails`, hours, cost, `${room.stairHandrail} lf @ $${unitPrice.toFixed(2)}/lf`);
 	}
 
 	// Steps
 	if (room.stairSteps && room.stairSteps > 0) {
-		const stepHours = room.stairSteps * P.PRODUCTION_RATES.STAIRS.STEP;
-		addLineItem(ctx, `${room.label} - Steps (Risers/Stringers)`, stepHours, `${room.stairSteps} steps @ ${P.PRODUCTION_RATES.STAIRS.STEP} hrs/ea`);
+		const unitPrice = P.UNIT_PRICES.STAIRS.STEP;
+		const { cost, hours } = calculateItemPrice(room.stairSteps, unitPrice);
+		addLineItem(ctx, `${room.label} - Steps (Risers/Stringers)`, hours, cost, `${room.stairSteps} steps @ $${unitPrice.toFixed(2)}/ea`);
 	}
 };
 
@@ -406,45 +356,29 @@ export const calculatePaintingEstimate = async (data: any) => {
 		if (room.type === 'bedroom' && room.closetSize && room.closetSize !== 'None') {
 			const sizeKey = room.closetSize.toUpperCase() as keyof typeof P.FIXED_ITEMS.CLOSET_MATERIAL_GALLONS;
 			const closetHours = P.FIXED_ITEMS[`CLOSET_${sizeKey}` as keyof typeof P.FIXED_ITEMS] || 0;
+			const closetCost = closetHours * P.LABOR_RATE;
 			const closetGallons = P.FIXED_ITEMS.CLOSET_MATERIAL_GALLONS[sizeKey] || 0;
 
-			addLineItem(ctx, `${room.label} - Closet (${room.closetSize})`, closetHours, `Fixed rate for ${room.closetSize} closet`);
+			addLineItem(ctx, `${room.label} - Closet (${room.closetSize})`, closetHours, closetCost, `Fixed rate for ${room.closetSize} closet`);
 			ctx.wallGallons += closetGallons;
 		}
-
-		// Floor Protection
-		const floorArea = L * W;
-		const protectionHours = (floorArea / 100) * P.DEFAULTS.FLOOR_PROTECTION * 100; // 15 mins per 100 sqft
-		addLineItem(ctx, `${room.label} - Floor Protection`, protectionHours / 60, `${Math.round(floorArea)} sqft @ 15m/100sqft`);
-
-		// Misc Material Fee
-		ctx.totalCost += P.MISC_MATERIAL_FEE_PER_ROOM;
-		ctx.items.push({
-			name: `${room.label} - Misc Supplies`,
-			hours: 0,
-			cost: P.MISC_MATERIAL_FEE_PER_ROOM,
-			details: 'Spackle, tape, sandpaper, etc.'
-		});
 	});
 
 	// Apply Occupancy Multiplier to LABOR hours (T016)
 	if (occupancyMultiplier !== 1.0) {
-		const adjustment = ctx.totalHours * (occupancyMultiplier - 1);
-		ctx.totalHours += adjustment;
-		ctx.totalCost += adjustment * P.LABOR_RATE;
-		// Update details of last item or add a new one? Let's add an occupancy line item.
+		const adjustmentHours = ctx.totalHours * (occupancyMultiplier - 1);
+		const adjustmentCost = ctx.totalCost * (occupancyMultiplier - 1);
+		
+		ctx.totalHours += adjustmentHours;
+		ctx.totalCost += adjustmentCost;
+
 		ctx.items.push({
 			name: `Occupancy Factor (${data.occupancy})`,
-			hours: parseFloat(adjustment.toFixed(2)),
-			cost: Math.round(adjustment * P.LABOR_RATE),
-			details: `${occupancyMultiplier}x multiplier applied to total labor`,
+			hours: parseFloat(adjustmentHours.toFixed(2)),
+			cost: Math.round(adjustmentCost),
+			details: `${occupancyMultiplier}x multiplier applied to total project`,
 		});
 	}
-
-	// T009: Global Add-ons (Workday logic, Daily Trip)
-	const totalDays = Math.ceil(ctx.totalHours / 8);
-	const tripHours = totalDays * P.DAILY_TRIP_HOURS;
-	addLineItem(ctx, 'Daily Trip & Setup', tripHours, `${totalDays} days @ 45m/day`);
 
 	// US3: Equipment Rental (High Work)
 	let maxProjectHeight = 0;
