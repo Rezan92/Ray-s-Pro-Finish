@@ -72,10 +72,10 @@
 
 **Independent Test**: Select "Poor" trim condition and verify $0.35/lf caulking fee line item.
 
-- [ ] T017 [US4] Refactor `calculateTrimHours` in `server/src/modules/estimator/services/paintingService.ts` to use `UNIT_PRICES.TRIM` and `UNIT_PRICES.CROWN`.
-- [ ] T018 [US4] Implement "Poor" trim condition surcharge: standalone line item at $0.35/lf.
-- [ ] T019 [US4] Implement "Detailed" crown style surcharge: +20% to the base crown labor price.
-- [ ] T020 [US4] Verify trim/crown labor cost and hour derivation.
+- [x] T017 [US4] Refactor `calculateTrimHours` in `server/src/modules/estimator/services/paintingService.ts` to use `UNIT_PRICES.TRIM` and `UNIT_PRICES.CROWN`.
+- [x] T018 [US4] Implement "Poor" trim condition surcharge: standalone line item at $0.35/lf.
+- [x] T019 [US4] Implement "Detailed" crown style surcharge: +20% to the base crown labor price.
+- [x] T020 [US4] Verify trim/crown labor cost and hour derivation.
 
 ---
 
