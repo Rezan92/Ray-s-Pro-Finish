@@ -427,24 +427,42 @@ export const calculatePaintingEstimate = async (data: any) => {
 	const tripHours = totalDays * P.DAILY_TRIP_HOURS;
 	addLineItem(ctx, 'Daily Trip & Setup', tripHours, `${totalDays} days @ 45m/day`);
 
-	// T009: Equipment Rental
-	// Scan the breakdown items or check room heights from the data
-	// Let's re-calculate H logic for the check or pass it through
-	const hasHighCeilings = data.rooms.some((room: any) => {
-		if (room.exactHeight && room.exactHeight >= 12) return true;
-		const hMap: Record<string, number> = { '11-14ft': 12, '15ft+': 18 };
-		const h = hMap[room.ceilingHeight] || parseInt(room.ceilingHeight) || 8;
-		return h >= 12;
+	// US3: Equipment Rental (High Work)
+	let maxProjectHeight = 0;
+	data.rooms.forEach((room: any) => {
+		let h;
+		if (room.exactHeight) {
+			h = room.exactHeight;
+		} else {
+			const hMap: Record<string, number> = { '8ft': 8, '9-10ft': 9, '11-14ft': 12, '15ft+': 18 };
+			h = hMap[room.ceilingHeight] || parseInt(room.ceilingHeight) || 8;
+		}
+		if (h > maxProjectHeight) maxProjectHeight = h;
 	});
-	if (hasHighCeilings) {
-		const rentalCost = totalDays * P.EQUIPMENT_RENTAL_DAILY;
-		ctx.totalCost += rentalCost;
-		ctx.items.push({
-			name: 'High-Reach Equipment Rental',
-			hours: 0,
-			cost: rentalCost,
-			details: `${totalDays} days @ $${P.EQUIPMENT_RENTAL_DAILY}/day`,
-		});
+
+	if (ctx.highWorkLaborHours > 0) {
+		const rentalDays = Math.ceil(ctx.highWorkLaborHours / 8);
+		let dailyRate = 0;
+		let equipmentType = '';
+
+		if (maxProjectHeight >= 15) {
+			dailyRate = P.UNIT_PRICES.EQUIPMENT.SCAFFOLD;
+			equipmentType = 'Scaffolding';
+		} else if (maxProjectHeight >= 12) {
+			dailyRate = P.UNIT_PRICES.EQUIPMENT.LADDER;
+			equipmentType = 'Ladder';
+		}
+
+		if (rentalDays > 0 && dailyRate > 0) {
+			const rentalCost = rentalDays * dailyRate;
+			ctx.totalCost += rentalCost;
+			ctx.items.push({
+				name: 'Equipment Rental',
+				hours: 0,
+				cost: rentalCost,
+				details: `${rentalDays} days ${equipmentType} @ $${dailyRate}/day (Total High Work: ${ctx.highWorkLaborHours.toFixed(2)} hrs)`,
+			});
+		}
 	}
 
 	// Material Supply Logic

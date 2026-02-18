@@ -56,11 +56,11 @@
 
 **Independent Test**: Set ceiling height to 15ft and verify Scaffolding rental ($150/day) appears based on labor hours.
 
-- [ ] T012 [US3] Implement `highWorkLaborHours` counter in `calculatePaintingEstimate` (paintingService.ts).
-- [ ] T013 [US3] Logic to increment `highWorkLaborHours` for any wall/ceiling task where `height >= 12`.
-- [ ] T014 [US3] Calculate rental duration: `Math.ceil(highWorkLaborHours / 8)`.
-- [ ] T015 [US3] Determine rental rate: $60 (12-15ft) or $150 (15ft+).
-- [ ] T016 [US3] Add "Equipment Rental" line item to the breakdown.
+- [x] T012 [US3] Implement `highWorkLaborHours` counter in `calculatePaintingEstimate` (paintingService.ts).
+- [x] T013 [US3] Logic to increment `highWorkLaborHours` for any wall/ceiling task where `height >= 12`.
+- [x] T014 [US3] Calculate rental duration: `Math.ceil(highWorkLaborHours / 8)`.
+- [x] T015 [US3] Determine rental rate: $60 (12-15ft) or $150 (15ft+).
+- [x] T016 [US3] Add "Equipment Rental" line item to the breakdown.
 
 **Checkpoint**: Equipment rental is correctly calculated and displayed.
 
