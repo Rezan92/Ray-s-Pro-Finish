@@ -11,6 +11,7 @@ interface CalculationContext {
 	wallGallons: number;
 	ceilingGallons: number;
 	trimGallons: number;
+	crownGallons: number;
 	primerGallons: number;
 }
 
@@ -272,7 +273,7 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 
 		// Materials
 		const crownFinishGallons = (perimeter / P.MATERIAL_COVERAGE.TRIM_LF_PER_GALLON) * finishCoats;
-		ctx.trimGallons += crownFinishGallons;
+		ctx.crownGallons += crownFinishGallons;
 		if (room.crownColorChange === 'Dark-to-Light') {
 			ctx.primerGallons += (perimeter / P.MATERIAL_COVERAGE.TRIM_PRIMER_LF_PER_GALLON);
 		}
@@ -282,22 +283,10 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	if (room.surfaces.doors) {
 		const count = parseInt(room.doorCount) || 0;
 		if (count > 0) {
-			let doorHoursPerSide = 0;
-			let doorPricePerSide = 0;
-			if (room.doorStyle === 'Paneled') {
-				doorHoursPerSide = P.FIXED_ITEMS.DOOR_6_PANEL_SIDE;
-				doorPricePerSide = 112.50 / 2; // $112.50 ea from ref / 2 sides
-			} else { // Slab
-				doorHoursPerSide = P.FIXED_ITEMS.DOOR_SLAB_SIDE;
-				doorPricePerSide = 75.00 / 2; // $75.00 ea from ref / 2 sides
-			}
-			
-			// Both sides
-			const totalDoorHours = count * doorHoursPerSide * 2;
-			const totalDoorCost = count * doorPricePerSide * 2;
-			const detailHours = doorHoursPerSide * 2; 
+			const totalDoorHours = count * P.FIXED_ITEMS.DOOR_STANDARD;
+			const totalDoorCost = count * P.FIXED_ITEMS.DOOR_STANDARD_PRICE;
 
-			addLineItem(ctx, `${room.label} - Doors`, totalDoorHours, totalDoorCost, `${count} ${room.doorStyle} doors @ ${detailHours.toFixed(2)} hrs/ea (both sides)`);
+			addLineItem(ctx, `${room.label} - Doors`, totalDoorHours, totalDoorCost, `${count} doors @ $145.00/ea`);
 			
 			const doorFinishGallons = (count / P.MATERIAL_COVERAGE.DOORS_PER_GALLON) * 2; 
 			ctx.trimGallons += doorFinishGallons;
@@ -358,6 +347,7 @@ export const calculatePaintingEstimate = async (data: any) => {
 		wallGallons: 0,
 		ceilingGallons: 0,
 		trimGallons: 0,
+		crownGallons: 0,
 		primerGallons: 0,
 	};
 
@@ -402,7 +392,8 @@ export const calculatePaintingEstimate = async (data: any) => {
 		// Occupancy Fee (Per Room)
 		if (data.occupancy === 'PAINTER_MOVES') {
 			const fee = P.UNIT_PRICES.MISC.OCCUPANCY_PAINTER_MOVES;
-			addLineItem(ctx, `${room.label} - Furniture Handling`, 0, fee, 'Fixed fee for moving/covering heavy furniture');
+			const time = P.UNIT_PRICES.MISC.OCCUPANCY_PAINTER_MOVES_TIME;
+			addLineItem(ctx, `${room.label} - Furniture Handling`, time, fee, 'Fixed fee for moving/covering heavy furniture (45 mins)');
 		}
 	});
 
@@ -452,9 +443,10 @@ export const calculatePaintingEstimate = async (data: any) => {
 	ctx.wallGallons *= waste;
 	ctx.ceilingGallons *= waste;
 	ctx.trimGallons *= waste;
+	ctx.crownGallons *= waste;
 	ctx.primerGallons *= waste;
 
-	const totalGallons = ctx.wallGallons + ctx.ceilingGallons + ctx.trimGallons + ctx.primerGallons;
+	const totalGallons = ctx.wallGallons + ctx.ceilingGallons + ctx.trimGallons + ctx.crownGallons + ctx.primerGallons;
 
 	if (totalGallons > 0) {
 		let materialCost = 0;
@@ -464,7 +456,7 @@ export const calculatePaintingEstimate = async (data: any) => {
 			if (data.paintProvider === 'Premium') gallonPrice = P.MATERIAL_PRICES.PREMIUM;
 			if (data.paintProvider === 'Ultra Premium') gallonPrice = P.MATERIAL_PRICES.ULTRA_PREMIUM;
 
-			const finishCost = (ctx.wallGallons + ctx.ceilingGallons + ctx.trimGallons) * gallonPrice;
+			const finishCost = (ctx.wallGallons + ctx.ceilingGallons + ctx.trimGallons + ctx.crownGallons) * gallonPrice;
 			const primerCost = ctx.primerGallons * P.MATERIAL_PRICES.UNIVERSAL_PRIMER;
 			materialCost = finishCost + primerCost;
 		}
@@ -481,7 +473,7 @@ export const calculatePaintingEstimate = async (data: any) => {
 			name: 'Material Breakdown',
 			hours: 0,
 			cost: 0,
-			details: `Walls: ${ctx.wallGallons.toFixed(1)}g, Ceiling: ${ctx.ceilingGallons.toFixed(1)}g, Trim: ${ctx.trimGallons.toFixed(1)}g, Primer: ${ctx.primerGallons.toFixed(1)}g`,
+			details: `Walls: ${ctx.wallGallons.toFixed(1)}g, Ceiling: ${ctx.ceilingGallons.toFixed(1)}g, Trim: ${ctx.trimGallons.toFixed(1)}g, Crown: ${ctx.crownGallons.toFixed(1)}g, Primer: ${ctx.primerGallons.toFixed(1)}g`,
 		});
 		ctx.totalCost += materialCost;
 	}

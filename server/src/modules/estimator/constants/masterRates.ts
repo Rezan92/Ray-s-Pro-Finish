@@ -178,6 +178,7 @@ export const MASTER_RATES = {
 				TRIM_PREP_POOR: 0.35,
 				CROWN_DETAILED_SURCHARGE: 0.20,
 				OCCUPANCY_PAINTER_MOVES: 60.00,
+				OCCUPANCY_PAINTER_MOVES_TIME: 0.75, // 45 mins
 			},
 			STAIRS: {
 				SPINDLE_SQUARE: 15.00,
@@ -226,9 +227,9 @@ export const MASTER_RATES = {
 				MEDIUM: 0.53,
 				LARGE: 0.84,
 			},
-			WINDOW_STANDARD_CASING: 0.833, // 50 mins total per window
-			DOOR_6_PANEL_SIDE: 0.666, // 40 mins per side
-			DOOR_SLAB_SIDE: 0.583, // 35 mins per side
+			WINDOW_STANDARD_CASING: 0.5, // 30 mins
+			DOOR_STANDARD: 1.5, // 1.5 hrs
+			DOOR_STANDARD_PRICE: 145.00,
 		},
 
 		DEFAULTS: {

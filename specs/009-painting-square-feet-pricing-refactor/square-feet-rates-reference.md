@@ -10,7 +10,7 @@
 | **Hourly Labor Rate** | **$75.00** | /hour | Base rate for all calculations. |
 | **Occupancy: Empty/New** | **$0.00** | /room | No furniture. |
 | **Occupancy: Owner Clears** | **$0.00** | /room | Owner moves/covers everything. |
-| **Occupancy: Painter Moves** | **$60.00** | /room | Painter moves/covers heavy furniture. |
+| **Occupancy: Painter Moves** | **$60.00** | /room | Painter moves/covers heavy furniture (45 mins). |
 | **Ceiling Height: 8-9'** | **1.00x** | multiplier | Standard. |
 | **Ceiling Height: 10'** | **1.10x** | multiplier | Moderate height. |
 | **Ceiling Height: 12-14'** | **1.25x** | multiplier | High. |
@@ -69,8 +69,7 @@
 
 | Item | Rate | Labor Price | Notes |
 | :--- | :--- | :--- | :--- |
-| **Door (Slab)** | 1.0 hr | **$75.00** ea | Both sides & frame. |
-| **Door (Paneled)** | 1.5 hr | **$112.50** ea | Both sides & frame. |
+| **Door (Standard)** | 1.5 hr | **$145.00** ea | Both sides & frame. |
 | **Window Frame** | 0.5 hr | **$37.50** ea | Standard casing/sash. |
 | **Closet (Standard)**| 1 hr | **$75.00** ea | 2' x 4' reach-in. |
 | **Closet (Medium)** | 1.5 hr | **$112.50** ea | 5' x 5' walk-in. |
