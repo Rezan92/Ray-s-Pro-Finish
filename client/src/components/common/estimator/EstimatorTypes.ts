@@ -23,10 +23,11 @@ export interface PaintingRoom {
 	ceilingTexture: string; // 'Flat', 'Textured', 'Popcorn'
 	trimCondition: string; // 'Good', 'Poor'
 	trimStyle: 'Simple' | 'Detailed';
-	trimConversion?: boolean;
+	trimColorChange: string; // 'Similar', 'Change', 'Dark-to-Light'
 	doorCount: string;
 	doorStyle: string; // 'Slab', 'Paneled'
 	crownMoldingStyle: string; // 'Simple', 'Detailed'
+	crownColorChange: string; // 'Similar', 'Change', 'Dark-to-Light'
 	stairSteps?: number;
 	stairSpindles?: number;
 	stairSpindleType?: 'Square' | 'Intricate';

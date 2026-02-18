@@ -1,0 +1,37 @@
+
+openapi: 3.0.0
+info:
+  title: Painting Estimator API (Unit Pricing)
+  version: 2.0.0
+components:
+  schemas:
+    ColorChange:
+      type: string
+      enum: [Similar, Change, Dark-to-Light]
+    PaintingRoom:
+      type: object
+      properties:
+        label: { type: string }
+        type: { type: string }
+        size: { type: string }
+        ceilingHeight: { type: string }
+        surfaces:
+          type: object
+          properties:
+            walls: { type: boolean }
+            ceiling: { type: boolean }
+            trim: { type: boolean }
+            crownMolding: { type: boolean }
+            doors: { type: boolean }
+            windows: { type: boolean }
+        colorChange: { $ref: "#/components/schemas/ColorChange" }
+        ceilingTexture: { type: string, enum: [Smooth, Orange Peel, Popcorn] }
+        trimColorChange: { $ref: "#/components/schemas/ColorChange" }
+        crownColorChange: { $ref: "#/components/schemas/ColorChange" }
+        trimCondition: { type: string, enum: [Good, Fair, Poor] }
+        crownMoldingStyle: { type: string, enum: [Simple, Detailed] }
+        doorCount: { type: string }
+        doorStyle: { type: string, enum: [Slab, Paneled] }
+        windowCount: { type: integer }
+        # ... other existing fields
+

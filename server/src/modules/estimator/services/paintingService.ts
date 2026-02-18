@@ -22,10 +22,9 @@ const addLineItem = (
 	ctx: CalculationContext,
 	name: string,
 	hours: number,
-	details: string,
-	isLabor: boolean = true
+	cost: number,
+	details: string
 ) => {
-	const cost = isLabor ? hours * P.LABOR_RATE : 0;
 	ctx.totalHours += hours;
 	ctx.totalCost += cost;
 	ctx.items.push({
@@ -34,6 +33,15 @@ const addLineItem = (
 		cost: Math.round(cost),
 		details,
 	});
+};
+
+/**
+ * T005: Helper to calculate price and derive hours (Reverse-Hour Formula)
+ */
+const calculateItemPrice = (quantity: number, unitPrice: number) => {
+	const cost = quantity * unitPrice;
+	const hours = cost / P.LABOR_RATE;
+	return { cost, hours };
 };
 
 /**

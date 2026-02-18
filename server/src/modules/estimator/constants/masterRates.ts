@@ -147,39 +147,38 @@ export const MASTER_RATES = {
 			TRIM_STAIRWELL: 1.5,
 		},
 
-		PRODUCTION_RATES: {
+		UNIT_PRICES: {
 			WALLS: {
-				ROLL_PRIME: 320,
-				ROLL_1ST_COAT: 400, // sqft/hr
-				ROLL_2ND_COAT: 550, // sqft/hr
-				CUT_STANDARD_1ST: 120, // lf/hr
-				CUT_STANDARD_2ND: 200, // lf/hr
-				CUT_HIGH_CONTRAST_1ST: 75, // lf/hr
-				CUT_HIGH_CONTRAST_2ND: 125, // lf/hr
-				PREP_GOOD: 0.0015, // hrs/sqft (0.15/100)
-				PREP_FAIR: 0.004, // hrs/sqft (0.40/100)
-				PREP_POOR: 0.0125, // hrs/sqft (1.25/100)
-				DARK_TO_LIGHT_SURCHARGE: 0.005, // hrs/sqft (0.50/100)
+				REFRESH: 0.58,
+				CHANGE: 0.94,
+				DARK_TO_LIGHT: 1.36,
 			},
 			CEILINGS: {
-				SMOOTH_1ST_COAT: 350,
-				SMOOTH_2ND_COAT: 500,
-				POPCORN_1ST_COAT: 150,
-				POPCORN_2ND_COAT: 250,
-				ORANGE_PEEL_KNOCKDOWN_1ST_COAT: 300,
-				ORANGE_PEEL_KNOCKDOWN_2ND_COAT: 450,
+				SMOOTH_1: 0.58,
+				SMOOTH_2: 0.94,
+				SMOOTH_3: 1.36,
+				TEXTURE_SURCHARGE: {
+					ORANGE_PEEL: 0.15,
+					POPCORN: 0.40,
+				},
 			},
 			TRIM: {
-				BASEBOARD: 60, // lf/hr
-				CROWN_SIMPLE: 40, // lf/hr
-				CROWN_DETAILED: 25, // lf/hr
-				CAULKING_POOR: 0.025, // hrs/lf
+				COAT_1: 1.25,
+				COAT_2: 2.14,
+				COAT_3: 3.75,
 			},
-			STAIRS: {
-				SPINDLE_SQUARE: 0.2, // hrs (12m)
-				SPINDLE_INTRICATE: 0.5, // hrs (30m)
-				HANDRAIL: 6, // lf/hr
-				STEP: 0.333, // hrs (20m)
+			CROWN: {
+				COAT_1: 1.88,
+				COAT_2: 3.00,
+				COAT_3: 5.00,
+			},
+			MISC: {
+				TRIM_PREP_POOR: 0.35,
+				CROWN_DETAILED_SURCHARGE: 0.20,
+			},
+			EQUIPMENT: {
+				LADDER: 60.00,
+				SCAFFOLD: 150.00,
 			},
 		},
 

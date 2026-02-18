@@ -401,53 +401,69 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 													</select>
 												</div>
 												<div className={styles.formGroup}>
-													<div>
-														<label style={{ margin: 0 }}>
-															Is your trim currently wood-stained?
-														</label>
-														{painting.globalDefaults?.trimConversion && (
-															<InfoTooltip
-																message={PAINTING_TOOLTIPS.TRIM_CONVERSION}
-															/>
-														)}
-													</div>
+													<label>Trim Color Change (Default)</label>
 													<select
 														value={
-															painting.globalDefaults?.trimConversion
-																? 'Stained'
-																: 'Standard'
+															painting.globalDefaults?.trimColorChange ||
+															'Similar'
 														}
 														onChange={(e) =>
 															onGlobalChange('updateGlobalDefaults', {
-																field: 'trimConversion',
-																value: e.target.value === 'Stained',
+																field: 'trimColorChange',
+																value: e.target.value,
 															})
 														}
 													>
-														<option value='Standard'>Standard Painting</option>
-														<option value='Stained'>Stained to Painted</option>
+														<option value='Similar'>Refresh (Same Color)</option>
+														<option value='Change'>Standard Color Change</option>
+														<option value='Dark-to-Light'>
+															Major Change (Stain to Paint / Dark to Light)
+														</option>
 													</select>
 												</div>
 											</>
 										)}
 										{painting.globalDefaults?.surfaces.crownMolding && (
-											<div className={styles.formGroup}>
-												<label>Crown Molding Style (Default)</label>
-												<select
-													value={
-														painting.globalDefaults?.crownMoldingStyle ||
-														'Simple'
-													}
-													onChange={(e) =>
-														onGlobalChange('updateGlobalDefaults', {
-															field: 'crownMoldingStyle',
-															value: e.target.value,
-														})
-													}
-												>
-													<option value='Simple'>Simple / Smooth</option>
-													<option value='Detailed'>Detailed / Ornate</option>
-												</select>
+											<div className={styles.formGroupBox} style={{ padding: 0, border: 'none' }}>
+												<div className={styles.formGroup}>
+													<label>Crown Molding Style (Default)</label>
+													<select
+														value={
+															painting.globalDefaults?.crownMoldingStyle ||
+															'Simple'
+														}
+														onChange={(e) =>
+															onGlobalChange('updateGlobalDefaults', {
+																field: 'crownMoldingStyle',
+																value: e.target.value,
+															})
+														}
+													>
+														<option value='Simple'>Simple / Smooth</option>
+														<option value='Detailed'>Detailed / Ornate</option>
+													</select>
+												</div>
+												<div className={styles.formGroup}>
+													<label>Crown Color Change (Default)</label>
+													<select
+														value={
+															painting.globalDefaults?.crownColorChange ||
+															'Similar'
+														}
+														onChange={(e) =>
+															onGlobalChange('updateGlobalDefaults', {
+																field: 'crownColorChange',
+																value: e.target.value,
+															})
+														}
+													>
+														<option value='Similar'>Refresh (Same Color)</option>
+														<option value='Change'>Standard Color Change</option>
+														<option value='Dark-to-Light'>
+															Major Change (Stain to Paint / Dark to Light)
+														</option>
+													</select>
+												</div>
 											</div>
 										)}
 										{painting.globalDefaults?.surfaces.doors && (

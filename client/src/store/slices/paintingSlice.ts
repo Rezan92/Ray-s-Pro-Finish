@@ -19,7 +19,8 @@ interface PaintingState {
 		colorChange: string;
 		ceilingTexture: string;
 		trimCondition: string;
-		trimConversion: boolean;
+		trimColorChange: string;
+		crownColorChange: string;
 		crownMoldingStyle: string;
 		doorStyle: string;
 	};
@@ -43,7 +44,8 @@ const initialState: PaintingState = {
 		colorChange: 'Similar',
 		ceilingTexture: 'Flat',
 		trimCondition: 'Good',
-		trimConversion: false,
+		trimColorChange: 'Similar',
+		crownColorChange: 'Similar',
 		crownMoldingStyle: 'Simple',
 		doorStyle: 'Slab',
 	},
@@ -71,8 +73,9 @@ const createNewRoom = (
 		ceilingTexture: defaults.ceilingTexture,
 		trimCondition: defaults.trimCondition,
 		trimStyle: 'Simple',
-		trimConversion: defaults.trimConversion,
+		trimColorChange: defaults.trimColorChange,
 		crownMoldingStyle: defaults.crownMoldingStyle,
+		crownColorChange: defaults.crownColorChange,
 		doorCount: defaults.surfaces.doors ? 1 : 0,
 		doorStyle: defaults.doorStyle,
 		roomDescription: '',
@@ -152,8 +155,9 @@ export const paintingSlice = createSlice({
 					room.colorChange = state.globalDefaults.colorChange;
 					room.ceilingTexture = state.globalDefaults.ceilingTexture;
 					room.trimCondition = state.globalDefaults.trimCondition;
-					room.trimConversion = state.globalDefaults.trimConversion;
+					room.trimColorChange = state.globalDefaults.trimColorChange;
 					room.crownMoldingStyle = state.globalDefaults.crownMoldingStyle;
+					room.crownColorChange = state.globalDefaults.crownColorChange;
 					room.doorStyle = state.globalDefaults.doorStyle;
 				}
 			}

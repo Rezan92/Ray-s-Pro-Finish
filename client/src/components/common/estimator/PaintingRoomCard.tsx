@@ -53,14 +53,16 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 			if (name === 'ceiling') onRoomChange(room.id, 'ceilingTexture', 'Flat');
 			if (name === 'trim') {
 				onRoomChange(room.id, 'trimCondition', 'Good');
-				onRoomChange(room.id, 'trimConversion', false);
+				onRoomChange(room.id, 'trimColorChange', 'Similar');
 			}
 			if (name === 'doors') {
 				onRoomChange(room.id, 'doorCount', '1');
 				onRoomChange(room.id, 'doorStyle', 'Slab');
 			}
-			if (name === 'crownMolding')
+			if (name === 'crownMolding') {
 				onRoomChange(room.id, 'crownMoldingStyle', 'Simple');
+				onRoomChange(room.id, 'crownColorChange', 'Similar');
+			}
 			if (name === 'windows') onRoomChange(room.id, 'windowCount', 0);
 		}
 
@@ -514,51 +516,55 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 													onChange={handleFieldChange}
 													disabled={!room.isCustomized}
 												>
-													<option value='Good'>Good (Just needs paint)</option>
 													<option value='Poor'>Poor (Needs re-caulking)</option>
 												</select>
 											</div>
 											<div className={styles.formGroup}>
-												<div>
-													<label style={{ margin: 0 }}>
-														Is your trim currently wood-stained?
-													</label>
-													{room.trimConversion && (
-														<InfoTooltip
-															message={PAINTING_TOOLTIPS.TRIM_CONVERSION}
-														/>
-													)}
-												</div>
+												<label>Trim Color Change</label>
 												<select
-													name='trimStyleDropdown'
-													value={room.trimConversion ? 'Stained' : 'Standard'}
-													onChange={(e) =>
-														onRoomChange(
-															room.id,
-															'trimConversion',
-															e.target.value === 'Stained',
-														)
-													}
+													name='trimColorChange'
+													value={room.trimColorChange || 'Similar'}
+													onChange={handleFieldChange}
 													disabled={!room.isCustomized}
 												>
-													<option value='Standard'>Standard Painting</option>
-													<option value='Stained'>Stained to Painted</option>
+													<option value='Similar'>Refresh (Same Color)</option>
+													<option value='Change'>Standard Color Change</option>
+													<option value='Dark-to-Light'>
+														Major Change (Stain to Paint / Dark to Light)
+													</option>
 												</select>
 											</div>
 										</>
 									)}
 									{!isStairwell && room.surfaces.crownMolding && (
-										<div className={styles.formGroup}>
-											<label>Crown Molding Style</label>
-											<select
-												name='crownMoldingStyle'
-												value={room.crownMoldingStyle || 'Simple'}
-												onChange={handleFieldChange}
-												disabled={!room.isCustomized}
-											>
-												<option value='Simple'>Simple / Smooth</option>
-												<option value='Detailed'>Detailed / Ornate</option>
-											</select>
+										<div className={styles.formGroupBox} style={{ padding: 0, border: 'none', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+											<div className={styles.formGroup}>
+												<label>Crown Molding Style</label>
+												<select
+													name='crownMoldingStyle'
+													value={room.crownMoldingStyle || 'Simple'}
+													onChange={handleFieldChange}
+													disabled={!room.isCustomized}
+												>
+													<option value='Simple'>Simple / Smooth</option>
+													<option value='Detailed'>Detailed / Ornate</option>
+												</select>
+											</div>
+											<div className={styles.formGroup}>
+												<label>Crown Color Change</label>
+												<select
+													name='crownColorChange'
+													value={room.crownColorChange || 'Similar'}
+													onChange={handleFieldChange}
+													disabled={!room.isCustomized}
+												>
+													<option value='Similar'>Refresh (Same Color)</option>
+													<option value='Change'>Standard Color Change</option>
+													<option value='Dark-to-Light'>
+														Major Change (Stain to Paint / Dark to Light)
+													</option>
+												</select>
+											</div>
 										</div>
 									)}
 									{!isStairwell && room.surfaces.doors && (
