@@ -81,9 +81,9 @@
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
-- [ ] T021 [P] Ensure `totalHours` is the sum of all item hours and `totalCost` matches the sum of all item costs.
-- [ ] T022 [P] Run `npm test server/src/modules/estimator/services/paintingService.test.ts` and fix regressions.
-- [ ] T023 [P] Final code cleanup and documentation update in `quickstart.md`.
+- [x] T021 [P] Ensure `totalHours` is the sum of all item hours and `totalCost` matches the sum of all item costs.
+- [x] T022 [P] Run `npm test server/src/modules/estimator/services/paintingService.test.ts` and fix regressions.
+- [x] T023 [P] Final code cleanup and documentation update in `quickstart.md`.
 
 ---
 

@@ -12,8 +12,8 @@
 - `client/src/components/common/estimator/PaintingForm.tsx`: UI for selecting unit options.
 
 ## Verification Checklist
-- [ ] Walls @ $0.58 / $0.94 / $1.36 per sqft.
-- [ ] Ceiling texture surcharge (+15% / +40%).
-- [ ] Detailed crown surcharge (+20%).
-- [ ] Equipment rental triggered at 12ft+.
-- [ ] All labor items have `hours` where `cost = hours * 75`.
+- [x] Walls @ $0.58 / $0.94 / $1.36 per sqft.
+- [x] Ceiling texture surcharge (+15% / +40%).
+- [x] Detailed crown surcharge (+20%).
+- [x] Equipment rental triggered at 12ft+.
+- [x] All labor items have `hours` where `cost = hours * 75`.

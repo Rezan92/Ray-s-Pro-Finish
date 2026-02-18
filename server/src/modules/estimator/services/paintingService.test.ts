@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { calculatePaintingEstimate } from './paintingService.js';
 import { PaintingRequest } from '../types.js';
 
-describe('PaintingService Man-Hour Engine', () => {
-	it('should calculate a Standard Room (10x10x8) correctly (SC-001)', async () => {
+describe('PaintingService Unit Pricing Engine', () => {
+	it('should calculate a Standard Wall Refresh (10x10x8) correctly (SC-001/SC-002)', async () => {
 		const request: PaintingRequest = {
 			rooms: [
 				{
@@ -25,14 +25,16 @@ describe('PaintingService Man-Hour Engine', () => {
 						crownMolding: false,
 						windows: false,
 					},
-					wallCondition: 'Good',
-					colorChange: 'Similar',
+					wallCondition: 'None',
+					colorChange: 'Similar', // Refresh @ $0.58
 					ceilingTexture: 'Flat',
 					trimCondition: 'Good',
 					trimStyle: 'Simple',
+					trimColorChange: 'Similar',
 					doorCount: '0',
 					doorStyle: 'Slab',
 					crownMoldingStyle: 'Simple',
+					crownColorChange: 'Similar',
 				},
 			],
 			paintProvider: 'Customer',
@@ -43,33 +45,31 @@ describe('PaintingService Man-Hour Engine', () => {
 
 		/**
 		 * Manual Math Breakdown:
-		 * Area: 40' perimeter * 8' height = 320 sqft
-		 * Roll 1st Coat: 320 / 400 = 0.80 hrs
-		 * Roll 2nd Coat: 320 / 550 = 0.58 hrs
-		 * Cut Standard: 40 / 120 = 0.33 hrs
-		 * Prep Good: 320 * 0.0015 = 0.48 hrs
-		 * Electrical Plates: 4 * 0.05 = 0.20 hrs
-		 * Floor Protection: (100 / 100) * 0.15 = 0.15 hrs
-		 * -------------------------------------------
-		 * Subtotal Labor: 2.54 hrs
-		 * Occupancy Multiplier: 1.0x
-		 * Days: Math.ceil(2.54 / 8) = 1 day
-		 * Daily Trip: 1 * 0.75 hrs = 0.75 hrs
-		 * -------------------------------------------
-		 * TOTAL HOURS: 3.29 hrs (approx 3.3)
+		 * Walls Area: 40' perimeter * 8' height = 320 sqft
+		 * Wall Labor: 320 * $0.58 = $185.60
+		 * Wall Hours: 185.60 / 75 = 2.47 hrs
+		 * Electrical Plates (4): 4 * 3m = 12m = 0.20 hrs. Cost = 0.20 * 75 = $15.00
+		 * Floor Protection (100sqft): 15m/100sqft. 0.15 hrs * 100 / 60 = ? 
+		 *   Code: (100 / 100) * 0.15 * 100 / 60 = 0.25 hrs. Cost = 0.25 * 75 = $18.75
+		 * Subtotal Labor Cost: 185.60 + 15.00 + 18.75 = $219.35
+		 * Subtotal Hours: 2.47 + 0.20 + 0.25 = 2.92 hrs
+		 * Total Days: ceil(2.92 / 8) = 1 day
+		 * Daily Trip: 1 * 0.75 hrs = 0.75 hrs. Cost = 0.75 * 75 = $56.25
+		 * Total Cost: 219.35 + 56.25 + 10 (Misc Supplies) = $285.60
+		 * Total Hours: 2.92 + 0.75 = 3.67 hrs
 		 */
 
-		expect(result.totalHours).toBeCloseTo(3.3, 1);
-		expect(result.low).toBe(Math.round(3.29 * 75)); // Approx 247
+		expect(result.totalHours).toBeCloseTo(3.7, 1);
+		expect(result.low).toBe(Math.round(285.60));
 	});
 
-	it('should apply 3.0x multiplier for stained-to-painted trim conversion', async () => {
+	it('should apply 20% surcharge for detailed crown molding (US4)', async () => {
 		const request: PaintingRequest = {
 			rooms: [
 				{
 					id: 'room_1',
 					type: 'bedroom',
-					label: 'Trim Room',
+					label: 'Crown Room',
 					size: 'Small',
 					exactLength: 10,
 					exactWidth: 10,
@@ -80,20 +80,21 @@ describe('PaintingService Man-Hour Engine', () => {
 					surfaces: {
 						walls: false,
 						ceiling: false,
-						trim: true,
+						trim: false,
 						doors: false,
-						crownMolding: false,
+						crownMolding: true,
 						windows: false,
 					},
-					wallCondition: 'Good',
+					wallCondition: 'None',
 					colorChange: 'Similar',
 					ceilingTexture: 'Flat',
 					trimCondition: 'Good',
-					trimConversion: true,
 					trimStyle: 'Simple',
+					trimColorChange: 'Similar',
 					doorCount: '0',
 					doorStyle: 'Slab',
-					crownMoldingStyle: 'Simple',
+					crownMoldingStyle: 'Detailed',
+					crownColorChange: 'Change', // $3.00 base
 				},
 			],
 			paintProvider: 'Customer',
@@ -105,32 +106,30 @@ describe('PaintingService Man-Hour Engine', () => {
 		/**
 		 * Manual Math Breakdown:
 		 * Perimeter: 40 lf
-		 * Baseboard Rate: 60 lf/hr
-		 * Base Hours: 40 / 60 = 0.67 hrs
-		 * Multiplier: 3.0x
-		 * Total Trim Hours: 2.0 hrs
-		 * Floor Protection: 0.15 hrs
-		 * -------------------------------------------
-		 * Subtotal: 2.15 hrs
-		 * Daily Trip: 0.75 hrs
-		 * TOTAL: 2.9 hrs
+		 * Base Rate: $3.00/lf
+		 * Surcharge: 20% -> $3.60/lf
+		 * Total Cost: 40 * 3.60 = $144.00
+		 * Total Hours: 144 / 75 = 1.92 hrs
 		 */
 
-		expect(result.totalHours).toBeCloseTo(2.9, 1);
+		const crownItem = result.breakdownItems?.find(i => i.name.includes('Crown Molding'));
+		expect(crownItem).toBeDefined();
+		expect(crownItem?.cost).toBe(144);
+		expect(crownItem?.hours).toBeCloseTo(1.92, 2);
 	});
 
-	it('should add equipment rental for high ceilings (SC-002)', async () => {
+	it('should add scaffolding rental for ceilings >= 15ft (US3)', async () => {
 		const request: PaintingRequest = {
 			rooms: [
 				{
 					id: 'room_1',
 					type: 'livingRoom',
-					label: 'Vaulted Room',
-					size: 'Small',
+					label: 'High Ceiling',
+					size: 'Medium',
 					exactLength: 10,
 					exactWidth: 10,
-					exactHeight: 14, // triggers high ceiling
-					ceilingHeight: '11ft+',
+					exactHeight: 15, // Scaffolding
+					ceilingHeight: '15ft+',
 					windowCount: 0,
 					closetSize: 'None',
 					surfaces: {
@@ -141,14 +140,16 @@ describe('PaintingService Man-Hour Engine', () => {
 						crownMolding: false,
 						windows: false,
 					},
-					wallCondition: 'Good',
+					wallCondition: 'None',
 					colorChange: 'Similar',
 					ceilingTexture: 'Flat',
 					trimCondition: 'Good',
 					trimStyle: 'Simple',
+					trimColorChange: 'Similar',
 					doorCount: '0',
 					doorStyle: 'Slab',
 					crownMoldingStyle: 'Simple',
+					crownColorChange: 'Similar',
 				},
 			],
 			paintProvider: 'Customer',
@@ -157,8 +158,9 @@ describe('PaintingService Man-Hour Engine', () => {
 
 		const result = await calculatePaintingEstimate(request);
 		
-		const rentalItem = result.breakdownItems?.find(item => item.name === 'High-Reach Equipment Rental');
+		const rentalItem = result.breakdownItems?.find(item => item.name === 'Equipment Rental');
 		expect(rentalItem).toBeDefined();
-		expect(rentalItem?.cost).toBe(200);
+		expect(rentalItem?.details).toContain('Scaffolding');
+		expect(rentalItem?.cost).toBe(150); // 1 day
 	});
 });
