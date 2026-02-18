@@ -330,8 +330,6 @@ export const calculatePaintingEstimate = async (data: any) => {
 		primerGallons: 0,
 	};
 
-	const occupancyMultiplier = P.MULTIPLIERS.OCCUPANCY[data.occupancy as keyof typeof P.MULTIPLIERS.OCCUPANCY] || 1.0;
-
 	data.rooms.forEach((room: PaintingRoom) => {
 		// T011 Logic: Exact dimensions vs Presets
 		let L, W, H;
@@ -369,23 +367,13 @@ export const calculatePaintingEstimate = async (data: any) => {
 			addLineItem(ctx, `${room.label} - Closet (${room.closetSize})`, closetHours, closetCost, `Fixed rate for ${room.closetSize} closet`);
 			ctx.wallGallons += closetGallons;
 		}
+
+		// Occupancy Fee (Per Room)
+		if (data.occupancy === 'PAINTER_MOVES') {
+			const fee = P.UNIT_PRICES.MISC.OCCUPANCY_PAINTER_MOVES;
+			addLineItem(ctx, `${room.label} - Furniture Handling`, 0, fee, 'Fixed fee for moving/covering heavy furniture');
+		}
 	});
-
-	// Apply Occupancy Multiplier to LABOR hours (T016)
-	if (occupancyMultiplier !== 1.0) {
-		const adjustmentHours = ctx.totalHours * (occupancyMultiplier - 1);
-		const adjustmentCost = ctx.totalCost * (occupancyMultiplier - 1);
-		
-		ctx.totalHours += adjustmentHours;
-		ctx.totalCost += adjustmentCost;
-
-		ctx.items.push({
-			name: `Occupancy Factor (${data.occupancy})`,
-			hours: parseFloat(adjustmentHours.toFixed(2)),
-			cost: Math.round(adjustmentCost),
-			details: `${occupancyMultiplier}x multiplier applied to total project`,
-		});
-	}
 
 	// US3: Equipment Rental (High Work)
 	let maxProjectHeight = 0;

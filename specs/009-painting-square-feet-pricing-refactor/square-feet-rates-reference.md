@@ -10,7 +10,7 @@
 | **Hourly Labor Rate** | **$75.00** | /hour | Base rate for all calculations. |
 | **Occupancy: Empty/New** | **$0.00** | /room | No furniture. |
 | **Occupancy: Owner Clears** | **$0.00** | /room | Owner moves/covers everything. |
-| **Occupancy: Heavy Move** | **+50%** | surcharge | Painter moves/covers heavy furniture. |
+| **Occupancy: Painter Moves** | **$60.00** | /room | Painter moves/covers heavy furniture. |
 | **Ceiling Height: 8-9'** | **1.00x** | multiplier | Standard. |
 | **Ceiling Height: 10'** | **1.10x** | multiplier | Moderate height. |
 | **Ceiling Height: 12-14'** | **1.25x** | multiplier | High. |
