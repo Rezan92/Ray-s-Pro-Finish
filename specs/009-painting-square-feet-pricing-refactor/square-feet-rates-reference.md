@@ -52,15 +52,16 @@
 ---
 
 ## 3. Base Production Rates (Trim & Molding)
+*Note: Trim and Crown Molding are high-detail, slow-paced tasks involving extensive masking and precision cutting. Consequently, labor prices for these items are derived from a **$100.00/hr** effective rate rather than the standard $75.00/hr.*
 
 | System | Speed (Avg) | Labor Price | Description |
 | :--- | :--- | :--- | :--- |
-| **Trim - 1 Coat** | 60 lf/hr | **$1.25** /lf | Refresh. |
-| **Trim - 2 Coats** | 35 lf/hr | **$2.14** /lf | Standard / Color Change. |
-| **Trim - 3 Coats** | 20 lf/hr | **$3.75** /lf | Prime + 2 (Stain-to-Paint). |
-| **Crown - 1 Coat** | 40 lf/hr | **$1.88** /lf | Refresh. |
-| **Crown - 2 Coats** | 25 lf/hr | **$3.00** /lf | Standard / Color Change. |
-| **Crown - 3 Coats** | 15 lf/hr | **$5.00** /lf | Prime + 2 (Stain-to-Paint). |
+| **Trim - 1 Coat** | 60 lf/hr | **$1.67** /lf | Refresh. |
+| **Trim - 2 Coats** | 35 lf/hr | **$2.86** /lf | Standard / Color Change. |
+| **Trim - 3 Coats** | 20 lf/hr | **$5.00** /lf | Prime + 2 (Stain-to-Paint). |
+| **Crown - 1 Coat** | 40 lf/hr | **$2.50** /lf | Refresh. |
+| **Crown - 2 Coats** | 25 lf/hr | **$4.00** /lf | Standard / Color Change. |
+| **Crown - 3 Coats** | 15 lf/hr | **$6.67** /lf | Prime + 2 (Stain-to-Paint). |
 
 ---
 

@@ -165,14 +165,14 @@ export const MASTER_RATES = {
 				},
 			},
 			TRIM: {
-				COAT_1: 1.25,
-				COAT_2: 2.14,
-				COAT_3: 3.75,
+				COAT_1: 1.67,
+				COAT_2: 2.86,
+				COAT_3: 5.00,
 			},
 			CROWN: {
-				COAT_1: 1.88,
-				COAT_2: 3.00,
-				COAT_3: 5.00,
+				COAT_1: 2.50,
+				COAT_2: 4.00,
+				COAT_3: 6.67,
 			},
 			MISC: {
 				TRIM_PREP_POOR: 0.35,
