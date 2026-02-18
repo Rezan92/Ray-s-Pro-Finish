@@ -160,7 +160,14 @@ const calculateCeilingHours = (room: PaintingRoom, ctx: CalculationContext, L: n
 	}
 
 	// 5. Materials
-	const ceilingFinishGallons = (area / P.MATERIAL_COVERAGE.WALL_CEILING_SQFT_PER_GALLON) * finishCoats;
+	let materialMultiplier = P.UNIT_PRICES.CEILINGS.MATERIAL_MULTIPLIER.SMOOTH;
+	if (room.ceilingTexture === 'Popcorn') {
+		materialMultiplier = P.UNIT_PRICES.CEILINGS.MATERIAL_MULTIPLIER.POPCORN;
+	} else if (room.ceilingTexture === 'Textured') {
+		materialMultiplier = P.UNIT_PRICES.CEILINGS.MATERIAL_MULTIPLIER.ORANGE_PEEL;
+	}
+
+	const ceilingFinishGallons = (area / P.MATERIAL_COVERAGE.WALL_CEILING_SQFT_PER_GALLON) * finishCoats * materialMultiplier;
 	ctx.ceilingGallons += ceilingFinishGallons;
 
 	if (room.colorChange === 'Dark-to-Light') {

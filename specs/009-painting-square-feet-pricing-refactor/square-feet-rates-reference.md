@@ -41,13 +41,13 @@
 | **Poor** | 1.00 hr/100 | **$0.75** /sqft | Extensive patching, cracks. |
 
 ### Ceiling Texture Surcharges (Additive %)
-*Note: Percentage is applied to the ceiling's Base Production Rate.*
+*Note: Labor surcharge is applied to the ceiling's Base Production Rate. Material multiplier is applied to the ceiling's base paint volume.*
 
-| Texture | Surcharge | Notes |
-| :--- | :--- | :--- |
-| **Smooth** | **0%** | Standard flat/smooth finish. |
-| **Orange Peel / Knockdown** | **+15%** | Light texture difficulty. |
-| **Popcorn** | **+40%** | High difficulty / fragile texture. |
+| Texture | Labor Surcharge | Material Multiplier | Notes |
+| :--- | :--- | :--- | :--- |
+| **Smooth** | **0%** | **1.00x** | Standard flat/smooth finish. |
+| **Orange Peel / Knockdown**| **+15%** | **1.30x** | (+30% extra paint) |
+| **Popcorn** | **+40%** | **2.00x** | (+100% extra paint) |
 
 ---
 

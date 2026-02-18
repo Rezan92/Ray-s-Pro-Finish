@@ -164,6 +164,11 @@ export const MASTER_RATES = {
 					ORANGE_PEEL: 0.15,
 					POPCORN: 0.40,
 				},
+				MATERIAL_MULTIPLIER: {
+					SMOOTH: 1.0,
+					ORANGE_PEEL: 1.3,
+					POPCORN: 2.0,
+				},
 			},
 			TRIM: {
 				COAT_1: 1.25,
