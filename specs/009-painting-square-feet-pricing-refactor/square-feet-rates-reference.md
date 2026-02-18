@@ -10,7 +10,7 @@
 | **Hourly Labor Rate** | **$75.00** | /hour | Base rate for all calculations. |
 | **Occupancy: Empty/New** | **$0.00** | /room | No furniture. |
 | **Occupancy: Owner Clears** | **$0.00** | /room | Owner moves/covers everything. |
-| **Occupancy: Painter Covers**| **$37.50** | /room | (30 mins @ $75/hr) Painter covers big furniture. |
+| **Occupancy: Heavy Move** | **+50%** | surcharge | Painter moves/covers heavy furniture. |
 | **Ceiling Height: 8-9'** | **1.00x** | multiplier | Standard. |
 | **Ceiling Height: 10'** | **1.10x** | multiplier | Moderate height. |
 | **Ceiling Height: 12-14'** | **1.25x** | multiplier | High. |
@@ -73,7 +73,7 @@
 | **Window Frame** | 0.5 hr | **$37.50** ea | Standard casing/sash. |
 | **Closet (Standard)**| 1 hr | **$75.00** ea | 2' x 4' reach-in. |
 | **Closet (Medium)** | 1.5 hr | **$112.50** ea | 5' x 5' walk-in. |
-| **Closet (Large)** | 2.5 hr | **$187.50** ea | 6' x 10' walk-in. |
+| **Closet (Large)** | 2 hr | **$150.00** ea | 6' x 10' walk-in. |
 
 ---
 

@@ -172,9 +172,6 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 											<option value='OWNER_CLEARS'>
 												Owner Clears Room (Owner moves & covers everything)
 											</option>
-											<option value='PAINTER_COVERS'>
-												Lived-In (Painter covers furniture)
-											</option>
 											<option value='PAINTER_MOVES'>
 												Lived-In (Painter moves & covers heavy furniture)
 											</option>
