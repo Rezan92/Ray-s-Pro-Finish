@@ -301,126 +301,139 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						{/* 3. Stairwell Details (T012) */}
 						{isStairwell && (
 							<div className={styles.formGroupBox}>
-								<div
-									style={{
-										display: 'flex',
-										alignItems: 'center',
-										gap: '8px',
-										marginBottom: '1rem',
-									}}
-								>
-									<label style={{ margin: 0 }}>Stairwell Components</label>
-									<span className={styles.inheritanceLabel} style={{ marginBottom: 0, marginLeft: 'auto' }}>
-										Select parts to paint
-									</span>
-									<InfoTooltip message={PAINTING_TOOLTIPS.STAIRWELL_COMPONENTS} />
-								</div>
+								<div className={styles.formGroup}>
+									<div
+										style={{
+											display: 'flex',
+											alignItems: 'center',
+											gap: '8px',
+											marginBottom: '1rem',
+										}}
+									>
+										<label style={{ margin: 0 }}>Stairwell Components</label>
+										<InfoTooltip
+											message={PAINTING_TOOLTIPS.STAIRWELL_COMPONENTS}
+										/>
+									</div>
 
-								<div className={styles.checkboxGroupHorizontal} style={{ marginBottom: '1rem' }}>
-									<label className={styles.checkboxLabel}>
-										<input
-											type='checkbox'
-											checked={(room.stairSpindles ?? 0) > 0}
-											onChange={(e) =>
-												onRoomChange(
-													room.id,
-													'stairSpindles',
-													e.target.checked ? 1 : 0,
-												)
-											}
-										/>
-										Spindles
-									</label>
-									<label className={styles.checkboxLabel}>
-										<input
-											type='checkbox'
-											checked={(room.stairHandrail ?? 0) > 0}
-											onChange={(e) =>
-												onRoomChange(
-													room.id,
-													'stairHandrail',
-													e.target.checked ? 10 : 0,
-												)
-											}
-										/>
-										Handrail
-									</label>
-									<label className={styles.checkboxLabel}>
-										<input
-											type='checkbox'
-											checked={(room.stairSteps ?? 0) > 0}
-											onChange={(e) =>
-												onRoomChange(
-													room.id,
-													'stairSteps',
-													e.target.checked ? 14 : 0,
-												)
-											}
-										/>
-										Steps
-									</label>
-								</div>
+									<div
+										className={styles.checkboxGroupHorizontal}
+										style={{ marginBottom: '1rem' }}
+									>
+										<label
+											className={styles.checkboxLabel}
+											style={{ fontWeight: 'bold' }}
+										>
+											<input
+												type='checkbox'
+												checked={(room.stairSpindles ?? 0) > 0}
+												onChange={(e) =>
+													onRoomChange(
+														room.id,
+														'stairSpindles',
+														e.target.checked ? 1 : 0,
+													)
+												}
+											/>
+											Spindles
+										</label>
+										<label
+											className={styles.checkboxLabel}
+											style={{ fontWeight: 'bold' }}
+										>
+											<input
+												type='checkbox'
+												checked={(room.stairHandrail ?? 0) > 0}
+												onChange={(e) =>
+													onRoomChange(
+														room.id,
+														'stairHandrail',
+														e.target.checked ? 10 : 0,
+													)
+												}
+											/>
+											Handrail
+										</label>
+										<label
+											className={styles.checkboxLabel}
+											style={{ fontWeight: 'bold' }}
+										>
+											<input
+												type='checkbox'
+												checked={(room.stairSteps ?? 0) > 0}
+												onChange={(e) =>
+													onRoomChange(
+														room.id,
+														'stairSteps',
+														e.target.checked ? 14 : 0,
+													)
+												}
+											/>
+											Steps
+										</label>
+									</div>
 
-								{((room.stairSpindles ?? 0) > 0 ||
-									(room.stairHandrail ?? 0) > 0 ||
-									(room.stairSteps ?? 0) > 0) && (
-									<div className={styles.conditionalFieldsContainer}>
-										{(room.stairSpindles ?? 0) > 0 && (
-											<div className={styles.formGroupBox} style={{ padding: 0, border: 'none', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+									{((room.stairSpindles ?? 0) > 0 ||
+										(room.stairHandrail ?? 0) > 0 ||
+										(room.stairSteps ?? 0) > 0) && (
+										<div className={styles.conditionalFieldsContainer}>
+											{(room.stairSpindles ?? 0) > 0 && (
+												<>
+													<div className={styles.formGroup}>
+														<label>Spindle Style</label>
+														<select
+															name='stairSpindleType'
+															value={room.stairSpindleType || 'Square'}
+															onChange={handleFieldChange}
+														>
+															<option value='Square'>Square (Simple)</option>
+															<option value='Intricate'>
+																Intricate (Ornate)
+															</option>
+														</select>
+													</div>
+													<div className={styles.formGroup}>
+														<label>Spindle Count</label>
+														<input
+															type='number'
+															name='stairSpindles'
+															className={styles.smallInput}
+															min='1'
+															value={room.stairSpindles || 1}
+															onChange={handleFieldChange}
+														/>
+													</div>
+												</>
+											)}
+											{(room.stairHandrail ?? 0) > 0 && (
 												<div className={styles.formGroup}>
-													<label>Spindle Count</label>
+													<label>Handrail (lf)</label>
 													<input
 														type='number'
-														name='stairSpindles'
+														name='stairHandrail'
 														className={styles.smallInput}
 														min='1'
-														value={room.stairSpindles || 1}
+														value={room.stairHandrail || 1}
 														onChange={handleFieldChange}
 													/>
 												</div>
+											)}
+											{(room.stairSteps ?? 0) > 0 && (
 												<div className={styles.formGroup}>
-													<label>Spindle Style</label>
-													<select
-														name='stairSpindleType'
-														value={room.stairSpindleType || 'Square'}
+													<label>Number of Steps</label>
+													<input
+														type='number'
+														name='stairSteps'
+														className={styles.smallInput}
+														min='1'
+														value={room.stairSteps || 1}
 														onChange={handleFieldChange}
-													>
-														<option value='Square'>Square (Simple)</option>
-														<option value='Intricate'>
-															Intricate (Ornate)
-														</option>
-													</select>
+													/>
 												</div>
-											</div>
-										)}
-										{(room.stairHandrail ?? 0) > 0 && (
-											<div className={styles.formGroup}>
-												<label>Handrail (lf)</label>
-												<input
-													type='number'
-													name='stairHandrail'
-													className={styles.smallInput}
-													min='1'
-													value={room.stairHandrail || 1}
-													onChange={handleFieldChange}
-												/>
-											</div>
-										)}
-										{(room.stairSteps ?? 0) > 0 && (
-											<div className={styles.formGroup}>
-												<label>Number of Steps</label>
-												<input
-													type='number'
-													name='stairSteps'
-													className={styles.smallInput}
-													min='1'
-													value={room.stairSteps || 1}
-													onChange={handleFieldChange}
-												/>
-											</div>
-										)}
-									</div>
-								)}
+											)}
+										</div>
+									)}
+								</div>
 							</div>
 						)}
 
@@ -614,7 +627,16 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 										</>
 									)}
 									{!isStairwell && room.surfaces.crownMolding && (
-										<div className={styles.formGroupBox} style={{ padding: 0, border: 'none', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+										<div
+											className={styles.formGroupBox}
+											style={{
+												padding: 0,
+												border: 'none',
+												display: 'flex',
+												flexDirection: 'column',
+												gap: '1rem',
+											}}
+										>
 											<div className={styles.formGroup}>
 												<label>Crown Molding Style</label>
 												<select
