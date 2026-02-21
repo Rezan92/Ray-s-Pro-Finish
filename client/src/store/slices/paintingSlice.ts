@@ -19,7 +19,8 @@ interface PaintingState {
 		colorChange: string;
 		ceilingTexture: string;
 		trimCondition: string;
-		trimConversion: boolean;
+		trimColorChange: string;
+		crownColorChange: string;
 		crownMoldingStyle: string;
 		doorStyle: string;
 	};
@@ -43,10 +44,20 @@ const initialState: PaintingState = {
 		colorChange: 'Similar',
 		ceilingTexture: 'Flat',
 		trimCondition: 'Good',
-		trimConversion: false,
+		trimColorChange: 'Similar',
+		crownColorChange: 'Similar',
 		crownMoldingStyle: 'Simple',
 		doorStyle: 'Slab',
 	},
+};
+
+/**
+ * Defines which surfaces are physically impossible or restricted for specific room types.
+ * For example, a Stairwell usually doesn't have Doors or Windows in the context of this estimator.
+ */
+const ROOM_SURFACE_RESTRICTIONS: Record<string, string[]> = {
+	stairwell: ['doors', 'windows', 'crownMolding'],
+	closet: ['windows', 'crownMolding'],
 };
 
 const createNewRoom = (
@@ -56,24 +67,34 @@ const createNewRoom = (
 	defaults: PaintingState['globalDefaults']
 ): PaintingRoom => {
 	const isStairwell = type === 'stairwell';
+	const restrictions = ROOM_SURFACE_RESTRICTIONS[type] || [];
+	
+	// Create surfaces based on defaults but apply restrictions
+	const surfaces = { ...defaults.surfaces };
+	restrictions.forEach(surface => {
+		// @ts-expect-error - Dynamic key access
+		surfaces[surface] = false;
+	});
+
 	return {
 		id,
 		type,
 		label,
 		size: 'Medium',
 		ceilingHeight: isStairwell ? '11-14ft' : '8ft',
-		windowCount: defaults.surfaces.windows ? 1 : 0,
+		windowCount: surfaces.windows ? 1 : 0,
 		closetSize: 'None',
 		isCustomized: false,
-		surfaces: { ...defaults.surfaces },
+		surfaces,
 		wallCondition: defaults.wallCondition,
 		colorChange: defaults.colorChange,
 		ceilingTexture: defaults.ceilingTexture,
 		trimCondition: defaults.trimCondition,
 		trimStyle: 'Simple',
-		trimConversion: defaults.trimConversion,
+		trimColorChange: defaults.trimColorChange,
 		crownMoldingStyle: defaults.crownMoldingStyle,
-		doorCount: defaults.surfaces.doors ? 1 : 0,
+		crownColorChange: defaults.crownColorChange,
+		doorCount: surfaces.doors ? '1' : '0',
 		doorStyle: defaults.doorStyle,
 		roomDescription: '',
 	};
@@ -152,8 +173,9 @@ export const paintingSlice = createSlice({
 					room.colorChange = state.globalDefaults.colorChange;
 					room.ceilingTexture = state.globalDefaults.ceilingTexture;
 					room.trimCondition = state.globalDefaults.trimCondition;
-					room.trimConversion = state.globalDefaults.trimConversion;
+					room.trimColorChange = state.globalDefaults.trimColorChange;
 					room.crownMoldingStyle = state.globalDefaults.crownMoldingStyle;
+					room.crownColorChange = state.globalDefaults.crownColorChange;
 					room.doorStyle = state.globalDefaults.doorStyle;
 				}
 			}
@@ -184,8 +206,30 @@ export const paintingSlice = createSlice({
 			// 2. Propagate to non-customized rooms
 			state.rooms.forEach(room => {
 				if (!room.isCustomized) {
+					const restrictions = ROOM_SURFACE_RESTRICTIONS[room.type] || [];
+					
 					if (field === 'surfaces') {
-						room.surfaces = { ...(value as any) };
+						const surfaces = { ...(value as PaintingRoom['surfaces']) };
+						
+						// Enforce restrictions
+						restrictions.forEach(restriction => {
+							// @ts-expect-error - Dynamic key access
+							surfaces[restriction] = false;
+						});
+
+						room.surfaces = { ...surfaces };
+						
+						// Sync counts based on surface visibility
+						if (surfaces.doors && (room.doorCount === '0' || !room.doorCount)) {
+							room.doorCount = '1';
+						} else if (!surfaces.doors) {
+							room.doorCount = '0';
+						}
+						if (surfaces.windows && (room.windowCount === 0 || !room.windowCount)) {
+							room.windowCount = 1;
+						} else if (!surfaces.windows) {
+							room.windowCount = 0;
+						}
 					} else {
 						// @ts-expect-error - Generic assignment
 						room[field] = value;

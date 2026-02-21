@@ -48,19 +48,28 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 	const handleSurfaceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, checked } = e.target;
 
-		// Professional fix: Clear associated sub-data when unselecting a surface
-		if (!checked) {
+		// Professional fix: Sync associated sub-data when toggling a surface
+		if (checked) {
+			if (name === 'doors' && (room.doorCount === '0' || !room.doorCount)) {
+				onRoomChange(room.id, 'doorCount', '1');
+			}
+			if (name === 'windows' && (room.windowCount === 0 || !room.windowCount)) {
+				onRoomChange(room.id, 'windowCount', 1);
+			}
+		} else {
 			if (name === 'ceiling') onRoomChange(room.id, 'ceilingTexture', 'Flat');
 			if (name === 'trim') {
 				onRoomChange(room.id, 'trimCondition', 'Good');
-				onRoomChange(room.id, 'trimConversion', false);
+				onRoomChange(room.id, 'trimColorChange', 'Similar');
 			}
 			if (name === 'doors') {
-				onRoomChange(room.id, 'doorCount', '1');
+				onRoomChange(room.id, 'doorCount', '0');
 				onRoomChange(room.id, 'doorStyle', 'Slab');
 			}
-			if (name === 'crownMolding')
+			if (name === 'crownMolding') {
 				onRoomChange(room.id, 'crownMoldingStyle', 'Simple');
+				onRoomChange(room.id, 'crownColorChange', 'Similar');
+			}
 			if (name === 'windows') onRoomChange(room.id, 'windowCount', 0);
 		}
 
@@ -218,7 +227,6 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 											name='ceilingHeight'
 											value={room.ceilingHeight || '8ft'}
 											onChange={handleFieldChange}
-											disabled={isStairwell}
 										>
 											<option value='8ft'>8 ft (Standard)</option>
 											<option value='9-10ft'>9-10 ft</option>
@@ -293,54 +301,138 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						{/* 3. Stairwell Details (T012) */}
 						{isStairwell && (
 							<div className={styles.formGroupBox}>
-								<label style={{ marginBottom: '1rem', display: 'block' }}>
-									Stairwell Components
-								</label>
-								<div className={styles.conditionalFieldsContainer}>
-									<div className={styles.formGroup}>
-										<label>Spindle Count</label>
-										<input
-											type='number'
-											name='stairSpindles'
-											className={styles.smallInput}
-											min='0'
-											value={room.stairSpindles || 0}
-											onChange={handleFieldChange}
+								<div className={styles.formGroup}>
+									<div
+										style={{
+											display: 'flex',
+											alignItems: 'center',
+											gap: '8px',
+											marginBottom: '1rem',
+										}}
+									>
+										<label style={{ margin: 0 }}>Stairwell Components</label>
+										<InfoTooltip
+											message={PAINTING_TOOLTIPS.STAIRWELL_COMPONENTS}
 										/>
 									</div>
-									<div className={styles.formGroup}>
-										<label>Spindle Type</label>
-										<select
-											name='stairSpindleType'
-											value={room.stairSpindleType || 'Square'}
-											onChange={handleFieldChange}
+
+									<div
+										className={styles.checkboxGroupHorizontal}
+										style={{ marginBottom: '1rem' }}
+									>
+										<label
+											className={styles.checkboxLabel}
+											style={{ fontWeight: 'bold' }}
 										>
-											<option value='Square'>Square (Simple)</option>
-											<option value='Intricate'>Intricate (Ornate)</option>
-										</select>
+											<input
+												type='checkbox'
+												checked={(room.stairSpindles ?? 0) > 0}
+												onChange={(e) =>
+													onRoomChange(
+														room.id,
+														'stairSpindles',
+														e.target.checked ? 1 : 0,
+													)
+												}
+											/>
+											Spindles
+										</label>
+										<label
+											className={styles.checkboxLabel}
+											style={{ fontWeight: 'bold' }}
+										>
+											<input
+												type='checkbox'
+												checked={(room.stairHandrail ?? 0) > 0}
+												onChange={(e) =>
+													onRoomChange(
+														room.id,
+														'stairHandrail',
+														e.target.checked ? 10 : 0,
+													)
+												}
+											/>
+											Handrail
+										</label>
+										<label
+											className={styles.checkboxLabel}
+											style={{ fontWeight: 'bold' }}
+										>
+											<input
+												type='checkbox'
+												checked={(room.stairSteps ?? 0) > 0}
+												onChange={(e) =>
+													onRoomChange(
+														room.id,
+														'stairSteps',
+														e.target.checked ? 14 : 0,
+													)
+												}
+											/>
+											Steps
+										</label>
 									</div>
-									<div className={styles.formGroup}>
-										<label>Handrail (lf)</label>
-										<input
-											type='number'
-											name='stairHandrail'
-											className={styles.smallInput}
-											min='0'
-											value={room.stairHandrail || 0}
-											onChange={handleFieldChange}
-										/>
-									</div>
-									<div className={styles.formGroup}>
-										<label>Number of Steps</label>
-										<input
-											type='number'
-											name='stairSteps'
-											className={styles.smallInput}
-											min='0'
-											value={room.stairSteps || 0}
-											onChange={handleFieldChange}
-										/>
-									</div>
+
+									{((room.stairSpindles ?? 0) > 0 ||
+										(room.stairHandrail ?? 0) > 0 ||
+										(room.stairSteps ?? 0) > 0) && (
+										<div className={styles.conditionalFieldsContainer}>
+											{(room.stairSpindles ?? 0) > 0 && (
+												<>
+													<div className={styles.formGroup}>
+														<label>Spindle Style</label>
+														<select
+															name='stairSpindleType'
+															value={room.stairSpindleType || 'Square'}
+															onChange={handleFieldChange}
+														>
+															<option value='Square'>Square (Simple)</option>
+															<option value='Intricate'>
+																Intricate (Ornate)
+															</option>
+														</select>
+													</div>
+													<div className={styles.formGroup}>
+														<label>Spindle Count</label>
+														<input
+															type='number'
+															name='stairSpindles'
+															className={styles.smallInput}
+															min='1'
+															value={room.stairSpindles || 1}
+															onChange={handleFieldChange}
+														/>
+													</div>
+												</>
+											)}
+											{(room.stairHandrail ?? 0) > 0 && (
+												<div className={styles.formGroup}>
+													<label>Handrail (lf)</label>
+													<input
+														type='number'
+														name='stairHandrail'
+														className={styles.smallInput}
+														min='1'
+														value={room.stairHandrail || 1}
+														onChange={handleFieldChange}
+													/>
+												</div>
+											)}
+											{(room.stairSteps ?? 0) > 0 && (
+												<div className={styles.formGroup}>
+													<label>Number of Steps</label>
+													<input
+														type='number'
+														name='stairSteps'
+														className={styles.smallInput}
+														min='1'
+														value={room.stairSteps || 1}
+														onChange={handleFieldChange}
+													/>
+												</div>
+											)}
+										</div>
+									)}
 								</div>
 							</div>
 						)}
@@ -514,51 +606,64 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 													onChange={handleFieldChange}
 													disabled={!room.isCustomized}
 												>
-													<option value='Good'>Good (Just needs paint)</option>
 													<option value='Poor'>Poor (Needs re-caulking)</option>
 												</select>
 											</div>
 											<div className={styles.formGroup}>
-												<div>
-													<label style={{ margin: 0 }}>
-														Is your trim currently wood-stained?
-													</label>
-													{room.trimConversion && (
-														<InfoTooltip
-															message={PAINTING_TOOLTIPS.TRIM_CONVERSION}
-														/>
-													)}
-												</div>
+												<label>Trim Color Change</label>
 												<select
-													name='trimStyleDropdown'
-													value={room.trimConversion ? 'Stained' : 'Standard'}
-													onChange={(e) =>
-														onRoomChange(
-															room.id,
-															'trimConversion',
-															e.target.value === 'Stained',
-														)
-													}
+													name='trimColorChange'
+													value={room.trimColorChange || 'Similar'}
+													onChange={handleFieldChange}
 													disabled={!room.isCustomized}
 												>
-													<option value='Standard'>Standard Painting</option>
-													<option value='Stained'>Stained to Painted</option>
+													<option value='Similar'>Refresh (Same Color)</option>
+													<option value='Change'>Standard Color Change</option>
+													<option value='Dark-to-Light'>
+														Major Change (Stain to Paint / Dark to Light)
+													</option>
 												</select>
 											</div>
 										</>
 									)}
 									{!isStairwell && room.surfaces.crownMolding && (
-										<div className={styles.formGroup}>
-											<label>Crown Molding Style</label>
-											<select
-												name='crownMoldingStyle'
-												value={room.crownMoldingStyle || 'Simple'}
-												onChange={handleFieldChange}
-												disabled={!room.isCustomized}
-											>
-												<option value='Simple'>Simple / Smooth</option>
-												<option value='Detailed'>Detailed / Ornate</option>
-											</select>
+										<div
+											className={styles.formGroupBox}
+											style={{
+												padding: 0,
+												border: 'none',
+												display: 'flex',
+												flexDirection: 'column',
+												gap: '1rem',
+											}}
+										>
+											<div className={styles.formGroup}>
+												<label>Crown Molding Style</label>
+												<select
+													name='crownMoldingStyle'
+													value={room.crownMoldingStyle || 'Simple'}
+													onChange={handleFieldChange}
+													disabled={!room.isCustomized}
+												>
+													<option value='Simple'>Simple / Smooth</option>
+													<option value='Detailed'>Detailed / Ornate</option>
+												</select>
+											</div>
+											<div className={styles.formGroup}>
+												<label>Crown Color Change</label>
+												<select
+													name='crownColorChange'
+													value={room.crownColorChange || 'Similar'}
+													onChange={handleFieldChange}
+													disabled={!room.isCustomized}
+												>
+													<option value='Similar'>Refresh (Same Color)</option>
+													<option value='Change'>Standard Color Change</option>
+													<option value='Dark-to-Light'>
+														Major Change (Stain to Paint / Dark to Light)
+													</option>
+												</select>
+											</div>
 										</div>
 									)}
 									{!isStairwell && room.surfaces.doors && (

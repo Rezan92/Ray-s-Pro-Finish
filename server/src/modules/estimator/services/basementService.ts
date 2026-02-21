@@ -286,12 +286,14 @@ export const calculateBasementEstimate = (
 
 	// --- STEP 4: PAINTING ---
 	if (services.painting) {
-		const pRate = MASTER_RATES.PAINTING.STANDARD;
+		const pRate = MASTER_RATES.PAINTING.UNIT_PRICES.WALLS.CHANGE;
+		const cRate = MASTER_RATES.PAINTING.UNIT_PRICES.CEILINGS.SMOOTH_2;
+		
 		addDetailItem(
 			'Painting: All Walls & Soffits',
 			totalWallSqft,
 			'sf',
-			pRate.WALL,
+			{ labor: pRate, material: 0 },
 			`${totalWallSqft} sf (Exterior + Interior + Soffits)`
 		);
 
@@ -300,7 +302,7 @@ export const calculateBasementEstimate = (
 				'Painting: Ceiling',
 				ceilingSqft,
 				'sf',
-				pRate.CEILING,
+				{ labor: cRate, material: 0 },
 				`${ceilingSqft} sf (Floor Area)`
 			);
 		} else if (services.ceilingFinish === 'Painted/Industrial') {

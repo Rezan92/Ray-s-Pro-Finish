@@ -131,12 +131,6 @@ export const MASTER_RATES = {
 		MISC_MATERIAL_FEE_PER_ROOM: 10,
 
 		MULTIPLIERS: {
-			OCCUPANCY: {
-				EMPTY: 1.0,
-				OWNER_CLEARS: 1.0,
-				PAINTER_COVERS: 1.2,
-				PAINTER_MOVES: 1.35,
-			},
 			CEILING_HEIGHT: {
 				STANDARD: 1.0, // 8-9'
 				MID: 1.1, // 10'
@@ -147,54 +141,97 @@ export const MASTER_RATES = {
 			TRIM_STAIRWELL: 1.5,
 		},
 
-		PRODUCTION_RATES: {
+		UNIT_PRICES: {
 			WALLS: {
-				ROLL_PRIME: 320,
-				ROLL_1ST_COAT: 400, // sqft/hr
-				ROLL_2ND_COAT: 550, // sqft/hr
-				CUT_STANDARD_1ST: 120, // lf/hr
-				CUT_STANDARD_2ND: 200, // lf/hr
-				CUT_HIGH_CONTRAST_1ST: 75, // lf/hr
-				CUT_HIGH_CONTRAST_2ND: 125, // lf/hr
-				PREP_GOOD: 0.0015, // hrs/sqft (0.15/100)
-				PREP_FAIR: 0.004, // hrs/sqft (0.40/100)
-				PREP_POOR: 0.0125, // hrs/sqft (1.25/100)
-				DARK_TO_LIGHT_SURCHARGE: 0.005, // hrs/sqft (0.50/100)
+				REFRESH: 0.58,
+				CHANGE: 0.94,
+				DARK_TO_LIGHT: 1.36,
+				PREP_GOOD: 0.11,
+				PREP_FAIR: 0.30,
+				PREP_POOR: 0.75,
 			},
 			CEILINGS: {
-				SMOOTH_1ST_COAT: 350,
-				SMOOTH_2ND_COAT: 500,
-				POPCORN_1ST_COAT: 150,
-				POPCORN_2ND_COAT: 250,
-				ORANGE_PEEL_KNOCKDOWN_1ST_COAT: 300,
-				ORANGE_PEEL_KNOCKDOWN_2ND_COAT: 450,
+				SMOOTH_1: 0.58,
+				SMOOTH_2: 0.94,
+				SMOOTH_3: 1.36,
+				TEXTURE_SURCHARGE: {
+					ORANGE_PEEL: 0.15,
+					POPCORN: 0.40,
+				},
+				MATERIAL_MULTIPLIER: {
+					SMOOTH: 1.0,
+					ORANGE_PEEL: 1.3,
+					POPCORN: 2.0,
+				},
 			},
 			TRIM: {
-				BASEBOARD: 60, // lf/hr
-				CROWN_SIMPLE: 40, // lf/hr
-				CROWN_DETAILED: 25, // lf/hr
-				CAULKING_POOR: 0.025, // hrs/lf
+				COAT_1: 1.67,
+				COAT_2: 2.86,
+				COAT_3: 5.00,
+			},
+			CROWN: {
+				COAT_1: 2.50,
+				COAT_2: 4.00,
+				COAT_3: 6.67,
+			},
+			MISC: {
+				TRIM_PREP_POOR: 0.35,
+				CROWN_DETAILED_SURCHARGE: 0.20,
+				OCCUPANCY_PAINTER_MOVES: 60.00,
+				OCCUPANCY_PAINTER_MOVES_TIME: 0.75, // 45 mins
 			},
 			STAIRS: {
-				SPINDLE_SQUARE: 0.2, // hrs (12m)
-				SPINDLE_INTRICATE: 0.5, // hrs (30m)
-				HANDRAIL: 6, // lf/hr
-				STEP: 0.333, // hrs (20m)
+				SPINDLE_SQUARE: 15.00,
+				SPINDLE_INTRICATE: 37.50,
+				HANDRAIL: 12.50,
+				STEP: 25.00,
+			},
+			EQUIPMENT: {
+				LADDER: 60.00,
+				SCAFFOLD: 150.00,
+			},
+		},
+
+		PRODUCTION_SPEEDS: {
+			WALLS: {
+				REFRESH: 130, // sqft/hr
+				CHANGE: 80,
+				DARK_TO_LIGHT: 55,
+				PREP_GOOD: 666, // 0.15 hrs / 100 -> 100 / 0.15
+				PREP_FAIR: 250, // 0.40 hrs / 100 -> 100 / 0.40
+				PREP_POOR: 100, // 1.00 hr / 100
+			},
+			CEILINGS: {
+				REFRESH: 130,
+				CHANGE: 80,
+				DARK_TO_LIGHT: 55,
+			},
+			TRIM: {
+				COAT_1: 60, // lf/hr
+				COAT_2: 35,
+				COAT_3: 20,
+			},
+			CROWN: {
+				COAT_1: 40,
+				COAT_2: 25,
+				COAT_3: 15,
 			},
 		},
 
 		FIXED_ITEMS: {
-			CLOSET_STANDARD: 1.5,
-			CLOSET_MEDIUM: 2.5,
-			CLOSET_LARGE: 4.0,
+			CLOSET_STANDARD: 1.0,
+			CLOSET_MEDIUM: 1.5,
+			CLOSET_LARGE: 2.0,
 			CLOSET_MATERIAL_GALLONS: {
 				STANDARD: 0.32,
 				MEDIUM: 0.53,
 				LARGE: 0.84,
 			},
-			WINDOW_STANDARD_CASING: 0.833, // 50 mins total per window
-			DOOR_6_PANEL_SIDE: 0.666, // 40 mins per side
-			DOOR_SLAB_SIDE: 0.583, // 35 mins per side
+			WINDOW_STANDARD_CASING: 0.5, // 30 mins
+			DOOR_SLAB: 1.0,
+			DOOR_SLAB_PRICE: 75.00,
+			DOOR_PANELED: 1.6,
+			DOOR_PANELED_PRICE: 120.00,
 		},
 
 		DEFAULTS: {

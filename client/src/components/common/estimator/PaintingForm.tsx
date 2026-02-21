@@ -172,9 +172,6 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 											<option value='OWNER_CLEARS'>
 												Owner Clears Room (Owner moves & covers everything)
 											</option>
-											<option value='PAINTER_COVERS'>
-												Lived-In (Painter covers furniture)
-											</option>
 											<option value='PAINTER_MOVES'>
 												Lived-In (Painter moves & covers heavy furniture)
 											</option>
@@ -389,48 +386,42 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 															onGlobalChange('updateGlobalDefaults', {
 																field: 'trimCondition',
 																value: e.target.value,
-															})
-														}
-													>
-														<option value='Good'>
-															Good (Just needs paint)
-														</option>
-														<option value='Poor'>
-															Poor (Needs re-caulking)
-														</option>
-													</select>
-												</div>
-												<div className={styles.formGroup}>
-													<div>
-														<label style={{ margin: 0 }}>
-															Is your trim currently wood-stained?
-														</label>
-														{painting.globalDefaults?.trimConversion && (
-															<InfoTooltip
-																message={PAINTING_TOOLTIPS.TRIM_CONVERSION}
-															/>
-														)}
-													</div>
-													<select
-														value={
-															painting.globalDefaults?.trimConversion
-																? 'Stained'
-																: 'Standard'
-														}
-														onChange={(e) =>
-															onGlobalChange('updateGlobalDefaults', {
-																field: 'trimConversion',
-																value: e.target.value === 'Stained',
-															})
-														}
-													>
-														<option value='Standard'>Standard Painting</option>
-														<option value='Stained'>Stained to Painted</option>
-													</select>
-												</div>
-											</>
-										)}
-										{painting.globalDefaults?.surfaces.crownMolding && (
+														})
+													}
+												>
+													<option value='Good'>
+														Good (Just needs paint)
+													</option>
+													<option value='Poor'>
+														Poor (Needs re-caulking)
+													</option>
+												</select>
+											</div>
+											<div className={styles.formGroup}>
+												<label>Trim Color Change (Default)</label>
+												<select
+													value={
+														painting.globalDefaults?.trimColorChange ||
+														'Similar'
+													}
+													onChange={(e) =>
+														onGlobalChange('updateGlobalDefaults', {
+															field: 'trimColorChange',
+															value: e.target.value,
+														})
+													}
+												>
+													<option value='Similar'>Refresh (Same Color)</option>
+													<option value='Change'>Standard Color Change</option>
+													<option value='Dark-to-Light'>
+														Major Change (Stain to Paint / Dark to Light)
+													</option>
+												</select>
+											</div>
+										</>
+									)}
+									{painting.globalDefaults?.surfaces.crownMolding && (
+										<div className={styles.formGroupBox} style={{ padding: 0, border: 'none' }}>
 											<div className={styles.formGroup}>
 												<label>Crown Molding Style (Default)</label>
 												<select
@@ -449,144 +440,166 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 													<option value='Detailed'>Detailed / Ornate</option>
 												</select>
 											</div>
-										)}
-										{painting.globalDefaults?.surfaces.doors && (
 											<div className={styles.formGroup}>
-												<div
-													style={{
-														display: 'flex',
-														alignItems: 'center',
-														gap: '8px',
-													}}
-												>
-													<label style={{ margin: 0 }}>
-														Door Style (Default)
-													</label>
-													{painting.globalDefaults?.doorStyle === 'Paneled' && (
-														<InfoTooltip
-															message={PAINTING_TOOLTIPS.DOOR_PANELED}
-														/>
-													)}
-												</div>
+												<label>Crown Color Change (Default)</label>
 												<select
-													value={painting.globalDefaults?.doorStyle || 'Slab'}
+													value={
+														painting.globalDefaults?.crownColorChange ||
+														'Similar'
+													}
 													onChange={(e) =>
 														onGlobalChange('updateGlobalDefaults', {
-															field: 'doorStyle',
+															field: 'crownColorChange',
 															value: e.target.value,
 														})
 													}
 												>
-													<option value='Slab'>Flat / Slab</option>
-													<option value='Paneled'>Paneled</option>
+													<option value='Similar'>Refresh (Same Color)</option>
+													<option value='Change'>Standard Color Change</option>
+													<option value='Dark-to-Light'>
+														Major Change (Stain to Paint / Dark to Light)
+													</option>
 												</select>
 											</div>
-										)}
-									</div>
-								</div>
-							)}
-
-							<div className={styles.formGroupBox}>
-								<div className={styles.formGroupGrid}>
-									<div className={styles.formGroup}>
-										<label>Surface Condition (Default)</label>
-										<select
-											value={painting.globalDefaults?.wallCondition || 'Good'}
-											onChange={(e) =>
-												onGlobalChange('updateGlobalDefaults', {
-													field: 'wallCondition',
-													value: e.target.value,
-												})
-											}
-										>
-											<option value='None'>None (No extra preparation)</option>
-											<option value='Good'>Good (Few nail holes)</option>
-											<option value='Fair'>
-												Basic Prep (Nail holes, minor scuffs)
-											</option>
-											<option value='Poor'>
-												Major Prep (Peeling paint, cracks, or large holes)
-											</option>
-										</select>
-									</div>
-									<div className={styles.formGroup}>
-										<div
-											style={{
-												display: 'flex',
-												alignItems: 'center',
-												gap: '8px',
-											}}
-										>
-											<label style={{ margin: 0 }}>
-												Color Change (Default)
-											</label>
-											{painting.globalDefaults?.colorChange ===
-												'Dark-to-Light' && (
-												<InfoTooltip
-													message={PAINTING_TOOLTIPS.COLOR_CHANGE_DARK_TO_LIGHT}
-												/>
-											)}
 										</div>
-										<select
-											value={painting.globalDefaults?.colorChange || 'Similar'}
-											onChange={(e) =>
-												onGlobalChange('updateGlobalDefaults', {
-													field: 'colorChange',
-													value: e.target.value,
-												})
-											}
-										>
-											<option value='Similar'>Refresh (Same Color)</option>
-											<option value='Change'>
-												Color Change (Light to Light or Dark)
-											</option>
-											<option value='Dark-to-Light'>
-												Color Change (Dark to Light)
-											</option>
-										</select>
-									</div>
+									)}
+									{painting.globalDefaults?.surfaces.doors && (
+										<div className={styles.formGroup}>
+											<div
+												style={{
+													display: 'flex',
+													alignItems: 'center',
+													gap: '8px',
+												}}
+											>
+												<label style={{ margin: 0 }}>
+													Door Style (Default)
+												</label>
+												{painting.globalDefaults?.doorStyle === 'Paneled' && (
+													<InfoTooltip
+														message={PAINTING_TOOLTIPS.DOOR_PANELED}
+													/>
+												)}
+											</div>
+											<select
+												value={painting.globalDefaults?.doorStyle || 'Slab'}
+												onChange={(e) =>
+													onGlobalChange('updateGlobalDefaults', {
+														field: 'doorStyle',
+														value: e.target.value,
+													})
+												}
+											>
+												<option value='Slab'>Flat / Slab</option>
+												<option value='Paneled'>Paneled</option>
+											</select>
+										</div>
+									)}
 								</div>
 							</div>
+						)}
 
-							<div className={styles.formGroupBox}>
+						<div className={styles.formGroupBox}>
+							<div className={styles.formGroupGrid}>
 								<div className={styles.formGroup}>
-									<label>
-										Additional Details{' '}
-										<span
-											style={{
-												fontWeight: 'normal',
-												fontSize: '0.85rem',
-												color: '#666',
-											}}
-										>
-											(Optional - Max 600 characters)
-										</span>
-									</label>
-									<textarea
-										name='additionalDetails'
-										value={painting.additionalDetails || ''}
+									<label>Surface Condition (Default)</label>
+									<select
+										value={painting.globalDefaults?.wallCondition || 'Good'}
 										onChange={(e) =>
-											onGlobalChange('additionalDetails', e.target.value)
+											onGlobalChange('updateGlobalDefaults', {
+												field: 'wallCondition',
+												value: e.target.value,
+											})
 										}
-										maxLength={600} // Enforce the limit natively
-										rows={4}
-										placeholder='Tell us about specific damage, color changes (e.g. dark red to white), or high ceilings...'
-									/>
+									>
+										<option value='None'>None (No extra preparation)</option>
+										<option value='Good'>Good (Few nail holes)</option>
+										<option value='Fair'>
+											Basic Prep (Nail holes, minor scuffs)
+										</option>
+										<option value='Poor'>
+											Major Prep (Peeling paint, cracks, or large holes)
+										</option>
+									</select>
+								</div>
+								<div className={styles.formGroup}>
 									<div
 										style={{
-											textAlign: 'right',
-											fontSize: '0.8rem',
-											color: '#999',
+											display: 'flex',
+											alignItems: 'center',
+											gap: '8px',
 										}}
 									>
-										{(painting.additionalDetails || '').length} / 600
+										<label style={{ margin: 0 }}>
+											Color Change (Default)
+										</label>
+										{painting.globalDefaults?.colorChange ===
+											'Dark-to-Light' && (
+											<InfoTooltip
+												message={PAINTING_TOOLTIPS.COLOR_CHANGE_DARK_TO_LIGHT}
+											/>
+										)}
 									</div>
+									<select
+										value={painting.globalDefaults?.colorChange || 'Similar'}
+										onChange={(e) =>
+											onGlobalChange('updateGlobalDefaults', {
+												field: 'colorChange',
+												value: e.target.value,
+											})
+										}
+									>
+										<option value='Similar'>Refresh (Same Color)</option>
+										<option value='Change'>
+											Color Change (Light to Light or Dark)
+										</option>
+										<option value='Dark-to-Light'>
+											Color Change (Dark to Light)
+										</option>
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div className={styles.formGroupBox}>
+							<div className={styles.formGroup}>
+								<label>
+									Additional Details{' '}
+									<span
+										style={{
+											fontWeight: 'normal',
+											fontSize: '0.85rem',
+											color: '#666',
+										}}
+									>
+										(Optional - Max 600 characters)
+									</span>
+								</label>
+								<textarea
+									name='additionalDetails'
+									value={painting.additionalDetails || ''}
+									onChange={(e) =>
+										onGlobalChange('additionalDetails', e.target.value)
+									}
+									maxLength={600} // Enforce the limit natively
+									rows={4}
+									placeholder='Tell us about specific damage, color changes (e.g. dark red to white), or high ceilings...'
+								/>
+								<div
+									style={{
+										textAlign: 'right',
+										fontSize: '0.8rem',
+										color: '#999',
+									}}
+								>
+									{(painting.additionalDetails || '').length} / 600
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+		</div>
 
 			{/* --- B. The Generated Room Cards --- */}
 			{painting.rooms.map((room) => {

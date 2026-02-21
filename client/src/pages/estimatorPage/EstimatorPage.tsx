@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { PageHeader } from '@/components/common/pageHeader/PageHeader';
 import { Button } from '@/components/common/button/Button';
 import styles from './EstimatorPage.module.css';
@@ -178,6 +178,19 @@ const EstimatorPage = () => {
 
 	const isStep1Complete = Object.values(services).some(Boolean);
 
+	// Validation for Step 2
+	const isStep2Complete = useMemo(() => {
+		// If Painting is selected, must have at least one room
+		if (services.painting && paintingData.rooms.length === 0) return false;
+		
+		// If Patching is selected, must have at least one repair
+		if (services.patching && repairData.repairs.length === 0) return false;
+
+		// Basement/Garage/Installation usually have defaults or single-view forms, 
+		// but we can add more strict checks here if needed.
+		return true;
+	}, [services, paintingData.rooms, repairData.repairs]);
+
 	return (
 		<div className={styles.estimatorPageWrapper}>
 			<PageHeader title='Instant Estimator' />
@@ -281,6 +294,7 @@ const EstimatorPage = () => {
 									type='button'
 									variant='primary'
 									onClick={handleNext}
+									disabled={!isStep2Complete}
 								>
 									Next: Your Info
 								</Button>

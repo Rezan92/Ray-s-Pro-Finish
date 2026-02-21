@@ -21,4 +21,6 @@ export const PAINTING_TOOLTIPS = {
 		'Paneled doors take significantly longer to paint because each corner must be detailed by hand with a brush to prevent drips.',
 	TRIM_CONVERSION:
 		'Painting over wood-stain requires extensive preparation, including deep sanding, stain blocking, and multiple primer/finish coats to ensure a professional bond.',
+	STAIRWELL_COMPONENTS:
+		'Select ONLY the parts of the staircase you want us to paint. For example, if you are only painting the spindles but keeping the handrail as-is, leave the handrail unchecked.',
 };
