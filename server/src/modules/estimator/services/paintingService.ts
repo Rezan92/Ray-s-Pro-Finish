@@ -1,7 +1,7 @@
 import { generateServiceBreakdown } from '../utils/breakdownHelper.js';
 import { MASTER_RATES } from '../constants/masterRates.js';
 import { ROOM_DIMENSIONS } from '../constants/paintingConstants.js';
-import { PaintingRoom, BreakdownItem } from '../types.js';
+import { PaintingRoom, BreakdownItem, PaintingRequest } from '../types.js';
 
 interface CalculationContext {
 	totalHours: number;
@@ -16,6 +16,23 @@ interface CalculationContext {
 }
 
 const P = MASTER_RATES.PAINTING;
+
+/**
+ * Helper to convert ceiling height labels or numbers to a standard number
+ */
+const getHeightNumber = (room: PaintingRoom): number => {
+	if (room.exactHeight) return room.exactHeight;
+	
+	const HEIGHT_MAP: Record<string, number> = {
+		'8ft': 8,
+		'9-10ft': 9,
+		'11-14ft': 12,
+		'15ft+': 18,
+	};
+	
+	const rawHeight = room.ceilingHeight || '8ft';
+	return HEIGHT_MAP[rawHeight] || parseInt(rawHeight) || 8;
+};
 
 /**
  * T004: Helper to add a line item to the context and update totals
@@ -56,6 +73,15 @@ const calculateLineData = (quantity: number, unitPrice: number, speed?: number) 
 };
 
 /**
+ * Helper to calculate price first and derive hours (Reverse-Hour Strategy)
+ */
+const calculateItemPrice = (quantity: number, unitPrice: number) => {
+	const cost = quantity * unitPrice;
+	const hours = cost / P.LABOR_RATE;
+	return { cost, hours };
+};
+
+/**
  * T005: Walls Logic
  */
 const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: number, W: number, H: number) => {
@@ -82,8 +108,19 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 		label = 'Dark-to-Light (3 Coats)';
 	}
 
-	const { cost, hours } = calculateLineData(area, unitPrice, speed);
-	const details = `${Math.round(area)} sqft @ $${unitPrice.toFixed(2)}/sqft (${label})`;
+	// 2. Apply Height Multiplier to Walls
+	let heightMultiplier = P.MULTIPLIERS.CEILING_HEIGHT.STANDARD;
+	if (H >= 10 && H < 12) heightMultiplier = P.MULTIPLIERS.CEILING_HEIGHT.MID;
+	else if (H >= 12 && H < 15) heightMultiplier = P.MULTIPLIERS.CEILING_HEIGHT.HIGH;
+	else if (H >= 15) heightMultiplier = P.MULTIPLIERS.CEILING_HEIGHT.VAULTED;
+
+	const finalUnitPrice = unitPrice * heightMultiplier;
+	const { cost, hours } = calculateLineData(area, finalUnitPrice, speed);
+	
+	let details = `${Math.round(area)} sqft @ $${finalUnitPrice.toFixed(2)}/sqft (${label})`;
+	if (heightMultiplier > 1) {
+		details = `${Math.round(area)} sqft @ $${finalUnitPrice.toFixed(2)}/sqft (${label} x ${heightMultiplier} height)`;
+	}
 	
 	addLineItem(ctx, `${room.label} - Walls`, hours, cost, details);
 
@@ -92,7 +129,7 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 		ctx.highWorkLaborHours += hours;
 	}
 
-	// 2. Prep (Unit-based additive price)
+	// 3. Prep (Unit-based additive price)
 	let prepPrice = 0;
 	let prepSpeed = 0;
 	if (room.wallCondition === 'Good') {
@@ -109,12 +146,13 @@ const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	}
 	
 	if (prepPrice > 0) {
-		const { cost: pCost, hours: pHours } = calculateLineData(area, prepPrice, prepSpeed);
-		addLineItem(ctx, `${room.label} - Wall Prep (${room.wallCondition})`, pHours, pCost, `${Math.round(area)} sqft @ $${prepPrice.toFixed(2)}/sqft`);
+		const finalPrepPrice = prepPrice * heightMultiplier;
+		const { cost: pCost, hours: pHours } = calculateLineData(area, finalPrepPrice, prepSpeed);
+		addLineItem(ctx, `${room.label} - Wall Prep (${room.wallCondition})`, pHours, pCost, `${Math.round(area)} sqft @ $${finalPrepPrice.toFixed(2)}/sqft`);
 		if (H >= 12) ctx.highWorkLaborHours += pHours;
 	}
 
-	// 3. Materials (Finish Coats)
+	// 4. Materials (Finish Coats)
 	const finishGallons = (area / P.MATERIAL_COVERAGE.WALL_CEILING_SQFT_PER_GALLON) * finishCoats;
 	ctx.wallGallons += finishGallons;
 	
@@ -283,10 +321,15 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 	if (room.surfaces.doors) {
 		const count = parseInt(room.doorCount) || 0;
 		if (count > 0) {
-			const totalDoorHours = count * P.FIXED_ITEMS.DOOR_STANDARD;
-			const totalDoorCost = count * P.FIXED_ITEMS.DOOR_STANDARD_PRICE;
+			const isPaneled = room.doorStyle === 'Paneled';
+			const doorHours = isPaneled ? P.FIXED_ITEMS.DOOR_PANELED : P.FIXED_ITEMS.DOOR_SLAB;
+			const doorPrice = isPaneled ? P.FIXED_ITEMS.DOOR_PANELED_PRICE : P.FIXED_ITEMS.DOOR_SLAB_PRICE;
+			const styleLabel = isPaneled ? 'Paneled' : 'Slab/Smooth';
 
-			addLineItem(ctx, `${room.label} - Doors`, totalDoorHours, totalDoorCost, `${count} doors @ $145.00/ea`);
+			const totalDoorHours = count * doorHours;
+			const totalDoorCost = count * doorPrice;
+
+			addLineItem(ctx, `${room.label} - Doors`, totalDoorHours, totalDoorCost, `${count} ${styleLabel} doors @ $${doorPrice.toFixed(2)}/ea`);
 			
 			const doorFinishGallons = (count / P.MATERIAL_COVERAGE.DOORS_PER_GALLON) * 2; 
 			ctx.trimGallons += doorFinishGallons;
@@ -338,7 +381,7 @@ const calculateStairwellHours = (room: PaintingRoom, ctx: CalculationContext) =>
 /**
  * T010: Main Estimation Function
  */
-export const calculatePaintingEstimate = async (data: any) => {
+export const calculatePaintingEstimate = async (data: PaintingRequest) => {
 	const ctx: CalculationContext = {
 		totalHours: 0,
 		totalCost: 0,
@@ -353,24 +396,15 @@ export const calculatePaintingEstimate = async (data: any) => {
 
 	data.rooms.forEach((room: PaintingRoom) => {
 		// T011 Logic: Exact dimensions vs Presets
-		let L, W, H;
-		if (room.exactLength && room.exactWidth && room.exactHeight) {
+		let L, W;
+		if (room.exactLength && room.exactWidth) {
 			L = room.exactLength;
 			W = room.exactWidth;
-			H = room.exactHeight;
 		} else {
 			[L, W] = ROOM_DIMENSIONS[room.type]?.[room.size] || [12, 14];
-			
-			// Standardized Height Mapping (Phase 1 Fix)
-			const HEIGHT_MAP: Record<string, number> = {
-				'8ft': 8,
-				'9-10ft': 9,
-				'11-14ft': 12,
-				'15ft+': 18,
-			};
-			const rawHeight = room.ceilingHeight || '8ft';
-			H = HEIGHT_MAP[rawHeight] || parseInt(rawHeight) || 8;
 		}
+
+		const H = getHeightNumber(room);
 
 		// Surface calculations
 		calculateWallHours(room, ctx, L, W, H);
@@ -399,14 +433,8 @@ export const calculatePaintingEstimate = async (data: any) => {
 
 	// US3: Equipment Rental (High Work)
 	let maxProjectHeight = 0;
-	data.rooms.forEach((room: any) => {
-		let h;
-		if (room.exactHeight) {
-			h = room.exactHeight;
-		} else {
-			const hMap: Record<string, number> = { '8ft': 8, '9-10ft': 9, '11-14ft': 12, '15ft+': 18 };
-			h = hMap[room.ceilingHeight] || parseInt(room.ceilingHeight) || 8;
-		}
+	data.rooms.forEach((room: PaintingRoom) => {
+		const h = getHeightNumber(room);
 		if (h > maxProjectHeight) maxProjectHeight = h;
 	});
 

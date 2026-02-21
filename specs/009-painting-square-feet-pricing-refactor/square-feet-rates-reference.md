@@ -69,7 +69,8 @@
 
 | Item | Rate | Labor Price | Notes |
 | :--- | :--- | :--- | :--- |
-| **Door (Standard)** | 1.5 hr | **$145.00** ea | Both sides & frame. |
+| **Door (Slab/Smooth)** | 1.0 hr | **$75.00** ea | Both sides & frame. |
+| **Door (Paneled)** | 1.6 hr | **$120.00** ea | Both sides & frame. |
 | **Window Frame** | 0.5 hr | **$37.50** ea | Standard casing/sash. |
 | **Closet (Standard)**| 1 hr | **$75.00** ea | 2' x 4' reach-in. |
 | **Closet (Medium)** | 1.5 hr | **$112.50** ea | 5' x 5' walk-in. |
