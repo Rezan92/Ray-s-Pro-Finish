@@ -227,7 +227,6 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 											name='ceilingHeight'
 											value={room.ceilingHeight || '8ft'}
 											onChange={handleFieldChange}
-											disabled={isStairwell}
 										>
 											<option value='8ft'>8 ft (Standard)</option>
 											<option value='9-10ft'>9-10 ft</option>
@@ -302,53 +301,102 @@ export const PaintingRoomCard: React.FC<PaintingRoomCardProps> = ({
 						{/* 3. Stairwell Details (T012) */}
 						{isStairwell && (
 							<div className={styles.formGroupBox}>
-								<label style={{ marginBottom: '1rem', display: 'block' }}>
-									Stairwell Components
-								</label>
-								<div className={styles.conditionalFieldsContainer}>
-									<div className={styles.formGroup}>
-										<label>Spindle Count</label>
-										<input
-											type='number'
-											name='stairSpindles'
-											className={styles.smallInput}
-											min='0'
-											value={room.stairSpindles || 0}
-											onChange={handleFieldChange}
-										/>
+								<div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1rem' }}>
+									<label style={{ margin: 0 }}>Stairwell Components</label>
+									<InfoTooltip message={PAINTING_TOOLTIPS.STAIRWELL_COMPONENTS} />
+								</div>
+								
+								<div className={styles.stairwellGrid}>
+									{/* Spindles */}
+									<div className={styles.stairwellItem}>
+										<label className={styles.checkboxLabel}>
+											<input
+												type='checkbox'
+												checked={room.stairSpindles !== undefined && room.stairSpindles > 0}
+												onChange={(e) => onRoomChange(room.id, 'stairSpindles', e.target.checked ? 1 : 0)}
+											/>
+											Spindles
+										</label>
+										{(room.stairSpindles ?? 0) > 0 && (
+											<div className={styles.stairwellInputs}>
+												<div className={styles.formGroup}>
+													<label>Count</label>
+													<input
+														type='number'
+														name='stairSpindles'
+														className={styles.smallInput}
+														min='1'
+														value={room.stairSpindles || 1}
+														onChange={handleFieldChange}
+													/>
+												</div>
+												<div className={styles.formGroup}>
+													<label>Style</label>
+													<select
+														name='stairSpindleType'
+														value={room.stairSpindleType || 'Square'}
+														onChange={handleFieldChange}
+													>
+														<option value='Square'>Square (Simple)</option>
+														<option value='Intricate'>Intricate (Ornate)</option>
+													</select>
+												</div>
+											</div>
+										)}
 									</div>
-									<div className={styles.formGroup}>
-										<label>Spindle Type</label>
-										<select
-											name='stairSpindleType'
-											value={room.stairSpindleType || 'Square'}
-											onChange={handleFieldChange}
-										>
-											<option value='Square'>Square (Simple)</option>
-											<option value='Intricate'>Intricate (Ornate)</option>
-										</select>
+
+									{/* Handrail */}
+									<div className={styles.stairwellItem}>
+										<label className={styles.checkboxLabel}>
+											<input
+												type='checkbox'
+												checked={room.stairHandrail !== undefined && room.stairHandrail > 0}
+												onChange={(e) => onRoomChange(room.id, 'stairHandrail', e.target.checked ? 10 : 0)}
+											/>
+											Handrail
+										</label>
+										{(room.stairHandrail ?? 0) > 0 && (
+											<div className={styles.stairwellInputs}>
+												<div className={styles.formGroup}>
+													<label>Linear Feet (lf)</label>
+													<input
+														type='number'
+														name='stairHandrail'
+														className={styles.smallInput}
+														min='1'
+														value={room.stairHandrail || 1}
+														onChange={handleFieldChange}
+													/>
+												</div>
+											</div>
+										)}
 									</div>
-									<div className={styles.formGroup}>
-										<label>Handrail (lf)</label>
-										<input
-											type='number'
-											name='stairHandrail'
-											className={styles.smallInput}
-											min='0'
-											value={room.stairHandrail || 0}
-											onChange={handleFieldChange}
-										/>
-									</div>
-									<div className={styles.formGroup}>
-										<label>Number of Steps</label>
-										<input
-											type='number'
-											name='stairSteps'
-											className={styles.smallInput}
-											min='0'
-											value={room.stairSteps || 0}
-											onChange={handleFieldChange}
-										/>
+
+									{/* Steps */}
+									<div className={styles.stairwellItem}>
+										<label className={styles.checkboxLabel}>
+											<input
+												type='checkbox'
+												checked={room.stairSteps !== undefined && room.stairSteps > 0}
+												onChange={(e) => onRoomChange(room.id, 'stairSteps', e.target.checked ? 14 : 0)}
+											/>
+											Steps (Risers/Stringers)
+										</label>
+										{(room.stairSteps ?? 0) > 0 && (
+											<div className={styles.stairwellInputs}>
+												<div className={styles.formGroup}>
+													<label>Number of Steps</label>
+													<input
+														type='number'
+														name='stairSteps'
+														className={styles.smallInput}
+														min='1'
+														value={room.stairSteps || 1}
+														onChange={handleFieldChange}
+													/>
+												</div>
+											</div>
+										)}
 									</div>
 								</div>
 							</div>
