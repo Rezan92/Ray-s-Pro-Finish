@@ -73,18 +73,34 @@ const calculateLineData = (quantity: number, unitPrice: number, speed?: number) 
 };
 
 /**
- * Helper to calculate price first and derive hours (Reverse-Hour Strategy)
+ * Helper to calculate price first and derive hours (Reverse-Hour Strategy) 
  */
-const calculateItemPrice = (quantity: number, unitPrice: number) => {
+const calculateItemPrice = (quantity: number, unitPrice: number) => {       
 	const cost = quantity * unitPrice;
 	const hours = cost / P.LABOR_RATE;
 	return { cost, hours };
 };
 
 /**
- * T005: Walls Logic
+ * Rounding logic for paint purchase:
+ * - 0 to 0.25 gallons -> 0.25 (Quart)
+ * - 0.25 to 1.0 gallons -> 1.0 (Full Gallon)
+ * - Above 1.0: if decimal <= 0.25 -> X.25, else -> next full Gallon
  */
-const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: number, W: number, H: number) => {
+const roundToPurchasableAmount = (gallons: number): number => {
+	if (gallons <= 0) return 0;
+	
+	const integerPart = Math.floor(gallons);
+	const decimalPart = gallons - integerPart;
+
+	if (decimalPart === 0) return integerPart;
+	if (decimalPart <= 0.25) return integerPart + 0.25;
+	return integerPart + 1.0;
+};
+
+/**
+ * T005: Walls Logic
+ */const calculateWallHours = (room: PaintingRoom, ctx: CalculationContext, L: number, W: number, H: number) => {
 	if (!room.surfaces.walls) return;
 
 	const perimeter = 2 * (L + W);
@@ -466,13 +482,13 @@ export const calculatePaintingEstimate = async (data: PaintingRequest) => {
 	// Material Supply Logic
 	const isCustomerProviding = data.paintProvider === 'Customer';
 	
-	// Phase 7: Apply Waste Buffer to all categories at once
+	// Phase 7: Apply Waste Buffer and Round to Purchasable Amounts (Individual Categories)
 	const waste = P.MATERIAL_COVERAGE.WASTE_BUFFER;
-	ctx.wallGallons *= waste;
-	ctx.ceilingGallons *= waste;
-	ctx.trimGallons *= waste;
-	ctx.crownGallons *= waste;
-	ctx.primerGallons *= waste;
+	ctx.wallGallons = roundToPurchasableAmount(ctx.wallGallons * waste);
+	ctx.ceilingGallons = roundToPurchasableAmount(ctx.ceilingGallons * waste);
+	ctx.trimGallons = roundToPurchasableAmount(ctx.trimGallons * waste);
+	ctx.crownGallons = roundToPurchasableAmount(ctx.crownGallons * waste);
+	ctx.primerGallons = roundToPurchasableAmount(ctx.primerGallons * waste);
 
 	const totalGallons = ctx.wallGallons + ctx.ceilingGallons + ctx.trimGallons + ctx.crownGallons + ctx.primerGallons;
 
@@ -493,7 +509,7 @@ export const calculatePaintingEstimate = async (data: PaintingRequest) => {
 			name: 'Material Supply Package',
 			hours: 0,
 			cost: Math.round(materialCost),
-			details: `${totalGallons.toFixed(1)} gal (${isCustomerProviding ? 'Customer Provided' : data.paintProvider}) incl. 15% waste`,
+			details: `${totalGallons.toFixed(2)} gal (${isCustomerProviding ? 'Customer Provided' : data.paintProvider}) - Rounding applied per surface`,
 		});
 
 		// T016: Gallon Breakdown for Admin
@@ -501,7 +517,7 @@ export const calculatePaintingEstimate = async (data: PaintingRequest) => {
 			name: 'Material Breakdown',
 			hours: 0,
 			cost: 0,
-			details: `Walls: ${ctx.wallGallons.toFixed(1)}g, Ceiling: ${ctx.ceilingGallons.toFixed(1)}g, Trim: ${ctx.trimGallons.toFixed(1)}g, Crown: ${ctx.crownGallons.toFixed(1)}g, Primer: ${ctx.primerGallons.toFixed(1)}g`,
+			details: `Walls: ${ctx.wallGallons.toFixed(2)}g, Ceiling: ${ctx.ceilingGallons.toFixed(2)}g, Trim: ${ctx.trimGallons.toFixed(2)}g, Crown: ${ctx.crownGallons.toFixed(2)}g, Primer: ${ctx.primerGallons.toFixed(2)}g`,
 		});
 		ctx.totalCost += materialCost;
 	}
