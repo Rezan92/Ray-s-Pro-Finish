@@ -1,9 +1,11 @@
 // This determines the URL based on whether you are running locally or in production
 const IS_DEVELOPMENT = import.meta.env.MODE === 'development';
 
-export const API_BASE_URL = IS_DEVELOPMENT
+// 1. Check for an explicit override (good for future domain changes)
+// 2. Otherwise, switch based on the build mode
+export const API_BASE_URL = import.meta.env.VITE_API_URL || (IS_DEVELOPMENT
   ? 'http://localhost:5000/api'
-  : '/api'; // In production, we usually proxy or use a relative path
+  : 'https://ray-s-pro-finish-api.onrender.com/api');
 
 // A helper to make fetching cleaner
 export const endpoints = {
