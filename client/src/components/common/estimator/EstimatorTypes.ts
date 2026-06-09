@@ -152,7 +152,9 @@ export interface FormData {
 	painting: {
 		rooms: PaintingRoom[];
 		paintProvider: string;
-		furniture: string;
+		furniture?: string;
+		occupancy?: string; // T015: Furniture handling
+		globalDefaults?: Partial<PaintingRoom>; // T014: Inheritance
 		additionalDetails?: string;
 	};
 
@@ -170,6 +172,11 @@ export interface FormData {
 		email: string;
 		phone: string;
 	};
+}
+
+export interface RepairState {
+	repairs: RepairItem[];
+	smallRepairsDescription?: string;
 }
 
 export interface BreakdownItem {

@@ -28,7 +28,7 @@ export const BasementForm: React.FC<BasementFormProps> = ({
 	) => {
 		const { name, value, type } = e.target;
 		const finalValue = type === 'number' ? Number(value) : value;
-		onFieldChange(name, finalValue);
+		onFieldChange(name as keyof BasementData, finalValue);
 	};
 
 	const handleServiceChange = (field: keyof BasementData['services'], value: unknown) => {

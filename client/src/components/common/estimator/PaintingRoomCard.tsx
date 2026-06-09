@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import type { PaintingRoom } from './EstimatorTypes';
-import { ChevronDown, Plus, Trash2, Ruler, AlertTriangle } from 'lucide-react';
+import { ChevronDown, Plus, Trash2 } from 'lucide-react';
 import { ROOM_SIZE_OPTIONS } from './roomSizeData';
 import styles from './styles/PaintingRoomCard.module.css';
 import { InfoTooltip } from '@/components/common/infoTooltip/InfoTooltip';

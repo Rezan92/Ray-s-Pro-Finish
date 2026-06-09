@@ -3,6 +3,7 @@ import type {
 	FormData,
 	DrywallLevel,
 	PaintLevel,
+	GarageData,
 } from '@/components/common/estimator/EstimatorTypes';
 import { InfoTooltip } from '@/components/common/infoTooltip/InfoTooltip';
 import { AlertCircle, Check, ChevronDown } from 'lucide-react';
@@ -46,9 +47,8 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 		>
 	) => {
 		const { name, value, type } = e.target;
-		const finalValue =
-			type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
-		onFieldChange(name, finalValue);
+		const finalValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
+		onFieldChange(name as keyof GarageData, finalValue);
 	};
 
 	const handleServiceToggle = (key: 'insulation' | 'drywall' | 'painting') => {
@@ -156,16 +156,7 @@ export const GarageForm: React.FC<GarageFormProps> = ({
 							className={`${styles.serviceRow} ${
 								garage.includeCeiling ? styles.active : ''
 							}`}
-							onClick={() =>
-								handleChange({
-									target: {
-										name: 'includeCeiling',
-										type: 'checkbox',
-										// @ts-expect-error - Mocking event structure
-										checked: !garage.includeCeiling,
-									},
-								})
-							}
+							onClick={() => onFieldChange('includeCeiling', !garage.includeCeiling)}
 						>
 							<div className={styles.serviceRowHeader}>
 								<div className={styles.checkboxCircle}>

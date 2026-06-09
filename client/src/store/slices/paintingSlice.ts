@@ -185,8 +185,7 @@ export const paintingSlice = createSlice({
 			action: PayloadAction<{ field: keyof PaintingState; value: unknown }>
 		) => {
 			const { field, value } = action.payload;
-			// @ts-expect-error - Generic assignment
-			state[field] = value as never;
+			(state as any)[field] = value;
 		},
 		updateGlobalDefaults: (
 			state,
@@ -195,12 +194,10 @@ export const paintingSlice = createSlice({
 			const { field, value } = action.payload;
 			
 			// 1. Update global state
-			// @ts-expect-error - Generic assignment
 			if (field === 'surfaces') {
 				state.globalDefaults.surfaces = { ...(value as any) };
 			} else {
-				// @ts-expect-error - Generic assignment
-				state.globalDefaults[field] = value;
+				(state.globalDefaults as any)[field] = value;
 			}
 
 			// 2. Propagate to non-customized rooms
@@ -213,8 +210,7 @@ export const paintingSlice = createSlice({
 						
 						// Enforce restrictions
 						restrictions.forEach(restriction => {
-							// @ts-expect-error - Dynamic key access
-							surfaces[restriction] = false;
+							(surfaces as any)[restriction] = false;
 						});
 
 						room.surfaces = { ...surfaces };
@@ -231,8 +227,7 @@ export const paintingSlice = createSlice({
 							room.windowCount = 0;
 						}
 					} else {
-						// @ts-expect-error - Generic assignment
-						room[field] = value;
+						(room as any)[field] = value;
 					}
 				}
 			});

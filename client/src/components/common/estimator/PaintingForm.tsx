@@ -222,13 +222,13 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 											<input
 												type='checkbox'
 												checked={
-													painting.globalDefaults?.surfaces.walls ?? true
+													painting.globalDefaults?.surfaces?.walls ?? true
 												}
 												onChange={(e) =>
 													onGlobalChange('updateGlobalDefaults', {
 														field: 'surfaces',
 														value: {
-															...painting.globalDefaults.surfaces,
+															...painting.globalDefaults?.surfaces,
 															walls: e.target.checked,
 														},
 													})
@@ -240,13 +240,13 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 											<input
 												type='checkbox'
 												checked={
-													painting.globalDefaults?.surfaces.ceiling ?? false
+													painting.globalDefaults?.surfaces?.ceiling ?? false
 												}
 												onChange={(e) =>
 													onGlobalChange('updateGlobalDefaults', {
 														field: 'surfaces',
 														value: {
-															...painting.globalDefaults.surfaces,
+															...painting.globalDefaults?.surfaces,
 															ceiling: e.target.checked,
 														},
 													})
@@ -258,13 +258,13 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 											<input
 												type='checkbox'
 												checked={
-													painting.globalDefaults?.surfaces.trim ?? false
+													painting.globalDefaults?.surfaces?.trim ?? false
 												}
 												onChange={(e) =>
 													onGlobalChange('updateGlobalDefaults', {
 														field: 'surfaces',
 														value: {
-															...painting.globalDefaults.surfaces,
+															...painting.globalDefaults?.surfaces,
 															trim: e.target.checked,
 														},
 													})
@@ -276,13 +276,13 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 											<input
 												type='checkbox'
 												checked={
-													painting.globalDefaults?.surfaces.doors ?? false
+													painting.globalDefaults?.surfaces?.doors ?? false
 												}
 												onChange={(e) =>
 													onGlobalChange('updateGlobalDefaults', {
 														field: 'surfaces',
 														value: {
-															...painting.globalDefaults.surfaces,
+															...painting.globalDefaults?.surfaces,
 															doors: e.target.checked,
 														},
 													})
@@ -294,14 +294,14 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 											<input
 												type='checkbox'
 												checked={
-													painting.globalDefaults?.surfaces.crownMolding ??
+													painting.globalDefaults?.surfaces?.crownMolding ??
 													false
 												}
 												onChange={(e) =>
 													onGlobalChange('updateGlobalDefaults', {
 														field: 'surfaces',
 														value: {
-															...painting.globalDefaults.surfaces,
+															...painting.globalDefaults?.surfaces,
 															crownMolding: e.target.checked,
 														},
 													})
@@ -313,13 +313,13 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 											<input
 												type='checkbox'
 												checked={
-													painting.globalDefaults?.surfaces.windows ?? false
+													painting.globalDefaults?.surfaces?.windows ?? false
 												}
 												onChange={(e) =>
 													onGlobalChange('updateGlobalDefaults', {
 														field: 'surfaces',
 														value: {
-															...painting.globalDefaults.surfaces,
+															...painting.globalDefaults?.surfaces,
 															windows: e.target.checked,
 														},
 													})
@@ -332,13 +332,13 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 							</div>
 
 							{/* Sub-questions for Global Surfaces */}
-							{(painting.globalDefaults?.surfaces.ceiling ||
-								painting.globalDefaults?.surfaces.trim ||
-								painting.globalDefaults?.surfaces.crownMolding ||
-								painting.globalDefaults?.surfaces.doors) && (
+							{(painting.globalDefaults?.surfaces?.ceiling ||
+								painting.globalDefaults?.surfaces?.trim ||
+								painting.globalDefaults?.surfaces?.crownMolding ||
+								painting.globalDefaults?.surfaces?.doors) && (
 								<div className={styles.formGroupBox}>
 									<div className={styles.conditionalFieldsContainer}>
-										{painting.globalDefaults?.surfaces.ceiling && (
+										{painting.globalDefaults?.surfaces?.ceiling && (
 											<div className={styles.formGroup}>
 												<div
 													style={{
@@ -374,7 +374,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 												</select>
 											</div>
 										)}
-										{painting.globalDefaults?.surfaces.trim && (
+										{painting.globalDefaults?.surfaces?.trim && (
 											<>
 												<div className={styles.formGroup}>
 													<label>Trim Condition (Default)</label>
@@ -420,7 +420,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 											</div>
 										</>
 									)}
-									{painting.globalDefaults?.surfaces.crownMolding && (
+									{painting.globalDefaults?.surfaces?.crownMolding && (
 										<div className={styles.formGroupBox} style={{ padding: 0, border: 'none' }}>
 											<div className={styles.formGroup}>
 												<label>Crown Molding Style (Default)</label>
@@ -463,7 +463,7 @@ export const PaintingForm: React.FC<PaintingFormProps> = ({
 											</div>
 										</div>
 									)}
-									{painting.globalDefaults?.surfaces.doors && (
+									{painting.globalDefaults?.surfaces?.doors && (
 										<div className={styles.formGroup}>
 											<div
 												style={{

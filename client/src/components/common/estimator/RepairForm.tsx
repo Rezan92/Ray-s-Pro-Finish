@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { FormData, RepairItem } from './EstimatorTypes';
+import type { FormData, RepairItem, RepairState } from './EstimatorTypes';
 import { Plus, Trash2, AlertCircle, X, Edit2 } from 'lucide-react';
 import { Button } from '@/components/common/button/Button';
 import { InfoTooltip } from '@/components/common/infoTooltip/InfoTooltip';
@@ -7,7 +7,7 @@ import styles from './styles/RepairForm.module.css';
 
 interface RepairFormProps {
 	formData: FormData;
-	onFieldChange: (field: string, value: unknown) => void;
+	onFieldChange: (field: keyof RepairState, value: unknown) => void;
 	onAddRepair: (repair: RepairItem) => void;
 	onUpdateRepair: (repair: RepairItem) => void;
 	onRemoveRepair: (id: string) => void;

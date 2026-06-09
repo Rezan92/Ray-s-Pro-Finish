@@ -30,11 +30,10 @@ export const repairSlice = createSlice({
 		},
 		updateRepairField: (
 			state,
-			action: PayloadAction<{ field: keyof RepairState; value: unknown }>
+			action: PayloadAction<{ field: keyof RepairState; value: any }>
 		) => {
 			const { field, value } = action.payload;
-			// @ts-expect-error - Generic assignment to state object
-			state[field] = value as never;
+			(state as any)[field] = value;
 		},
 		resetRepair: () => initialState,
 	},

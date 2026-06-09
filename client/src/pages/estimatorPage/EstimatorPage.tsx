@@ -169,10 +169,9 @@ const EstimatorPage = () => {
 			garage: garageData,
 			patching: repairData,
 			installation: installationData,
-			contact: contact,
+			contact,
 		};
 
-		// @ts-expect-error - Thunk payload types
 		dispatch(generateEstimate({ formData: mergedFormData, adminKey }));
 	};
 
@@ -271,7 +270,6 @@ const EstimatorPage = () => {
 								onUpdateRepair={(repair) => dispatch(updateRepair(repair))}
 								onRemoveRepair={(id) => dispatch(removeRepair(id))}
 								onRepairFieldChange={(field, value) =>
-									// @ts-expect-error - Generic field update
 									dispatch(updateRepairField({ field, value }))
 								}
 								// Installation Handlers

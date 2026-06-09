@@ -1,5 +1,5 @@
 import React from 'react';
-import type { FormData } from './EstimatorTypes';
+import type { FormData, InstallationData } from './EstimatorTypes';
 import { AlertTriangle, Info } from 'lucide-react';
 import styles from './styles/InstallationForm.module.css';
 
@@ -23,7 +23,7 @@ export const InstallationForm: React.FC<InstallationFormProps> = ({
 			e.target.type === 'checkbox'
 				? (e.target as HTMLInputElement).checked
 				: e.target.value;
-		onFieldChange(e.target.name, value);
+		onFieldChange(e.target.name as keyof InstallationData, value);
 	};
 
 	const isDemo = installation.projectType === 'Demo';

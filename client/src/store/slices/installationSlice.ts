@@ -21,11 +21,10 @@ export const installationSlice = createSlice({
 	reducers: {
 		updateInstallationField: (
 			state,
-			action: PayloadAction<{ field: keyof InstallationData; value: unknown }>
+			action: PayloadAction<{ field: keyof InstallationData; value: any }>
 		) => {
 			const { field, value } = action.payload;
-			// @ts-expect-error - Generic assignment to state object
-			state[field] = value as never;
+			(state as any)[field] = value;
 		},
 		resetInstallation: () => initialState,
 	},
