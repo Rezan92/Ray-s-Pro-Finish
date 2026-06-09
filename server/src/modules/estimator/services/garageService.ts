@@ -4,7 +4,7 @@ import {
 	HEIGHT_VALUES,
 } from '../constants/garageConstants.js';
 import { MASTER_RATES, RateDetail } from '../constants/masterRates.js';
-import { GarageRequest } from '../types.js';
+import { GarageRequest, BreakdownItem } from '../types.js';
 
 // Map UI Values to Master Rate Keys
 const LEVEL_MAP: Record<string, keyof typeof MASTER_RATES.DRYWALL_INSTALL> = {
@@ -14,20 +14,6 @@ const LEVEL_MAP: Record<string, keyof typeof MASTER_RATES.DRYWALL_INSTALL> = {
 	'Level 4': 'LEVEL_4',
 	'Level 5': 'LEVEL_5',
 };
-
-const PAINT_MAP: Record<string, keyof typeof MASTER_RATES.PAINTING> = {
-	Primer: 'PRIMER',
-	'1-Coat': 'ONE_COAT',
-	Standard: 'STANDARD',
-	Premium: 'FULL',
-};
-
-interface BreakdownItem {
-	name: string;
-	cost: number;
-	hours: number;
-	details: string;
-}
 
 export const calculateGarageEstimate = (
 	data: GarageRequest,

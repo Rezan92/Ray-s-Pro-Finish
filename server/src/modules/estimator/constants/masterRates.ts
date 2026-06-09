@@ -170,9 +170,9 @@ export const MASTER_RATES = {
 				COAT_3: 5.00,
 			},
 			CROWN: {
-				COAT_1: 2.50,
-				COAT_2: 4.00,
-				COAT_3: 6.67,
+				COAT_1: 2.00,
+				COAT_2: 3.00,
+				COAT_3: 5.00,
 			},
 			MISC: {
 				TRIM_PREP_POOR: 0.35,

@@ -1,3 +1,10 @@
+export interface BreakdownItem {
+	name: string;
+	cost: number;
+	hours: number;
+	details: string;
+}
+
 export interface PaintingRoom {
 	id: string;
 	type: string;

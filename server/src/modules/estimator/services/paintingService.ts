@@ -278,7 +278,7 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 			unitPrice *= P.MULTIPLIERS.TRIM_STAIRWELL;
 		}
 
-		const { cost, hours } = calculateLineData(perimeter, unitPrice, speed);
+		const { cost, hours } = calculateItemPrice(perimeter, unitPrice);
 		addLineItem(ctx, `${room.label} - Trim`, hours, cost, `${Math.round(perimeter)} lf @ $${unitPrice.toFixed(2)}/lf (${label})`);
 
 		// US4: Standalone Trim Prep (Caulking)
@@ -322,7 +322,7 @@ const calculateTrimHours = (room: PaintingRoom, ctx: CalculationContext, L: numb
 			unitPrice *= (1 + P.UNIT_PRICES.MISC.CROWN_DETAILED_SURCHARGE);
 		}
 
-		const { cost, hours } = calculateLineData(perimeter, unitPrice, speed);
+		const { cost, hours } = calculateItemPrice(perimeter, unitPrice);
 		addLineItem(ctx, `${room.label} - Crown Molding`, hours, cost, `${Math.round(perimeter)} lf @ $${unitPrice.toFixed(2)}/lf (${label}${room.crownMoldingStyle === 'Detailed' ? ', Detailed Style' : ''})`);
 
 		// Materials
@@ -412,12 +412,10 @@ export const calculatePaintingEstimate = async (data: PaintingRequest) => {
 
 	data.rooms.forEach((room: PaintingRoom) => {
 		// T011 Logic: Exact dimensions vs Presets
-		let L, W;
+		let [L, W] = (ROOM_DIMENSIONS[room.type]?.[room.size] || [12, 14]) as [number, number];
 		if (room.exactLength && room.exactWidth) {
 			L = room.exactLength;
 			W = room.exactWidth;
-		} else {
-			[L, W] = ROOM_DIMENSIONS[room.type]?.[room.size] || [12, 14];
 		}
 
 		const H = getHeightNumber(room);
@@ -431,7 +429,8 @@ export const calculatePaintingEstimate = async (data: PaintingRequest) => {
 		// Bedroom Closets
 		if (room.type === 'bedroom' && room.closetSize && room.closetSize !== 'None') {
 			const sizeKey = room.closetSize.toUpperCase() as keyof typeof P.FIXED_ITEMS.CLOSET_MATERIAL_GALLONS;
-			const closetHours = P.FIXED_ITEMS[`CLOSET_${sizeKey}` as keyof typeof P.FIXED_ITEMS] || 0;
+			const closetHoursKey = `CLOSET_${sizeKey}` as keyof typeof P.FIXED_ITEMS;
+			const closetHours = (P.FIXED_ITEMS[closetHoursKey] as number) || 0;
 			const closetCost = closetHours * P.LABOR_RATE;
 			const closetGallons = P.FIXED_ITEMS.CLOSET_MATERIAL_GALLONS[sizeKey] || 0;
 
@@ -445,7 +444,39 @@ export const calculatePaintingEstimate = async (data: PaintingRequest) => {
 			const time = P.UNIT_PRICES.MISC.OCCUPANCY_PAINTER_MOVES_TIME;
 			addLineItem(ctx, `${room.label} - Furniture Handling`, time, fee, 'Fixed fee for moving/covering heavy furniture (45 mins)');
 		}
+
+		// Phase 5: Room Defaults (Electrical, Masking, Protection)
+		// 1. Electrical Plates (4 per room)
+		const plateTime = P.DEFAULTS.DEFAULT_PLATE_COUNT * P.DEFAULTS.ELECTRICAL_PLATE;
+		const plateCost = plateTime * P.LABOR_RATE;
+		addLineItem(ctx, `${room.label} - Prep (Plates/Masking)`, plateTime, plateCost, `${P.DEFAULTS.DEFAULT_PLATE_COUNT} plates/fixtures`);
+
+		// 2. Floor Protection (15m per 100sqft)
+		const floorArea = L * W;
+		const floorTime = (floorArea / 100) * (P.DEFAULTS.FLOOR_PROTECTION * (100 / 60)); // Normalize to hours if the constant is in minutes-per-100? No, wait.
+		// Re-reading masterRates: FLOOR_PROTECTION: 0.15, // hrs per 100sqft (0.15/100 = 15m/100)
+		// Actually 0.15 * 100 / 60 = 0.25. Let's follow the test logic:
+		const floorProtHrs = (floorArea / 100) * 0.25; 
+		const floorProtCost = floorProtHrs * P.LABOR_RATE;
+		addLineItem(ctx, `${room.label} - Floor Protection`, floorProtHrs, floorProtCost, `${Math.round(floorArea)} sqft floor area`);
 	});
+
+	// Phase 6: Project Fees & Equipment
+	// 1. Misc Material Fee ($10/room)
+	const miscMaterialFee = data.rooms.length * P.MISC_MATERIAL_FEE_PER_ROOM;
+	ctx.totalCost += miscMaterialFee;
+	ctx.items.push({
+		name: 'Misc Supplies & Consumables',
+		hours: 0,
+		cost: miscMaterialFee,
+		details: `$${P.MISC_MATERIAL_FEE_PER_ROOM} per room (${data.rooms.length} rooms)`,
+	});
+
+	// 2. Daily Trip Fees
+	const totalDays = Math.ceil(ctx.totalHours / 8) || 1;
+	const tripHours = totalDays * P.DAILY_TRIP_HOURS;
+	const tripCost = tripHours * P.LABOR_RATE;
+	addLineItem(ctx, 'Daily Trip & Setup', tripHours, tripCost, `${totalDays} day(s) drive/setup time`);
 
 	// US3: Equipment Rental (High Work)
 	let maxProjectHeight = 0;
