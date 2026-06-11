@@ -2,13 +2,14 @@
 
 .featureSection {
   position: relative;
-  z-index: 10; /* Make sure it's above the hero */
-  padding: 0 var(--space-xl);
+  z-index: 10;
+  padding: var(--space-xxl) var(--space-xl); /* Added vertical padding */
 }
 
 /* Layout variant for the Home page where it overlaps the Hero */
 .floating {
   margin-top: -80px; 
+  padding-top: 0;
 }
 
 .featureGrid {
@@ -16,7 +17,7 @@
   grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
   max-width: 1200px; /* Max width for the section */
   margin: 0 auto;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); /* Softened shadow */
 }
 
 /* --- Responsive --- */
@@ -27,7 +28,7 @@
   }
   
   .featureSection {
-    padding: 0 var(--space-md);
+    padding: var(--space-xl) var(--space-md);
   }
 
   .floating {
@@ -37,6 +38,6 @@
 
 @media (max-width: 768px) {
   .floating {
-    margin-top: 300px;
+    margin-top: 0; /* Removed large margin since it's no longer floating in mobile usually */
   }
 }

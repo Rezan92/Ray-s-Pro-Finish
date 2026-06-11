@@ -19,20 +19,21 @@ const Hero = () => {
 				<div className={styles.heroContainer}>
 					<div className={styles.heroContent}>
 						<h1 className={styles.heroTitle}>
-							EXPERT DRYWALL REPAIR
-							<br />& INTERIOR PAINTING
+							FLAWLESS HOME TRANSFORMATIONS.
+							<br />
+							ON TIME, ZERO MESS.
 						</h1>
 						<p className={styles.heroSubtitle}>
-							From seamless drywall patching and installation to a flawless,
-							high-quality paint finish, we make your walls look perfect.
+							From seamless drywall patching to a premium paint finish, we
+							respect your home and deliver perfect results. No dust, no delays.
 						</p>
 						<div className={styles.heroActions}>
 							<Button
-								to='/services'
+								to='/contact'
 								variant='primary'
 								className={styles.heroButton}
 							>
-								Our Services
+								Get Your Dust-Free Estimate
 							</Button>
 						</div>
 					</div>

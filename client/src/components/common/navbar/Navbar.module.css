@@ -1,9 +1,10 @@
 .navbar {
   position: relative;
-  z-index: 3;
+  z-index: 10; /* Ensure it stays above the hero */
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--space-sm);
+  transform: translateY(50%); /* Shift down by half its height to overlap the hero */
 }
 
 .navbar .container {
