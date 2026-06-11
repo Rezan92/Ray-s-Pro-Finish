@@ -34,13 +34,6 @@ const Hero = () => {
 							>
 								Our Services
 							</Button>
-							<Button
-								to='/estimator'
-								variant='light'
-								className={styles.heroButton}
-							>
-								Get an Instant Estimate
-							</Button>
 						</div>
 					</div>
 				</div>
