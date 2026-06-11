@@ -8,7 +8,6 @@ import TopBar from './components/common/topBar/TopBar';
 import Navbar from './components/common/navbar/Navbar';
 import { Footer } from './components/common/footer/Footer';
 import ProjectsPage from './pages/projects/ProjectsPage';
-import EstimatorPage from './pages/estimatorPage/EstimatorPage';
 import { ModalManager } from './components/common/modal/ModalManager';
 
 function App() {
@@ -38,11 +37,6 @@ function App() {
 					<Route
 						path='/contact'
 						element={<ContactPage />}
-					/>
-
-					<Route
-						path='/estimator'
-						element={<EstimatorPage />}
 					/>
 				</Routes>
 			</main>

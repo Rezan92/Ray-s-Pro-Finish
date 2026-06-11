@@ -17,7 +17,7 @@ A high-performance, type-safe business platform for Ray Pro Finish.
 **Variable-First:** All colors, spacing, and shadows must use CSS variables from `index.css`. Never hardcode HEX or RGB values in component styles. If a variable does not exist for a repeated color or value, you must suggest adding it to `index.css`. **Isolation:** Use CSS Modules exclusively for component-level styling. Filenames must be `[ComponentName].module.css`. **Responsive:** Every component must follow a "Mobile-First" approach. **Mixed Usage:** When a component requires both isolated styles and global utilities (e.g. `dark` theme class), combine them: ``className={`${styles.componentClass} global-utility`}``.
 
 ### II. State & Data Logic
-**Modular Redux:** Slices must be feature-specific. The "Estimator" must be divided into sub-slices (painting, basement, etc.) to prevent a "God Slice." **Immutable Pricing:** Pricing logic and rates are prohibited from being hardcoded in components. They must be fetched from `masterRates.ts` or the server.
+**Modular Redux:** Slices must be feature-specific to prevent a "God Slice." **Immutable Pricing:** Pricing logic and rates are prohibited from being hardcoded in components. They must be fetched from a centralized configuration or the server.
 
 ### III. TypeScript & Standards
 **Strict Mode:** No usage of `any`. All props, states, and API responses must have explicit interfaces. **Zero Tolerance:** Treat all compiler and linter warnings (including unused imports and variables) as blocking errors. **Clean Code:** Comments must only explain *why* complex logic exists, never *what* it does. Remove all unused code and comments immediately. **Text Integrity:** Prohibit changing any user-facing text, questions, or labels unless explicitly instructed. **Error Handling:** Use a unified notification pattern (e.g., the `FloatingAlert` component) for all user feedback. Browser `alert()` is prohibited.
@@ -26,7 +26,7 @@ A high-performance, type-safe business platform for Ray Pro Finish.
 **Service Layer:** Controllers only handle requests; Services handle calculation and business logic. **Contract-First:** API routes must return standardized JSON structures that match frontend TypeScript interfaces.
 
 ### V. File Organization
-Components live in `client/src/components/` within specific folders: `common/` (atomic UI like Buttons), `features/` (complex logic like Estimator), and `layout/` (Navbar, Footer).
+Components live in `client/src/components/` within specific folders: `common/` (atomic UI like Buttons), `features/` (complex logic), and `layout/` (Navbar, Footer).
 
 ## Governance
 
