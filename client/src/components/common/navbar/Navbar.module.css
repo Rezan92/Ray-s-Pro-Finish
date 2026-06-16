@@ -1,18 +1,18 @@
 .navbar {
   position: relative;
   z-index: 10;
-  padding: 0 var(--space-sm);
+  padding: var(--space-sm) 0;
 }
 
 .navbar .container {
-  background-color: var(--color-brand-dark);
-  max-width: 1200px;
-  margin: 0 auto;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0;
+  background-color: rgba(10, 20, 47, 0.3);
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: var(--border-radius-sm);
+  padding: 0 var(--space-sm);
 }
 
 .navDesktop {
@@ -27,29 +27,60 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  gap: var(--space-md);
 }
 
 .navLink {
+  position: relative;
   display: block;
-  padding: 16px var(--space-lg);
+  padding: 12px 8px;
   font-family: var(--font-family-heading);
   font-size: 0.875rem;
   font-weight: var(--font-weight-bold);
   color: var(--color-text-inverted);
   text-decoration: none;
   text-transform: uppercase;
-  transition: all 0.3s ease;
-  border-top: 4px solid transparent;
-  border-bottom: 4px solid transparent;
+  transition: color 0.3s ease;
 }
 
-.navLink:hover {
-  color: var(--color-primary);
-}
-
-.navLink.active {
+/* Animated Underline */
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 8px;
+  /* Match padding to center underline under text */
+  right: 8px;
+  height: 2px;
   background-color: var(--color-primary);
-  color: var(--color-text-inverted);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: left;
+}
+
+.navLink:hover,
+.navLink.active {
+  color: var(--color-primary);
+  background-color: transparent;
+}
+
+.navLink:hover::after,
+.navLink.active::after {
+  transform: scaleX(1);
+}
+
+/* Custom button style for the navbar */
+.navEstimateBtn {
+  background-color: transparent !important;
+  color: var(--color-primary) !important;
+  border: 2px solid var(--color-primary) !important;
+  transition: all 0.3s ease;
+  margin-right: 0;
+}
+
+.navEstimateBtn:hover {
+  background-color: var(--color-primary) !important;
+  color: var(--color-text-inverted) !important;
 }
 
 .navMobile {
@@ -136,6 +167,7 @@
   .mobileLink.active,
   .mobileLink:hover {
     color: var(--color-primary);
+    background-color: transparent;
   }
 
   .mobileMenuBtn {
