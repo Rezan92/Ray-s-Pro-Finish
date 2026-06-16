@@ -11,10 +11,15 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+
+}
+
+.heroMain {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   color: var(--color-text-inverted);
+  margin-top: 5rem;
 }
 
 .heroContent {
@@ -88,7 +93,6 @@
   }
 
   .hero {
-    height: 100vh;
     min-height: 500px;
   }
 

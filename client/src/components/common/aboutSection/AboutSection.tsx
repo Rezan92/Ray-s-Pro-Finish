@@ -49,7 +49,6 @@ export const AboutSection = () => {
 						prep work, ensuring every surface is smooth and ready for a
 						stunning, high-quality coat of paint.
 					</p>
-
 				</div>
 			</div>
 		</section>

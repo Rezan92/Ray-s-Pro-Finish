@@ -1,14 +1,14 @@
 .navbar {
   position: relative;
-  z-index: 10; /* Ensure it stays above the hero */
-  max-width: 1200px;
-  margin: 0 auto;
+  z-index: 10;
   padding: 0 var(--space-sm);
-  transform: translateY(50%); /* Shift down by half its height to overlap the hero */
 }
 
 .navbar .container {
   background-color: var(--color-brand-dark);
+  max-width: 1200px;
+  margin: 0 auto;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -118,6 +118,7 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    text-align: left;
   }
 
   .mobileLink {

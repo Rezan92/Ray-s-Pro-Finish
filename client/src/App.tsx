@@ -5,16 +5,15 @@ import AboutPage from './pages/aboutPage/AboutPage';
 import ServicesPage from './pages/services/ServicesPage';
 import ContactPage from './pages/contact/ContactPage';
 import TopBar from './components/common/topBar/TopBar';
-import Navbar from './components/common/navbar/Navbar';
 import { Footer } from './components/common/footer/Footer';
 import ProjectsPage from './pages/projects/ProjectsPage';
 import { ModalManager } from './components/common/modal/ModalManager';
+import BlogPage from './pages/blog/BlogPage';
 
 function App() {
 	return (
 		<div className={styles.App}>
 			<TopBar />
-			<Navbar />
 			<ModalManager />
 			<main>
 				<Routes>
@@ -37,6 +36,10 @@ function App() {
 					<Route
 						path='/contact'
 						element={<ContactPage />}
+					/>{' '}
+					<Route
+						path='/blog'
+						element={<BlogPage />}
 					/>
 				</Routes>
 			</main>
