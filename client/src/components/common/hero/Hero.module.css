@@ -33,7 +33,6 @@
   z-index: -1;
 }
 
-/* We reuse .container but need to position content above the overlay */
 .heroContainer {
   position: relative;
   z-index: 2;
@@ -46,8 +45,8 @@
 
 .heroTitle {
   font-family: 'Anton', sans-serif;
-  font-size: 4.5rem; /* Anton is narrower, so we can go larger */
-  font-weight: 400; /* Anton only comes in 400, but is naturally heavy */
+  font-size: 3.3rem;
+  font-weight: 400;
   color: var(--color-text-inverted);
   text-transform: uppercase;
   line-height: 1;
@@ -59,17 +58,14 @@
   font-family: var(--font-family-body);
   font-size: 1.25rem;
   font-weight: 300;
-  /* Lighter weight for visual hierarchy */
   color: var(--color-text-inverted);
   line-height: 1.6;
   margin-bottom: var(--space-xl);
-  /* Reduced from xxl (48px) to xl (32px) */
 }
 
 .heroActions {
   display: flex;
   justify-content: flex-start;
-  /* Left-aligned buttons */
   gap: 20px;
 }
 
@@ -82,7 +78,6 @@
 
 .heroButton:hover {
   transform: translateY(-3px);
-  /* Subtle hover lift */
   filter: brightness(1.1);
 }
 
@@ -107,6 +102,5 @@
 
   .heroButton {
     width: 100%;
-    /* Full width buttons on mobile */
   }
 }
