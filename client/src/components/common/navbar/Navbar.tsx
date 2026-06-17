@@ -47,12 +47,12 @@ const Navbar = () => {
 						))}
 					</ul>
 					<Button
-						to='/contact'
-						variant='dark'
+					        to='/contact'
+					        className={styles.navEstimateBtn}
 					>
-						Inquire Now
+					        Free Estimate
 					</Button>
-				</div>
+					</div>
 
 				{/* --- Mobile Navigation --- */}
 				<div className={styles.navMobile}>
@@ -94,14 +94,13 @@ const Navbar = () => {
 					))}
 				</ul>
 				<Button
-					to='/contact'
-					variant='dark'
-					className={styles.mobileMenuBtn}
-					// We can attach onClick to Button component if it supports it,
-					// or wrap it to close menu when clicked.
-					onClick={handleClose}
+				        to='/contact'
+				        className={`${styles.mobileMenuBtn} ${styles.navEstimateBtn}`}
+				        // We can attach onClick to Button component if it supports it,
+				        // or wrap it to close menu when clicked.
+				        onClick={handleClose}
 				>
-					Inquire Now
+				        Free Estimate
 				</Button>
 			</div>
 		</nav>

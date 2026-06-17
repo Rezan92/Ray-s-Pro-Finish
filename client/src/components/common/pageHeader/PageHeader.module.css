@@ -1,14 +1,18 @@
 /* src/components/common/pageHeader/PageHeader.module.css */
 
 .pageHeader {
-  margin-top: -27px;
   position: relative;
-  padding: var(--space-xxxl) var(--space-xl);
+  padding: 0 var(--space-xl);
   text-align: center;
+
   background-size: cover;
-  background-position: center center;
-  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
   z-index: 1;
+
+}
+
+.pageHeaderMain {
   min-height: 500px;
   display: flex;
   align-items: center;
@@ -22,7 +26,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--color-overlay-dark); /* Using new variable */
+  background-color: var(--color-overlay-dark);
+  /* Using new variable */
   opacity: 0.85;
   z-index: -1;
 }
@@ -46,8 +51,11 @@
 @media (max-width: 768px) {
   .pageHeader {
     min-height: 200px;
-    padding: var(--space-xxl) var(--space-md);
+    padding: 0;
     background-attachment: scroll;
+  }
+  .pageHeaderMain {
+    min-height: 200px;
   }
 
   .pageHeaderTitle {

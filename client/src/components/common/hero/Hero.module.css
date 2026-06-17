@@ -1,29 +1,30 @@
 /* src/components/common/hero/Hero.module.css */
 .heroContainerWrapper {
-  min-height: 750px;
+  position: relative;
 }
 
 .hero {
-  position: absolute;
-  top: 150px;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: relative;
   z-index: 2;
-  height: 90vh;
-  min-height: 600px;
+  height: 60vh;
+  min-height: 400px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  display: flex;
-  align-items: center;
-  color: var(--color-text-inverted);
+
 }
 
-.hero :global(.container) {
+.heroMain {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
+  color: var(--color-text-inverted);
+  margin-top: 5rem;
+}
+
+.heroContent {
+  text-align: left;
+  max-width: 850px;
 }
 
 /* Dark overlay for text readability */
@@ -33,36 +34,35 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(10, 20, 47, 0.31);
-  /* --color-brand-dark at 60% opacity */
+  background-color: rgba(15, 23, 42, 0.5);
   z-index: -1;
 }
 
-/* We reuse .container but need to position content above the overlay */
 .heroContainer {
   position: relative;
   z-index: 2;
-  top: 50px;
+
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--space-sm);
+  padding: 0 var(--space-md);
 }
 
 .heroTitle {
-  font-family: var(--font-family-heading);
-  font-size: 3.5rem;
-  /* 56px */
-  font-weight: var(--font-weight-extrabold);
+  font-family: 'Anton', sans-serif;
+  font-size: 3.3rem;
+  font-weight: 400;
   color: var(--color-text-inverted);
   text-transform: uppercase;
-  line-height: 1.2;
+  line-height: 1;
+  letter-spacing: 1px;
   margin-bottom: var(--space-lg);
 }
 
 .heroSubtitle {
   font-family: var(--font-family-body);
-  font-size: 1.125rem;
-  /* 18px */
+  font-size: 1.25rem;
+  font-weight: 300;
   color: var(--color-text-inverted);
   line-height: 1.6;
   margin-bottom: var(--space-xl);
@@ -70,8 +70,20 @@
 
 .heroActions {
   display: flex;
-  gap: 10px;
-  /* Space between buttons */
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.heroButton {
+  padding: 18px 36px;
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-bold);
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.heroButton:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.1);
 }
 
 /* --- Responsive --- */
@@ -81,27 +93,18 @@
   }
 
   .hero {
-    height: 106vh;
     min-height: 500px;
-    align-items: center;
-    /* Center content vertically */
-    justify-content: center;
-    /* Center content horizontally */
-  }
-
-  .heroContainer {
-    top: inherit;
   }
 
   .heroTitle {
-    font-size: 2.5rem;
-    /* 40px */
+    font-size: 3rem;
   }
 
   .heroSubtitle {
-    font-size: 1rem;
-    /* 16px */
-    margin-left: auto;
-    margin-right: auto;
+    font-size: 1.1rem;
+  }
+
+  .heroButton {
+    width: 100%;
   }
 }
