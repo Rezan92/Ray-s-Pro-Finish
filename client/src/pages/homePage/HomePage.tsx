@@ -14,7 +14,7 @@ function HomePage() {
 			<Hero />
 			<TrustStrip />
 			<AboutSection />
-			<FeatureSection isFloating={false} />
+			<FeatureSection />
 			<RequestQuoteSection />
 			<ServicesSection />
 			<IndustrialServicesSection />
