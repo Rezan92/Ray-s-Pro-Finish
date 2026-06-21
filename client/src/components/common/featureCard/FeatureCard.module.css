@@ -5,41 +5,60 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: var(--space-md);
+  padding: var(--space-xl) var(--space-lg);
+  background-color: var(--color-bg-primary); /* White background */
+  border: 1px solid var(--color-border);
+  border-radius: 24px; /* More rounded corners */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
   opacity: 0; /* Start hidden for animation */
   transform: translateY(20px); /* Start slightly down for animation */
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.featureCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(241, 90, 36, 0.12); /* Subtle orange glow shadow */
+  border-color: rgba(241, 90, 36, 0.3); /* Subtle orange border */
 }
 
 .iconWrapper {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: var(--color-primary-10);
   margin-bottom: var(--space-md);
+  transition: background-color 0.3s ease;
+}
+
+.featureCard:hover .iconWrapper {
+  background-color: var(--color-primary); /* Icon background turns solid orange on hover */
 }
 
 .mainIcon {
   color: var(--color-primary);
+  transition: color 0.3s ease;
+}
+
+.featureCard:hover .mainIcon {
+  color: var(--color-bg-primary); /* Icon turns white on hover */
 }
 
 .cardTitle {
   font-family: var(--font-family-heading);
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   font-weight: var(--font-weight-bold);
   color: var(--color-brand-dark);
-  margin-bottom: var(--space-xs);
+  margin-bottom: var(--space-sm);
 }
 
 .cardDescription {
   font-family: var(--font-family-body);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: var(--color-text-secondary);
   line-height: 1.6;
-  max-width: 280px;
 }
 
 /* --- Animation --- */

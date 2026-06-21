@@ -1,11 +1,10 @@
 import styles from './FeatureSection.module.css';
-import { ShieldCheck, UserCheck, Clock, Award } from 'lucide-react';
+import { ShieldCheck, Star, FileSignature, Award, Clock, ThumbsUp } from 'lucide-react';
 import { FeatureCard } from '../featureCard/FeatureCard';
-import aboutImage from '@/assets/aboutSection/aboutSection.png';
 import { Button } from '../button/Button';
 
 export const FeatureSection = () => {
-	const leftFeatures = [
+	const features = [
 		{
 			icon: ShieldCheck,
 			title: 'Dust-Free Preparation',
@@ -13,14 +12,11 @@ export const FeatureSection = () => {
 			delay: '0ms',
 		},
 		{
-			icon: UserCheck,
-			title: 'Background Checked Crews',
-			description: 'Every professional we send is fully vetted and trained to respect your space—no subcontractor roulette.',
+			icon: Star,
+			title: 'Expert Team',
+			description: 'Our team brings years of specialized experience to your home. Every project receives meticulous attention to detail from start to finish.',
 			delay: '100ms',
 		},
-	];
-
-	const rightFeatures = [
 		{
 			icon: Clock,
 			title: 'On Time, Guaranteed',
@@ -28,10 +24,22 @@ export const FeatureSection = () => {
 			delay: '200ms',
 		},
 		{
+			icon: FileSignature,
+			title: 'Transparent Pricing',
+			description: 'No hidden costs and no surprises. The quote you receive is the exact price you pay for the fully agreed-upon scope of work.',
+			delay: '300ms',
+		},
+		{
 			icon: Award,
 			title: 'Premium Materials',
 			description: 'We exclusively use top-tier paints like Benjamin Moore and Sherwin-Williams to guarantee a flawless, lasting finish.',
-			delay: '300ms',
+			delay: '400ms',
+		},
+		{
+			icon: ThumbsUp,
+			title: '100% Satisfaction',
+			description: "We aren't finished until you are completely thrilled with the results. We stand behind our work and your satisfaction is our priority.",
+			delay: '500ms',
 		},
 	];
 
@@ -44,39 +52,16 @@ export const FeatureSection = () => {
 				</p>
 			</div>
 
-			<div className={styles.centralHubGrid}>
-				{/* Left Column Features */}
-				<div className={styles.featuresCol}>
-					{leftFeatures.map((card, index) => (
-						<FeatureCard
-							key={index}
-							icon={card.icon}
-							title={card.title}
-							description={card.description}
-							animationDelay={card.delay}
-						/>
-					))}
-				</div>
-
-				{/* Center Column Image */}
-				<div className={styles.centerCol}>
-					<div className={styles.imageWrapper}>
-						<img src={aboutImage} alt="Premium Painting Services" className={styles.centerImage} />
-					</div>
-				</div>
-
-				{/* Right Column Features */}
-				<div className={styles.featuresCol}>
-					{rightFeatures.map((card, index) => (
-						<FeatureCard
-							key={index}
-							icon={card.icon}
-							title={card.title}
-							description={card.description}
-							animationDelay={card.delay}
-						/>
-					))}
-				</div>
+			<div className={styles.featureGrid}>
+				{features.map((card, index) => (
+					<FeatureCard
+						key={index}
+						icon={card.icon}
+						title={card.title}
+						description={card.description}
+						animationDelay={card.delay}
+					/>
+				))}
 			</div>
 
 			<div className={styles.actionContainer}>
