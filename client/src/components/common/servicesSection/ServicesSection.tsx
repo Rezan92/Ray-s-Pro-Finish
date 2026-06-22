@@ -70,10 +70,10 @@ export const ServicesSection = () => {
 	return (
 		<section className={styles.servicesSection}>
 			<div className={styles.servicesSectionHeader}>
-				<span className={styles.servicesSectionSubtitle}>What We Provide</span>
 				<h2 className={styles.servicesSectionTitle}>
 					Our Services
 				</h2>
+				<span className={styles.servicesSectionSubtitle}>What We Provide</span>
 			</div>
 
 			<div className={styles.servicesSectionGrid}>
