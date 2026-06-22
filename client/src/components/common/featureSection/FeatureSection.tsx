@@ -1,7 +1,7 @@
 import styles from './FeatureSection.module.css';
 import { ShieldCheck, Star, FileSignature, Award, Clock, ThumbsUp } from 'lucide-react';
 import { FeatureCard } from '../featureCard/FeatureCard';
-import { Button } from '../button/Button';
+import { BrushButton } from '../brushButton/BrushButton';
 
 export const FeatureSection = () => {
 	const features = [
@@ -65,9 +65,9 @@ export const FeatureSection = () => {
 			</div>
 
 			<div className={styles.actionContainer}>
-				<Button to="/contact" variant="primary" className={styles.ctaButton}>
+				<BrushButton to="/contact">
 					Get a FREE quote
-				</Button>
+				</BrushButton>
 			</div>
 		</section>
 	);

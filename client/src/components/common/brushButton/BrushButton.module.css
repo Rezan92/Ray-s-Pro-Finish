@@ -1,0 +1,48 @@
+/* src/components/common/brushButton/BrushButton.module.css */
+
+.svgFilter {
+  position: absolute;
+  pointer-events: none;
+}
+
+.brushButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 40px;
+  font-size: 1.4rem;
+  font-family: var(--font-family-painted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--color-bg-primary);
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  z-index: 1;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Pseudo-element holds the actual painted background */
+.brushButton::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: -1;
+  background: linear-gradient(to right, var(--brush-primary) 50%, var(--brush-hover) 50%);
+  background-size: 200% 100%;
+  background-position: left bottom;
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* Base painted shape */
+  transition: all 0.4s ease-out;
+  /* Apply the realistic distressed texture and holes via dynamic ID */
+  filter: var(--brush-filter);
+}
+
+.brushButton:hover::before {
+  background-position: right bottom;
+}
+
+.brushButton:hover {
+  transform: translateY(-3px) scale(1.03);
+}
