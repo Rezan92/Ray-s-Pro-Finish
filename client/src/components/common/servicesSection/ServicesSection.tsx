@@ -3,6 +3,11 @@ import styles from './ServicesSection.module.css';
 import { PaintRoller, Hammer, Palette, CalendarCheck } from 'lucide-react';
 import type { Service } from '../serviceModal/ServiceModal';
 
+import interiorPaintingImg from '@/assets/serviceSection/interior_painting.png';
+import drywallPatchingImg from '@/assets/serviceSection/drywall_patching.png';
+import accentWallsImg from '@/assets/serviceSection/accent_walls.png';
+import freeConsultationImg from '@/assets/serviceSection/free_consultation.png';
+
 // Redux
 import { useAppDispatch } from '@/store/hooks';
 import { openServiceModal } from '@/store/slices/uiSlice';
@@ -10,6 +15,7 @@ import { openServiceModal } from '@/store/slices/uiSlice';
 const servicesData: Service[] = [
 	{
 		title: 'Interior Painting',
+		image: interiorPaintingImg,
 		icon: PaintRoller,
 		iconColor: '#F15A24',
 		description: 'We paint walls, ceilings, doors, and trim...',
@@ -20,6 +26,7 @@ const servicesData: Service[] = [
 	},
 	{
 		title: 'Drywall Patching',
+		image: drywallPatchingImg,
 		icon: Hammer,
 		iconColor: '#1E8E3E',
 		description: 'We fix nail holes, stress cracks, dents, and water damage...',
@@ -30,6 +37,7 @@ const servicesData: Service[] = [
 	},
 	{
 		title: 'Accent Walls',
+		image: accentWallsImg,
 		icon: Palette,
 		iconColor: '#040e26',
 		description: 'We paint single walls or specific sections of a room with a different color...',
@@ -40,6 +48,7 @@ const servicesData: Service[] = [
 	},
 	{
 		title: 'Free Consultation',
+		image: freeConsultationImg,
 		icon: CalendarCheck,
 		iconColor: '#faad14',
 		description: 'We visit your home to look at the rooms you want painted...',

@@ -85,6 +85,51 @@
 	margin: var(--space-sm) 0;
 }
 
+.imageContainer {
+	position: relative;
+	width: 100%;
+	border-radius: var(--border-radius-md);
+	overflow: hidden;
+	margin-bottom: var(--space-sm);
+	cursor: pointer;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.modalImage {
+	width: 100%;
+	height: auto;
+	max-height: 250px;
+	object-fit: cover;
+	display: block;
+	transition: transform 0.3s ease;
+}
+
+.imageOverlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.4);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+	color: #fff;
+	font-weight: bold;
+	gap: var(--space-xs);
+}
+
+.imageContainer:hover .modalImage {
+	transform: scale(1.05);
+}
+
+.imageContainer:hover .imageOverlay {
+	opacity: 1;
+}
+
 .modalTextContent {
 	display: flex;
 	flex-direction: column;
@@ -121,6 +166,52 @@
 .actionButton:hover {
 	background-color: #d94b1c;
 	transform: translateY(-2px);
+}
+
+/* Lightbox styles */
+.lightboxOverlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.9);
+	z-index: 2000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	animation: fadeIn 0.3s ease-out forwards;
+}
+
+.lightboxCloseBtn {
+	position: absolute;
+	top: var(--space-xl);
+	right: var(--space-xl);
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	z-index: 2001;
+	transition: transform 0.2s ease;
+}
+
+.lightboxCloseBtn:hover {
+	transform: scale(1.1) rotate(90deg);
+}
+
+.lightboxTransformWrapper {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.lightboxImage {
+	max-width: 90vw;
+	max-height: 90vh;
+	object-fit: contain;
+	border-radius: var(--border-radius-sm);
+	box-shadow: 0 10px 40px rgba(0,0,0,0.5);
 }
 
 @keyframes fadeIn {
