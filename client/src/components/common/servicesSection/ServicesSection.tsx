@@ -69,6 +69,26 @@ export const ServicesSection = () => {
 
 	return (
 		<section className={styles.servicesSection}>
+			{/* Animation Layer */}
+			<div className={styles.animationContainer}>
+				<svg className={styles.paintedLinesSvg} width="100%" height="100%" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+					<filter id="brush-bristles-bg" x="-20%" y="-20%" width="140%" height="140%">
+						<feTurbulence type="fractalNoise" baseFrequency="0.04 0.8" numOctaves="3" result="noise" />
+						<feDisplacementMap in="SourceGraphic" in2="noise" scale="12" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+						<feColorMatrix in="noise" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 2 -1.5" result="holes" />
+						<feComposite in="displaced" in2="holes" operator="out" />
+					</filter>
+					<g filter="url(#brush-bristles-bg)" stroke="#f15a24" fill="none" strokeLinecap="square">
+						{/* Top to Bottom Diagonal */}
+						<path className={styles.path1} d="M -100 -100 Q 800 500 2000 1200" strokeWidth="80" />
+						{/* Left to Right Wavy */}
+						<path className={styles.path2} d="M -200 400 C 500 200, 1400 800, 2100 300" strokeWidth="120" />
+						{/* Bottom Left to Top Right */}
+						<path className={styles.path3} d="M -100 1200 Q 1000 400 2000 -100" strokeWidth="50" />
+					</g>
+				</svg>
+			</div>
+
 			<div className={styles.servicesSectionHeader}>
 				<h2 className={styles.servicesSectionTitle}>
 					Our Services
