@@ -1,52 +1,73 @@
 import styles from './FeatureSection.module.css';
-import { PaintRoller, Smile, Wand2 } from 'lucide-react'; // Icons from screenshot
+import { ShieldCheck, Star, FileSignature, Award, Clock, ThumbsUp } from 'lucide-react';
 import { FeatureCard } from '../featureCard/FeatureCard';
+import { BrushButton } from '../brushButton/BrushButton';
 
-interface FeatureSectionProps {
-	isFloating?: boolean;
-}
-
-export const FeatureSection: React.FC<FeatureSectionProps> = ({ isFloating = false }) => {
-	const cardData = [
+export const FeatureSection = () => {
+	const features = [
 		{
-			icon: Wand2,
-			title: 'Precision Drywall Repair',
-			description:
-				'From nail holes to water damage, we make wall imperfections vanish. Our seamless patching and texture matching create a flawless surface.',
-			variant: 'dark',
+			icon: ShieldCheck,
+			title: 'Dust-Free Preparation',
+			description: 'We use advanced HEPA-filtered sanders and meticulous masking to ensure your home remains spotless from start to finish.',
 			delay: '0ms',
 		},
 		{
-			icon: PaintRoller,
-			title: 'High-Quality Interior Painting',
-			description:
-				'A great paint job is all in the details. We guarantee clean lines, sharp edges, and a smooth, durable finish that brightens your home.',
-			variant: 'primary',
+			icon: Star,
+			title: 'Expert Team',
+			description: 'Our team brings years of specialized experience to your home. Every project receives meticulous attention to detail from start to finish.',
 			delay: '100ms',
 		},
 		{
-			icon: Smile,
-			title: 'Clean & Reliable Service',
-			description:
-				'We respect your time and your space. We show up on schedule, protect your furniture, and leave your home spotless.',
-			variant: 'dark',
+			icon: Clock,
+			title: 'On Time, Guaranteed',
+			description: 'We provide firm start and completion dates with punctual daily arrivals so your project never drags out.',
 			delay: '200ms',
+		},
+		{
+			icon: FileSignature,
+			title: 'Transparent Pricing',
+			description: 'No hidden costs and no surprises. The quote you receive is the exact price you pay for the fully agreed-upon scope of work.',
+			delay: '300ms',
+		},
+		{
+			icon: Award,
+			title: 'Premium Materials',
+			description: 'We exclusively use top-tier paints like Benjamin Moore and Sherwin-Williams to guarantee a flawless, lasting finish.',
+			delay: '400ms',
+		},
+		{
+			icon: ThumbsUp,
+			title: '100% Satisfaction',
+			description: "We aren't finished until you are completely thrilled with the results. We stand behind our work and your satisfaction is our priority.",
+			delay: '500ms',
 		},
 	];
 
 	return (
-		<section className={`${styles.featureSection} ${isFloating ? styles.floating : ''}`}>
+		<section className={styles.featureSection}>
+			<div className={styles.sectionHeader}>
+				<h2 className={styles.sectionTitle}>Why Choose Us?</h2>
+				<p className={styles.sectionSubtitle}>
+					From routine drywall repairs to major exterior painting, we've got your home covered with reliable and friendly service.
+				</p>
+			</div>
+
 			<div className={styles.featureGrid}>
-				{cardData.map((card, index) => (
+				{features.map((card, index) => (
 					<FeatureCard
 						key={index}
 						icon={card.icon}
 						title={card.title}
 						description={card.description}
-						variant={card.variant as 'dark' | 'primary'}
 						animationDelay={card.delay}
 					/>
 				))}
+			</div>
+
+			<div className={styles.actionContainer}>
+				<BrushButton to="/contact">
+					Get a FREE quote
+				</BrushButton>
 			</div>
 		</section>
 	);

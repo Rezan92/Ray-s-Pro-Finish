@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+
 /* ==========================================================================
    Global Design System Variables & Base Styles
   ==========================================================================
@@ -53,6 +55,7 @@
 */
   --font-family-heading: "Roboto", Arial, sans-serif;
   --font-family-body: "Roboto", Arial, sans-serif;
+  --font-family-painted: "Permanent Marker", cursive;
 
   --font-weight-regular: 400;
   --font-weight-medium: 500;

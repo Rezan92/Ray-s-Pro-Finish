@@ -1,85 +1,71 @@
 /* src/components/home/FeatureCard.module.css */
 
 .featureCard {
-  position: relative; /* Required for the ::after sheen */
-  padding: var(--space-xxl) var(--space-xl);
-  color: var(--color-text-inverted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  overflow: hidden; /* Hide the sheen overflow */
+  padding: var(--space-xl) var(--space-lg);
+  background-color: var(--color-bg-primary); /* White background */
+  border: 1px solid var(--color-border);
+  border-radius: 24px; /* More rounded corners */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
   opacity: 0; /* Start hidden for animation */
   transform: translateY(20px); /* Start slightly down for animation */
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-/* --- Variants --- */
-.dark {
-  background-color: var(--color-brand-dark);
-}
-.primary {
-  background-color: var(--color-primary);
+.featureCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(241, 90, 36, 0.12); /* Subtle orange glow shadow */
+  border-color: rgba(241, 90, 36, 0.3); /* Subtle orange border */
 }
 
 .iconWrapper {
-  margin: 0 auto var(--space-lg);
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-white-10); /* Faint white bg */
-  color: var(--color-text-inverted);
+  background-color: var(--color-primary-10);
+  margin-bottom: var(--space-md);
+  transition: background-color 0.3s ease;
 }
 
-.primary .iconWrapper {
-  background-color: var(--color-brand-dark);
-  color: var(--color-primary); 
-  border: 2px solid var(--color-brand-dark);
+.featureCard:hover .iconWrapper {
+  background-color: var(--color-primary); /* Icon background turns solid orange on hover */
 }
 
-.dark .iconWrapper {
-  background-color: var(--color-primary);
-  color: var(--color-brand-dark);
+.mainIcon {
+  color: var(--color-primary);
+  transition: color 0.3s ease;
+}
+
+.featureCard:hover .mainIcon {
+  color: var(--color-bg-primary); /* Icon turns white on hover */
 }
 
 .cardTitle {
   font-family: var(--font-family-heading);
-  font-size: 1.25rem; /* 20px */
+  font-size: 1.2rem;
   font-weight: var(--font-weight-bold);
-  color: var(--color-text-inverted);
-  margin-bottom: var(--space-md);
+  color: var(--color-brand-dark);
+  margin-bottom: var(--space-sm);
 }
 
 .cardDescription {
   font-family: var(--font-family-body);
-  font-size: 1rem; /* 16px */
-  color: var(--color-white-80); /* Slightly transparent white */
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
   line-height: 1.6;
-}
-
-/* --- Sheen Effect --- */
-.cardSheen {
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 20px;
-  height: 200%;
-  background: var(--color-white-15);
-  transform: rotate(20deg);
-  opacity: 0.8;
-}
-
-/* Hide sheen on the primary card (it's not visible in screenshot) */
-.primary .cardSheen {
-  display: none;
 }
 
 /* --- Animation --- */
 .animateSlideUp {
-  /* Connect to the keyframes animation */
   animation: slideUpFadeIn 0.6s ease-out forwards;
 }
 
-/* Define the animation */
 @keyframes slideUpFadeIn {
   from {
     opacity: 0;
