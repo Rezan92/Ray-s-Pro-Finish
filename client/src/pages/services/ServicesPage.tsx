@@ -4,7 +4,6 @@ import { ServicesSection } from '@/components/common/servicesSection/ServicesSec
 import { OurProcessSection } from '@/components/common/ourProcessSection/OurProcessSection';
 import { SpecialtyServicesSection } from '@/components/common/specialtyServicesSection/SpecialtyServicesSection';
 import { TestimonialSection } from '@/components/common/testimonialSection/TestimonialSection';
-import { RequestQuoteSection } from '@/components/common/requestQuoteSection/RequestQuoteSection';
 
 const ServicesPage = () => {
 	return (
@@ -21,8 +20,7 @@ const ServicesPage = () => {
 			<SpecialtyServicesSection />
 			{/* 5. Social Proof (Backs up claims) */}
 			<TestimonialSection />
-			{/* 6. Call to Action (Gets the lead) */}
-			<RequestQuoteSection />
+
 		</div>
 	);
 };

@@ -4,7 +4,6 @@ import { AboutSection } from '@/components/common/aboutSection/AboutSection';
 import { IndustrialServicesSection } from '@/components/common/industrialServicesSection/IndustrialServicesSection';
 import { FeatureSection } from '@/components/common/featureSection/FeatureSection';
 import { TestimonialSection } from '@/components/common/testimonialSection/TestimonialSection';
-import { RequestQuoteSection } from '@/components/common/requestQuoteSection/RequestQuoteSection';
 
 function AboutPage() {
 	return (
@@ -24,8 +23,7 @@ function AboutPage() {
 			{/* 5. Social Proof (Show what customers say) */}
 			<TestimonialSection />
 
-			{/* 6. Call to Action (End every page with a CTA) */}
-			<RequestQuoteSection />
+
 		</div>
 	);
 }
