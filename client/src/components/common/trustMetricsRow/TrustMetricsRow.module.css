@@ -1,0 +1,77 @@
+.trustMetricsSection {
+	padding: var(--space-xxxl) var(--space-xl);
+	background-color: var(--color-bg-primary); 
+	display: flex;
+	justify-content: center;
+	border-top: 1px solid var(--color-border);
+}
+
+.metricsContainer {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: var(--space-xl);
+	max-width: 1200px;
+	width: 100%;
+}
+
+.metricCard {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	padding: var(--space-xxl);
+	background-color: #F4F7FB; /* Very light slate/blue-ish background matching the image */
+	border-radius: 20px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02); /* Very subtle shadow just in case */
+}
+
+.metricNumber {
+	font-family: var(--font-family-heading);
+	font-size: 5.5rem; /* Made significantly larger */
+	font-weight: var(--font-weight-extrabold);
+	color: var(--color-primary); /* Retained brand orange */
+	line-height: 1;
+	margin-bottom: var(--space-md);
+}
+
+.metricTitle {
+	font-size: 1.15rem;
+	color: var(--color-brand-dark);
+	margin: 0 0 var(--space-sm) 0;
+	font-weight: var(--font-weight-bold);
+}
+
+.metricDescription {
+	font-size: 1rem;
+	color: #64748b; /* Muted gray text like in the image */
+	line-height: 1.6;
+	margin: 0;
+}
+
+@media (max-width: 1024px) {
+	.metricNumber {
+		font-size: 4.5rem;
+	}
+	.metricCard {
+		padding: var(--space-xl);
+	}
+}
+
+@media (max-width: 768px) {
+	.metricsContainer {
+		grid-template-columns: 1fr;
+		gap: var(--space-xl);
+		max-width: 500px;
+	}
+	.metricNumber {
+		font-size: 5rem;
+	}
+}
+
+@media (max-width: 480px) {
+	.trustMetricsSection {
+		padding: var(--space-xxl) var(--space-md);
+	}
+	.metricNumber {
+		font-size: 4rem;
+	}
+}
