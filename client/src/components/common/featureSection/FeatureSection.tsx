@@ -52,16 +52,20 @@ export const FeatureSection = () => {
 				</p>
 			</div>
 
-			<div className={styles.featureGrid}>
-				{features.map((card, index) => (
-					<FeatureCard
-						key={index}
-						icon={card.icon}
-						title={card.title}
-						description={card.description}
-						animationDelay={card.delay}
-					/>
-				))}
+			<div className={styles.timelineContainer}>
+                <div className={styles.timelineLine}></div>
+				<div className={styles.featureGrid}>
+					{features.map((card, index) => (
+						<FeatureCard
+							key={index}
+							index={index}
+							icon={card.icon}
+							title={card.title}
+							description={card.description}
+							animationDelay={card.delay}
+						/>
+					))}
+				</div>
 			</div>
 
 			<div className={styles.actionContainer}>
