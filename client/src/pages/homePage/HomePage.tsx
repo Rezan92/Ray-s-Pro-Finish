@@ -3,7 +3,7 @@ import TrustStrip from '@/components/common/trustStrip/TrustStrip';
 import { FeatureSection } from '@/components/common/featureSection/FeatureSection';
 
 import { ServicesSection } from '@/components/common/servicesSection/ServicesSection';
-import { IndustrialServicesSection } from '@/components/common/industrialServicesSection/IndustrialServicesSection';
+import { TrustMetricsRow } from '@/components/common/trustMetricsRow/TrustMetricsRow';
 import {LatestProjectsSection} from '../../components/common/latestProjectsSection/LatestProjectsSection';
 import {TestimonialSection} from '../../components/common/testimonialSection/TestimonialSection';
 
@@ -16,7 +16,7 @@ function HomePage() {
 			<FeatureSection />
 
 			<ServicesSection />
-			<IndustrialServicesSection />
+			<TrustMetricsRow />
       <LatestProjectsSection />
       <TestimonialSection />
 		</div>
