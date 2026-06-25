@@ -2,16 +2,18 @@
 
 .latestProjectsSection {
   width: 100%;
-  max-width: 1140px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: var(--space-xxxl) var(--space-lg);
+  padding: var(--space-xxxl) var(--space-md);
 }
 
 .latestProjectsHeader {
+  position: relative;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: var(--space-xxl);
+  text-align: center;
 }
 
 .headerTitleContainer {
@@ -21,13 +23,25 @@
 
 .latestProjectsTitle {
   font-family: var(--font-family-heading);
-  font-size: 2.5rem; /* 40px */
-  font-weight: var(--font-weight-bold);
+  font-size: 3rem;
+  font-weight: var(--font-weight-extrabold);
   color: var(--color-brand-dark);
   margin: 0;
+  text-transform: uppercase;
+}
+
+.latestProjectsSubtitle {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  margin-top: var(--space-sm);
+  margin-bottom: 0;
 }
 
 .headerControls {
+  position: absolute;
+  right: 0;
   display: flex;
   gap: var(--space-sm);
 }
@@ -93,6 +107,12 @@
     text-align: center;
   }
   
+  .headerControls {
+    position: static;
+    margin-top: var(--space-sm);
+    justify-content: center;
+  }
+
   .latestProjectsTitle {
     font-size: 2rem;
   }

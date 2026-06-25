@@ -43,6 +43,9 @@ export const LatestProjectsSection = () => {
 			<div className={styles.latestProjectsHeader}>
 				<div className={styles.headerTitleContainer}>
 					<h2 className={styles.latestProjectsTitle}>Latest Projects</h2>
+					<span className={styles.latestProjectsSubtitle}>
+						Projects we are proud of
+					</span>
 				</div>
 				<div className={styles.headerControls}>
 					<button
