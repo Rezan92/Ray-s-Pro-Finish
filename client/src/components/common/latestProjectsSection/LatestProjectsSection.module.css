@@ -8,16 +8,15 @@
 }
 
 .latestProjectsHeader {
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: var(--space-xxl);
 }
 
-.latestProjectsSubtitle {
-  font-size: 0.875rem;
-  font-weight: var(--font-weight-medium);
-  color: var(--color-primary);
-  text-transform: uppercase;
-  letter-spacing: 1px;
+.headerTitleContainer {
+  display: flex;
+  flex-direction: column;
 }
 
 .latestProjectsTitle {
@@ -25,27 +24,75 @@
   font-size: 2.5rem; /* 40px */
   font-weight: var(--font-weight-bold);
   color: var(--color-brand-dark);
-  margin: var(--space-sm) 0 0 0;
+  margin: 0;
 }
 
-.latestProjectsGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-xl);
+.headerControls {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.navButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--color-bg-primary); /* Assuming white/light gray */
+  color: var(--color-primary); /* Cyan/brand color */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.navButton:hover {
+  background-color: var(--color-primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.navButton:active {
+  transform: translateY(0);
+}
+
+.carouselContainer {
+  margin-bottom: var(--space-xxl);
+  /* Make sure Swiper doesn't cut off shadows */
+  padding: var(--space-sm) 0;
+}
+
+.viewAllContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.viewAllButton {
+  background-color: var(--color-primary);
+  color: white;
+  font-weight: var(--font-weight-bold);
+  padding: var(--space-md) var(--space-xl);
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.viewAllButton:hover {
+  background-color: var(--color-primary-dark, #d94e1d);
+  transform: translateY(-2px);
 }
 
 /* --- Mobile Responsiveness --- */
-@media (max-width: 900px) { /* Tablet */
-  .latestProjectsGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 @media (max-width: 640px) { /* Mobile */
-  .latestProjectsGrid {
-    grid-template-columns: 1fr; /* Stacks to a single column */
+  .latestProjectsHeader {
+    flex-direction: column;
+    gap: var(--space-md);
+    text-align: center;
   }
-
+  
   .latestProjectsTitle {
     font-size: 2rem;
   }

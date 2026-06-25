@@ -34,12 +34,9 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         </div>
       </div>
       <div className={styles.content}>
-        <span className={styles.tag}>{project.tag}</span>
         <h3 className={styles.title}>{project.title}</h3>
-        <div className={styles.location}>
-          <MapPin size={16} />
-          <span>{project.location}</span>
-        </div>
+        <p className={styles.detailsText}>{project.details}</p>
+        <span className={styles.viewDetailsLink}>View Details</span>
       </div>
     </div>
   );
