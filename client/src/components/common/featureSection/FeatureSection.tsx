@@ -45,6 +45,22 @@ export const FeatureSection = () => {
 
 	return (
 		<section className={styles.featureSection}>
+			{/* Static Wavy Background Layer */}
+			<div className={styles.bgContainer}>
+				<svg className={styles.paintedLinesSvg} width="100%" height="100%" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+					<filter id="feature-brush-bg" x="-20%" y="-20%" width="140%" height="140%">
+						<feTurbulence type="fractalNoise" baseFrequency="0.04 0.8" numOctaves="3" result="noise" />
+						<feDisplacementMap in="SourceGraphic" in2="noise" scale="12" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+						<feColorMatrix in="noise" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 2 -1.5" result="holes" />
+						<feComposite in="displaced" in2="holes" operator="out" />
+					</filter>
+					<g filter="url(#feature-brush-bg)" stroke="#94a3b8" fill="none" strokeLinecap="square">
+						{/* Left to Right Wavy */}
+						<path className={styles.staticPath} d="M -200 400 C 500 200, 1400 800, 2100 300" strokeWidth="120" />
+					</g>
+				</svg>
+			</div>
+
 			<div className={styles.sectionHeader}>
 				<h2 className={styles.sectionTitle}>Why Choose Us?</h2>
 				<p className={styles.sectionSubtitle}>
@@ -52,16 +68,20 @@ export const FeatureSection = () => {
 				</p>
 			</div>
 
-			<div className={styles.featureGrid}>
-				{features.map((card, index) => (
-					<FeatureCard
-						key={index}
-						icon={card.icon}
-						title={card.title}
-						description={card.description}
-						animationDelay={card.delay}
-					/>
-				))}
+			<div className={styles.timelineContainer}>
+                <div className={styles.timelineLine}></div>
+				<div className={styles.featureGrid}>
+					{features.map((card, index) => (
+						<FeatureCard
+							key={index}
+							index={index}
+							icon={card.icon}
+							title={card.title}
+							description={card.description}
+							animationDelay={card.delay}
+						/>
+					))}
+				</div>
 			</div>
 
 			<div className={styles.actionContainer}>

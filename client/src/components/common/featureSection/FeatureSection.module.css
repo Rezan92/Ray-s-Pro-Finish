@@ -4,17 +4,43 @@
   position: relative;
   z-index: 10;
   padding: var(--space-xxxl) var(--space-md);
-  background-color: var(--color-bg-light); /* Slightly off-white so the white cards pop */
-  /* Wavy line brush effect background */
-  background-image: url("data:image/svg+xml,%3Csvg width='1200' height='800' viewBox='0 0 1200 800' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M-100 150 Q 400 -50, 800 250 T 1400 100' fill='none' stroke='%23f15a24' stroke-opacity='0.08' stroke-width='60' stroke-linecap='round'/%3E%3Cpath d='M-100 750 Q 300 900, 700 600 T 1400 800' fill='none' stroke='%23f15a24' stroke-opacity='0.06' stroke-width='100' stroke-linecap='round'/%3E%3Cpath d='M-100 400 Q 600 300, 1000 450 T 1400 350' fill='none' stroke='%23f15a24' stroke-opacity='0.04' stroke-width='40' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+  background-color: var(--color-bg-light); 
+  border-top: 1px solid var(--color-border);
+  overflow: hidden; /* Prevent horizontal scroll from timeline line */
 }
+
+/* Background animation */
+.bgContainer {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+.paintedLinesSvg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+	opacity: 0.1;
+}
+
+.staticPath {
+	stroke-dasharray: none;
+}
+
 
 .sectionHeader {
   text-align: center;
   margin-bottom: var(--space-xxxl);
+  max-width: 800px;
+  margin-inline: auto;
 }
 
 .sectionTitle {
@@ -36,16 +62,32 @@
   margin: 0 auto;
 }
 
-/* 6-Card Grid */
-.featureGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-xl);
-  max-width: 1200px;
+.timelineContainer {
+  position: relative;
+  max-width: 1400px; /* Wider for 6 items */
   margin: 0 auto var(--space-xxxl);
+  padding: 0 var(--space-xl);
 }
 
-/* Call to Action */
+.timelineLine {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-top: 2px dashed #94a3b8; /* Gray dashed line */
+  z-index: 0;
+  transform: translateY(-50%);
+}
+
+.featureGrid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--space-md);
+}
+
 .actionContainer {
   display: flex;
   justify-content: center;
@@ -53,16 +95,24 @@
 }
 
 /* --- Responsive --- */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .featureGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-lg);
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-xl) var(--space-md);
+  }
+  .timelineContainer {
+    max-width: 900px;
+  }
+  /* Hide the single straight line on tablet since it wraps into multiple rows */
+  .timelineLine {
+    display: none; 
   }
 }
 
 @media (max-width: 768px) {
   .featureGrid {
     grid-template-columns: 1fr; 
+    gap: var(--space-xl);
   }
   
   .sectionTitle {
