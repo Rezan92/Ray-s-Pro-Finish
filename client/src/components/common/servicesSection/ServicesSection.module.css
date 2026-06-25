@@ -1,85 +1,115 @@
-/* src/components/home/ServicesSection.module.css */
-
 .servicesSection {
-  width: 100%;
-  padding: var(--space-xxxl) var(--space-xl);
-  /* 64px 32px */
-  background-color: transparent;
-  position: relative;
+	position: relative;
+	padding: var(--space-xxxl) var(--space-xl);
+	background-color: var(--color-bg-light);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	overflow: hidden; /* prevents grid overflowing */
 }
 
-.servicesSection::after {
-  position: absolute;
-  bottom: -10px;
-  left: 0;
-  right: 0;
-  height: 50%;
-  width: 100%;
-  content: '';
-  background: #e0e0e0;
-  z-index: -1;
+/* Background animation */
+.animationContainer {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+	overflow: hidden;
+	pointer-events: none;
 }
 
+.paintedLinesSvg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 0;
+	opacity: 0.15;
+}
+
+/* Base style for paths */
+.path1, .path2, .path3 {
+	stroke-dasharray: 4000;
+	stroke-dashoffset: 4000;
+}
+
+.path1 { animation: drawAndErase 20s infinite 0s linear; }
+.path2 { animation: drawAndErase 24s infinite 7s linear; }
+.path3 { animation: drawAndErase 26s infinite 16s linear; }
+
+@keyframes drawAndErase {
+	0% {
+		stroke-dashoffset: 4000; /* Fully undrawn */
+	}
+	15% {
+		stroke-dashoffset: 0; /* Fully drawn */
+	}
+	35% {
+		stroke-dashoffset: 0; /* Stays drawn for a bit */
+	}
+	50% {
+		stroke-dashoffset: -4000; /* Erases progressively in the same direction */
+	}
+	100% {
+		stroke-dashoffset: -4000; /* Remains erased for a long period to keep the screen clear */
+	}
+}
+
+/* Make sure content is above the background animation */
 .servicesSectionHeader {
-  text-align: center;
-  margin-bottom: var(--space-xxl);
-  /* 48px */
+	position: relative;
+	z-index: 1;
+	text-align: center;
+	margin-bottom: var(--space-xxxl);
+	max-width: 800px;
 }
 
 .servicesSectionSubtitle {
-  font-family: var(--font-family-heading);
-  font-size: 0.875rem;
-  /* 14px */
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-bottom: var(--space-sm);
-  display: block;
+	display: block;
+	font-size: 1.1rem;
+	font-weight: var(--font-weight-bold);
+	color: var(--color-primary);
+	margin-top: var(--space-sm);
+	margin-bottom: 0;
 }
 
 .servicesSectionTitle {
-  font-family: var(--font-family-heading);
-  font-size: 2.5rem;
-  /* 40px */
-  font-weight: var(--font-weight-extrabold);
-  color: var(--color-brand-dark);
-  margin: 0;
+	font-size: 3rem;
+	color: var(--color-brand-dark);
+	margin: 0;
+	font-weight: var(--font-weight-extrabold);
+	text-transform: uppercase;
 }
 
 .servicesSectionGrid {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  /* Create 3 equal columns */
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-xxxl);
-  /* 32px gap */
+	position: relative;
+	z-index: 1;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: var(--space-xl) clamp(1.5rem, 5vw, 4rem);
+	max-width: 1200px;
+	width: 100%;
 }
 
-/* --- Responsive --- */
-
-@media (max-width: 1024px) {
-
-  /* Switch to 2 columns for tablets */
-  .servicesSectionGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+@media (max-width: 900px) {
+	.servicesSectionTitle {
+		font-size: 2.5rem;
+	}
+	.servicesSectionGrid {
+		grid-template-columns: 1fr;
+		gap: var(--space-xl);
+		max-width: 500px;
+	}
 }
 
-@media (max-width: 768px) {
-  .servicesSection {
-    padding: 100px var(--space-md);
-    /* 48px 16px */
-  }
-
-  /* Switch to 1 column for mobile */
-  .servicesSectionGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .servicesSectionTitle {
-    font-size: 2rem;
-    /* 32px */
-  }
+@media (max-width: 480px) {
+	.servicesSection {
+		padding: var(--space-xxl) var(--space-md);
+	}
+	.servicesSectionTitle {
+		font-size: 2rem;
+	}
 }

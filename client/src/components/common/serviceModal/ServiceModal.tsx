@@ -1,15 +1,18 @@
-import React from 'react';
-import styles from './ServiceModal.module.css'; // Import the new CSS
-import { X } from 'lucide-react';
+import React, { useState } from 'react';
+import styles from './ServiceModal.module.css';
+import { X, ZoomIn } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 
 // Define the shape of a Service
 export type Service = {
 	title: string;
-	image: string;
-	details: string[]; // An array of paragraphs for the description
+	image?: string;
+	details: string[];
 	icon: LucideIcon;
+	iconColor: string;
 	description: string;
+	isConsultation?: boolean;
 };
 
 type ServiceModalProps = {
@@ -21,6 +24,9 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({
 	service,
 	onClose,
 }) => {
+	const IconComponent = service.icon;
+	const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+
 	return (
 		<>
 			<div
@@ -34,15 +40,30 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({
 				>
 					<X size={24} />
 				</button>
-				<img
-					src={service.image}
-					alt={service.title}
-					className={styles.modalImage}
-				/>
-				<div className={styles.modalTextContent}>
+				
+				<div className={styles.modalHeader}>
+					<div 
+						className={styles.modalIconWrapper} 
+						style={{ backgroundColor: service.iconColor }}
+					>
+						<IconComponent size={32} color="#ffffff" />
+					</div>
 					<h2 className={styles.modalTitle}>{service.title}</h2>
-					<div className={styles.modalDivider}></div>
-					{/* Loop over the details array and render each as a paragraph */}
+				</div>
+
+				<div className={styles.modalDivider}></div>
+				
+				{service.image && (
+					<div className={styles.imageContainer} onClick={() => setIsLightboxOpen(true)}>
+						<img src={service.image} alt={service.title} className={styles.modalImage} />
+						<div className={styles.imageOverlay}>
+							<ZoomIn size={32} color="#fff" />
+							<span>Click to Zoom</span>
+						</div>
+					</div>
+				)}
+
+				<div className={styles.modalTextContent}>
 					{service.details.map((paragraph, index) => (
 						<p
 							key={index}
@@ -52,7 +73,38 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({
 						</p>
 					))}
 				</div>
+
+				{service.isConsultation && (
+					<div className={styles.modalAction}>
+						<a href="#quote" className={styles.actionButton} onClick={onClose}>
+							Schedule a Walkthrough &rarr;
+						</a>
+					</div>
+				)}
 			</div>
+
+			{/* Lightbox Overlay */}
+			{isLightboxOpen && service.image && (
+				<div className={styles.lightboxOverlay}>
+					<button className={styles.lightboxCloseBtn} onClick={() => setIsLightboxOpen(false)}>
+						<X size={32} color="#fff" />
+					</button>
+					<TransformWrapper
+						initialScale={1}
+						minScale={0.5}
+						maxScale={4}
+						centerOnInit={true}
+					>
+						<TransformComponent wrapperClass={styles.lightboxTransformWrapper}>
+							<img 
+								src={service.image} 
+								alt={service.title} 
+								className={styles.lightboxImage} 
+							/>
+						</TransformComponent>
+					</TransformWrapper>
+				</div>
+			)}
 		</>
 	);
 };

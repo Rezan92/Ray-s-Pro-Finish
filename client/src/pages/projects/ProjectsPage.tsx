@@ -3,7 +3,6 @@ import { PageHeader } from '@/components/common/pageHeader/PageHeader';
 import { ProjectGallerySection } from '@/components/common/projectGallerySection/ProjectGallerySection';
 import { OurProcessSection } from '@/components/common/ourProcessSection/OurProcessSection';
 import { TestimonialSection } from '@/components/common/testimonialSection/TestimonialSection';
-import { RequestQuoteSection } from '@/components/common/requestQuoteSection/RequestQuoteSection';
 
 const ProjectsPage = () => {
 	return (
@@ -18,8 +17,7 @@ const ProjectsPage = () => {
 			<OurProcessSection />
 			{/* 4. Social Proof (Reinforces quality) */}
 			<TestimonialSection />
-			{/* 5. Call to Action (The final step) */}
-			<RequestQuoteSection />
+
 		</div>
 	);
 };

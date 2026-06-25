@@ -1,10 +1,9 @@
 import styles from './AboutPage.module.css';
 import { PageHeader } from '@/components/common/pageHeader/PageHeader';
 import { AboutSection } from '@/components/common/aboutSection/AboutSection';
-import { IndustrialServicesSection } from '@/components/common/industrialServicesSection/IndustrialServicesSection';
+import { TrustMetricsRow } from '@/components/common/trustMetricsRow/TrustMetricsRow';
 import { FeatureSection } from '@/components/common/featureSection/FeatureSection';
 import { TestimonialSection } from '@/components/common/testimonialSection/TestimonialSection';
-import { RequestQuoteSection } from '@/components/common/requestQuoteSection/RequestQuoteSection';
 
 function AboutPage() {
 	return (
@@ -16,7 +15,7 @@ function AboutPage() {
 			<AboutSection />
 
 			{/* 3. Our Commitment (The "Difference is in the details" section) */}
-			<IndustrialServicesSection />
+			<TrustMetricsRow />
 
 			{/* 4. Our Values (The 3 feature cards) */}
 			<FeatureSection />
@@ -24,8 +23,7 @@ function AboutPage() {
 			{/* 5. Social Proof (Show what customers say) */}
 			<TestimonialSection />
 
-			{/* 6. Call to Action (End every page with a CTA) */}
-			<RequestQuoteSection />
+
 		</div>
 	);
 }
