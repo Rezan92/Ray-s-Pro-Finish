@@ -4,6 +4,12 @@ import styles from './TrustMetricsRow.module.css';
 export const TrustMetricsRow = () => {
 	return (
 		<section className={styles.trustMetricsSection}>
+			<div className={styles.sectionHeader}>
+				<h2 className={styles.sectionTitle}>THE WAY WE DO BUSINESS</h2>
+				<span className={styles.sectionSubtitle}>
+					We believe hiring a contractor should be completely stress-free. Here is what you can expect.*
+				</span>
+			</div>
 			<div className={styles.metricsContainer}>
 				<div className={styles.metricCard}>
 					<div className={styles.metricNumber}>#1</div>
