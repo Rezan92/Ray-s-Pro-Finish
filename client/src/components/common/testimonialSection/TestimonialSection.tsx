@@ -100,11 +100,26 @@ export const TestimonialSection: React.FC = () => {
 					<div className={styles.ratingSummaryScoreRow}>
 						<span className={styles.ratingScoreText}>{averageRating}</span>
 						<div className={styles.ratingStars}>
-							{[...Array(5)].map((_, i) => (
-								<svg key={i} className={i < Math.round(Number(averageRating)) ? styles.starFilled : styles.starEmpty} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-									<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-								</svg>
-							))}
+							<svg width="0" height="0" style={{ position: 'absolute' }}>
+								<defs>
+									<linearGradient id="star-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+										<stop offset={`${Math.round((Number(averageRating) % 1) * 100)}%`} stopColor="var(--color-primary)" />
+										<stop offset={`${Math.round((Number(averageRating) % 1) * 100)}%`} stopColor="#d1d5db" />
+									</linearGradient>
+								</defs>
+							</svg>
+							{[...Array(5)].map((_, i) => {
+								const ratingValue = Number(averageRating);
+								const isFull = i < Math.floor(ratingValue);
+								const isPartial = i === Math.floor(ratingValue) && (ratingValue % 1) !== 0;
+								const fillValue = isFull ? 'var(--color-primary)' : isPartial ? 'url(#star-gradient)' : '#d1d5db';
+								
+								return (
+									<svg key={i} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+										<path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" fill={fillValue} />
+									</svg>
+								);
+							})}
 						</div>
 						<span className={styles.ratingCountText}>Over {totalReviews} Reviews</span>
 					</div>
