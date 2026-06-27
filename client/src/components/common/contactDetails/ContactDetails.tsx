@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './ContactDetails.module.css';
 import ContactInfoBlock from '../contactInfoBlock/ContactInfoBlock';
-import { Button } from '../button/Button';
+import { BrushButton } from '../brushButton/BrushButton';
 import { Phone, MapPin, Mail, Clock } from 'lucide-react';
 
 export const ContactDetails: React.FC = () => {
@@ -46,15 +46,16 @@ export const ContactDetails: React.FC = () => {
 				/>
 			</div>
 
-			<Button
+			<BrushButton
 				href={whatsappLink}
 				target='_blank'
-				variant='dark'
+				primaryColor="#25D366"
+				hoverColor="#128C7E"
 				className={styles.whatsappBtn}
 			>
 				{/* You can add a WhatsApp icon here later if you import one */}
 				Contact Us via WhatsApp
-			</Button>
+			</BrushButton>
 		</div>
 	);
 };

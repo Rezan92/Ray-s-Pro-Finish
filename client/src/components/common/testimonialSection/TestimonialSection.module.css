@@ -94,24 +94,7 @@
 }
 
 .writeReviewButton {
-  display: flex;
-  align-items: center;
   gap: var(--space-sm);
-  background-color: #ef4444; /* red-500 matching the image */
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: var(--border-radius-sm);
-  font-family: var(--font-family-body);
-  font-weight: var(--font-weight-bold);
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.2s;
-}
-
-.writeReviewButton:hover {
-  background-color: #dc2626; /* red-600 */
-  transform: translateY(-2px);
 }
 
 

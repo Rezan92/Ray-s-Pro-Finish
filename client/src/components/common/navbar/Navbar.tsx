@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Button } from '../button/Button';
+import { BrushButton } from '../brushButton/BrushButton';
 import { Menu } from 'lucide-react';
 import styles from './Navbar.module.css';
 
@@ -46,12 +46,13 @@ const Navbar = () => {
 							</li>
 						))}
 					</ul>
-					<Button
+					<BrushButton
 					        to='/contact'
 					        className={styles.navEstimateBtn}
+							size="small"
 					>
 					        Free Estimate
-					</Button>
+					</BrushButton>
 					</div>
 
 				{/* --- Mobile Navigation --- */}
@@ -93,15 +94,14 @@ const Navbar = () => {
 						</li>
 					))}
 				</ul>
-				<Button
+				<BrushButton
 				        to='/contact'
 				        className={`${styles.mobileMenuBtn} ${styles.navEstimateBtn}`}
-				        // We can attach onClick to Button component if it supports it,
-				        // or wrap it to close menu when clicked.
 				        onClick={handleClose}
+						size="medium"
 				>
 				        Free Estimate
-				</Button>
+				</BrushButton>
 			</div>
 		</nav>
 	);

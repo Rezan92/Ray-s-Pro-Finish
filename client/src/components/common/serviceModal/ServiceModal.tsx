@@ -3,6 +3,7 @@ import styles from './ServiceModal.module.css';
 import { X, ZoomIn } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
+import { BrushButton } from '../brushButton/BrushButton';
 
 // Define the shape of a Service
 export type Service = {
@@ -76,9 +77,9 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({
 
 				{service.isConsultation && (
 					<div className={styles.modalAction}>
-						<a href="#quote" className={styles.actionButton} onClick={onClose}>
+						<BrushButton href="#quote" className={styles.actionButton} onClick={onClose} size="small">
 							Schedule a Walkthrough &rarr;
-						</a>
+						</BrushButton>
 					</div>
 				)}
 			</div>
