@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './ProjectCard.module.css';
-import { MapPin } from 'lucide-react';
 
 // Define the shape of a project
 export type Project = {
