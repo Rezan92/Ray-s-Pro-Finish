@@ -37,7 +37,8 @@ export const LatestProjectsSection = () => {
 		swiperRef.current.slideNext();
 	}, []);
 
-	const displayProjects = projectsData;
+	// Duplicate data to ensure Swiper loop has enough slides for 4 items
+	const displayProjects = [...projectsData, ...projectsData];
 
 	return (
 		<section className={styles.latestProjectsSection}>
@@ -85,7 +86,7 @@ export const LatestProjectsSection = () => {
 								slidesPerView: 2,
 							},
 							1024: {
-								slidesPerView: 3,
+								slidesPerView: 4,
 							},
 						}}
 					>

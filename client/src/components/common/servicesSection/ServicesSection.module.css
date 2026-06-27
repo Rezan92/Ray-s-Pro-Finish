@@ -6,60 +6,8 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	overflow: hidden; /* prevents grid overflowing */
 }
 
-/* Background animation */
-.animationContainer {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 0;
-	overflow: hidden;
-	pointer-events: none;
-}
-
-.paintedLinesSvg {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 0;
-	opacity: 0.15;
-}
-
-/* Base style for paths */
-.path1, .path2, .path3 {
-	stroke-dasharray: 4000;
-	stroke-dashoffset: 4000;
-}
-
-.path1 { animation: drawAndErase 20s infinite 0s linear; }
-.path2 { animation: drawAndErase 24s infinite 7s linear; }
-.path3 { animation: drawAndErase 26s infinite 16s linear; }
-
-@keyframes drawAndErase {
-	0% {
-		stroke-dashoffset: 4000; /* Fully undrawn */
-	}
-	15% {
-		stroke-dashoffset: 0; /* Fully drawn */
-	}
-	35% {
-		stroke-dashoffset: 0; /* Stays drawn for a bit */
-	}
-	50% {
-		stroke-dashoffset: -4000; /* Erases progressively in the same direction */
-	}
-	100% {
-		stroke-dashoffset: -4000; /* Remains erased for a long period to keep the screen clear */
-	}
-}
-
-/* Make sure content is above the background animation */
 .servicesSectionHeader {
 	position: relative;
 	z-index: 1;
