@@ -2,10 +2,11 @@
 
 .featureCard {
   position: relative;
-  height: 400px; /* Provides ample space above and below */
+  height: 400px;
   text-align: left;
   opacity: 0;
   transform: translateY(20px);
+  cursor: pointer;
 }
 
 .contentBox {
@@ -66,9 +67,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 2; /* Ensures it sits above the dashed line */
-  background: var(--color-bg-light); /* Hide the line behind the square */
-  padding: 4px; /* Slight gap around the square to cut the line nicely */
+  z-index: 2;
 }
 
 .iconSquare {
@@ -85,6 +84,17 @@
 
 .featureCard:hover .iconSquare {
   transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
+.featureCard:hover .cardTitle {
+  color: var(--color-primary);
+  transition: color 0.3s ease;
+}
+
+.featureCard:hover .iconCenterWrapper {
+  filter: drop-shadow(0 0 10px rgba(241, 90, 36, 0.35));
+  transition: filter 0.3s ease;
 }
 
 /* Colors matching ServicesSection */
