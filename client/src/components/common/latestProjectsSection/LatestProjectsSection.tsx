@@ -41,73 +41,75 @@ export const LatestProjectsSection = () => {
 
 	return (
 		<section className={styles.latestProjectsSection}>
-			<div className={styles.latestProjectsHeader}>
-				<div className={styles.headerTitleContainer}>
-					<h2 className={styles.latestProjectsTitle}>Latest Projects</h2>
-					<span className={styles.latestProjectsSubtitle}>
-						Projects we are proud of
-					</span>
+			<div className={styles.container}>
+				<div className={styles.latestProjectsHeader}>
+					<div className={styles.headerTitleContainer}>
+						<h2 className={styles.latestProjectsTitle}>Latest Projects</h2>
+						<span className={styles.latestProjectsSubtitle}>
+							Projects we are proud of
+						</span>
+					</div>
+					<div className={styles.headerControls}>
+						<button
+							className={styles.navButton}
+							onClick={handlePrev}
+							aria-label="Previous Project"
+						>
+							<ChevronLeft size={20} />
+						</button>
+						<button
+							className={styles.navButton}
+							onClick={handleNext}
+							aria-label="Next Project"
+						>
+							<ChevronRight size={20} />
+						</button>
+					</div>
 				</div>
-				<div className={styles.headerControls}>
-					<button
-						className={styles.navButton}
-						onClick={handlePrev}
-						aria-label="Previous Project"
+
+				<div className={styles.carouselContainer}>
+					<Swiper
+						modules={[Autoplay, Navigation]}
+						onBeforeInit={(swiper) => {
+							swiperRef.current = swiper;
+						}}
+						spaceBetween={24}
+						slidesPerView={1}
+						loop={true}
+						autoplay={{
+							delay: 3500,
+							disableOnInteraction: false,
+						}}
+						breakpoints={{
+							640: {
+								slidesPerView: 2,
+							},
+							1024: {
+								slidesPerView: 3,
+							},
+						}}
 					>
-						<ChevronLeft size={20} />
-					</button>
-					<button
-						className={styles.navButton}
-						onClick={handleNext}
-						aria-label="Next Project"
-					>
-						<ChevronRight size={20} />
-					</button>
+						{displayProjects.map((project, index) => (
+							<SwiperSlide key={`${project.id}-${index}`}>
+								<ProjectCard
+									project={project}
+									onClick={() => handleCardClick(project)}
+								/>
+							</SwiperSlide>
+						))}
+					</Swiper>
 				</div>
-			</div>
 
-			<div className={styles.carouselContainer}>
-				<Swiper
-					modules={[Autoplay, Navigation]}
-					onBeforeInit={(swiper) => {
-						swiperRef.current = swiper;
-					}}
-					spaceBetween={24}
-					slidesPerView={1}
-					loop={true}
-					autoplay={{
-						delay: 3500,
-						disableOnInteraction: false,
-					}}
-					breakpoints={{
-						640: {
-							slidesPerView: 2,
-						},
-						1024: {
-							slidesPerView: 3,
-						},
-					}}
-				>
-					{displayProjects.map((project, index) => (
-						<SwiperSlide key={`${project.id}-${index}`}>
-							<ProjectCard
-								project={project}
-								onClick={() => handleCardClick(project)}
-							/>
-						</SwiperSlide>
-					))}
-				</Swiper>
-			</div>
+				<div className={styles.viewAllContainer}>
+					<BrushButton className={styles.viewAllButton} size="medium" to="/projects">
+						View All Projects
+					</BrushButton>
+				</div>
 
-			<div className={styles.viewAllContainer}>
-				<BrushButton className={styles.viewAllButton} size="medium" to="/projects">
-					View All Projects
-				</BrushButton>
+				{selectedProject && (
+					<ProjectModal project={selectedProject} onClose={handleCloseModal} />
+				)}
 			</div>
-
-			{selectedProject && (
-				<ProjectModal project={selectedProject} onClose={handleCloseModal} />
-			)}
 		</section>
 	);
 };
