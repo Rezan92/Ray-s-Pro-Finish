@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './TrustMetricsRow.module.css';
 
 export const TrustMetricsRow = () => {
