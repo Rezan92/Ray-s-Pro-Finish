@@ -4,20 +4,28 @@ import styles from './BrushButton.module.css';
 
 interface BrushButtonProps {
   to?: string;
+  href?: string;
+  target?: string;
+  type?: 'submit' | 'button' | 'reset';
   onClick?: () => void;
   children: React.ReactNode;
   primaryColor?: string;
   hoverColor?: string;
   className?: string;
+  size?: 'small' | 'medium' | 'large';
 }
 
 export const BrushButton: React.FC<BrushButtonProps> = ({
   to,
+  href,
+  target,
+  type = 'button',
   onClick,
   children,
   primaryColor = 'var(--color-primary)',
   hoverColor = 'var(--color-brand-dark)',
   className = '',
+  size = 'medium',
 }) => {
   // Generate a unique ID for the SVG filter so multiple buttons don't clash on the same page
   const uniqueId = useId().replace(/:/g, '');
@@ -43,7 +51,15 @@ export const BrushButton: React.FC<BrushButtonProps> = ({
     </>
   );
 
-  const combinedClassName = `${styles.brushButton} ${className}`;
+  const combinedClassName = `${styles.brushButton} ${styles[size]} ${className}`;
+
+  if (href) {
+    return (
+      <a href={href} target={target} rel={target === '_blank' ? 'noopener noreferrer' : undefined} className={combinedClassName} style={customStyle} onClick={onClick}>
+        {content}
+      </a>
+    );
+  }
 
   if (to) {
     return (
@@ -54,7 +70,7 @@ export const BrushButton: React.FC<BrushButtonProps> = ({
   }
 
   return (
-    <button className={combinedClassName} style={customStyle} onClick={onClick}>
+    <button type={type} className={combinedClassName} style={customStyle} onClick={onClick}>
       {content}
     </button>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './ContactForm.module.css';
-import { Button } from '../button/Button';
+import { BrushButton } from '../brushButton/BrushButton';
 
 export const ContactForm: React.FC = () => {
 	// In a real app, you would handle form state and submission here
@@ -77,13 +77,12 @@ export const ContactForm: React.FC = () => {
 						required
 					></textarea>
 				</div>
-				<Button
+				<BrushButton
 					type='submit'
-					variant='primary'
 					className={styles.contactSubmitBtn}
 				>
 					Send Message
-				</Button>
+				</BrushButton>
 			</form>
 		</div>
 	);

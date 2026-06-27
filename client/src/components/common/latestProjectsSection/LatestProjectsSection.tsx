@@ -5,6 +5,7 @@ import type { Project } from '../projectCard/ProjectCard';
 import { ProjectModal } from '../projectModal/ProjectModal';
 import { projectsData } from '@/data/projectsData';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { BrushButton } from '../brushButton/BrushButton';
 
 // Swiper imports
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -99,9 +100,9 @@ export const LatestProjectsSection = () => {
 			</div>
 
 			<div className={styles.viewAllContainer}>
-				<button className={styles.viewAllButton}>
+				<BrushButton className={styles.viewAllButton} size="medium" to="/projects">
 					View All Projects
-				</button>
+				</BrushButton>
 			</div>
 
 			{selectedProject && (

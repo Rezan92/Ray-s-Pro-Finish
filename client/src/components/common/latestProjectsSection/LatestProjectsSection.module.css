@@ -85,19 +85,7 @@
 }
 
 .viewAllButton {
-  background-color: var(--color-primary);
-  color: white;
-  font-weight: var(--font-weight-bold);
-  padding: var(--space-md) var(--space-xl);
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
-}
-
-.viewAllButton:hover {
-  background-color: var(--color-primary-dark, #d94e1d);
-  transform: translateY(-2px);
+  /* No additional styles needed, BrushButton handles it */
 }
 
 /* --- Mobile Responsiveness --- */

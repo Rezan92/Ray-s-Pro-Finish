@@ -1,5 +1,5 @@
 import styles from './Hero.module.css';
-import { Button } from '../button/Button';
+import { BrushButton } from '../brushButton/BrushButton';
 // Use the @ alias for a clean path to assets
 import heroImage from '@/assets/hero/Hero.png';
 import Navbar from '../navbar/Navbar';
@@ -32,13 +32,13 @@ const Hero = () => {
 								delays.
 							</p>
 							<div className={styles.heroActions}>
-								<Button
+								<BrushButton
 									to='/contact'
-									variant='primary'
 									className={styles.heroButton}
+									size="medium"
 								>
 									Get Your Dust-Free Estimate
-								</Button>
+								</BrushButton>
 							</div>
 						</div>
 					</div>

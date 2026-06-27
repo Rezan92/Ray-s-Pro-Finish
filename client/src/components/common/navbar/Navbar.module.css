@@ -71,16 +71,7 @@
 
 /* Custom button style for the navbar */
 .navEstimateBtn {
-  background-color: transparent !important;
-  color: var(--color-primary) !important;
-  border: 2px solid var(--color-primary) !important;
-  transition: all 0.3s ease;
   margin-right: 0;
-}
-
-.navEstimateBtn:hover {
-  background-color: var(--color-primary) !important;
-  color: var(--color-text-inverted) !important;
 }
 
 .navMobile {
