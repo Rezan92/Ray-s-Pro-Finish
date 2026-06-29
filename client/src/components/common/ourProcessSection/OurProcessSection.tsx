@@ -1,21 +1,20 @@
 import React from 'react';
-import { ClipboardList, ShieldCheck, PaintRoller, Sparkles } from 'lucide-react';
 import styles from './OurProcessSection.module.css';
+import { BrushButton } from '../brushButton/BrushButton';
 
 // A sub-component for each step
 const ProcessStep: React.FC<{
-	icon: React.ElementType;
-	step: string;
+	numberString: string;
 	title: string;
 	description: string;
-}> = ({ icon: Icon, step, title, description }) => {
+}> = ({ numberString, title, description }) => {
 	return (
 		<div className={styles.processStep}>
-			<div className={styles.processStepIconWrapper}>
-				<Icon size={40} />
+			<div className={styles.processStepGraphic}>
+                <span className={styles.stepLabel}>Step</span>
+				<span className={styles.hugeStepNumber}>{numberString}</span>
 			</div>
 			<div className={styles.processStepContent}>
-				<span className={styles.processStepNumber}>{step}</span>
 				<h3 className={styles.processStepTitle}>{title}</h3>
 				<p className={styles.processStepDescription}>{description}</p>
 			</div>
@@ -27,35 +26,66 @@ export const OurProcessSection: React.FC = () => {
 	return (
 		<section className={styles.ourProcessSection}>
 			<div className={styles.ourProcessHeader}>
-				<span className={styles.ourProcessSubtitle}>HOW IT WORKS</span>
-				<h2 className={styles.ourProcessTitle}>Our Professional Process</h2>
+				<h2 className={styles.ourProcessTitle}>
+                    Our Professional <span className={styles.highlight}>Process</span>
+                </h2>
+				<p className={styles.ourProcessSubtitle}>How It Works</p>
 			</div>
-			<div className={styles.ourProcessGrid}>
+            
+            <div className={styles.timelineContainer}>
+                {/* Desktop Road SVG */}
+                <svg className={styles.desktopRoadSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <path 
+                        d="M 25 12.5 C 100 12.5, 100 37.5, 75 37.5 C 0 37.5, 0 62.5, 25 62.5 C 100 62.5, 100 87.5, 75 87.5 Q 50 87.5 25 87.5"
+                        fill="none"
+                        stroke="var(--color-primary)"
+                        strokeOpacity="0.2"
+                        strokeWidth="6"
+                        strokeLinecap="round"
+                        vectorEffect="non-scaling-stroke"
+                    />
+                </svg>
+
+                {/* Mobile Road SVG */}
+                <svg className={styles.mobileRoadSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <path 
+                        d="M 50 10 Q 80 25, 50 40 T 50 70 T 50 95"
+                        fill="none"
+                        stroke="var(--color-primary)"
+                        strokeOpacity="0.2"
+                        strokeWidth="4"
+                        strokeLinecap="round"
+                        vectorEffect="non-scaling-stroke"
+                    />
+                </svg>
+
 				<ProcessStep
-					icon={ClipboardList}
-					step='Step 01'
-					title='Consultation & Quote'
-					description='We start with a free, on-site consultation to understand your vision, assess the scope, and provide a detailed, transparent estimate. No hidden fees.'
+					numberString='01'
+					title='Consultation & Estimate'
+					description="We come to your home for a comprehensive 15- to 30-minute consultation. We take precise measurements, discuss your color preferences, and confidently answer all your questions. You'll receive a detailed, transparent quote immediately after."
 				/>
 				<ProcessStep
-					icon={ShieldCheck}
-					step='Step 02'
-					title='Protect & Prepare'
-					description='This is the most critical step. We meticulously cover your floors, protect your furniture, and professionally prep all surfaces (sanding, patching, priming) for a flawless finish.'
+					numberString='02'
+					title='Protection & Preparation'
+					description="We meticulously prepare the area by moving, covering, and protecting all floors and furniture. We work respectfully around your day-to-day life to ensure a pristine environment before any paint is applied."
 				/>
 				<ProcessStep
-					icon={PaintRoller}
-					step='Step 03'
-					title='Execute with Precision'
-					description='Our skilled team uses high-quality materials and professional techniques to deliver sharp lines, smooth walls, and a beautiful, durable finish that lasts.'
+					numberString='03'
+					title='Professional Execution'
+					description="Once perfectly prepped, our professional team begins the painting process. We use premium materials and flawless techniques to deliver sharp lines and a beautiful, lasting finish."
 				/>
 				<ProcessStep
-					icon={Sparkles}
-					step='Step 04'
+					numberString='04'
 					title='Cleanup & Walkthrough'
-					description='We leave your home spotless. We conduct a final walkthrough with you to ensure every detail is perfect and you are 100% satisfied with the transformation.'
+					description="We leave your home completely spotless. We will walk you through the finished work with complete transparency. If there are any final touch-ups or adjustments you desire, we handle them immediately to guarantee your 100% satisfaction."
 				/>
 			</div>
+
+            <div className={styles.ctaContainer}>
+                <BrushButton to="/contact">
+                    Get a Free Estimate
+                </BrushButton>
+            </div>
 		</section>
 	);
 };
