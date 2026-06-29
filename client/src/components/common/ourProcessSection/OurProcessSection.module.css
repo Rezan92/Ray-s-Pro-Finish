@@ -2,14 +2,13 @@
 
 .ourProcessSection {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--space-xl);
+  padding: var(--space-xxxl) var(--space-xl);
+  position: relative;
 }
 
 .ourProcessHeader {
   text-align: center;
-  margin-bottom: var(--space-xxl);
+  margin-bottom: var(--space-xxxl);
 }
 
 .ourProcessSubtitle {
@@ -22,81 +21,129 @@
 
 .ourProcessTitle {
   font-family: var(--font-family-heading);
-  font-size: 2.5rem;
-  /* 40px */
-  font-weight: var(--font-weight-bold);
+  font-size: 3rem;
+  font-weight: var(--font-weight-extrabold);
   color: var(--color-brand-dark);
   margin: var(--space-sm) 0 0 0;
+  text-transform: uppercase;
 }
 
-.ourProcessGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-xl);
+.highlight {
+  color: var(--color-primary);
+}
+
+.timelineContainer {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xxxl);
+  padding: var(--space-xl) 0;
 }
 
 .processStep {
-  text-align: left;
-  background-color: var(--color-bg-primary);
-  border: 1px solid var(--color-border);
-  padding: var(--space-xl);
-  border-radius: var(--border-radius-md);
-  transition: all 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-xxxl);
 }
 
-.processStep:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+.processStep:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.processStepGraphic {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  min-height: 200px;
+}
+
+.hugeStepNumber {
+  font-family: var(--font-family-heading);
+  font-size: 10rem;
+  font-weight: 900;
+  color: #e2e8f0; /* Very light slate gray */
+  line-height: 1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  user-select: none;
 }
 
 .processStepIconWrapper {
-  width: 70px;
-  height: 70px;
+  width: 90px;
+  height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   background-color: var(--color-primary);
   color: white;
-  margin-bottom: var(--space-lg);
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-.processStepNumber {
-  font-family: var(--font-family-heading);
-  font-size: 0.875rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary);
-  text-transform: uppercase;
+.processStepContent {
+  flex: 1;
+  text-align: left;
 }
 
 .processStepTitle {
   font-family: var(--font-family-heading);
-  font-size: 1.25rem;
-  font-weight: var(--font-weight-bold);
+  font-size: 2rem;
+  font-weight: var(--font-weight-extrabold);
   color: var(--color-brand-dark);
-  margin: var(--space-xs) 0 var(--space-sm) 0;
+  margin: 0 0 var(--space-md) 0;
 }
 
 .processStepDescription {
-  font-size: 0.9rem;
+  font-size: 1.15rem;
   color: var(--color-text-secondary);
   line-height: 1.6;
   margin: 0;
 }
 
+.ctaContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-xxxl);
+}
+
 /* --- Mobile Responsiveness --- */
-@media (max-width: 1024px) {
-  .ourProcessGrid {
-    grid-template-columns: repeat(2, 1fr);
+@media (max-width: 900px) {
+  .ourProcessTitle {
+    font-size: 2.5rem;
   }
 }
 
-@media (max-width: 640px) {
-  .ourProcessGrid {
-    grid-template-columns: 1fr;
-  }
-
+@media (max-width: 768px) {
   .ourProcessTitle {
     font-size: 2rem;
+  }
+
+  .processStep, 
+  .processStep:nth-child(even) {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-xl);
+  }
+
+  .processStepGraphic {
+    min-height: 150px;
+  }
+
+  .processStepContent {
+    text-align: center;
+  }
+
+  .hugeStepNumber {
+    font-size: 8rem;
   }
 }

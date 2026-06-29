@@ -2,8 +2,6 @@ import styles from './ServicesPage.module.css';
 import { PageHeader } from '@/components/common/pageHeader/PageHeader';
 import { ServicesSection } from '@/components/common/servicesSection/ServicesSection';
 import { OurProcessSection } from '@/components/common/ourProcessSection/OurProcessSection';
-import { SpecialtyServicesSection } from '@/components/common/specialtyServicesSection/SpecialtyServicesSection';
-import { TestimonialSection } from '@/components/common/testimonialSection/TestimonialSection';
 
 const ServicesPage = () => {
 	return (
@@ -16,11 +14,6 @@ const ServicesPage = () => {
 			<ServicesSection />
 			{/* 3. Our Professional Process (Builds trust) */}
 			<OurProcessSection />
-			{/* 4. Our Specialty Services (Shows expertise) */}
-			<SpecialtyServicesSection />
-			{/* 5. Social Proof (Backs up claims) */}
-			<TestimonialSection />
-
 		</div>
 	);
 };
