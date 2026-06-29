@@ -35,18 +35,12 @@ export const OurProcessSection: React.FC = () => {
             <div className={styles.timelineContainer}>
                 {/* Desktop Road SVG */}
                 <svg className={styles.desktopRoadSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <defs>
-                        <linearGradient id="roadGradientDesktop" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stopColor="var(--color-primary)" stopOpacity="0.4" />
-                            <stop offset="100%" stopColor="#94a3b8" stopOpacity="0.2" />
-                        </linearGradient>
-                    </defs>
                     <path 
                         d="M 25 12.5 C 100 12.5, 100 37.5, 75 37.5 C 0 37.5, 0 62.5, 25 62.5 C 100 62.5, 100 87.5, 75 87.5 Q 50 87.5 25 87.5"
                         fill="none"
-                        stroke="url(#roadGradientDesktop)"
-                        strokeWidth="4"
-                        strokeDasharray="12 12"
+                        stroke="var(--color-primary)"
+                        strokeOpacity="0.2"
+                        strokeWidth="6"
                         strokeLinecap="round"
                         vectorEffect="non-scaling-stroke"
                     />
@@ -54,18 +48,12 @@ export const OurProcessSection: React.FC = () => {
 
                 {/* Mobile Road SVG */}
                 <svg className={styles.mobileRoadSvg} viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <defs>
-                        <linearGradient id="roadGradientMobile" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stopColor="var(--color-primary)" stopOpacity="0.4" />
-                            <stop offset="100%" stopColor="#94a3b8" stopOpacity="0.2" />
-                        </linearGradient>
-                    </defs>
                     <path 
                         d="M 50 10 Q 80 25, 50 40 T 50 70 T 50 95"
                         fill="none"
-                        stroke="url(#roadGradientMobile)"
-                        strokeWidth="3"
-                        strokeDasharray="8 8"
+                        stroke="var(--color-primary)"
+                        strokeOpacity="0.2"
+                        strokeWidth="4"
                         strokeLinecap="round"
                         vectorEffect="non-scaling-stroke"
                     />
