@@ -1,7 +1,3 @@
-.servicesPageWrapper > * {
-	margin-bottom: var(--space-xxxl);
-}
-
-.servicesPageWrapper > *:last-child {
-	margin-bottom: 0;
+.servicesPageWrapper {
+	/* Sections rely on their own padding for vertical spacing */
 }
