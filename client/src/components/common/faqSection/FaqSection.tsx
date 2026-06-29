@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './FaqSection.module.css';
 import { Plus, Minus } from 'lucide-react';
+import { BrushButton } from '../brushButton/BrushButton';
 
 const faqs = [
     {
@@ -65,6 +66,14 @@ export const FaqSection = () => {
                         </div>
                     );
                 })}
+            </div>
+            <div className={styles.ctaContainer}>
+                <p className={styles.ctaText}>
+                    Have more questions or concerns? We are always happy to help!
+                </p>
+                <BrushButton to="/contact">
+                    Contact Us
+                </BrushButton>
             </div>
             </div>
         </section>

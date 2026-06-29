@@ -110,4 +110,27 @@
   .faqAnswer {
     font-size: 1rem;
   }
+  .ctaContainer {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: var(--space-lg);
+  }
+}
+
+.ctaContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: var(--space-xxl);
+  gap: var(--space-xl);
+  width: 100%;
+}
+
+.ctaText {
+  font-family: var(--font-family-body);
+  font-size: 1.15rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-brand-dark);
+  margin: 0;
 }
