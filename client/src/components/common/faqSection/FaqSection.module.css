@@ -1,0 +1,136 @@
+.faqSection {
+  width: 100%;
+  padding: var(--space-xxxl) var(--space-xl);
+  border-top: 1px solid var(--color-border);
+  position: relative;
+  z-index: 10;
+}
+
+.faqContainer {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.highlight {
+  color: var(--color-primary);
+}
+
+.sectionTitle {
+  font-family: var(--font-family-heading);
+  font-size: 3rem;
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-brand-dark);
+  margin-bottom: var(--space-xxl);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.faqList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.faqItem {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.faqItem:first-child {
+  border-top: 1px solid var(--color-border);
+}
+
+.faqButton {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-xl) 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--color-brand-dark);
+}
+
+.faqQuestion {
+  font-family: var(--font-family-heading);
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+  padding-right: var(--space-md);
+  color: var(--color-brand-dark);
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary); /* Use brand orange/primary color */
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.iconExpanded {
+  transform: rotate(180deg);
+}
+
+.faqAnswerWrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+
+.faqAnswerWrapper.expanded {
+  grid-template-rows: 1fr;
+}
+
+.faqAnswerContent {
+  overflow: hidden;
+}
+
+.faqAnswer {
+  font-family: var(--font-family-body);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #64748b; /* text-slate-500 */
+  padding-bottom: var(--space-xl);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .sectionTitle {
+    font-size: 2.5rem;
+  }
+  .faqQuestion {
+    font-size: 1.1rem;
+  }
+  .faqAnswer {
+    font-size: 1rem;
+  }
+  .ctaContainer {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: var(--space-lg);
+  }
+}
+
+.ctaContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: var(--space-xxl);
+  gap: var(--space-xl);
+  width: 100%;
+}
+
+.ctaText {
+  font-family: var(--font-family-body);
+  font-size: 1.15rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-brand-dark);
+  margin: 0;
+}
