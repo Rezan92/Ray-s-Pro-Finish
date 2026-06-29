@@ -4,6 +4,7 @@
   width: 100%;
   padding: var(--space-xxxl) var(--space-xl);
   position: relative;
+  border-top: 1px solid var(--color-border);
 }
 
 .ourProcessHeader {
@@ -12,11 +13,12 @@
 }
 
 .ourProcessSubtitle {
-  font-size: 0.875rem;
-  font-weight: var(--font-weight-medium);
+  display: block;
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-bold);
   color: var(--color-primary);
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  margin-top: var(--space-sm);
+  margin-bottom: 0;
 }
 
 .ourProcessTitle {

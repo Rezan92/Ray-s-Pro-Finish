@@ -26,10 +26,10 @@ export const OurProcessSection: React.FC = () => {
 	return (
 		<section className={styles.ourProcessSection}>
 			<div className={styles.ourProcessHeader}>
-				<span className={styles.ourProcessSubtitle}>HOW IT WORKS</span>
 				<h2 className={styles.ourProcessTitle}>
                     Our Professional <span className={styles.highlight}>Process</span>
                 </h2>
+				<p className={styles.ourProcessSubtitle}>How It Works</p>
 			</div>
             
             <div className={styles.timelineContainer}>
