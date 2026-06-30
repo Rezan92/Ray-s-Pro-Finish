@@ -23,7 +23,7 @@ function TopBar() {
 						<ContactInfoBlock
 							icon={MapPin}
 							title='Our Service Area'
-							subtitle='Serving Wheaton, Lombard & Chicagoland Suburbs'
+							subtitle='Serving DuPage County & Surrounding Areas'
 						/>
 					</div>
 				</div>
