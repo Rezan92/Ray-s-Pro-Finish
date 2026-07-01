@@ -9,12 +9,14 @@ import { Footer } from './components/common/footer/Footer';
 import ProjectsPage from './pages/projects/ProjectsPage';
 import { ModalManager } from './components/common/modal/ModalManager';
 import BlogPage from './pages/blog/BlogPage';
+import { FloatingEstimateButton } from './components/common/floatingEstimateButton/FloatingEstimateButton';
 
 function App() {
 	return (
 		<div className={styles.App}>
 			<TopBar />
 			<ModalManager />
+			<FloatingEstimateButton />
 			<main>
 				<Routes>
 					<Route

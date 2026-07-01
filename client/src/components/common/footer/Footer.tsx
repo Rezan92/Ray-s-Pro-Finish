@@ -129,7 +129,7 @@ export const Footer: React.FC = () => {
 					<div className={styles.footerContactList}>
 						<ContactItem
 							icon={<MapPin size={20} />}
-							text='Service Area: Wheaton, Lombard & Chicagoland Suburbs'
+							text='Service Area: DuPage County & Surrounding Areas'
 						/>
 						<ContactItem
 							icon={<Phone size={20} />}

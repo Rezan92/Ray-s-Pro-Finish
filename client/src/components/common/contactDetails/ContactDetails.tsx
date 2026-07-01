@@ -35,8 +35,8 @@ export const ContactDetails: React.FC = () => {
 				<ContactInfoBlock
 					icon={MapPin}
 					bold='Service Area:'
-					title='Chicagoland Suburbs'
-					subtitle='Serving Wheaton, Lombard & more'
+					title='DuPage County'
+					subtitle='Serving the surrounding area'
 				/>
 				<ContactInfoBlock
 					icon={Clock}
